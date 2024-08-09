@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert, TextInput } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Heading } from '@/components/text/Heading';
@@ -25,6 +25,14 @@ export default function OTP() {
     setOtp(newOtp);
     if (text && index < otpInputs.current.length - 1) {
       otpInputs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>, index: number) => {
+    if (e.nativeEvent.key === 'Backspace') {
+      if (index > 0) {
+        otpInputs.current[index - 1]?.focus();
+      }
     }
   };
 
@@ -69,7 +77,7 @@ export default function OTP() {
             source={require('@/assets/images/logo.png')}
           />
           <Image source={require('@/assets/images/otp.png')}  style={styles.otpImage} />
-          <Heading type="h3" style={[styles.alignCenter, styles.title]}>
+          <Heading type="h4" style={[styles.alignCenter, styles.title]}>
             Xác nhận số điện thoại
           </Heading>
           <Paragraph type="p2" style={styles.subtitle}>Vui lòng nhập mã OTP gồm 4 chữ số được gửi đến số điện thoại của bạn!</Paragraph>
@@ -85,6 +93,7 @@ export default function OTP() {
                 keyboardType="number-pad" // `keyboardType` should be "number-pad" for numeric input
                 value={digit}
                 onChangeText={(text) => handleChange(text, index)}
+                onKeyPress={(e) => handleKeyPress(e, index)}
               />
             ))}
           </View>
@@ -95,8 +104,12 @@ export default function OTP() {
             </Paragraph>
           </TouchableOpacity>
 
-          <Button style={styles.continueContainer} text="Tiếp tục" type="primary" onPress={handleOTP}/>
-
+          <Button
+              style={styles.continueContainer}
+              text="Tiếp tục"
+              type="primary"
+              onPress={handleOTP}
+            />
 
         </View>
       </SafeAreaView>
@@ -122,11 +135,11 @@ const styles = StyleSheet.create({
 
   otpImage:{
     alignSelf: 'center',
-    marginTop: 60
+    marginTop: 45
   },
 
   title: {
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 10,
   },
 
@@ -155,7 +168,7 @@ const styles = StyleSheet.create({
   },
 
   resendContainer: {
-    marginBottom: 20,
+    marginTop: 20,
   },
 
   continueContainer: {

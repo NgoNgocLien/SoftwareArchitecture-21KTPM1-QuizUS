@@ -16,39 +16,43 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      // if (!phoneNumber || !password || !confirmPassword){
-      //   Alert.alert('Error', "Không để trống số điện thoại, mật khẩu, xác nhận mật khẩu");
-      //   return;
-      // }
-
-      // if (password != confirmPassword){
-      //   Alert.alert('Error', "Mật khẩu xác nhận phải trùng khớp với mật khẩu");
-      //   return;
-      // }
+      router.push({
+        pathname: '/otp',
+        params: { phoneNumber, password },  // Passing data
+      });
+      return
       
-      // Alert.alert('Success', phoneNumber + ' ' + password);
-      // const response = await fetch('https://example.com/api/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     phoneNumber,
-      //     password,
-      //   }),
-      // });
+      if (!phoneNumber || !password || !confirmPassword){
+        Alert.alert('Error', "Không để trống số điện thoại, mật khẩu, xác nhận mật khẩu");
+        return;
+      }
 
-      // const result = await response.json();
+      if (password != confirmPassword){
+        Alert.alert('Error', "Mật khẩu xác nhận phải trùng khớp với mật khẩu");
+        return;
+      }
+    
+      const response = await fetch('http://localhost:8080/api/player/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber
+        }),
+      });
 
-      // if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok) {
         router.push({
           pathname: '/otp',
           params: { phoneNumber, password },  // Passing data
         });
-      // } else {
+      } else {
 
-      //   Alert.alert('Error', 'Số điện thoại đã được đăng ký');
-      // }
+        Alert.alert('Error', 'Số điện thoại đã được đăng ký');
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Lỗi hệ thống');
