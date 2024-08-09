@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     marginBottom: 30,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: 'white',
   },
 });

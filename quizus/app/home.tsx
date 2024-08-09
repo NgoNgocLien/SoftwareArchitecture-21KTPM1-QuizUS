@@ -7,12 +7,18 @@ import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
 import { useNavigation, useRouter } from 'expo-router';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Home() {
   const router = useRouter();
 
   
   return (
+    <LinearGradient
+    colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+    locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
+    style={styles.safeArea}
+    >
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
@@ -26,13 +32,13 @@ export default function Home() {
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
+    </LinearGradient> 
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
   },
 
   container: {

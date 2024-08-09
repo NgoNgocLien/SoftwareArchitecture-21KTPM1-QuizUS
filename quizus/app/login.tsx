@@ -6,6 +6,7 @@ import { Heading } from '@/components/text/Heading';
 import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -46,7 +47,12 @@ export default function Login() {
   };
   
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <LinearGradient
+    colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+    locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
+    style={styles.safeArea}
+    > 
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Image
@@ -83,7 +89,7 @@ export default function Login() {
 
           <View style={styles.signupContainer}>
             <Paragraph type="p2">Chưa có tài khoản?</Paragraph>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {router.push('/signup')}}>
               <Paragraph type="p2" color="#FF5252">
                 Tạo tài khoản
               </Paragraph>
@@ -92,14 +98,15 @@ export default function Login() {
 
         </View>
       </SafeAreaView>
+      
     </TouchableWithoutFeedback>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
   },
 
   container: {
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
-    gap: 3
+    gap: 3,
+    marginTop: 'auto',
   },
 });

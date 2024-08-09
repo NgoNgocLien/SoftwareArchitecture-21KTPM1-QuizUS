@@ -6,7 +6,7 @@ export type ThemedTextProps = TextProps & {
 
 export function Label({
   style,
-  color = "black",
+  color = "#7A7A81",
   // type,
   ...rest
 }: ThemedTextProps) {

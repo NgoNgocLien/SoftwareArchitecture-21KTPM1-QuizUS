@@ -6,16 +6,23 @@ import { Heading } from '@/components/text/Heading';
 import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     try {
-      // if (!phoneNumber || !password){
-      //   Alert.alert('Error', "Không để trống số điện thoại hoặc mật khẩu");
+      // if (!phoneNumber || !password || !confirmPassword){
+      //   Alert.alert('Error', "Không để trống số điện thoại, mật khẩu, xác nhận mật khẩu");
+      //   return;
+      // }
+
+      // if (password != confirmPassword){
+      //   Alert.alert('Error', "Mật khẩu xác nhận phải trùng khớp với mật khẩu");
       //   return;
       // }
       
@@ -34,10 +41,13 @@ export default function Signup() {
       // const result = await response.json();
 
       // if (response.ok) {
-        router.push('/home');
+        router.push({
+          pathname: '/otp',
+          params: { phoneNumber, password },  // Passing data
+        });
       // } else {
 
-      //   Alert.alert('Error', 'Số điện thoại hoặc mật khẩu sai');
+      //   Alert.alert('Error', 'Số điện thoại đã được đăng ký');
       // }
     } catch (error) {
       console.error(error);
@@ -46,6 +56,11 @@ export default function Signup() {
   };
   
   return (
+    <LinearGradient
+    colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+    locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
+    style={styles.safeArea}
+    > 
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
@@ -54,7 +69,7 @@ export default function Signup() {
             source={require('@/assets/images/logo.png')}
           />
           <Heading type="h1" style={[styles.alignCenter, styles.title]}>
-            Đăng nhập
+            Tạo tài khoản
           </Heading>
 
           <Label>Số điện thoại</Label>
@@ -65,13 +80,12 @@ export default function Signup() {
           <Input secureTextEntry={true}
             onChangeText={setPassword} />
 
-          {/* <TouchableOpacity> */}
-            <Paragraph type="p2" color="#FF5252" style={styles.forgotPassword}>
-              Quên mật khẩu?
-            </Paragraph>
-          {/* </TouchableOpacity> */}
+          <Label>Xác nhận mật khẩu</Label>
+          <Input secureTextEntry={true}
+            onChangeText={setConfirmPassword} />
 
-          <Button text="Tiếp tục" type="primary" onPress={handleLogin}/>
+
+          <Button text="Tiếp tục" type="primary" onPress={handleSignup}/>
 
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />
@@ -79,13 +93,13 @@ export default function Signup() {
             <View style={styles.separator} />
           </View>
 
-          <Button text="Đăng nhập với Gmail" type="secondary" />
+          <Button text="Đăng kí với Gmail" type="secondary" />
 
           <View style={styles.signupContainer}>
-            <Paragraph type="p2">Chưa có tài khoản?</Paragraph>
-            <TouchableOpacity>
+            <Paragraph type="p2">Đã có tài khoản?</Paragraph>
+            <TouchableOpacity  onPress={() => {router.push('/login')}}>
               <Paragraph type="p2" color="#FF5252">
-                Tạo tài khoản
+                Đăng nhập
               </Paragraph>
             </TouchableOpacity>
           </View>
@@ -93,13 +107,13 @@ export default function Signup() {
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex: 1
   },
 
   container: {
@@ -138,7 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
-    gap: 3
+    gap: 3,
+    marginTop: 'auto',
   },
 });

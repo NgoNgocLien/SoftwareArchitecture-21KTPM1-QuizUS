@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    width: '100%'
   },
   secondary: {
     backgroundColor: '#fff',
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 32,
-
+    width: '100%',
     borderColor: '#ccc',
     borderWidth: 1,
   }
