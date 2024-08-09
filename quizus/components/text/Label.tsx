@@ -25,7 +25,6 @@ export function Label({
 const styles = StyleSheet.create({
     label: {
       fontSize: 16,
-      color: '#333',
       marginBottom: 10,
     },
   });

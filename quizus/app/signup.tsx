@@ -7,7 +7,7 @@ import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 
-export default function Login() {
+export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();

@@ -29,11 +29,14 @@ export default function RootLayout() {
     return null;
   }
 
+  // index is home
+
   return (
     <ThemeProvider value={DefaultTheme}>
       <Stack>
         <Stack.Screen name="login" options={{ headerShown: false }}/>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="home" options={{ headerShown: false }}/>
+        {/* <Stack.Screen name="index" options={{ headerShown: false }}/>  */}
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
