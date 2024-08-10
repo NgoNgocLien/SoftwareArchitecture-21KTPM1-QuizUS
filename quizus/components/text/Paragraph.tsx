@@ -1,3 +1,4 @@
+import { Colors } from '@/constants/Colors';
 import { Text, type TextProps, StyleSheet } from 'react-native';
 
 export type ThemedTextProps = TextProps & {
@@ -7,7 +8,7 @@ export type ThemedTextProps = TextProps & {
 
 export function Paragraph({
   style,
-  color = "black",
+  color = Colors.light.mainText,
   type,
   ...rest
 }: ThemedTextProps) {

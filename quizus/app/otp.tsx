@@ -7,6 +7,7 @@ import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter, useLocalSearchParams  } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Colors } from '@/constants/Colors';
 
 export default function OTP() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function OTP() {
       // const result = await response.json();
 
       // if (response.ok) {
-        router.push('/(tabs)');
+        router.replace('/(tabs)');
       // } else {
 
       //   Alert.alert('Error', 'Mã OTP không hợp lệ');
@@ -65,7 +66,7 @@ export default function OTP() {
   
   return (
     <LinearGradient
-    colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+    colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
     locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
     style={styles.safeArea}
     > 
@@ -99,7 +100,7 @@ export default function OTP() {
           </View>
 
           <TouchableOpacity style={styles.resendContainer}>
-            <Paragraph type="p2" color="#FF5252" >
+            <Paragraph type="p2" color={Colors.light.primary} >
               Gửi lại mã
             </Paragraph>
           </TouchableOpacity>
@@ -160,8 +161,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderWidth: 1,
-    borderColor: '#FF5252',
-    backgroundColor: '#FFF',
+    borderColor: Colors.light.primary,
+    backgroundColor: Colors.light.background,
     textAlign: 'center',
     fontSize: 18,
     borderRadius: 10,

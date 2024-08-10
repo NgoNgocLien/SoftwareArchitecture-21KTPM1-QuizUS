@@ -8,6 +8,7 @@ const tintColorDark = '#fff';
 
 const black = '#000000';
 const white = '#FFFFFF';
+const neutral = '#7A7A81';
 const gray = '#949494';
 
 const brand_50 = '#FFE6E7';
@@ -24,7 +25,8 @@ const brand_900 = '#320B0C';
 export const Colors = {
   light: {
     mainText: black,
-    subText: gray,
+    subText: neutral,
+    gray: gray,
     background: white, 
     primary: brand_500,
     secondary: brand_50,

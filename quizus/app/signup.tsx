@@ -7,6 +7,7 @@ import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Colors } from '@/constants/Colors';
 
 export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -60,7 +61,7 @@ export default function Signup() {
   
   return (
     <LinearGradient
-    colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+    colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
     locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
     style={styles.safeArea}
     > 
@@ -92,7 +93,7 @@ export default function Signup() {
 
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />
-            <Paragraph type="p3" color="#ccc">Hoặc</Paragraph>
+            <Paragraph type="p3" color={Colors.light.subText}>Hoặc</Paragraph>
             <View style={styles.separator} />
           </View>
 
@@ -100,8 +101,8 @@ export default function Signup() {
 
           <View style={styles.signupContainer}>
             <Paragraph type="p2">Đã có tài khoản?</Paragraph>
-            <TouchableOpacity  onPress={() => {router.push('/login')}}>
-              <Paragraph type="p2" color="#FF5252">
+            <TouchableOpacity  onPress={() => {router.replace('/login')}}>
+              <Paragraph type="p2" color={Colors.light.primary}>
                 Đăng nhập
               </Paragraph>
             </TouchableOpacity>
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
   separator: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: Colors.light.subText,
   },
 
   signupContainer: {

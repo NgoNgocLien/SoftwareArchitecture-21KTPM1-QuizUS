@@ -1,3 +1,4 @@
+import { Colors } from '@/constants/Colors';
 import { Text, type TextProps, StyleSheet } from 'react-native';
 export type ThemedTextProps = TextProps & {
   color?: string;
@@ -6,7 +7,7 @@ export type ThemedTextProps = TextProps & {
 
 export function Label({
   style,
-  color = "#7A7A81",
+  color = Colors.light.subText,
   // type,
   ...rest
 }: ThemedTextProps) {
