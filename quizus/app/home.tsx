@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
+import { StyleSheet, Text, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Heading } from '@/components/text/Heading';
 import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
-import { useNavigation, useRouter } from 'expo-router';
+import { Link, useNavigation, useRouter } from 'expo-router';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -24,11 +24,11 @@ export default function Home() {
         <View style={styles.header}>
           <Image
             source={require('@/assets/images/logo.png')}
-          />
+          />  
           <FontAwesome5 name="bell" size={26} color="black" solid={false} />
         </View>
         <View style={styles.container}>
-          
+          <Link href='/(tabs)'><Text>To Tabs</Text></Link>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
