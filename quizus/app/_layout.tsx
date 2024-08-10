@@ -21,7 +21,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      router.push('/signup');  // Điều hướng đến trang login
+      router.push('/login');  // Điều hướng đến trang login
     }
   }, [loaded]);
 
@@ -38,6 +38,7 @@ export default function RootLayout() {
         <Stack.Screen name="signup" />
         <Stack.Screen name="otp" />
         <Stack.Screen name="home" />
+        <Stack.Screen name="(tabs)" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
