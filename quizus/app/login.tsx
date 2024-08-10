@@ -35,7 +35,7 @@ export default function Login() {
       // const result = await response.json();
 
       // if (response.ok) {
-        router.push('/home');
+        router.push('/(tabs)');
       // } else {
 
       //   Alert.alert('Error', 'Số điện thoại hoặc mật khẩu sai');

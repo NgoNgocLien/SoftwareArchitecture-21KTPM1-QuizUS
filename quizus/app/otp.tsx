@@ -52,7 +52,7 @@ export default function OTP() {
       // const result = await response.json();
 
       // if (response.ok) {
-        router.push('/home');
+        router.push('/(tabs)');
       // } else {
 
       //   Alert.alert('Error', 'Mã OTP không hợp lệ');
