@@ -16,12 +16,12 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      router.push({
-        pathname: '/otp',
-        params: { phoneNumber, password },  // Passing data
-      });
-      return
-      
+      // router.push({
+      //   pathname: '/otp',
+      //   params: { phoneNumber, password },  // Passing data
+      // });
+      // return
+
       if (!phoneNumber || !password || !confirmPassword){
         Alert.alert('Error', "Không để trống số điện thoại, mật khẩu, xác nhận mật khẩu");
         return;
@@ -44,13 +44,12 @@ export default function Signup() {
 
       const result = await response.json();
 
-      if (response.ok) {
+      if (result.ok) {
         router.push({
           pathname: '/otp',
           params: { phoneNumber, password },  // Passing data
         });
       } else {
-
         Alert.alert('Error', 'Số điện thoại đã được đăng ký');
       }
     } catch (error) {

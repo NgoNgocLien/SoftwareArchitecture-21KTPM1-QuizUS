@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js",
-    "generate-models": "sequelize-auto -o './models' -d xplore_db -h dpg-cmsg9k8l5elc738q0qe0-a.oregon-postgres.render.com -u xplore_db_user -p 5432 -x v48HurCElV8R96vmRppnzt5GiyCyHhSL -e postgres"
+    "start": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
