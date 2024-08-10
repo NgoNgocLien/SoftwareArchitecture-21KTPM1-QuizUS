@@ -7,20 +7,22 @@ import { Input } from '@/components/Input';
 
 export default function HomePage() {
     return (
-        <LinearGradient
-            colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
-            locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
-            style={styles.background}
-        >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View>
-                    <Header />
-                    <View style={styles.container}>
-                        <Input placeholder="Search" />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <LinearGradient
+                colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+                locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
+                style={styles.background}
+            >
+                
+                    <View>
+                        <Header />
+                        <View style={styles.container}>
+                            <Input placeholder="Search" />
+                        </View>
                     </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </LinearGradient>
+                
+            </LinearGradient>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -30,6 +32,7 @@ const styles = StyleSheet.create({
     },
 
     container: {
+        marginVertical: 20,
         paddingHorizontal: 20,
     },
 });
