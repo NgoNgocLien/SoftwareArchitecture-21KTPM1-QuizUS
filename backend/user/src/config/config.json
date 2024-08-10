@@ -1,0 +1,44 @@
+{
+    "development": {
+      "username": "quizus",
+      "password": "KWbqYCcWyw4KbXZWcV6KpqtS3ciwL3PN",
+      "database": "quizus",
+      "host": "dpg-cqr7n988fa8c73fp1vag-a.oregon-postgres.render.com",
+      "dialect": "postgres",
+      "dialectOptions": {
+        "ssl": {
+          "require": true,
+          "rejectUnauthorized": false
+        }
+      },
+      "ssl": true
+    },
+    "test": {
+      "username": "quizus",
+      "password": "KWbqYCcWyw4KbXZWcV6KpqtS3ciwL3PN",
+      "database": "quizus",
+      "host": "dpg-cqr7n988fa8c73fp1vag-a.oregon-postgres.render.com",
+      "dialect": "postgres",
+      "dialectOptions": {
+        "ssl": {
+          "require": true,
+          "rejectUnauthorized": false
+        }
+      },
+      "ssl": true
+    },
+    "production": {
+      "username": "quizus",
+      "password": "KWbqYCcWyw4KbXZWcV6KpqtS3ciwL3PN",
+      "database": "quizus",
+      "host": "dpg-cqr7n988fa8c73fp1vag-a.oregon-postgres.render.com",
+      "dialect": "postgres",
+      "dialectOptions": {
+        "ssl": {
+          "require": true,
+          "rejectUnauthorized": false
+        }
+      },
+      "ssl": true
+    }
+  }
