@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Paragraph } from './text/Paragraph';
+import { Colors } from '@/constants/Colors';
 
 export type ThemedButtonProps = TouchableOpacityProps & {
   type?: string; 
@@ -20,7 +21,7 @@ export function Button({
         style]} {...rest}>
         <Paragraph type="p2" 
             color={
-                type=='primary' ? "white" : "#000"}>
+                type=='primary' ? Colors.light.background : Colors.light.mainText}>
         {text}
         </Paragraph>
     </TouchableOpacity>
@@ -29,7 +30,7 @@ export function Button({
 
 const styles = StyleSheet.create({
   primary: {
-    backgroundColor: '#FF5252', 
+    backgroundColor: Colors.light.primary, 
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
@@ -38,14 +39,14 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   secondary: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.background,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 32,
     width: '100%',
-    borderColor: '#ccc',
+    borderColor: Colors.light.subText,
     borderWidth: 1,
   }
 });

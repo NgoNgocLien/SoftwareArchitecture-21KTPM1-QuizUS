@@ -7,6 +7,7 @@ import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Colors } from '@/constants/Colors';
 
 export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -35,7 +36,7 @@ export default function Login() {
       // const result = await response.json();
 
       // if (response.ok) {
-        router.push('/home');
+        router.replace('/(tabs)');
       // } else {
 
       //   Alert.alert('Error', 'Số điện thoại hoặc mật khẩu sai');
@@ -48,7 +49,7 @@ export default function Login() {
   
   return (
     <LinearGradient
-    colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+    colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
     locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
     style={styles.safeArea}
     > 
@@ -72,7 +73,7 @@ export default function Login() {
             onChangeText={setPassword} />
 
           {/* <TouchableOpacity> */}
-            <Paragraph type="p2" color="#FF5252" style={styles.forgotPassword}>
+            <Paragraph type="p2" color={Colors.light.primary} style={styles.forgotPassword}>
               Quên mật khẩu?
             </Paragraph>
           {/* </TouchableOpacity> */}
@@ -81,7 +82,7 @@ export default function Login() {
 
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />
-            <Paragraph type="p3" color="#ccc">Hoặc</Paragraph>
+            <Paragraph type="p3" color={Colors.light.subText}>Hoặc</Paragraph>
             <View style={styles.separator} />
           </View>
 
@@ -89,8 +90,8 @@ export default function Login() {
 
           <View style={styles.signupContainer}>
             <Paragraph type="p2">Chưa có tài khoản?</Paragraph>
-            <TouchableOpacity onPress={() => {router.push('/signup')}}>
-              <Paragraph type="p2" color="#FF5252">
+            <TouchableOpacity onPress={() => {router.replace('/signup')}}>
+              <Paragraph type="p2" color={Colors.light.primary}>
                 Tạo tài khoản
               </Paragraph>
             </TouchableOpacity>
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
   separator: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: Colors.light.subText,
   },
 
   signupContainer: {

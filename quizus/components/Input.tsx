@@ -1,3 +1,4 @@
+import { Colors } from '@/constants/Colors';
 import React from 'react';
 import { StyleSheet, TextInput, TextInputProps } from 'react-native';
 
@@ -41,11 +42,11 @@ const styles = StyleSheet.create({
   input: {
     height: 48,
     width: '100%',
-    borderColor: '#ccc',
+    borderColor: Colors.light.subText,
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
     marginBottom: 30,
-    backgroundColor: 'white',
+    backgroundColor: Colors.light.background,
   },
 });
