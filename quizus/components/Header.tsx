@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "react-native-vector-icons/Icon";
 import {Colors} from "@/constants/Colors";
 
-export default function Header() {
+export function Header() {
     // state of notification bell
     const [noti, setNoti] = React.useState(false);
 
