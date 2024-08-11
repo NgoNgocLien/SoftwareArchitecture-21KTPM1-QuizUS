@@ -8,6 +8,7 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
+import config from '@/constants/config';
 
 export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -33,7 +34,7 @@ export default function Signup() {
         return;
       }
     
-      const response = await fetch('http://localhost:8080/api/player/signup', {
+      const response = await fetch(`${config.BASE_URL}/api/player/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,19 +44,19 @@ export default function Signup() {
         }),
       });
 
-      const result = await response.json();
-
-      if (result.ok) {
+      if (response.ok) {
         router.push({
           pathname: '/otp',
-          params: { phoneNumber, password },  // Passing data
+          params: { phoneNumber, password }, 
         });
       } else {
-        Alert.alert('Error', 'Số điện thoại đã được đăng ký');
-      }
+        const result = await response.json();
+        Alert.alert('Error', result.message);
+      } 
+
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Lỗi hệ thống');
+      Alert.alert('Error', 'Lỗi từ frontend');
     }
   };
   
