@@ -4,18 +4,13 @@
     "slug": "quizus",
     "version": "1.0.0",
     "orientation": "portrait",
-<<<<<<< HEAD
     "icon": "./assets/images/logo-box.png",
-=======
-    "icon": "./assets/images/icon.png",
->>>>>>> d32db403d1ea782339dc3c7748e98ae7827d3c43
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-
     },
     "ios": {
       "supportsTablet": true
@@ -33,8 +28,7 @@
     },
     "plugins": [
       "expo-router",
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

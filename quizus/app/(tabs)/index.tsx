@@ -38,7 +38,7 @@ export default function HomePage() {
                         <View style={styles.emptyTab}></View>
 
                         {tabNames.map((tab, index) => (
-                            <Pressable onPress={() => handleTabFocus(index)}>
+                            <Pressable onPress={() => handleTabFocus(index)} key={tab.index}>
                                 <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
                                     <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>{tab.name}</Text>
                                 </View>
