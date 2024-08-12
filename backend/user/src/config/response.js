@@ -10,8 +10,8 @@ const failCode = (res, data, message) =>{
         content:data
     });
 }
-const errorCode = (res, message) =>{
-    res.status(500).send(message);
+const errorCode = (res) =>{
+    res.status(500).send("Lỗi hệ thống");
 }
 module.exports = {
     successCode,
