@@ -7,7 +7,8 @@ app.use(express.static("."));
 const cors = require('cors');
 app.use(cors());
 
-app.listen(8080);
+const port = 8080
+app.listen(port);
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
