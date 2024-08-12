@@ -35,6 +35,8 @@ export default function RootLayout() {
           <Stack.Screen name="otp" />
 
           <Stack.Screen name="(tabs)" />
+
+          <Stack.Screen name="campaign" />
           
           <Stack.Screen name="+not-found" />
         </Stack>

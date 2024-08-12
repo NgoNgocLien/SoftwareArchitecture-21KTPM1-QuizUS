@@ -3,6 +3,8 @@ import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity } f
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Colors } from '@/constants/Colors';
+import { Paragraph } from './text/Paragraph';
+import { router } from 'expo-router';
 
 export function CampaignCard({
     brandLogo = 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
@@ -35,7 +37,7 @@ export function CampaignCard({
                     <Text style={styles.campaignName}>{campaignName}</Text>
                 </View>
                 <View style={styles.detail_bottom}>
-                    <TouchableOpacity style={styles.joinButton}>
+                    <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push('/campaign')}>
                         <Text style={styles.joinButtonText}>Tham gia</Text>
                     </TouchableOpacity>
                     <MaterialCommunityIcons name={favorite ? 'heart' : 'heart-outline'} style={[styles.favoriteIcon, favorite ? {color: Colors.light.primary} : null]} onPress={handleFavorite} suppressHighlighting={true} />

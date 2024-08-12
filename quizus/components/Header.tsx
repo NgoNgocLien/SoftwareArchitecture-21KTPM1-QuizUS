@@ -1,12 +1,12 @@
-import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { useState } from "react";
+import { Image, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
-import {Colors} from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 
 export function Header() {
     // state of notification bell
-    const [noti, setNoti] = React.useState(false);
+    const [noti, setNoti] = useState(false);
 
     const handleBellPress = () => {
         setNoti(!noti);

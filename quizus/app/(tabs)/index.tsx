@@ -49,14 +49,14 @@ export default function HomePage() {
                         <View style={styles.emptyTab}></View>
                     </ScrollView>
                     
-                    <ScrollView showsVerticalScrollIndicator={false} style={{paddingTop: 10}}>
+                    <ScrollView showsVerticalScrollIndicator={false} style={{paddingVertical: 10, height: 540}}>
+                        <CampaignCard />
                         <CampaignCard />
                         <CampaignCard />
                         <CampaignCard />
                         <CampaignCard />
                         
                     </ScrollView> 
-
                 </View>
             </LinearGradient>
         // </TouchableWithoutFeedback>
