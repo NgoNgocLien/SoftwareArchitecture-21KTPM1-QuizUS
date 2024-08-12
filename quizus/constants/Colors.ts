@@ -22,6 +22,9 @@ const brand_700 = '#992227';
 const brand_800 = '#66161A';
 const brand_900 = '#320B0C';
 
+const green_50 = '#CCFAD6';
+const green_100 = '#256332';
+
 export const Colors = {
   light: {
     mainText: black,
@@ -30,6 +33,8 @@ export const Colors = {
     background: white, 
     primary: brand_500,
     secondary: brand_50,
+    success_50: green_50,
+    success_100: green_100,
   },
   dark: {
     mainText: black,

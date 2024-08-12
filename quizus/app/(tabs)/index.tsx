@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { StyleSheet, Keyboard, Text, TouchableWithoutFeedback, View, ScrollView,TextInput, Pressable } from 'react-native';
+import { StyleSheet, Keyboard, Text, TouchableWithoutFeedback, View, ScrollView,TextInput, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { Header } from '@/components/Header';
 import { Colors } from '@/constants/Colors';
+import { CampaignCard } from '@/components/CampaignCard';
 
 export default function HomePage() {
 
@@ -23,7 +24,7 @@ export default function HomePage() {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <LinearGradient
                 colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
                 locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
@@ -38,18 +39,27 @@ export default function HomePage() {
                         <View style={styles.emptyTab}></View>
 
                         {tabNames.map((tab, index) => (
-                            <Pressable onPress={() => handleTabFocus(index)} key={tab.index}>
+                            <TouchableWithoutFeedback onPress={() => handleTabFocus(index)} key={tab.index}>
                                 <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
                                     <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>{tab.name}</Text>
                                 </View>
-                            </Pressable>
+                            </TouchableWithoutFeedback>
                         ))}
 
                         <View style={styles.emptyTab}></View>
                     </ScrollView>
+                    
+                    <ScrollView showsVerticalScrollIndicator={false} style={{paddingTop: 10}}>
+                        <CampaignCard />
+                        <CampaignCard />
+                        <CampaignCard />
+                        <CampaignCard />
+                        
+                    </ScrollView> 
+
                 </View>
             </LinearGradient>
-        </TouchableWithoutFeedback>
+        // </TouchableWithoutFeedback>
     )
 }
 
@@ -74,8 +84,9 @@ const styles = StyleSheet.create({
 
     emptyTab: {
         width: 20,
-        borderBottomColor: Colors.light.subText,
-        borderBottomWidth: 1,
+        height: 40,
+        borderBottomColor: Colors.light.gray,
+        borderBottomWidth: 1,    
     },
 
     categoryTab: {
@@ -83,7 +94,7 @@ const styles = StyleSheet.create({
         height: 40,
         paddingHorizontal: 10,
         justifyContent: 'center',
-        borderBottomColor: Colors.light.subText,
+        borderBottomColor: Colors.light.gray,
         borderBottomWidth: 1,
     },
 
