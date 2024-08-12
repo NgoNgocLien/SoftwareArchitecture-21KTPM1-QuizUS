@@ -7,11 +7,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableWithoutFeedback, Keyboard, SafeAreaView, View, Image, StyleSheet } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Header } from '@/components/Header';
-// import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() { 
 //  To set light or dark theme
-//   const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme();
 
   return (
     <Tabs
@@ -19,6 +19,12 @@ export default function TabLayout() {
             tabBarActiveTintColor: Colors['light'].primary,
             tabBarInactiveTintColor: Colors['light'].subText,
             headerShown: false,
+            tabBarStyle: {
+                backgroundColor: Colors['light'].background,
+                borderTopColor: 'transparent',
+                elevation: 0,
+                shadowOpacity: 0,
+            },
         }}
     >
         <Tabs.Screen

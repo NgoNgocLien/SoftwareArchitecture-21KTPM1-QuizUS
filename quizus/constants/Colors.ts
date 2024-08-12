@@ -32,5 +32,11 @@ export const Colors = {
     secondary: brand_50,
   },
   dark: {
+    mainText: black,
+    subText: neutral,
+    gray: gray,
+    background: white, 
+    primary: black,
+    secondary: gray,
   },
 };
