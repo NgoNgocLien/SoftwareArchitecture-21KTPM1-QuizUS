@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableHighlight, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Colors } from '@/constants/Colors';
@@ -35,10 +35,10 @@ export function CampaignCard({
                     <Text style={styles.campaignName}>{campaignName}</Text>
                 </View>
                 <View style={styles.detail_bottom}>
-                    <TouchableHighlight style={styles.joinButton}>
+                    <TouchableOpacity style={styles.joinButton}>
                         <Text style={styles.joinButtonText}>Tham gia</Text>
-                    </TouchableHighlight>
-                    <MaterialCommunityIcons name={favorite ? 'heart' : 'heart-outline'} style={[styles.favoriteIcon, favorite ? {color: Colors.light.primary} : null]} onPress={handleFavorite}/>
+                    </TouchableOpacity>
+                    <MaterialCommunityIcons name={favorite ? 'heart' : 'heart-outline'} style={[styles.favoriteIcon, favorite ? {color: Colors.light.primary} : null]} onPress={handleFavorite} suppressHighlighting={true} />
                 </View>
             </View>
         </View>

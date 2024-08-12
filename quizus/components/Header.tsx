@@ -15,7 +15,7 @@ export function Header() {
     return (
         <SafeAreaView style={styles.header}>
             <Image source={require('@/assets/images/logo-svg.png')} style={styles.logo} />
-            <MaterialCommunityIcons name={noti ? "bell-ring" : "bell-outline"} size={26} color={noti ? Colors['light'].primary : Colors['light'].mainText} style={styles.notiIcon} onPress={handleBellPress}/>
+            <MaterialCommunityIcons name={noti ? "bell-ring" : "bell-outline"} size={26} color={noti ? Colors['light'].primary : Colors['light'].mainText} style={styles.notiIcon} onPress={handleBellPress} suppressHighlighting={true}/>
         </SafeAreaView>
     );
 }
