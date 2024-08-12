@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const port = process.env.PORT; 
+const port = 8082; 
 const dbURI = 'mongodb://127.0.0.1:27017/QuizUs'; //process.env.
 
 const app = express();

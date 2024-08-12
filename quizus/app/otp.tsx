@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
@@ -8,15 +8,32 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter, useLocalSearchParams  } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
+import auth from '@react-native-firebase/auth';
 
 export default function OTP() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const {phoneNumber, password} = params;
+  const phoneNumber = params.phoneNumber as string;
+  const password = params.password as string;
+
+  const [confirm, setConfirm] = useState<any>(null);
+  useEffect(() => {
+    // const sendOTP = async () => {
+    //   try {
+    //     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    //     setConfirm(confirmation);
+    //   } catch (error) {
+    //     console.error(error);
+    //     Alert.alert('Error', 'Lỗi từ frontend');
+    //   }
+    // };
+
+    // sendOTP(); // Trigger OTP sending when the screen is accessed
+  }, [phoneNumber]);
 
   const [otp, setOtp] = useState<string[]>(['', '', '', '']);
   const otpInputs = useRef<Array<TextInput | null>>([]);
-
+  
   const handleChange = (text: string, index: number) => {
     if (text.length > 1) {
       text = text.slice(-1); // Ensure only the last character is used
@@ -37,9 +54,13 @@ export default function OTP() {
     }
   };
 
-  const handleOTP = async () => {
-    try {
-      // const response = await fetch('https://example.com/api/login', {
+  const confirmCode = async () => {
+    try{
+      // const userCredential = await confirm.confirm(otp.join(''));
+      // const user = userCredential.user;
+      // const userDocument = await firestore().collection("users").doc(user.uid).get();
+
+      // const response = await fetch(`${config.BASE_URL}/api/player/otp`, {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
@@ -49,20 +70,25 @@ export default function OTP() {
       //     password,
       //   }),
       // });
-
-      // const result = await response.json();
-
-      // if (response.ok) {
+  
+      // if (response.ok) 
         router.replace('/(tabs)');
-      // } else {
-
-      //   Alert.alert('Error', 'Mã OTP không hợp lệ');
-      // }
     } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'Lỗi hệ thống');
+      if (error instanceof Error) {
+        if (error.message.includes('invalid-verification-code')) {
+          Alert.alert('Error', 'Mã OTP không hợp lệ.');
+        } else if (error.message.includes('session-expired')) {
+          Alert.alert('Error', 'Phiên xác thực đã hết hạn. Vui lòng thử lại.');
+        } else {
+          console.error(error);
+          Alert.alert('Error', 'Lỗi từ frontend');
+        }
+      } else {
+        console.error('An unexpected error occurred', error);
+        Alert.alert('Error', 'Lỗi không xác định');
+      }
     }
-  };
+  }
   
   return (
     <LinearGradient
@@ -109,7 +135,7 @@ export default function OTP() {
               style={styles.continueContainer}
               text="Tiếp tục"
               type="primary"
-              onPress={handleOTP}
+              onPress={confirmCode}
             />
 
         </View>
