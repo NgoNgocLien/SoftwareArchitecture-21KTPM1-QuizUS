@@ -1,37 +1,26 @@
-import React from 'react';
-import { StyleSheet, Keyboard, Text, TouchableWithoutFeedback, View, ScrollView, FlatList } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Keyboard, Text, TouchableWithoutFeedback, View, ScrollView,TextInput, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { Header } from '@/components/Header';
-import { Input } from '@/components/Input';
 import { Colors } from '@/constants/Colors';
 
 export default function HomePage() {
 
-    const DATA = [
-        {
-          id: '1',
-          title: 'First Item',
-        },
-        {
-          id: '2',
-          title: 'Second Item',
-        },
-        {
-          id: '3',
-          title: 'Third Item',
-        },
-        {   
-            id: '4',
-            title: 'Fourth Item',
-        },
-        {
-            id: '5',
-            title: 'Fifth Item',
-        }
-      ];
+    const tabNames = [
+        { index: 0, name: 'Tất cả' },
+        { index: 1, name: 'Nhà hàng' },
+        { index: 2, name: 'Cà phê & Bánh' },
+        { index: 3, name: 'Mỹ phẩm' },
+        { index: 4, name: 'Thời trang' },
+        { index: 5, name: 'Dịch vụ' }
+    ]
 
+    const [focusedTab, setFocusedTab] = useState(0);
 
+    const handleTabFocus = (index: number) => {
+        setFocusedTab(index);
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -41,21 +30,22 @@ export default function HomePage() {
                 style={styles.background}>
                 <View>
                     <Header />
-                    <View style={styles.paddingContainer}>
-                        <Input placeholder="Tìm kiếm thương hiệu, sự kiện" />
-                    </View> 
-                    <ScrollView horizontal={true} style={styles.container}>
-                        <View style={styles.categoryBar}>
-                            <View style={styles.emptyCategoryTab}></View>
-                            <FlatList
-                                data={DATA}
-                                renderItem={({item}) => <Item title={item.title} />}
-                                keyExtractor={item => item.id}
-                                horizontal={true}
-                            />
+                    <View style={[styles.container, {marginTop: 20, marginBottom: 15}]}>
+                        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện"/>    
+                    </View>
 
-                            <View style={styles.emptyCategoryTab}></View>
-                        </View>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} bounces={false}>
+                        <View style={styles.emptyTab}></View>
+
+                        {tabNames.map((tab, index) => (
+                            <Pressable onPress={() => handleTabFocus(index)}>
+                                <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
+                                    <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>{tab.name}</Text>
+                                </View>
+                            </Pressable>
+                        ))}
+
+                        <View style={styles.emptyTab}></View>
                     </ScrollView>
                 </View>
             </LinearGradient>
@@ -63,40 +53,27 @@ export default function HomePage() {
     )
 }
 
-type ItemProps = {
-    title: string;
-}
-
-const Item = ({title}: ItemProps) => (
-    <View style={styles.categoryTab}>
-        <Text>{title}</Text>
-    </View>
-  );
-
 const styles = StyleSheet.create({
     background: {
       flex: 1,
     },
 
-    paddingContainer: {
+    container: {
         paddingHorizontal: 20,
     },
 
-    // full-width container
-    container: {
+    searchBar: {
+        height: 52,
         width: '100%',
+        borderColor: Colors.light.subText,
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        backgroundColor: Colors.light.background,
     },
 
-    // box border
-    categoryBar: {
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-
-    emptyCategoryTab: {
+    emptyTab: {
         width: 20,
-        height: 40,
         borderBottomColor: Colors.light.subText,
         borderBottomWidth: 1,
     },
@@ -106,16 +83,25 @@ const styles = StyleSheet.create({
         height: 40,
         paddingHorizontal: 10,
         justifyContent: 'center',
-        alignItems: 'center',
         borderBottomColor: Colors.light.subText,
         borderBottomWidth: 1,
-        color: Colors.light.subText,
     },
 
-    focusedCategoryTab: {
-        color: Colors.light.primary,
+    categoryText: {
+        color: Colors.light.subText,
+        fontWeight: 'medium',
+        fontSize: 16,
+    },
+
+    focusedTab: {
         borderBottomColor: Colors.light.primary,
         borderBottomWidth: 2,
     },
+
+    focusedText: {
+        color: Colors.light.primary,
+        fontWeight: 500,
+    }
 });
+
   
