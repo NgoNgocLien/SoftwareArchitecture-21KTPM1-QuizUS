@@ -33,6 +33,7 @@ export function Input({
       style={[styles.input, style]}
       placeholder={placeholder}
       keyboardType={keyboardType()} // Use the determined keyboard type
+      placeholderTextColor={Colors.light.subText}
       {...rest}
     />
   );

@@ -18,7 +18,8 @@ export function Button({
     <TouchableOpacity style={[
         type=='primary' && styles.primary, 
         type=='secondary' && styles.secondary, 
-        style]} {...rest}>
+        style]} {...rest}
+        activeOpacity={0.6} >
         <Paragraph type="p2" 
             color={
                 type=='primary' ? Colors.light.background : Colors.light.mainText}>
