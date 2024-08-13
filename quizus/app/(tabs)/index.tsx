@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, Keyboard, Text, TouchableWithoutFeedback, View, ScrollView,TextInput, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import Toast from 'react-native-root-toast';
 
 import { Header } from '@/components/Header';
 import { Colors } from '@/constants/Colors';
@@ -23,7 +25,8 @@ export default function HomePage() {
     }
 
     return (
-        // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        // <RootSiblingParent>
+        // <TouchableWithoutFeedback onPress={Keyboard.dismiss}> 
             <LinearGradient
                 colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
                 locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
@@ -59,6 +62,7 @@ export default function HomePage() {
                 </View>
             </LinearGradient>
         // </TouchableWithoutFeedback>
+        // </RootSiblingParent>
     )
 }
 

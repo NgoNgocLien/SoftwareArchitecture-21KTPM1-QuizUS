@@ -14,7 +14,6 @@ import { Header } from '@/components/Header';
 import { SubHeader } from '@/components/SubHeader';
 import { Colors } from '@/constants/Colors';
 import { Paragraph } from '@/components/text/Paragraph';
-import Unorderedlist from 'react-native-unordered-list';
 import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
 
@@ -145,14 +144,14 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         gap: 4, 
         borderRadius: 4, 
-        backgroundColor: Colors.light.success_50
+        backgroundColor: Colors.light.green_50
     },
     timeIcon: {
-        color: Colors.light.success_100,
+        color: Colors.light.green_100,
         fontSize: 16
     },
     time: {
-        color: Colors.light.success_100,
+        color: Colors.light.green_100,
         fontWeight: '500',
         fontSize: 14,
     },
