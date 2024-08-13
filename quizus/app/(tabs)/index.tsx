@@ -12,9 +12,8 @@ export default function HomePage() {
         { index: 0, name: 'Tất cả' },
         { index: 1, name: 'Nhà hàng' },
         { index: 2, name: 'Cà phê & Bánh' },
-        { index: 3, name: 'Mỹ phẩm' },
-        { index: 4, name: 'Thời trang' },
-        { index: 5, name: 'Dịch vụ' }
+        { index: 3, name: 'Mua sắm' },
+        { index: 4, name: 'Giải trí' }
     ]
 
     const [focusedTab, setFocusedTab] = useState(0);
