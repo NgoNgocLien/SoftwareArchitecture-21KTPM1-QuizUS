@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Heading } from '@/components/text/Heading';
@@ -48,6 +48,10 @@ export default function Login() {
   };
   
   return (
+    <KeyboardAvoidingView
+      style={styles.safeArea}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
     <LinearGradient
     colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
     locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
@@ -99,9 +103,9 @@ export default function Login() {
 
         </View>
       </SafeAreaView>
-      
     </TouchableWithoutFeedback>
     </LinearGradient>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -113,6 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    height: '100%'
   },
 
   alignCenter: {
@@ -147,6 +152,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
-    marginTop: 'auto',
+    // marginTop: 'auto',
+    position: 'relative',
+    bottom: 0
   },
 });

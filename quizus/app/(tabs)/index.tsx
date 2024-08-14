@@ -44,7 +44,7 @@ export default function HomePage() {
                     <View style={styles.paddingContainer}>
                         <Input placeholder="Tìm kiếm thương hiệu, sự kiện" />
                     </View> 
-                    <ScrollView horizontal={true} style={styles.container}>
+                    {/* <ScrollView horizontal={true} style={styles.container}>
                         <View style={styles.categoryBar}>
                             <View style={styles.emptyCategoryTab}></View>
                             <FlatList
@@ -56,7 +56,7 @@ export default function HomePage() {
 
                             <View style={styles.emptyCategoryTab}></View>
                         </View>
-                    </ScrollView>
+                    </ScrollView> */}
                 </View>
             </LinearGradient>
         </TouchableWithoutFeedback>
