@@ -1,19 +1,17 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { StyleSheet } from 'react-native';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
-import { LinearGradient } from 'expo-linear-gradient';
-import { TouchableWithoutFeedback, Keyboard, SafeAreaView, View, Image, StyleSheet } from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { Header } from '@/components/Header';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() { 
 //  To set light or dark theme
   const colorScheme = useColorScheme();
 
   return (
+    <RootSiblingParent>
     <Tabs
         screenOptions={{
             tabBarActiveTintColor: Colors['light'].primary,
@@ -64,6 +62,7 @@ export default function TabLayout() {
             }}
         />  
     </Tabs>
+    </RootSiblingParent> 
   );
 }
 
