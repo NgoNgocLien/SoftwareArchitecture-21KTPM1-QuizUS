@@ -10,8 +10,7 @@ const port = 8082;
 const dbURI = process.env.MONGODB_ATLAS_URI;
 console.log("Database URI:", dbURI); 
 
-const campaignRoutes = require('./routes/campaignRoutes');
-
+const app = express();
 app.use(express.json());
 
 mongoose.connect(dbURI, {
