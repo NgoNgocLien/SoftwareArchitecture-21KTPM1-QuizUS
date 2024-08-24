@@ -21,3 +21,30 @@
     font-family: regular-font;
     src: url("../../public/font/Inter-Regular.ttf");
 }
+
+/* Navbar.css */
+.navbar {
+    display: flex;
+    width: 264px;
+    height: 900px;
+    padding-bottom: 627px;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+    background: #020D1A;
+}
+  
+.tab-item {
+    color: #FFFFFF; /* White text color */
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    padding: 15px;
+    cursor: pointer;
+}
+  
+.tab-item:hover {
+    background: #1E2A37; /* Darker background on hover */
+}
+  
