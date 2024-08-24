@@ -16,6 +16,18 @@
     --brand-700: #992227;
     --brand-800: #66161A;
     --brand-900: #320B0C;
+    /*--Blue--*/
+    --blue-0: #F1F6FF;
+    --blue-50: #F1F6FF;
+    --blue-100: #DEE9FF;
+    --blue-200: #84ADFF;
+    --blue-300: #518BFF;
+    --blue-400: #1E69FF;
+    --blue-500: #004EEA;
+    --blue-600: #04C;
+    --blue-700: #003AAF;
+    --blue-800: #003092;
+    --blue-900: #001D57;
     /*--Neutral--*/
     --neutral-0: #EFF0FE;
     --neutral-50: #DFE1F7;
@@ -34,7 +46,7 @@
     --scheme-main-text: #000000;
     --scheme-sub-text: #A3A3A3;
     --scheme-primary: var(--brand-500);
-    /* --scheme-secondary: #B7CFFF; */
+    --scheme-secondary: var(--blue-500);
     /* --scheme-accent: #84ADFF; */
     /*----------Feedback----------*/
     /*--Error--*/
@@ -222,7 +234,7 @@ p, .p2 {
 /*-- Color --*/
 
 body {
-    background-color: var(--scheme-background);
+    background-color: white;
     margin: 0;
     padding: 0;
 }
@@ -325,7 +337,7 @@ button {
 }
 
 .sec-btn:hover {
-    background: var(--brand-200);
+    background: var(--blue-200);
     cursor: pointer;
 }
 
@@ -420,6 +432,14 @@ button {
 
 .bg-black {
     background-color: var(--black)
+}
+
+.bg-light {
+    background-color: var(--scheme-background-light)
+}
+
+.bg-dark {
+    background-color: var(--scheme-background-dark)
 }
 
 .bg-neutral-50 {
