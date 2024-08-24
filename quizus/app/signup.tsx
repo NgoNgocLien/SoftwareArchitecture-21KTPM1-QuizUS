@@ -8,7 +8,7 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
-import config from '@/constants/config';
+import config from '@/constants/config.js';
 
 export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -18,11 +18,6 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      // router.push({
-      //   pathname: '/otp',
-      //   params: { phoneNumber, password },  // Passing data
-      // });
-      // return
 
       if (!phoneNumber || !password || !confirmPassword){
         Alert.alert('Error', "Không để trống số điện thoại, mật khẩu, xác nhận mật khẩu");
@@ -34,25 +29,25 @@ export default function Signup() {
         return;
       }
     
-      const response = await fetch(`${config.BASE_URL}/api/player/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phoneNumber
-        }),
-      });
+      // const response = await fetch(`${config.USER_BE}/api/player/signup`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     phoneNumber
+      //   }),
+      // });
 
-      if (response.ok) {
+      // if (response.ok) {
         router.push({
           pathname: '/otp',
           params: { phoneNumber, password }, 
         });
-      } else {
-        const result = await response.json();
-        Alert.alert('Error', result.message);
-      } 
+      // } else {
+      //   const result = await response.json();
+      //   Alert.alert('Error', result.message);
+      // } 
 
     } catch (error) {
       console.error(error);
@@ -157,7 +152,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 3,
-    marginTop: 'auto',
+    gap: 3
   },
 });

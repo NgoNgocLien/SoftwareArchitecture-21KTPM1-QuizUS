@@ -25,6 +25,11 @@ const brand_900 = '#320B0C';
 const green_50 = '#CCFAD6';
 const green_100 = '#256332';
 
+const success = '#34C759';
+const error = '#FF3B30';
+const warning = '#FF9500';
+const info = '#007AFF';
+
 export const Colors = {
   light: {
     mainText: black,
@@ -33,8 +38,12 @@ export const Colors = {
     background: white, 
     primary: brand_500,
     secondary: brand_50,
-    success_50: green_50,
-    success_100: green_100,
+    green_50: green_50,
+    green_100: green_100,
+    success: success,
+    error: error,
+    warning: warning,
+    info: info,
   },
   dark: {
     mainText: black,

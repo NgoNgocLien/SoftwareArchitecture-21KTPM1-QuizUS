@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
 import { Paragraph } from './text/Paragraph';
 import { router } from 'expo-router';
+import { ToastBar, ToastBarOptions } from './ToastBar';
 
 export function CampaignCard({
     brandLogo = 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
@@ -18,6 +21,7 @@ export function CampaignCard({
 
     const handleFavorite = () => {
         setFavorite(!favorite);
+        Toast.show(<ToastBar type='success' message='Sự kiện đã được thêm vào Yêu thích'/>, ToastBarOptions)
     }
 
     return (
@@ -97,14 +101,14 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         gap: 4, 
         borderRadius: 4, 
-        backgroundColor: Colors.light.success_50
+        backgroundColor: Colors.light.green_50
     },
     timeIcon: {
-        color: Colors.light.success_100,
+        color: Colors.light.green_100,
         fontSize: 16
     },
     time: {
-        color: Colors.light.success_100,
+        color: Colors.light.green_100,
         fontWeight: '500',
         fontSize: 12,
     },

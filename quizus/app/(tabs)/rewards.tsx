@@ -9,13 +9,18 @@ import {
     Image, 
     Keyboard, 
     TouchableWithoutFeedback, 
-    TouchableHighlight } from 'react-native';
+    TouchableHighlight, 
+    Button} from 'react-native';
 
 import { Header } from '@/components/Header';
 import { Colors } from '@/constants/Colors';
 import { CampaignCard } from '@/components/CampaignCard';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import Toast from 'react-native-root-toast';
+import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
 
 export default function Rewards() {
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <LinearGradient
@@ -26,6 +31,8 @@ export default function Rewards() {
                 <View>
                     <Header />          
                 </View>
+                <Button title="Show Toast" onPress={() => Toast.show(<ToastBar type='info' message='Lorem ipsum dolor sit amet, consectetur adipiscing edit.'/>, ToastBarOptions)} />
+
             </LinearGradient>
         </TouchableWithoutFeedback>
         

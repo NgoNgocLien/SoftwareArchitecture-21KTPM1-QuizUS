@@ -18,20 +18,29 @@ export default function OTP() {
 
   const [confirm, setConfirm] = useState<any>(null);
   useEffect(() => {
-    // const sendOTP = async () => {
-    //   try {
-    //     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-    //     setConfirm(confirmation);
-    //   } catch (error) {
-    //     console.error(error);
-    //     Alert.alert('Error', 'Lỗi từ frontend');
-    //   }
-    // };
+    const formatPhoneNumber = (phoneNumber: string) => {
+      // Assuming the user inputs a phone number without the country code
+      if (!phoneNumber.startsWith('+')) {
+        // Add your country code, for example, Vietnam is +84
+        phoneNumber = `+84${phoneNumber}`;
+      }
+      return phoneNumber;
+    };
+    
+    const sendOTP = async () => {
+      try {
+        const confirmation = await auth().signInWithPhoneNumber(formatPhoneNumber(phoneNumber));
+        setConfirm(confirmation);
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error', 'Lỗi từ frontend');
+      }
+    };
 
-    // sendOTP(); // Trigger OTP sending when the screen is accessed
+    sendOTP(); // Trigger OTP sending when the screen is accessed
   }, [phoneNumber]);
 
-  const [otp, setOtp] = useState<string[]>(['', '', '', '']);
+  const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const otpInputs = useRef<Array<TextInput | null>>([]);
   
   const handleChange = (text: string, index: number) => {
@@ -56,11 +65,11 @@ export default function OTP() {
 
   const confirmCode = async () => {
     try{
-      // const userCredential = await confirm.confirm(otp.join(''));
+      const userCredential = await confirm.confirm(otp.join(''));
       // const user = userCredential.user;
       // const userDocument = await firestore().collection("users").doc(user.uid).get();
 
-      // const response = await fetch(`${config.BASE_URL}/api/player/otp`, {
+      // const response = await fetch(`${config.USER_BE}/api/player/otp`, {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
@@ -179,13 +188,13 @@ const styles = StyleSheet.create({
   otpContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '62%',
     marginBottom: 20,
+    gap: 10
   },
 
   otpInput: {
-    width: 50,
-    height: 50,
+    width: 38,
+    height: 45,
     borderWidth: 1,
     borderColor: Colors.light.primary,
     backgroundColor: Colors.light.background,
@@ -199,6 +208,6 @@ const styles = StyleSheet.create({
   },
 
   continueContainer: {
-    marginTop: 'auto',
+    marginTop: 100,
   },
 });

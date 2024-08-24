@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "634424446376",
+    "project_id": "quizus-c4b22",
+    "storage_bucket": "quizus-c4b22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634424446376:android:4c5f9d923f5d22fd0da19d",
+        "android_client_info": {
+          "package_name": "com.quizus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634424446376-0ls0s9gn522pe90o0d6sfvrfidg6pfio.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quizus",
+            "certificate_hash": "ae2b248c0109ca8a5cae8ab84bf1722c9bf8dd9b"
+          }
+        },
+        {
+          "client_id": "634424446376-fkj7rrcnmfnqqu47acajfn0kigjv51mj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACRabx9HEo30m2kh0ey0XiVdyOzttuPcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634424446376-fkj7rrcnmfnqqu47acajfn0kigjv51mj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "634424446376-c9nlclp67t04dt51oldo14pb5crn7b90.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quizus"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,7 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 
-export function SubHeader() {
+export function SubHeader(
+    props: {
+        style?: any
+    }
+) {
     return (
         <SafeAreaView style={styles.header}>
             <MaterialCommunityIcons name={'arrow-left'} size={28} color={Colors['light'].mainText} onPress={() => router.back()} suppressHighlighting={true}/>
