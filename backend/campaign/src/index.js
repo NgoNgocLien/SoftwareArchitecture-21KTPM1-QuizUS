@@ -2,15 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const port = 8082; 
-const dbURI = 'mongodb://127.0.0.1:27017/QuizUs'; //process.env.
+const port = 8082;
 
-const app = express();
+// Use the MongoDB Atlas URI from the environment variables
+// MONGODB_ATLAS_URI=mongodb+srv://<db_username>:<db_password>@cluster0.jj66d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+const dbURI = process.env.MONGODB_ATLAS_URI;
+console.log("Database URI:", dbURI); 
+
+const campaignRoutes = require('./routes/campaignRoutes');
+
 app.use(express.json());
-
-app.use('/', (req, res) => {
-  res.send("OK");
-});
 
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
