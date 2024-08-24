@@ -11,7 +11,11 @@ const dbURI = process.env.MONGODB_ATLAS_URI;
 console.log("Database URI:", dbURI); 
 
 const app = express();
+const campaignRoutes = require('./routes/campaignRoutes');
+
 app.use(express.json());
+
+app.use('/', campaignRoutes);
 
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
