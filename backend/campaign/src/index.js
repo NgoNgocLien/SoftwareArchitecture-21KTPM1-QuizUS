@@ -6,11 +6,11 @@ const port = 8082;
 const dbURI = 'mongodb://127.0.0.1:27017/QuizUs'; //process.env.
 
 const app = express();
+const campaignRoutes = require('./routes/campaignRoutes');
+
 app.use(express.json());
 
-app.use('/', (req, res) => {
-  res.send("OK");
-});
+app.use('/', campaignRoutes);
 
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
