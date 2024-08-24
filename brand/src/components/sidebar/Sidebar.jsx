@@ -1,6 +1,14 @@
 import "./Sidebar.css";
+import { useState } from "react";
 
 export default function Sidebar() {
+
+    let [focus, setFocus] = useState("dashboard");
+
+    const handleFocus = (tab) => {
+        setFocus(tab);
+    }
+
     return (
         <div className="sidebar bg-black col-2">
             <div className="sidebar-brand d-flex align-items-center">
@@ -8,29 +16,21 @@ export default function Sidebar() {
             </div>
             <div className="horizontal-line"></div>
             <ul className="sidebar-nav">
-                <li className="sidebar-nav-item">
-                    <a href="#" className="sidebar-nav-link btn-md sec-btn text-white">
-                        <i className="fa fa-home"></i>
-                        <span>Tổng quan</span>
-                    </a>
+                <li className={focus === "dashboard" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("dashboard")}>
+                    <i class="fa-solid fa-house"></i>
+                    <span>Tổng quan</span>
                 </li>
-                <li className="sidebar-nav-item">
-                    <a href="#" className="text-white btn-md sec-btn">
-                        <i className="fa fa-user"></i>
-                        <span>Người chơi</span>
-                    </a>
+                <li className={focus === "player" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("player")}>
+                    <i class="fa-solid fa-user"></i>
+                    <span>Người chơi</span>
                 </li>
-                <li className="sidebar-nav-item">
-                    <a href="#" className="sidebar-nav-link text-white">
-                        <i className="fa fa-cog"></i>
-                        <span>Nhãn hàng</span>
-                    </a>
+                <li className={focus === "brand" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("brand")}>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Nhãn hàng</span>
                 </li>
-                <li className="sidebar-nav-item">
-                    <a href="#" className="sidebar-nav-link text-white">
-                        <i className="fa fa-cog"></i>
-                        <span>Trò chơi</span>
-                    </a>
+                <li className={focus === "game" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("game")}>
+                    <i class="fa-solid fa-gamepad"></i>
+                    <span>Trò chơi</span>
                 </li>
             </ul>
         </div>
