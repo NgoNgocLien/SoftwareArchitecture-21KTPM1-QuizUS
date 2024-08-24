@@ -7,8 +7,9 @@ const CampaignGameSchema = new Schema({
     ref: 'Campaign', 
     required: true 
   },
-  id_game: { 
-    type: Number, 
+  id_quiz: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'Quiz', 
     required: true 
   },
   id_campaign_item1: { 
