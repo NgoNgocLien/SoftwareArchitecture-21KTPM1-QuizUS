@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+/*--Typography--*/
+/*---------Font family---------*/
+@font-face {
+    font-family: bold-font;
+    src: url("../../public/font/Inter-Bold.ttf");
+}
+
+@font-face {
+    font-family: semibold-font;
+    src: url("../../public/font/Inter-SemiBold.ttf");
+}
+
+@font-face {
+    font-family: medium-font;
+    src: url("../../public/font/Inter-Medium.ttf");
+}
+
+@font-face {
+    font-family: regular-font;
+    src: url("../../public/font/Inter-Regular.ttf");
+}
