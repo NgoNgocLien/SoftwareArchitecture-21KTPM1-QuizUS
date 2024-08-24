@@ -31,6 +31,8 @@
     flex-direction: row;
     align-items: center;
 
+    cursor: pointer;
+
 }
 
 .sidebar-nav-item:hover {
