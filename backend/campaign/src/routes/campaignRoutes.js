@@ -108,13 +108,12 @@ router.post('/', async (req, res) => {
 // Cập nhật một chiến dịch
 router.put('/', async (req, res) => {
   try {
-    const { _id } = req.body; // Lấy _id từ body của request
+    const { _id } = req.body; 
 
     if (!_id) {
       return res.status(400).json({ message: '_id is required' });
     }
 
-    // Tìm và cập nhật campaign dựa trên _id
     const updatedCampaign = await Campaign.findByIdAndUpdate(
       _id,
       {
@@ -132,18 +131,15 @@ router.put('/', async (req, res) => {
         item2_photo: req.body.item2_photo,
         score_award: req.body.score_award
       },
-      { new: true, runValidators: true } // Trả về document đã cập nhật và chạy validators
+      { new: true, runValidators: true } 
     );
 
-    // Nếu không tìm thấy campaign với _id đã cho
     if (!updatedCampaign) {
       return res.status(404).json({ message: 'Campaign not found' });
     }
 
-    // Trả về campaign đã cập nhật
     res.json(updatedCampaign);
   } catch (error) {
-    // Xử lý lỗi nếu có
     res.status(400).json({ message: error.message });
   }
 });
