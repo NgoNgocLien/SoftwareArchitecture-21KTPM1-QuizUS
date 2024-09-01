@@ -69,3 +69,7 @@ li {
 li>i {
     margin-right: 10px;
 }
+
+.sidebar-brand>i:hover {
+    color: white;
+}

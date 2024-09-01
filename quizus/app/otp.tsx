@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
+import { Input } from '@/components/input/Input';
 import { Heading } from '@/components/text/Heading';
 import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';

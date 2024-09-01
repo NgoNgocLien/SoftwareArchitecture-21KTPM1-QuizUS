@@ -3,16 +3,22 @@ import { useState } from "react";
 
 export default function Sidebar() {
 
-    let [focus, setFocus] = useState("dashboard");
-
+    const [focus, setFocus] = useState("dashboard");
     const handleFocus = (tab) => {
         setFocus(tab);
     }
 
+    const [collapse, setCollapse] = useState(false);
+    const handleCollapse = () => {
+        setCollapse(!collapse);
+    }
+
     return (
         <div className="sidebar bg-black col-2">
-            <div className="sidebar-brand d-flex align-items-center">
+            <div className="sidebar-brand d-flex align-items-center justify-content-between">
                 <img src="/logo-dark-svg.png" alt="Logo" width={90} height={45} />
+                <i style={{ fontSize: "20px" }} className={collapse ? "fa-solid fa-angles-right text-scheme-subtext" : "fa-solid fa-angles-left text-scheme-subtext"} onClick={handleCollapse}></i>
+
             </div>
             <div className="horizontal-line"></div>
             <ul className="sidebar-nav">
@@ -33,6 +39,8 @@ export default function Sidebar() {
                     <span>Trò chơi</span>
                 </li>
             </ul>
+
         </div>
+
     )
 }

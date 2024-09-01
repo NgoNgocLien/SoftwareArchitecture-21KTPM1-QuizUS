@@ -1,14 +1,10 @@
 import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, ViewProps } from "react-native";
-import { 
-    Text,
-    StyleSheet
-} from "react-native";
+import { StyleSheet } from "react-native";
 import { Heading } from "./text/Heading";
 import { Paragraph } from "./text/Paragraph";
 import Toast from "react-native-root-toast";
-import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 export type ToastBarProps = ViewProps & {
     type?: 'success' | 'error' | 'warning' | 'info'; 
@@ -21,10 +17,10 @@ export function ToastBar({
     ...rest
 }: ToastBarProps) {
     return (
-        <View style={[styles.container, {borderLeftColor: type === 'info' ? Colors.light.info : type === 'success' ? Colors.light.success : type === 'error' ? Colors.light.error : Colors.light.warning}, rest.style]}>
+        <View style={[styles.container, {borderLeftColor: type === 'info' ? Colors.feedback.info : type === 'success' ? Colors.feedback.success : type === 'error' ? Colors.feedback.error : Colors.feedback.warning}, rest.style]}>
             <MaterialCommunityIcons 
             name={type === 'info' ? 'information' : type === 'success' ? 'check-circle' : type === 'error' ? 'close-circle' : 'alert'} 
-            color={type === 'info' ? Colors.light.info : type === 'success' ? Colors.light.success : type === 'error' ? Colors.light.error : Colors.light.warning} 
+            color={type === 'info' ? Colors.feedback.info : type === 'success' ? Colors.feedback.success : type === 'error' ? Colors.feedback.error : Colors.feedback.warning} 
             size={24} 
             />
             <View style={styles.messageContainer}>

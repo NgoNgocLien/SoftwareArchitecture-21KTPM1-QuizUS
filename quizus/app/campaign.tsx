@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Header } from '@/components/Header';
 import { SubHeader } from '@/components/SubHeader';
 import { Colors } from '@/constants/Colors';
 import { Paragraph } from '@/components/text/Paragraph';
