@@ -1,18 +1,14 @@
 import React from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
+import Toast from 'react-native-root-toast';
 import { 
     StyleSheet, 
-    ScrollView, 
     View, 
-    Text, 
-    Image, 
     Keyboard, 
     TouchableWithoutFeedback, 
     Button
 } from 'react-native';
 
-import { Header } from '@/components/Header';
-import Toast from 'react-native-root-toast';
+import { Header } from '@/components/header/Header';
 import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
 
 export default function Rewards() {

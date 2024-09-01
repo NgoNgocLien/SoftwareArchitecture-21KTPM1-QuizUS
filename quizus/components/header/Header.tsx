@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
 
         // Shadow for Android
-        elevation: 5, // Elevation for the shadow effect
+        elevation: 7, // Elevation for the shadow effect
     },
     logo: {
         width: 80,

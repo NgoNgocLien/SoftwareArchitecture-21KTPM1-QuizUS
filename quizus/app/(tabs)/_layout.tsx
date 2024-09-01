@@ -20,7 +20,7 @@ export default function TabLayout() {
             tabBarStyle: {
                 backgroundColor: Colors['light'].background,
                 borderTopColor: 'transparent',
-                elevation: 5,
+                elevation: 7,
                 shadowColor: 'black',
                 shadowOffset: { width: 0, height: -5 },
                 shadowOpacity: 0.08,

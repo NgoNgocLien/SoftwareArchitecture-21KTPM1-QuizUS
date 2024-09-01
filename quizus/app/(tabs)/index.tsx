@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView,TextInput } from 'react-native';
 
-import { Header } from '@/components/Header';
+import { Header } from '@/components/header/Header';
 import { Colors } from '@/constants/Colors';
 import { CampaignCard } from '@/components/card/CampaignCard';
 import { SearchBar } from '@/components/input/SearchBar';
-import { FontAwesome } from '@expo/vector-icons';
 
 export default function HomePage() {
 

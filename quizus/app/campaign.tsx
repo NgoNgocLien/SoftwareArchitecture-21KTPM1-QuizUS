@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SubHeader } from '@/components/SubHeader';
+import { SubHeader } from '@/components/header/SubHeader';
 import { Colors } from '@/constants/Colors';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';

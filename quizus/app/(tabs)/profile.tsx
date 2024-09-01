@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, ScrollView, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, ScrollView, Text } from 'react-native';
+
 import { Button } from '@/components/Button';
 import { useRouter } from 'expo-router';
 
