@@ -5,13 +5,13 @@ import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
-import { ToastBar, ToastBarOptions } from './ToastBar';
+import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
 
 export function CampaignCard({
     brandLogo = 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
     brandName = 'SHOPEE',
-    start = '2024-08-25T12:00:00Z',
-    end = '2024-09-25T12:00:00Z',
+    startDate = '2024-08-25T12:00:00Z',
+    endDate = '2024-09-25T12:00:00Z',
     campaignName = 'Kho báu biển xanh - Lướt sóng săn quà đỉnh',
     isFavorite = false,
     ...rest
@@ -32,10 +32,11 @@ export function CampaignCard({
             <View style={styles.detailContainer}>
                 <View style={styles.detail_top}>
                     <Text style={styles.brandName}>{brandName}</Text>
-                    <View style={Date.now() < Date.parse(end) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                        <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(end) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
-                        { Date.now() < Date.parse(end) ? 
-                            <Text style={styles.time}>{new Date(end).toLocaleDateString()}</Text> :
+                    <View style={Date.now() < Date.parse(endDate) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                        <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(endDate) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                        { Date.now() < Date.parse(endDate) ? 
+                            // formatted as 'MM/DD/YY'
+                            <Text style={styles.time}>{new Date(startDate).toLocaleDateString().slice(0, -5)} - {new Date(endDate).toLocaleDateString().slice(0, -5)}</Text> :
                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                         }
                     </View>

@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView,TextInput 
 
 import { Header } from '@/components/Header';
 import { Colors } from '@/constants/Colors';
-import { CampaignCard } from '@/components/CampaignCard';
+import { CampaignCard } from '@/components/card/CampaignCard';
 import { SearchBar } from '@/components/input/SearchBar';
 import { FontAwesome } from '@expo/vector-icons';
 
