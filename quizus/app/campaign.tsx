@@ -1,13 +1,14 @@
 import React from 'react';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
-    SafeAreaView, 
     View,
     Text,
     StyleSheet,
     Image,
     ScrollView,
-    Platform
+    Platform,
+    Share,
+    Alert,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -26,6 +27,29 @@ export default function Campaign({
     end_date='2024-09-25T12:00:00Z',
     description='Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
 }) {
+
+    const handleShare = async () => {
+        try {
+            const result = await Share.share({
+                message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+                url: 'exp://192.168.1.6:8081',
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                    Alert.alert('Shared with activity type of result.activityType');
+                } else {
+                    // shared
+                    Alert.alert('Shared');
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error: any) {
+            Alert.alert(error.message);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <SubHeader/>
@@ -44,7 +68,7 @@ export default function Campaign({
                                         <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                                     }
                                 </View>
-                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} />
+                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={handleShare} suppressHighlighting={true} />
                                 </View>
                                 <View style={styles.campaignHeader_bottom}>
                                     <Heading type='h5'>{name}</Heading>

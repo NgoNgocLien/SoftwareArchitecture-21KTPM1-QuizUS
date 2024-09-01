@@ -27,7 +27,7 @@ export function VoucherCard({
                     <View style={Date.now() < Date.parse(endDate) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
                         <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(endDate) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
                         { Date.now() < Date.parse(endDate) ? 
-                            <Text style={styles.time}>{new Date(startDate).toLocaleDateString().slice(0, -5)} - {new Date(endDate).toLocaleDateString().slice(0, -5)}</Text> :
+                            <Text style={styles.time}>{new Date(startDate).getDate()}/{new Date(startDate).getMonth() + 1} - {new Date(endDate).getDate()}/{new Date(endDate).getMonth() + 1}</Text> :
                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                         }
                     </View>

@@ -2,11 +2,14 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
-export function SearchBar() {
+export function SearchBar({
+    ...rest
+}) {
   return (
     <View style={styles.container}>
-        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện"/>    
+        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện" {...rest} />
         <FontAwesome name={'search'} style={styles.searchIcon} />
     </View>
   );

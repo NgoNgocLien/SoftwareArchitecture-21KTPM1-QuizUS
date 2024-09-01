@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView,TextInput } from 'react-native';
+import { router } from 'expo-router';
+import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView, Button } from 'react-native';
 
 import { Header } from '@/components/header/Header';
 import { Colors } from '@/constants/Colors';
@@ -27,7 +28,7 @@ export default function HomePage() {
             <View style={styles.background} >
                 <Header />
                 <View style={[styles.container, {marginTop: 20, marginBottom: 10}]}>
-                    <SearchBar />
+                    <SearchBar editable={false} onPress={() => router.push('/(tabs)/search')} />
                 </View>
 
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} bounces={false} style={{ minHeight: 40, maxHeight: 40}}>

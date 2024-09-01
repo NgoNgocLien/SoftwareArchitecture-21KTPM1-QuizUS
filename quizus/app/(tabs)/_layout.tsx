@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { StyleSheet } from 'react-native';
 import { RootSiblingParent } from 'react-native-root-siblings';
@@ -64,6 +64,13 @@ export default function TabLayout() {
                 ),
             }}
         />  
+        <Tabs.Screen 
+            name="search" 
+            options={{
+                tabBarButton: () => null,
+            }} 
+        />
+
     </Tabs>
     </RootSiblingParent> 
   );

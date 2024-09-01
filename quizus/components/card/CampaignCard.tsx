@@ -34,17 +34,15 @@ export function CampaignCard({
     const handleRemoveFavourite = () => {
         setModalVisible(!modalVisible);
         setFavorite(false);
+        Toast.show(<ToastBar type='success' message='Sự kiện đã được xóa khỏi Yêu thích'/>, ToastBarOptions)
     }
 
     return (
         <>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-            >
+            <Modal animationType="fade" transparent={true} visible={modalVisible} >
                 <View style={dialogStyles.centeredView}>
                     <View style={dialogStyles.modalView}>
+
                         <View style={dialogStyles.topView}>
                             <View style={dialogStyles.dangerIconContainer}>
                                 <FontAwesome6 name='triangle-exclamation' style={dialogStyles.dangerIcon}/>
@@ -58,6 +56,7 @@ export function CampaignCard({
                         <TouchableOpacity style={dialogStyles.confirmButton} activeOpacity={0.6} onPress={handleRemoveFavourite}>
                             <Text style={dialogStyles.confirmButtonText}>OK</Text>
                         </TouchableOpacity>
+
                     </View>
                 </View>
             </Modal>
@@ -72,8 +71,8 @@ export function CampaignCard({
                         <View style={Date.now() < Date.parse(endDate) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
                             <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(endDate) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
                             { Date.now() < Date.parse(endDate) ? 
-                                // formatted as 'MM/DD/YY'
-                                <Text style={styles.time}>{new Date(startDate).toLocaleDateString().slice(0, -5)} - {new Date(endDate).toLocaleDateString().slice(0, -5)}</Text> :
+                                // formatted as 'MM/DD'
+                                <Text style={styles.time}>{new Date(startDate).getDate()}/{new Date(startDate).getMonth() + 1} - {new Date(endDate).getDate()}/{new Date(endDate).getMonth() + 1}</Text> :
                                 <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                             }
                         </View>
@@ -210,7 +209,7 @@ const dialogStyles = StyleSheet.create({
     modalView: {
         marginHorizontal: 20,
         backgroundColor: 'white',
-        borderRadius: 8,
+        borderRadius: 10,
         padding: 20,
         shadowColor: '#000',
         shadowOffset: {
@@ -246,7 +245,7 @@ const dialogStyles = StyleSheet.create({
     confirmButton: {
         backgroundColor: Colors.light.primary,
         padding: 12,
-        borderRadius: 8,
+        borderRadius: 10,
         marginTop: 20,
     },
     confirmButtonText: {
