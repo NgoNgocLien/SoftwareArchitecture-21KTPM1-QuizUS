@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'white',
         paddingHorizontal: 20,
-        paddingBottom: -20,
+        paddingBottom: Platform.OS === 'ios' ? -20 : 10,
+        paddingTop: Platform.OS === 'android' ? 10 : 0,
         
         // Shadow for iOS
         shadowColor: 'black',
