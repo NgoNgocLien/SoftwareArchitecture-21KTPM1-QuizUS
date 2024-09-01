@@ -65,6 +65,18 @@ export const Colors = {
     primary: black,
     secondary: gray,
   },
+  brand: {
+    _50: brand_50,
+    _100: brand_100,
+    _200: brand_200,
+    _300: brand_300,
+    _400: brand_400,
+    _500: brand_500,
+    _600: brand_600,
+    _700: brand_700,
+    _800: brand_800,
+    _900: brand_900,
+  },
   gray: {
     _100: gray_100,
     _200: gray_200,

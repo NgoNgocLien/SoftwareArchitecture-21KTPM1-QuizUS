@@ -1,11 +1,13 @@
-import React from 'react';
-import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, Image, Modal, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
 import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
+import { Heading } from '../text/Heading';
+import { Paragraph } from '../text/Paragraph';
 
 export function CampaignCard({
     brandLogo = 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
@@ -16,45 +18,80 @@ export function CampaignCard({
     isFavorite = false,
     ...rest
 }) {
+    const [modalVisible, setModalVisible] = useState(false);
 
     const [favorite, setFavorite] = React.useState(isFavorite);
-
     const handleFavorite = () => {
-        setFavorite(!favorite);
-        Toast.show(<ToastBar type='success' message='Sự kiện đã được thêm vào Yêu thích'/>, ToastBarOptions)
+        if (favorite) {
+            setModalVisible(true);
+        } else {
+            // TODO: Add to favorite
+            Toast.show(<ToastBar type='success' message='Sự kiện đã được thêm vào Yêu thích'/>, ToastBarOptions)
+            setFavorite(true);
+        }
+    }
+
+    const handleRemoveFavourite = () => {
+        setModalVisible(!modalVisible);
+        setFavorite(false);
     }
 
     return (
-        <View style={[styles.campaignContainer, rest.style]}>
-            <View style={styles.brandContainer}>
-                <Image source={{uri: brandLogo}} style={styles.brandLogo}/>
-            </View>
-            <View style={styles.detailContainer}>
-                <View style={styles.detail_top}>
-                    <Text style={styles.brandName}>{brandName}</Text>
-                    <View style={Date.now() < Date.parse(endDate) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                        <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(endDate) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
-                        { Date.now() < Date.parse(endDate) ? 
-                            // formatted as 'MM/DD/YY'
-                            <Text style={styles.time}>{new Date(startDate).toLocaleDateString().slice(0, -5)} - {new Date(endDate).toLocaleDateString().slice(0, -5)}</Text> :
-                            <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
-                        }
+        <>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+            >
+                <View style={dialogStyles.centeredView}>
+                    <View style={dialogStyles.modalView}>
+                        <View style={dialogStyles.topView}>
+                            <View style={dialogStyles.dangerIconContainer}>
+                                <FontAwesome6 name='triangle-exclamation' style={dialogStyles.dangerIcon}/>
+                            </View>
+                            <FontAwesome6 name='xmark' style={{fontSize: 20, padding: 5, color: Colors.gray._600}} onPress={() => setModalVisible(!modalVisible)} suppressHighlighting={true}/>
+                        </View>
+
+                        <Heading type='h5'>Bỏ yêu thích</Heading>
+                        <Paragraph type='p2' color={Colors.light.subText}>Bạn có chắc chắn muốn xoá sự kiện này khỏi danh sách yêu thích?</Paragraph>
+
+                        <TouchableOpacity style={dialogStyles.confirmButton} activeOpacity={0.6} onPress={handleRemoveFavourite}>
+                            <Text style={dialogStyles.confirmButtonText}>OK</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.detail_middle}>
-                    <Text style={styles.campaignName}>{campaignName}</Text>
+            </Modal>
+
+            <View style={[styles.campaignContainer, rest.style]}>
+                <View style={styles.brandContainer}>
+                    <Image source={{uri: brandLogo}} style={styles.brandLogo}/>
                 </View>
-                <View style={styles.detail_bottom}>
-                    <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push('/campaign')}>
-                        <Text style={styles.joinButtonText}>Tham gia</Text>
-                    </TouchableOpacity>
-                    <MaterialCommunityIcons name={favorite ? 'heart' : 'heart-outline'} style={[styles.favoriteIcon, favorite ? {color: Colors.light.primary} : null]} onPress={handleFavorite} suppressHighlighting={true} />
+                <View style={styles.detailContainer}>
+                    <View style={styles.detail_top}>
+                        <Text style={styles.brandName}>{brandName}</Text>
+                        <View style={Date.now() < Date.parse(endDate) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                            <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(endDate) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                            { Date.now() < Date.parse(endDate) ? 
+                                // formatted as 'MM/DD/YY'
+                                <Text style={styles.time}>{new Date(startDate).toLocaleDateString().slice(0, -5)} - {new Date(endDate).toLocaleDateString().slice(0, -5)}</Text> :
+                                <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
+                            }
+                        </View>
+                    </View>
+                    <View style={styles.detail_middle}>
+                        <Text style={styles.campaignName}>{campaignName}</Text>
+                    </View>
+                    <View style={styles.detail_bottom}>
+                        <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push('/campaign')}>
+                            <Text style={styles.joinButtonText}>Tham gia</Text>
+                        </TouchableOpacity>
+                        <MaterialCommunityIcons name={favorite ? 'heart' : 'heart-outline'} style={[styles.favoriteIcon, favorite ? {color: Colors.light.primary} : null]} onPress={handleFavorite} suppressHighlighting={true} />
+                    </View>
                 </View>
             </View>
-        </View>
+        </>
     );
 }
-
 
 const styles = StyleSheet.create({
     campaignContainer: {
@@ -161,4 +198,61 @@ const styles = StyleSheet.create({
         color: Colors.gray._500,
         fontSize: 28
     }
+});
+
+const dialogStyles = StyleSheet.create({
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    },
+    modalView: {
+        marginHorizontal: 20,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+
+    topView: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
+    dangerIconContainer: {
+        backgroundColor: Colors.brand._200,
+        borderColor: Colors.brand._50,
+        borderWidth: 6,
+        borderRadius: 30,
+        width: 50,
+        height: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    dangerIcon: {
+        color: Colors.light.primary,
+        fontSize: 20,
+    },
+    confirmButton: {
+        backgroundColor: Colors.light.primary,
+        padding: 12,
+        borderRadius: 8,
+        marginTop: 20,
+    },
+    confirmButtonText: {
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: '600',
+    },
 });
