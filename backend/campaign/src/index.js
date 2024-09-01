@@ -7,8 +7,7 @@ const port = 8082;
 // Use the MongoDB Atlas URI from the environment variables
 // MONGODB_ATLAS_URI=mongodb+srv://<db_username>:<db_password>@cluster0.jj66d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
-// const dbURI = process.env.MONGODB_ATLAS_URI;
-const dbURI = 'mongodb://127.0.0.1:27017/QuizUs';
+const dbURI = process.env.MONGODB_ATLAS_URI;
 console.log("Database URI:", dbURI); 
 
 const app = express();
