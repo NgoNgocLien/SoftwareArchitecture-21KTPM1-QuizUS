@@ -1,0 +1,75 @@
+@charset "utf-8";
+@import url("../../styles/common.css");
+
+.sidebar {
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.sidebar-brand {
+    height: 60px;
+    padding: 20px;
+}
+
+.sidebar-nav {
+    width: 100%;
+    padding: 2px;
+}
+
+.sidebar-nav-item {
+    font-size: 18px;
+    line-height: 20px;
+    padding: 18px;
+    height: 56px;
+    border-radius: 6px;
+
+    color: white;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    cursor: pointer;
+
+}
+
+.sidebar-nav-item:hover {
+    background-color: var(--neutral-900);
+    transition: background-color 0.3s ease;
+}
+
+.focused {
+    background-color: var(--scheme-secondary);
+    color: var(--white);
+    border: none;
+    transition: background-color 0.1s ease;
+}
+
+.focused:hover {
+    background-color: var(--scheme-secondary);
+}
+
+.align-left {
+    text-align: left;
+}
+
+.horizontal-line {
+    width: 100%;
+    height: 1px;
+    background-color: var(--neutral-700);
+}
+
+li {
+    list-style-type: none;
+    margin: 10px;
+}
+
+li>i {
+    margin-right: 10px;
+}
+
+.sidebar-brand>i:hover {
+    color: white;
+}

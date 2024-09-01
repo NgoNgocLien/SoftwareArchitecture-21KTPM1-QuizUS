@@ -1,20 +1,20 @@
 import React from 'react';
 import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
-import { Paragraph } from './text/Paragraph';
 import { router } from 'expo-router';
 import { ToastBar, ToastBarOptions } from './ToastBar';
 
 export function CampaignCard({
     brandLogo = 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
     brandName = 'SHOPEE',
-    time = '01/02 - 29/03',
+    start = '2024-08-25T12:00:00Z',
+    end = '2024-09-25T12:00:00Z',
     campaignName = 'Kho báu biển xanh - Lướt sóng săn quà đỉnh',
     isFavorite = false,
+    ...rest
 }) {
 
     const [favorite, setFavorite] = React.useState(isFavorite);
@@ -25,16 +25,19 @@ export function CampaignCard({
     }
 
     return (
-        <View style={styles.campaignContainer}>
+        <View style={[styles.campaignContainer, rest.style]}>
             <View style={styles.brandContainer}>
                 <Image source={{uri: brandLogo}} style={styles.brandLogo}/>
             </View>
             <View style={styles.detailContainer}>
                 <View style={styles.detail_top}>
                     <Text style={styles.brandName}>{brandName}</Text>
-                    <View style={styles.timeContainer}>
-                        <MaterialCommunityIcons name={'clock-outline'} style={styles.timeIcon}/>
-                        <Text style={styles.time}>{time}</Text>
+                    <View style={Date.now() < Date.parse(end) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                        <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(end) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                        { Date.now() < Date.parse(end) ? 
+                            <Text style={styles.time}>{new Date(end).toLocaleDateString()}</Text> :
+                            <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
+                        }
                     </View>
                 </View>
                 <View style={styles.detail_middle}>
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         borderRadius: 10,
         shadowColor: 'black',
-        shadowOffset: { width: 0, height: 0 }, // Adds shadow below the header
+        shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.2,
         shadowRadius: 3.8,
         elevation: 5,
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
     brandContainer: {
         flex: 1, 
         borderStyle: 'dashed', 
-        borderColor: Colors.light.gray,
+        borderColor: Colors.gray._400,
         borderRightWidth: 1,
         padding: 10,
         justifyContent: 'center',
@@ -101,16 +104,24 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         gap: 4, 
         borderRadius: 4, 
-        backgroundColor: Colors.light.green_50
+        backgroundColor: Colors.green._50
     },
     timeIcon: {
-        color: Colors.light.green_100,
+        color: Colors.green._800,
         fontSize: 16
     },
     time: {
-        color: Colors.light.green_100,
+        color: Colors.green._800,
         fontWeight: '500',
         fontSize: 12,
+    },
+
+    outDatedContainer: {
+        backgroundColor: Colors.gray._200,
+    },
+
+    outDated: {
+        color: Colors.light.subText,
     },
 
     detail_middle: {
@@ -146,7 +157,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     favoriteIcon: {
-        color: Colors.light.gray,
+        color: Colors.gray._500,
         fontSize: 28
     }
 });

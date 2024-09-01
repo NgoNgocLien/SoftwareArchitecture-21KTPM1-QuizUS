@@ -3,7 +3,7 @@ import "./Login.css"
 export default function Login() {
     return (
         <div className="container">
-            <div className="justify-content-center d-flex">
+            <div className="justify-content-center d-flex cont">
                 <div className="col-4">
                     <div className="logo text-center">
                         <img src="/logo-svg.png" alt="Logo" width={100} height={50} />
