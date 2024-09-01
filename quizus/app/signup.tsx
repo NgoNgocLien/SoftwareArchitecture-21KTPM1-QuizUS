@@ -64,7 +64,7 @@ export default function Signup() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Image
-            style={styles.alignCenter}
+            style={[styles.alignCenter, {width: 80, height: 42}]}
             source={require('@/assets/images/logo.png')}
           />
           <Heading type="h1" style={[styles.alignCenter, styles.title]}>
@@ -84,7 +84,7 @@ export default function Signup() {
             onChangeText={setConfirmPassword} />
 
 
-          <Button text="Tiếp tục" type="primary" onPress={handleSignup}/>
+          <Button text="Tiếp tục" type="primary" onPress={handleSignup} style={{marginTop: 10}}/>
 
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />
@@ -112,12 +112,13 @@ export default function Signup() {
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1
+    flex: 1,
   },
 
   container: {
     flex: 1,
     padding: 20,
+    justifyContent: 'center',
   },
 
   alignCenter: {
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 20,
   },
 

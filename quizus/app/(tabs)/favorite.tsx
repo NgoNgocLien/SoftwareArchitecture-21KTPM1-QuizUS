@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, ScrollView, TouchableWithoutFeedback, View, Text } from 'react-native';
+import { StyleSheet, ScrollView, TouchableWithoutFeedback, View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { Header } from '@/components/header/Header';
@@ -10,7 +10,15 @@ import { SearchBar } from '@/components/input/SearchBar';
 import { Heading } from '@/components/text/Heading';
 import MaskedView from '@react-native-masked-view/masked-view';
 
-export default function Favorite() {
+export default function Favorite({
+    campaigns = [
+        {},
+        {},
+        {},
+        {},
+        {},
+    ]
+}) {
     return (
         <View style={styles.background} >
             <Header />
@@ -25,14 +33,21 @@ export default function Favorite() {
                     style={{ flex: 1 }}
                 />
                 } style={{flex: 1}}>
-                    
+
+                {campaigns.length === 0 ? (
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
+                    </View>
+                ) : (
                     <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                        <CampaignCard />
-                        <CampaignCard />
-                        <CampaignCard />
-                        <CampaignCard />
-                        <CampaignCard style={{ marginBottom: 32 }} />
+                    {campaigns.map((campaign, index) => (
+                        <CampaignCard 
+                            key={index} 
+                            style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
+                        />
+                    ))}
                     </ScrollView> 
+                )}
             </MaskedView>
         </View>
   );
