@@ -55,7 +55,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        backgroundColor: Colors.light.brand_100,
+        backgroundColor: Colors.brand._100,
         justifyContent: 'center',
         alignContent: 'center'
     },
