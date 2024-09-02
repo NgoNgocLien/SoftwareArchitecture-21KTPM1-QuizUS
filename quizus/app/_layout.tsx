@@ -19,7 +19,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      router.push('/quiz/1');
+      router.push('/profile');
     }
   }, [loaded]);
 

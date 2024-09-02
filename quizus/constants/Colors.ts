@@ -56,7 +56,7 @@ export const Colors = {
     subText: gray_600,
     subtext: gray_600,
     background: white, 
-    primary: brand_500,
+    primary: brand_400,
     secondary: brand_50,
   },
   dark: {

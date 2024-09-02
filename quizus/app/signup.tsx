@@ -8,6 +8,7 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
+import config from '@/constants/config.js';
 
 export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState('');
