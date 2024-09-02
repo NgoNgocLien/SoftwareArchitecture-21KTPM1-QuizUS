@@ -15,11 +15,11 @@ export default function Result() {
     const params = useLocalSearchParams();
     const score = params.score as string;
     const point = params.point as string;
-    const passedTime = parseInt(params.passedTime as string);
+    const elapsedTime = parseInt(params.elapsedTime as string);
     const id_quiz = params.id_quiz as string;
 
-    const minutes = Math.floor(passedTime / 60).toString().padStart(2, '0');
-    const seconds = (passedTime % 60).toString().padStart(2, '0');
+    const minutes = Math.floor(elapsedTime / 60000).toString().padStart(2, '0');
+    const seconds = Math.round((elapsedTime % 60000) / 1000).toString().padStart(2, '0');
     const [playerTurn, setPlayerTurn] = useState(1);
     // get player turn
 
