@@ -8,6 +8,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import styles from './QuizDetail.styles';
+import config from '@/constants/config';
 
 const quiz: Quiz = {
   quiz_id: "1",
@@ -96,8 +97,35 @@ export default function QuizDetail() {
     outputRange: ['0%', '100%'],
   });
 
+  const handleFinishGame = async () => {
+    try {
+      const response = await fetch(`${config.USER_BE}/api/quiz`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // phoneNumber,
+          // password,
+        }),
+      });
+
+      if (response.ok) {
+        router.replace('/(tabs)');
+      } else {
+        const result = await response.json();
+        // Alert.alert('Error', result.message);
+      }
+    } catch (error) {
+      console.error(error);
+      // Alert.alert('Error', 'Lỗi hệ thống');
+    }
+  };
+
   // hết giờ, trả lời hết câu hỏi, thoát quiz
   const navigateToResults = () => {
+    handleFinishGame();
+
     const params = {
       score: correctAnswer,
       point: 100,
@@ -128,7 +156,6 @@ export default function QuizDetail() {
             <Button text="Đồng ý" type="primary" style={styles.exitButton}
               onPress={() => {
                 setShowExitPopup(false);
-                // handleFinishGame();
                 navigateToResults();
               }} />
           </View>
@@ -149,7 +176,6 @@ export default function QuizDetail() {
             <Button text="Xem kết quả" type="primary" style={{marginBottom: 0}}
               onPress={() => {
                 setShowExitPopup(false);
-                // handleFinishGame();
                 navigateToResults();
               }} />
           </View>
@@ -229,7 +255,6 @@ export default function QuizDetail() {
               setShowAnswerKey(false);
               handleResume();
               if (count + 1 === quizLength){
-                // handleFinishGame();
                 navigateToResults();
               }
           }}></Button>
