@@ -4,9 +4,6 @@ require('dotenv').config();
 
 const port = 8082;
 
-// Use the MongoDB Atlas URI from the environment variables
-// MONGODB_ATLAS_URI=mongodb+srv://pmlinh21:oQ3rkzTObZb83CTo@cluster0.jj66d.mongodb.net/QuizUS
-
 const dbURI = process.env.MONGODB_ATLAS_URI;
 console.log("Database URI:", dbURI); 
 
