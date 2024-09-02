@@ -8,7 +8,7 @@ const port = 8082;
 // MONGODB_ATLAS_URI=mongodb+srv://<db_username>:<db_password>@cluster0.jj66d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
 const dbURI = process.env.MONGODB_ATLAS_URI;
-console.log("Database URI:", dbURI); 
+console.log("Database URI:", dbURI);
 
 const app = express();
 const campaignRoutes = require('./routes/campaignRoutes');
@@ -18,14 +18,14 @@ app.use(express.json());
 app.use('/', campaignRoutes);
 
 mongoose.connect(dbURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 }).then(() => {
-  console.log('Connected to database');
+    console.log('Connected to database');
 }).catch(err => {
-  console.error('Failed to connect to database:', err);
+    console.error('Failed to connect to database:', err);
 });
 
 app.listen(port, () => {
-  console.log(`App running on port ${port}`);
+    console.log(`App running on port ${port}`);
 });

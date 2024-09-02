@@ -2,11 +2,13 @@
 @import url("../../styles/common.css");
 
 .back-link {
+    background-color: white;
     height: 60px;
     padding-left: 20px;
     margin-bottom: 5px;
     color: gray;
-    span{
+
+    span {
         color: #A3A3A3;
         margin-left: 15px;
         font-size: 18px;
