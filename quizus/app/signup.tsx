@@ -29,25 +29,25 @@ export default function Signup() {
         return;
       }
     
-      // const response = await fetch(`${config.USER_BE}/api/player/signup`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     phoneNumber
-      //   }),
-      // });
+      const response = await fetch(`${config.USER_BE}/api/player/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber
+        }),
+      });
 
-      // if (response.ok) {
+      if (response.ok) {
         router.push({
           pathname: '/otp',
           params: { phoneNumber, password }, 
         });
-      // } else {
-      //   const result = await response.json();
-      //   Alert.alert('Error', result.message);
-      // } 
+      } else {
+        const result = await response.json();
+        Alert.alert('Error', result.message);
+      } 
 
     } catch (error) {
       console.error(error);

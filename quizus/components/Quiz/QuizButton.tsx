@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-native';
-import { Paragraph } from './text/Paragraph';
+import { Paragraph } from '../text/Paragraph';
 import { Colors } from '@/constants/Colors';
 
 export type ThemedButtonProps = TouchableOpacityProps & {
-  type?: string; 
+  type?: 'normal' | 'true' | 'wrong';
   text: string; 
 };
 
-export function Button({
+export function QuizButton({
   type,
   text,
   style,
@@ -16,13 +16,12 @@ export function Button({
 }: ThemedButtonProps) {
   return (
     <TouchableOpacity style={[
-        type=='primary' && styles.primary, 
-        type=='secondary' && styles.secondary, 
-        style]} {...rest}
+        type=='normal' && styles.primary, 
+        type=='true' && styles.secondary, 
+        style]} 
+        {...rest}
         activeOpacity={0.6} >
-        <Paragraph type="p2" 
-            color={
-                type=='primary' ? Colors.light.background : Colors.light.mainText}>
+        <Paragraph type="p2" color={Colors.light.mainText}>
         {text}
         </Paragraph>
     </TouchableOpacity>

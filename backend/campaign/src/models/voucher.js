@@ -33,6 +33,6 @@ const VoucherSchema = new Schema({
     type: Boolean, 
     default: false 
   }
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('Voucher', VoucherSchema);

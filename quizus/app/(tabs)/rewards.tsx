@@ -31,7 +31,9 @@ export default function Rewards() {
                 <View>
                     <Header />          
                 </View>
-                <Button title="Show Toast" onPress={() => Toast.show(<ToastBar type='info' message='Lorem ipsum dolor sit amet, consectetur adipiscing edit.'/>, ToastBarOptions)} />
+                <Button title="Show Toast" onPress={() => Toast.show(
+                    <ToastBar type='info' message='Lorem ipsum dolor sit amet, consectetur adipiscing edit.'/>, ToastBarOptions
+                )} />
 
             </LinearGradient>
         </TouchableWithoutFeedback>

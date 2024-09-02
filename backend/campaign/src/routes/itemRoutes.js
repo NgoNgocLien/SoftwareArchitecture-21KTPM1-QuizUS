@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/campaignItem');
-const Campaign = require('../models/campaign');
+// const Campaign = require('../models/campaign');
 
 // Tạo item
 router.post('/', async (req, res) => {

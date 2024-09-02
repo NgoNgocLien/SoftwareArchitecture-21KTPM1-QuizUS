@@ -4,16 +4,16 @@ module.exports = function(sequelize, DataTypes) {
     id_player: {
       type: DataTypes.STRING(6),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      defaultValue: Sequelize.literal("nextval('player_id_seq'::regclass)")
     },
     username: {
       type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: "player_username_key"
+      allowNull: true,
     },
     pwd: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
     avatar: {
       type: DataTypes.STRING(255),
@@ -25,8 +25,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     email: {
       type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: "player_email_key"
+      allowNull: true,
     },
     phone: {
       type: DataTypes.STRING(20),
@@ -48,24 +47,10 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "player_email_key",
-        unique: true,
-        fields: [
-          { name: "email" },
-        ]
-      },
-      {
         name: "player_pkey",
         unique: true,
         fields: [
           { name: "id_player" },
-        ]
-      },
-      {
-        name: "player_username_key",
-        unique: true,
-        fields: [
-          { name: "username" },
         ]
       },
     ]

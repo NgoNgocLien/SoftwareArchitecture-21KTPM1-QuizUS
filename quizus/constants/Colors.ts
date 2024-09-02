@@ -34,10 +34,12 @@ export const Colors = {
   light: {
     mainText: black,
     subText: neutral,
+    subtext: neutral,
     gray: gray,
     background: white, 
     primary: brand_500,
     secondary: brand_50,
+    brand_100:brand_100,
     green_50: green_50,
     green_100: green_100,
     success: success,
@@ -52,5 +54,5 @@ export const Colors = {
     background: white, 
     primary: black,
     secondary: gray,
-  },
+  }
 };

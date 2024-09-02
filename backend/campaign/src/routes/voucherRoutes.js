@@ -5,7 +5,7 @@ const Voucher = require('../models/voucher');
 // Tìm kiếm voucher theo brand
 router.get('/search/:id_brand', async (req, res) => {
   try {
-    const vouchers = await Voucher.findById(req.params.id_brand);
+    const vouchers = await Voucher.find({ id_brand: req.params.id_brand });
     res.status(200).json(vouchers);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -48,7 +48,7 @@ router.put('/', async (req, res) => {
       voucher.description = req.body.description || voucher.description;
       voucher.expired_date = req.body.expired_date || voucher.expired_date;
       voucher.score_exchange = req.body.score_exchange || voucher.score_exchange;
-      voucher.status = req.body.status || voucher.status;
+      voucher.status = req.body.status != null ? req.body.status : voucher.status;
       
       const updatedVoucher = await voucher.save();
       res.status(200).json(updatedVoucher);
