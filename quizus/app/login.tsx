@@ -8,6 +8,7 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
+import config from '@/constants/config.js';
 
 export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -16,36 +17,37 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      // if (!phoneNumber || !password){
-      //   Alert.alert('Error', "Không để trống số điện thoại hoặc mật khẩu");
-      //   return;
-      // }
+      if (!phoneNumber || !password){
+        Alert.alert('Error', "Không để trống số điện thoại hoặc mật khẩu");
+        return;
+      }
       
-      // Alert.alert('Success', phoneNumber + ' ' + password);
-      // const response = await fetch('https://example.com/api/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     phoneNumber,
-      //     password,
-      //   }),
-      // });
+      const response = await fetch(`${config.USER_BE}/api/player/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber,
+          password,
+        }),
+      });
 
-      // const result = await response.json();
-
-      // if (response.ok) {
+      if (response.ok) {
         router.replace('/(tabs)');
-      // } else {
-
-      //   Alert.alert('Error', 'Số điện thoại hoặc mật khẩu sai');
-      // }
+      } else {
+        const result = await response.json();
+        Alert.alert('Error', result.message);
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Lỗi hệ thống');
     }
   };
+
+  const handleForgetPwd = () =>{
+    router.replace('/(tabs)');
+  }
   
   return (
     <KeyboardAvoidingView
@@ -76,11 +78,11 @@ export default function Login() {
           <Input secureTextEntry={true}
             onChangeText={setPassword} />
 
-          {/* <TouchableOpacity> */}
+          <TouchableOpacity onPress={handleForgetPwd}>
             <Paragraph type="p2" color={Colors.light.primary} style={styles.forgotPassword}>
               Quên mật khẩu?
             </Paragraph>
-          {/* </TouchableOpacity> */}
+          </TouchableOpacity>
 
           <Button text="Tiếp tục" type="primary" onPress={handleLogin}/>
 

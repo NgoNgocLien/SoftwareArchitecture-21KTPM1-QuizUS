@@ -5,9 +5,10 @@ import "../styles/signup.css";
 
 export default function Signup(props) {
     //const dispatch = useDispatch();
-    const [fullname, setFullname] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [fullname, setFullname] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    //const [loading, setLoading] = useState(false);
     const roleId = localStorage.getItem(RoleKey);
     const [showNotification, setShowNotification] = useState(false);
 

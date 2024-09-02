@@ -10,14 +10,24 @@ import {
 
 import { Header } from '@/components/header/Header';
 import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Rewards() {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View>
-                <Header />          
-                <Button title="Show Toast" onPress={() => Toast.show(<ToastBar type='info' message='Lorem ipsum dolor sit amet, consectetur adipiscing edit.'/>, ToastBarOptions)} />
-            </View>
+            <LinearGradient
+                colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
+                locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
+                style={styles.background}
+            >
+                <View>
+                    <Header />          
+                </View>
+                <Button title="Show Toast" onPress={() => Toast.show(
+                    <ToastBar type='info' message='Lorem ipsum dolor sit amet, consectetur adipiscing edit.'/>, ToastBarOptions
+                )} />
+
+            </LinearGradient>
         </TouchableWithoutFeedback>
         
     )

@@ -10,6 +10,6 @@ const CampaignItemSchema = new Schema({
   photo: { 
     type: String
   }
-});
+}, { versionKey: false });
 
-module.exports = mongoose.model('CampaignItem', CampaignItemSchema);
+module.exports = mongoose.model('CampaignItem', CampaignItemSchema, 'campaignItems');

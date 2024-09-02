@@ -30,7 +30,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
@@ -42,6 +43,7 @@
       "eas": {
         "projectId": "94bc67d4-4719-4efb-ae8f-0ae41d55d0c2"
       }
-    }
+    },
+    "owner": "quizus_21ktpm1"
   }
 }

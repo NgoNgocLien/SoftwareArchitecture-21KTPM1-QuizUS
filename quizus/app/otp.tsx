@@ -9,6 +9,7 @@ import { useRouter, useLocalSearchParams  } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import auth from '@react-native-firebase/auth';
+import config from '@/constants/config.js';
 
 export default function OTP() {
   const router = useRouter();
@@ -19,9 +20,7 @@ export default function OTP() {
   const [confirm, setConfirm] = useState<any>(null);
   useEffect(() => {
     const formatPhoneNumber = (phoneNumber: string) => {
-      // Assuming the user inputs a phone number without the country code
       if (!phoneNumber.startsWith('+')) {
-        // Add your country code, for example, Vietnam is +84
         phoneNumber = `+84${phoneNumber}`;
       }
       return phoneNumber;
@@ -66,22 +65,21 @@ export default function OTP() {
   const confirmCode = async () => {
     try{
       const userCredential = await confirm.confirm(otp.join(''));
-      // const user = userCredential.user;
-      // const userDocument = await firestore().collection("users").doc(user.uid).get();
 
-      // const response = await fetch(`${config.USER_BE}/api/player/otp`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     phoneNumber,
-      //     password,
-      //   }),
-      // });
-  
-      // if (response.ok) 
+      const response = await fetch(`${config.USER_BE}/api/player/otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber,
+          password,
+        }),
+      });
+
+      if (response.ok) 
         router.replace('/(tabs)');
+      
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes('invalid-verification-code')) {

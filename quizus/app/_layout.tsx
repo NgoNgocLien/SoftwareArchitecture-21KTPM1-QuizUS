@@ -19,7 +19,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      router.push('/login');
+      router.push('/profile');
     }
   }, [loaded]);
 
@@ -37,6 +37,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
 
           <Stack.Screen name="campaign" />
+          <Stack.Screen name="quiz/[id]" />
           
           <Stack.Screen name="+not-found" />
         </Stack>
