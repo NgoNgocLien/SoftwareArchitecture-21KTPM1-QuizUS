@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { StyleSheet, Keyboard, Text, TouchableWithoutFeedback, View, ScrollView,TextInput, SafeAreaView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { RootSiblingParent } from 'react-native-root-siblings';
-import Toast from 'react-native-root-toast';
+import { router } from 'expo-router';
+import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView, Button } from 'react-native';
 
-import { Header } from '@/components/Header';
+import { Header } from '@/components/header/Header';
 import { Colors } from '@/constants/Colors';
-import { CampaignCard } from '@/components/CampaignCard';
+import { CampaignCard } from '@/components/card/CampaignCard';
+import { SearchBar } from '@/components/input/SearchBar';
 
 export default function HomePage() {
 
@@ -25,50 +24,44 @@ export default function HomePage() {
     }
 
     return (
-        // <RootSiblingParent>
         // <TouchableWithoutFeedback onPress={Keyboard.dismiss}> 
-            <LinearGradient
-                colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
-                locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
-                style={styles.background}>
-                <View>
-                    <Header />
-                    <View style={[styles.container, {marginTop: 20, marginBottom: 15}]}>
-                        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện"/>    
-                    </View>
-
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} bounces={false}>
-                        <View style={styles.emptyTab}></View>
-
-                        {tabNames.map((tab, index) => (
-                            <TouchableWithoutFeedback onPress={() => handleTabFocus(index)} key={tab.index}>
-                                <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
-                                    <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>{tab.name}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                        ))}
-
-                        <View style={styles.emptyTab}></View>
-                    </ScrollView>
-                    
-                    <ScrollView showsVerticalScrollIndicator={false} style={{paddingVertical: 10, height: 540}}>
-                        <CampaignCard />
-                        <CampaignCard />
-                        <CampaignCard />
-                        <CampaignCard />
-                        <CampaignCard />
-                        
-                    </ScrollView> 
+            <View style={styles.background} >
+                <Header />
+                <View style={[styles.container, {marginTop: 20, marginBottom: 10}]}>
+                    <SearchBar editable={false} onPress={() => router.push('/(tabs)/search')} />
                 </View>
-            </LinearGradient>
+
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} bounces={false} style={{ minHeight: 40, maxHeight: 40}}>
+                    <View style={styles.emptyTab}></View>
+
+                    {tabNames.map((tab, index) => (
+                        <TouchableWithoutFeedback onPress={() => handleTabFocus(index)} key={tab.index}>
+                            <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
+                                <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>{tab.name}</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    ))}
+
+                    <View style={styles.emptyTab}></View>
+                </ScrollView>
+                
+                <ScrollView showsVerticalScrollIndicator={false} style={{paddingVertical: 12}}>
+                    <CampaignCard />
+                    <CampaignCard />
+                    <CampaignCard />
+                    <CampaignCard />
+                    <CampaignCard style={{marginBottom: 32}}/>
+                    
+                </ScrollView> 
+            </View>
         // </TouchableWithoutFeedback>
-        // </RootSiblingParent>
     )
 }
 
 const styles = StyleSheet.create({
     background: {
       flex: 1,
+      backgroundColor: Colors.light.background,
     },
 
     container: {
@@ -88,7 +81,7 @@ const styles = StyleSheet.create({
     emptyTab: {
         width: 20,
         height: 40,
-        borderBottomColor: Colors.light.gray,
+        borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,    
     },
 
@@ -97,7 +90,7 @@ const styles = StyleSheet.create({
         height: 40,
         paddingHorizontal: 10,
         justifyContent: 'center',
-        borderBottomColor: Colors.light.gray,
+        borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,
     },
 
@@ -117,5 +110,3 @@ const styles = StyleSheet.create({
         fontWeight: 500,
     }
 });
-
-  

@@ -81,42 +81,66 @@ router.get('/id/:id_campaign', async (req, res) => {
 
 // Tạo một chiến dịch mới
 router.post('/', async (req, res) => {
-  const campaign = new Campaign({
-    id_brand1: req.body.id_brand1,
-    id_brand2: req.body.id_brand2,
-    name: req.body.name,
-    photo: req.body.photo,
-    start_datetime: req.body.start_datetime,
-    end_datetime: req.body.end_datetime
-  });
-
   try {
-    const newCampaign = await campaign.save();
-    res.status(201).json(newCampaign);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    const newCampaign = new Campaign({
+      id_brand1: req.body.id_brand1,
+      id_brand2: req.body.id_brand2,
+      name: req.body.name,
+      photo: req.body.photo,
+      start_datetime: req.body.start_datetime,
+      end_datetime: req.body.end_datetime,
+      id_voucher: req.body.id_voucher,
+      max_amount_voucher: req.body.max_amount_voucher,
+      given_amount_voucher: req.body.given_amount_voucher,
+      id_quiz: req.body.id_quiz,
+      item1_photo: req.body.item1_photo,
+      item2_photo: req.body.item2_photo,
+      score_award: req.body.score_award
+    });
+
+    const savedCampaign = await newCampaign.save();
+    res.status(201).json(savedCampaign);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
 // Cập nhật một chiến dịch
 router.put('/', async (req, res) => {
   try {
-    const campaign = await Campaign.findById(req.body._id);
-    if (campaign) {
-      campaign.id_brand1 = req.body.id_brand1 || campaign.id_brand1;
-      campaign.id_brand2 = req.body.id_brand2 || campaign.id_brand2;
-      campaign.name = req.body.name || campaign.name;
-      campaign.photo = req.body.photo || campaign.photo;
-      campaign.start_datetime = req.body.start_datetime || campaign.start_datetime;
-      campaign.end_datetime = req.body.end_datetime || campaign.end_datetime;
+    const { _id } = req.body; 
 
-      const updatedCampaign = await campaign.save();
-      res.status(200).json(updatedCampaign);
-    } else {
-      res.status(404).json({ message: 'Campaign not found' });
+    if (!_id) {
+      return res.status(400).json({ message: '_id is required' });
     }
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+
+    const updatedCampaign = await Campaign.findByIdAndUpdate(
+      _id,
+      {
+        id_brand1: req.body.id_brand1,
+        id_brand2: req.body.id_brand2,
+        name: req.body.name,
+        photo: req.body.photo,
+        start_datetime: req.body.start_datetime,
+        end_datetime: req.body.end_datetime,
+        id_voucher: req.body.id_voucher,
+        max_amount_voucher: req.body.max_amount_voucher,
+        given_amount_voucher: req.body.given_amount_voucher,
+        id_quiz: req.body.id_quiz,
+        item1_photo: req.body.item1_photo,
+        item2_photo: req.body.item2_photo,
+        score_award: req.body.score_award
+      },
+      { new: true, runValidators: true } 
+    );
+
+    if (!updatedCampaign) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
+
+    res.json(updatedCampaign);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 

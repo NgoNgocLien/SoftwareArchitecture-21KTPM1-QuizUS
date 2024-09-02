@@ -1,98 +1,117 @@
 import React from 'react';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
-    SafeAreaView, 
     View,
     Text,
     StyleSheet,
     Image,
     ScrollView,
+    Platform,
+    Share,
+    Alert,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Header } from '@/components/Header';
-import { SubHeader } from '@/components/SubHeader';
+import { SubHeader } from '@/components/header/SubHeader';
 import { Colors } from '@/constants/Colors';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
+import { VoucherCard } from '@/components/card/VoucherCard';
 
-export default function Campaign() {
+export default function Campaign({
+    logo='https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
+    name='Kho báu biển xanh, lướt sóng săn quà đỉnh',
+    photo='https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
+    start_date='2024-08-25T12:00:00Z',
+    end_date='2024-09-25T12:00:00Z',
+    description='Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+}) {
+
+    const handleShare = async () => {
+        try {
+            const result = await Share.share({
+                message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+                url: 'exp://192.168.1.6:8081',
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                    Alert.alert('Shared with activity type of result.activityType');
+                } else {
+                    // shared
+                    Alert.alert('Shared');
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error: any) {
+            Alert.alert(error.message);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <SubHeader/>
-            <LinearGradient
-                    colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
-                    locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
-                    style={styles.background}>
-            <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-                <Image style={styles.banner} source={{uri: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg'}} />
-                
-                        
-                    <View style={styles.campaignHeaderContainer}>
-                        <Image source={{uri: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png'}} style={styles.brandLogo} />
-                        <View style={{flex: 1, justifyContent: 'space-between'}}>
-                            <View style={styles.campaignHeader_top}>
-                                <View style={styles.timeContainer}>
-                                    <MaterialCommunityIcons name={'clock-outline'} style={styles.timeIcon}/>
-                                    <Text style={styles.time}>01/02 - 29/03</Text>
+            <View style={styles.background}>
+                <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
+                    <Image style={styles.banner} source={{uri: photo}} />
+                            
+                        <View style={styles.campaignHeaderContainer}>
+                            <Image source={{uri: logo}} style={styles.brandLogo} />
+                            <View style={{flex: 1, justifyContent: 'space-between'}}>
+                                <View style={styles.campaignHeader_top}>
+                                <View style={Date.now() < Date.parse(end_date) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                                    <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(end_date) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                                    { Date.now() < Date.parse(end_date) ? 
+                                        <Text style={styles.time}>{new Date(end_date).toLocaleDateString()}</Text> :
+                                        <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
+                                    }
                                 </View>
-                                <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} />
+                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={handleShare} suppressHighlighting={true} />
+                                </View>
+                                <View style={styles.campaignHeader_bottom}>
+                                    <Heading type='h5'>{name}</Heading>
+                                </View>
                             </View>
-                            <View style={styles.campaignHeader_bottom}>
-                                <Heading type='h5'>Kho báu biển xanh, lướt sóng săn quà đỉnh</Heading>
+                        </View>
+                        <View style={styles.gameInfoContainer}>
+                            <View style={styles.game__container}>
+                                <Text style={styles.game_info_header}>Thưởng</Text>
+                                <Text style={styles.game_info_container}>
+                                    <Text style={styles.game_info_num}>400</Text>
+                                    <Text style={styles.game_info_text}> xu</Text>
+                                </Text>
+                            </View>
+                            <View style={styles.vertical_seperator}></View>
+                            <View style={styles.game__container}>
+                                <Text style={styles.game_info_header}>Câu hỏi</Text>
+                                <Text style={styles.game_info_container}>
+                                    <Text style={styles.game_info_num}>10</Text>
+                                    <Text style={styles.game_info_text}> câu hỏi</Text>
+                                </Text>
                             </View>
                         </View>
-                    </View>
-                    <View style={styles.campaignInfoContainer}>
-                        <View style={styles.info__container}>
-                            <MaterialCommunityIcons name={'trophy-variant-outline'} style={styles.info__icon} />
-                            <Text style={styles.info__text}>+150 Điểm</Text>
-                        </View>
-                        <View style={styles.seperator}></View>
-                        <View style={styles.info__container}>
-                            <MaterialCommunityIcons name={'comment-question-outline'} style={styles.info__icon} />
-                            <Text style={styles.info__text}>10 Câu hỏi</Text>
-                        </View>
-                    </View>
-                    <View style={styles.campaignDetailContainer}>
-                        <View style={styles.heading__container}>
-                            <MaterialCommunityIcons name={'information-outline'} style={styles.heading__icon} />
-                            <Text style={styles.heading__text}>Giới thiệu</Text>
-                        </View>
-                        <Paragraph type='p2'>
-                            Game mùa hè hot nhất 2024 đã đổ bộ trên Quiz Us. Hoá thân thành cao thủ lướt sóng, bạn sẽ bước vào hành trình chinh phục kho báu cảu biển xanh. Hàng loạt quà tặng hấp dẫn sẽ xuất hiện xuyên suốt các chặng hành trình. Đặc biệt, khi thu thập đủ 4 mảnh ghép, bạn có cơ hội đổi 1 voucher trị giá 100K từ Grab.
-                        </Paragraph>
+                        <View style={styles.horizontal_seperator}></View>
+                        <View style={styles.campaignDetailContainer}>
+                            <Heading type="h5" style={styles.heading}>Giới thiệu</Heading>
+                            <Paragraph type='p2'>
+                                {description}
+                            </Paragraph>
 
-                        <View style={styles.heading__container}>
-                            <MaterialCommunityIcons name={'gift-outline'} style={styles.heading__icon} />
-                            <Text style={styles.heading__text}>Phần thưởng</Text>
-                        </View>
-                        <Paragraph type='p2'> 
-                            Người chơi trả lời đúng các câu hỏi sẽ được nhận phần thưởng tương ứng:{'\n'}
-                            <MaterialCommunityIcons name={'circle-small'} size={18} />Dưới 5 câu = +200 xu{'\n'}
-                            <MaterialCommunityIcons name={'circle-small'} size={18} />Từ 6-10 câu = +400 xu & 1 mảnh ghép
-                        </Paragraph>
+                            <Heading type="h5" style={styles.heading}>Phần thưởng</Heading>
+                            <Paragraph type='p2'>
+                                <Text style={{fontSize: 18, fontWeight: '800'}}>+400</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
+                            </Paragraph>
+                            <Paragraph type='p2' style={{color: Colors.light.subText}}>Trả lời đúng 10/10 câu</Paragraph>
 
-                        <View style={styles.heading__container}>
-                            {/* <MaterialCommunityIcons name={'swap-horizontal'} style={styles.heading__icon} /> */}
-                            <FontAwesome name={'exchange'} style={styles.heading__icon} />
-                            <Text style={styles.heading__text}>Quy đổi</Text>  
                         </View>
-                        <Paragraph type='p2'>
-                        Phần thưởng được dùng để đổi mã giảm giá hoặc voucher <Link href='/rewards' style={styles.link}>tại đây</Link>:{'\n'}
-                            <MaterialCommunityIcons name={'circle-small'} size={18} />4 mảnh ghép = 1 voucher Grab{'\n'}
-                            <MaterialCommunityIcons name={'circle-small'} size={18} />1000 xu = 1 voucher bất kỳ
-                        </Paragraph>
-                    </View>
-
-                    
-                
-            </ScrollView>
-            <View style={styles.joinButton} >
-                <Button text='Chơi ngay' type='primary'/>
+                        <VoucherCard style={{marginBottom: 100}}/>
+                </ScrollView>
+                <View style={styles.joinButtonContainer} >
+                    <Button text='Chơi ngay' type='primary' style={styles.joinButton}/>
+                </View>
             </View>
-            </LinearGradient>
         </View>
     )
 }
@@ -115,8 +134,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 10,
     },
-    campaignInfoContainer: {
-        paddingHorizontal: 20,
+    gameInfoContainer: {
         paddingTop: 10,
         flexDirection: 'row',
         justifyContent: 'center',
@@ -130,6 +148,7 @@ const styles = StyleSheet.create({
     brandLogo: {
         width: 80,
         height: 80,
+        borderRadius: 8,
     },
     campaignHeader_top: {
         flexDirection: 'row',
@@ -144,20 +163,26 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         gap: 4, 
         borderRadius: 4, 
-        backgroundColor: Colors.light.green_50
+        backgroundColor: Colors.green._50
     },
     timeIcon: {
-        color: Colors.light.green_100,
+        color: Colors.green._800,
         fontSize: 16
     },
     time: {
-        color: Colors.light.green_100,
+        color: Colors.green._800,
         fontWeight: '500',
         fontSize: 14,
     },
+    outDatedContainer: {
+        backgroundColor: Colors.gray._200,
+    },
+    outDated: {
+        color: Colors.light.subText,
+    },
     shareIcon: {
         fontSize: 24,
-        color: Colors.light.gray,
+        color: Colors.gray._600,
     },
 
     campaignName: {
@@ -165,33 +190,45 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
 
-    info__container: {
+    game_info_header: {
+        color: Colors.light.mainText,
+        fontWeight: '600',
+        fontSize: 10,
+    },
+    game__container: {
         flex: 1,
         justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
+        flexDirection: 'column',
+        gap: 2,
+        paddingHorizontal: 20,
     },
-    info__icon: {
-        fontSize: 18,
-        color: Colors.light.primary,
-    },
-    info__text: {
+    game_info_container: {
         color: Colors.light.mainText,
         fontWeight: '500',
         fontSize: 16,
     },
 
-    seperator: {
-        width: 1.5,
-        height: 28,
-        backgroundColor: Colors.light.primary,
+    game_info_num: {
     },
 
-    heading__container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
+    game_info_text: {
+        color: Colors.light.subText,
+    },
+
+    vertical_seperator: {
+        width: 1.2,
+        height: 40,
+        backgroundColor: Colors.gray._500,
+    },
+    horizontal_seperator: {
+        width: 'auto',
+        height: 1.2,
+        backgroundColor: Colors.gray._500,
+        marginHorizontal: 20,
+        marginTop: 10,
+    },
+
+    heading: {
         marginTop: 10,
         marginBottom: 5
     },
@@ -211,8 +248,16 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
 
+    joinButtonContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        paddingHorizontal: 20,
+        paddingBottom: 20,
+        backgroundColor: Colors.light.background,
+    },
     joinButton: {
-        marginHorizontal: 20,
-        marginBottom: 20,
+        marginBottom: Platform.OS === 'ios' ? 10 : 0,
     }
 });

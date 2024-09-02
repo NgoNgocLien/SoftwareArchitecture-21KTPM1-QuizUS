@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
+import { Input } from '@/components/input/Input';
 import { Heading } from '@/components/text/Heading';
 import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
@@ -63,7 +63,7 @@ export default function Login() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Image
-            style={styles.alignCenter}
+            style={[styles.alignCenter, {width: 80, height: 42}]}
             source={require('@/assets/images/logo.png')}
           />
           <Heading type="h1" style={[styles.alignCenter, styles.title]}>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    height: '100%'
+    justifyContent: 'center',
   },
 
   alignCenter: {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 20,
   },
 

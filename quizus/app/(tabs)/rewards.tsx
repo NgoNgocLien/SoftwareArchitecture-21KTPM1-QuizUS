@@ -1,26 +1,18 @@
 import React from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Toast from 'react-native-root-toast';
 import { 
     StyleSheet, 
-    ScrollView, 
     View, 
-    Text, 
-    Image, 
     Keyboard, 
     TouchableWithoutFeedback, 
-    TouchableHighlight, 
-    Button} from 'react-native';
+    Button
+} from 'react-native';
 
-import { Header } from '@/components/Header';
-import { Colors } from '@/constants/Colors';
-import { CampaignCard } from '@/components/CampaignCard';
-import { RootSiblingParent } from 'react-native-root-siblings';
-import Toast from 'react-native-root-toast';
+import { Header } from '@/components/header/Header';
 import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Rewards() {
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <LinearGradient

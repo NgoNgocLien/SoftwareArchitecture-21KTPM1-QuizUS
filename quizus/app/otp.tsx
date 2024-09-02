@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, Image, View, SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
+import { Input } from '@/components/input/Input';
 import { Heading } from '@/components/text/Heading';
 import { Label } from '@/components/text/Label';
 import { Paragraph } from '@/components/text/Paragraph';
@@ -107,7 +107,7 @@ export default function OTP() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Image
-            style={styles.alignCenter}
+            style={[styles.alignCenter, {width: 80, height: 42}]}
             source={require('@/assets/images/logo.png')}
           />
           <Image source={require('@/assets/images/otp.png')}  style={styles.otpImage} />
@@ -169,7 +169,9 @@ const styles = StyleSheet.create({
 
   otpImage:{
     alignSelf: 'center',
-    marginTop: 45
+    marginTop: 45,
+    width: 250,
+    height: 203
   },
 
   title: {
