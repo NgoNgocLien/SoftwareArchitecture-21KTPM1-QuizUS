@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Campaign = require('../models/campaign');
-
+const PlayerLikeCampaign = require('../models/playerLikeCampaign');
 // Lấy tất cả các chiến dịch
 router.get('/', async (req, res) => {
   try {
@@ -139,6 +139,22 @@ router.put('/', async (req, res) => {
     }
 
     res.json(updatedCampaign);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Lấy campaign yêu thích của 1 player
+router.get('/like/:id_player', async (req, res) => {
+  try {
+    const campaigns = await PlayerLikeCampaign.find()
+    // const campaigns = await PlayerLikeCampagin.find(
+    //   {
+    //     id_player: req.params.id_player,
+    //   },
+    // );
+    console.log(req.params.id_player)
+    res.json(campaigns);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
