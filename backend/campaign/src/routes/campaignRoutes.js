@@ -166,7 +166,7 @@ router.get('/like/:id_player', async (req, res) => {
 });
 
 //Lấy tất cả campaign có thể đổi thưởng bằng coin
-router.get('/redeemable/coin', async (req, res) => {
+router.get('/type/coin', async (req, res) => {
   try {
     const { score } = req.body; // Lấy điểm của người chơi từ BODY của request
     const currentTime = new Date();
@@ -184,7 +184,7 @@ router.get('/redeemable/coin', async (req, res) => {
 });
 
 //Lấy tất cả campaign có thể đổi thưởng bằng coin
-router.get('/redeemable/item', async (req, res) => {
+router.get('/type/item', async (req, res) => {
   try {
     const { playerId } = req.body; // Lấy playerId từ body của request
 
