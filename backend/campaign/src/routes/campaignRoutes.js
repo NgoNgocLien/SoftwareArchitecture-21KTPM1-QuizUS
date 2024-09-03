@@ -214,4 +214,67 @@ router.get('/redeemable/item', async (req, res) => {
   }
 });
 
+// Yêu thích campaign
+router.post('/like', async (req, res) => {
+  const { playerId, campaignId } = req.body;
+
+  if (!playerId || !campaignId) {
+    return res.status(400).json({ message: 'Player ID and Campaign ID are required.' });
+  }
+
+  try {
+    let playerLike = await PlayerLikeCampaign.findOne({ id_player: playerId });
+
+    if (!playerLike) {
+      playerLike = new PlayerLikeCampaign({
+        id_player: playerId,
+        campaigns: [{ id_campaign: campaignId }]
+      });
+      await playerLike.save();
+      return res.status(201).json(playerLike);
+    }
+
+    const campaignExists = playerLike.campaigns.some(campaign => campaign.id_campaign.toString() === campaignId);
+
+    if (campaignExists) {
+      return res.status(400).json({ message: 'Campaign already liked.' });
+    }
+
+    playerLike.campaigns.push({ id_campaign: campaignId });
+    await playerLike.save();
+    res.status(200).json(playerLike);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Bỏ yêu thích campaign
+router.post('/unlike', async (req, res) => {
+  const { playerId, campaignId } = req.body;
+
+  if (!playerId || !campaignId) {
+    return res.status(400).json({ message: 'Player ID and Campaign ID are required.' });
+  }
+
+  try {
+    const playerLike = await PlayerLikeCampaign.findOne({ id_player: playerId });
+
+    if (!playerLike) {
+      return res.status(404).json({ message: 'No likes found for this player.' });
+    }
+
+    const campaignIndex = playerLike.campaigns.findIndex(campaign => campaign.id_campaign.toString() === campaignId);
+
+    if (campaignIndex === -1) {
+      return res.status(400).json({ message: 'Campaign not found in likes.' });
+    }
+
+    playerLike.campaigns.splice(campaignIndex, 1);
+    await playerLike.save();
+    res.json(playerLike);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
