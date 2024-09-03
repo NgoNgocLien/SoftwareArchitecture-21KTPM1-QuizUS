@@ -148,16 +148,20 @@ router.put('/', async (req, res) => {
 // Lấy campaign yêu thích của 1 player
 router.get('/like/:id_player', async (req, res) => {
   try {
-    const campaigns = await PlayerLikeCampaign.find()
-    // const campaigns = await PlayerLikeCampagin.find(
-    //   {
-    //     id_player: req.params.id_player,
-    //   },
-    // );
-    console.log(req.params.id_player)
-    res.json(campaigns);
+    const playerLikes = await PlayerLikeCampaign.findOne({ id_player: req.params.id_player }).populate('campaigns.id_campaign');
+    
+    if (!playerLikes) {
+      return res.status(404).json({ message: 'No campaigns found for this player.' });
+    }
+    
+    const result = playerLikes.campaigns.map(like => ({
+      _id: like._id,
+      campaign_data: like.id_campaign
+    }));
+
+    res.json(result);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
