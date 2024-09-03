@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Campaign = require('../models/campaign');
 const PlayerLikeCampaign = require('../models/playerLikeCampaign');
+const PlayerGame = require('../models/playerGame');
 // Lấy tất cả các chiến dịch
 router.get('/', async (req, res) => {
   try {
@@ -147,16 +148,132 @@ router.put('/', async (req, res) => {
 // Lấy campaign yêu thích của 1 player
 router.get('/like/:id_player', async (req, res) => {
   try {
-    const campaigns = await PlayerLikeCampaign.find()
-    // const campaigns = await PlayerLikeCampagin.find(
-    //   {
-    //     id_player: req.params.id_player,
-    //   },
-    // );
-    console.log(req.params.id_player)
-    res.json(campaigns);
+    const playerLikes = await PlayerLikeCampaign.findOne({ id_player: req.params.id_player }).populate('campaigns.id_campaign');
+    
+    if (!playerLikes) {
+      return res.status(404).json({ message: 'No campaigns found for this player.' });
+    }
+    
+    const result = playerLikes.campaigns.map(like => ({
+      _id: like._id,
+      campaign_data: like.id_campaign
+    }));
+
+    res.json(result);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//Lấy tất cả campaign có thể đổi thưởng bằng coin
+router.get('/type/coin', async (req, res) => {
+  try {
+    const { score } = req.body; // Lấy điểm của người chơi từ BODY của request
+    const currentTime = new Date();
+    
+    const redeemableCampaigns = await Campaign.find({
+      score_award: { $lte: score }, 
+      start_datetime: { $lte: currentTime }, // Campaign đã bắt đầu
+      end_datetime: { $gte: currentTime } // Campaign chưa kết thúc
+    });
+
+    res.status(200).json(redeemableCampaigns);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi lấy dữ liệu', error });
+  }
+});
+
+//Lấy tất cả campaign có thể đổi thưởng bằng coin
+router.get('/type/item', async (req, res) => {
+  try {
+    const { playerId } = req.body; // Lấy playerId từ body của request
+
+    let NumItem1 = 1;
+    let NumItem2 = 1;
+
+    // Tìm tất cả các PlayerGame của người chơi đủ điều kiện đổi thưởng
+    const playerGames = await PlayerGame.find({
+      id_player: playerId,
+      quantity_item1: { $gte: NumItem1 }, // Kiểm tra số lượng item1 >+ NumItem1
+      quantity_item2: { $gte: NumItem2 }  // Kiểm tra số lượng item2 >= NumItem2(nếu cần tăng số lượng yêu cầu để đổi thì tăng 2 biến này)
+    });
+
+    const campaignIds = playerGames.map(game => game.id_campaign);
+    const currentTime = new Date();
+
+    // Tìm tất cả các campaign mà player có thể đổi thưởng dựa trên danh sách id_campaign và thời gian còn hiệu lực
+    const redeemableCampaigns = await Campaign.find({
+      _id: { $in: campaignIds }, // Chỉ lấy các campaign mà player đã sưu tầm đủ item
+      start_datetime: { $lte: currentTime }, // Campaign đã bắt đầu
+      end_datetime: { $gte: currentTime } // Campaign chưa kết thúc
+    });
+
+    res.status(200).json(redeemableCampaigns);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi lấy dữ liệu', error });
+  }
+});
+
+// Yêu thích campaign
+router.post('/like', async (req, res) => {
+  const { playerId, campaignId } = req.body;
+
+  if (!playerId || !campaignId) {
+    return res.status(400).json({ message: 'Player ID and Campaign ID are required.' });
+  }
+
+  try {
+    let playerLike = await PlayerLikeCampaign.findOne({ id_player: playerId });
+
+    if (!playerLike) {
+      playerLike = new PlayerLikeCampaign({
+        id_player: playerId,
+        campaigns: [{ id_campaign: campaignId }]
+      });
+      await playerLike.save();
+      return res.status(201).json(playerLike);
+    }
+
+    const campaignExists = playerLike.campaigns.some(campaign => campaign.id_campaign.toString() === campaignId);
+
+    if (campaignExists) {
+      return res.status(400).json({ message: 'Campaign already liked.' });
+    }
+
+    playerLike.campaigns.push({ id_campaign: campaignId });
+    await playerLike.save();
+    res.status(200).json(playerLike);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Bỏ yêu thích campaign
+router.post('/unlike', async (req, res) => {
+  const { playerId, campaignId } = req.body;
+
+  if (!playerId || !campaignId) {
+    return res.status(400).json({ message: 'Player ID and Campaign ID are required.' });
+  }
+
+  try {
+    const playerLike = await PlayerLikeCampaign.findOne({ id_player: playerId });
+
+    if (!playerLike) {
+      return res.status(404).json({ message: 'No likes found for this player.' });
+    }
+
+    const campaignIndex = playerLike.campaigns.findIndex(campaign => campaign.id_campaign.toString() === campaignId);
+
+    if (campaignIndex === -1) {
+      return res.status(400).json({ message: 'Campaign not found in likes.' });
+    }
+
+    playerLike.campaigns.splice(campaignIndex, 1);
+    await playerLike.save();
+    res.json(playerLike);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
