@@ -8,7 +8,7 @@ import { Link, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import config from '@/constants/config';
 
-export default function Profile() {
+export default function Items() {
     const router = useRouter();
 
     const handleLogout = () => {
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     },
     container: {
         paddingHorizontal: 20,
-        flex: 1
     }
     
 });
