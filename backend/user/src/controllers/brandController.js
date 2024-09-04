@@ -28,4 +28,16 @@ const signup = async (req, res) => {
   }
 }
 
-module.exports = { signup }
+const getAll = async (req, res) => {
+  try {
+    const brands = await model.brand.findAll();
+
+    return successCode(res, brands, 'Lấy danh sách brand thành công');
+  } catch (error) {
+    console.error('Error:', error);
+
+    return errorCode(res, 'Không thể lấy danh sách brand');
+  }
+};
+
+module.exports = { signup,getAll }
