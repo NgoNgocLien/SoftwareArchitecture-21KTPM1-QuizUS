@@ -104,7 +104,7 @@ export default function Campaign({
                             <View style={styles.game__container}>
                                 <Text style={styles.game_info_header}>Thưởng</Text>
                                 <Text style={styles.game_info_container}>
-                                    <Text style={styles.game_info_num}>400</Text>
+                                    <Text style={styles.game_info_num}>{config.QUIZ_SCORE}</Text>
                                     <Text style={styles.game_info_text}> xu</Text>
                                 </Text>
                             </View>
@@ -126,7 +126,7 @@ export default function Campaign({
 
                             <Heading type="h5" style={styles.heading}>Phần thưởng</Heading>
                             <Paragraph type='p2'>
-                                <Text style={{fontSize: 18, fontWeight: '800'}}>+400</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
+                                <Text style={{fontSize: 18, fontWeight: '800'}}>+{config.QUIZ_SCORE}</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
                             </Paragraph>
                             <Paragraph type='p2' style={{color: Colors.light.subText}}>Trả lời đúng 10/10 câu</Paragraph>
 

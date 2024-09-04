@@ -45,6 +45,8 @@ const green_700 = '#1A7431';
 const green_800 = '#155D27';
 const green_900 = '#10451D';
 
+const yellow = '#FFF7D2';
+
 const success = '#34C759';
 const error = '#FF3B30';
 const warning = '#FF9500';
@@ -100,6 +102,7 @@ export const Colors = {
     _800: green_800,
     _900: green_900,
   },
+  yellow: yellow,
   feedback: {
     success: success,
     error: error,

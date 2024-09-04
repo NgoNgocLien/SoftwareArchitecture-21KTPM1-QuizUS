@@ -22,7 +22,7 @@ export default function Favorite({
     return (
         <View style={styles.background} >
             <Header />
-            <View style={[styles.container, styles.screenTitleContainer]}>
+            <View style={[styles.container, styles.titleContainer]}>
                 <Heading type="h4">Yêu thích</Heading>
                 <FontAwesome name={'search'} style={styles.searchIcon} />
             </View>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
 
-    screenTitleContainer: {
+    titleContainer: {
         marginTop: 20,
         display: 'flex',
         flexDirection: 'row',
