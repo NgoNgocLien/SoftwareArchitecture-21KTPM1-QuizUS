@@ -157,7 +157,7 @@ export default function Rewards() {
                     <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
                         <View style={[styles.container, styles.titleContainer]}>
                             <Heading type="h4">Đổi xu lấy quà</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')}>Xem tất cả</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>
                         </View>
 
                         {/* Lấy chỉ 2 mục */}
@@ -170,7 +170,7 @@ export default function Rewards() {
 
                         <View style={[styles.container, styles.titleContainer]}>
                             <Heading type="h4">Đổi mảnh ghép</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')}>Xem tất cả</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')} suppressHighlighting={true}>Xem tất cả</Heading>
                         </View>
 
                         {/* Lấy chỉ 2 mục */}

@@ -280,6 +280,12 @@ const styles = StyleSheet.create({
     banner: {
         width: '100%',
         height: 140,
+
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3.8,
+        elevation: 5,
     },
     coinsContainer: {
         marginHorizontal: 20,

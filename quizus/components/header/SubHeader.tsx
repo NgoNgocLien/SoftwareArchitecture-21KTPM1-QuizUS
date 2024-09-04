@@ -9,7 +9,7 @@ export function SubHeader({
 }) {
     return (
         <SafeAreaView style={[styles.header, rest.style]}>
-            <MaterialCommunityIcons name={'arrow-left'} size={28} color={Colors['light'].mainText} onPress={() => router.dismiss()} suppressHighlighting={true}/>
+            <MaterialCommunityIcons name={'arrow-left'} size={28} color={Colors['light'].mainText} onPress={() => router.back()} suppressHighlighting={true}/>
         </SafeAreaView>
     );
 }
