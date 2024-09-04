@@ -155,7 +155,6 @@ export default function Rewards() {
                         </View>
                     ) : (
                         <>
-
                             <View style={[styles.container, styles.titleContainer]}>
                                 <Heading type="h4">Đổi xu lấy quà</Heading>
                                 <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>

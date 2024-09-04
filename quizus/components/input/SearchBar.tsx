@@ -10,7 +10,7 @@ export function SearchBar({
 }) {
   return (
     <Pressable style={[styles.container, rest.styles]} >
-        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện" editable={editable} onPress={rest.onPress} onEndEditing={rest.onEndEditing} />
+        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện" editable={editable} onPress={rest.onPress} onSubmitEditing={rest.onSubmitEditing} />
         <FontAwesome name={'search'} style={styles.searchIcon} />
     </Pressable>
   );
