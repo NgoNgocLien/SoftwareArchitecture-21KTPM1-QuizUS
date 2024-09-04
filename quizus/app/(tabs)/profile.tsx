@@ -26,7 +26,12 @@ export default function Profile() {
 
         <View style={styles.container}>
             <Button text="Quiz" type="primary" 
-                onPress={() => {router.replace("/quiz/1")}}>
+                onPress={() => {router.push({
+                    pathname: "/quiz/greeting",
+                    params: {
+                        id_campaign: "64e9d9c8e8b4c21c4b2e9f5f"
+                    }
+                })}}>
             </Button>
         </View>
 

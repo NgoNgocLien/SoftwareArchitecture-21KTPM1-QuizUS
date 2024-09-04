@@ -9,19 +9,20 @@ import { Colors } from '@/constants/Colors';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
+import config from '@/constants/config';
 
 export default function Result() {
     const router = useRouter();
     const params = useLocalSearchParams();
     const score = params.score as string;
-    const point = params.point as string;
+    const point = parseInt(params.point as string);
     const elapsedTime = parseInt(params.elapsedTime as string);
-    const id_quiz = params.id_quiz as string;
+    const id_campaign = params.id_campaign as string;
+    const playerTurn = parseInt(params.playerTurn as string);
 
-    const minutes = Math.floor(elapsedTime / 60000).toString().padStart(2, '0');
-    const seconds = Math.round((elapsedTime % 60000) / 1000).toString().padStart(2, '0');
-    const [playerTurn, setPlayerTurn] = useState(1);
-    // get player turn
+    const minutes = Math.floor(elapsedTime / config.DURATION).toString().padStart(2, '0');
+    const seconds = Math.ceil((elapsedTime % config.DURATION) / 1000).toString().padStart(2, '0');
+    console.log(elapsedTime);
 
     return (
     <LinearGradient
@@ -66,7 +67,7 @@ export default function Result() {
                     Xu thưởng
                 </Paragraph>
                 <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    +100
+                    {(point > 0) ? `+${point}` : 0}
                 </Paragraph>
             </TouchableOpacity>
             <TouchableOpacity style={styles.achievement}  activeOpacity={0.6}>
@@ -87,11 +88,21 @@ export default function Result() {
             {
                 playerTurn ? (
                     <Button text="Chơi lại" type="tertiary" style={{marginBottom: 10}} 
-                        onPress={() => {router.replace("/quiz/1")}}>
+                        onPress={() => {router.push({
+                            pathname: "/quiz/greeting",
+                            params: {
+                                id_campaign: id_campaign
+                            }
+                        })}}>
                     </Button>
                 ) : (
                     <Button text="Chia sẻ" type="tertiary" style={{marginBottom: 10}}
-                        onPress={() => {router.replace(`/quiz/${id_quiz}`)}}>
+                        onPress={() => {router.push({
+                            pathname: "/quiz/greeting",
+                            params: {
+                                id_campaign: id_campaign
+                            }
+                        })}}>
                     </Button>
                 )
             }

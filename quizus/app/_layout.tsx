@@ -37,8 +37,8 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
 
           <Stack.Screen name="campaign" />
-          <Stack.Screen name="quiz/[id]" />
-          
+          <Stack.Screen name="quiz/detail" />
+          <Stack.Screen name="quiz/result" />
           <Stack.Screen name="+not-found" />
         </Stack>
     </ThemeProvider>

@@ -23,6 +23,6 @@ const PlayerGameSchema = new Schema({
     type: Number,
     required: true
   }
-}, { collection: 'playerGames' });
+}, { collection: 'playerGames' }, { versionKey: false });
 
 module.exports = mongoose.model('PlayerGames', PlayerGameSchema);
