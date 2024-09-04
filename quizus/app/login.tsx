@@ -8,7 +8,8 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
-import config from '@/constants/config.js';
+
+import config from '@/constants/config';
 
 export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -22,7 +23,7 @@ export default function Login() {
         return;
       }
       
-      const response = await fetch(`${config.USER_BE}/api/player/login`, {
+      const response = await fetch(`${config.USER_BE}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +34,10 @@ export default function Login() {
         }),
       });
 
+      const result = await response.json();
       if (response.ok) {
+        config.saveToSecureStore("id_player", result.id_player);
+
         router.replace('/(tabs)');
       } else {
         const result = await response.json();
@@ -159,3 +163,5 @@ const styles = StyleSheet.create({
     bottom: 0
   },
 });
+
+

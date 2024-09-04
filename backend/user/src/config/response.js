@@ -1,8 +1,5 @@
 const successCode = (res, data, message) =>{
-    res.status(200).json({
-        message,
-        content:data
-    });
+    res.status(200).json(data);
 }
 const failCode = (res, data, message) =>{
     res.status(400).json({

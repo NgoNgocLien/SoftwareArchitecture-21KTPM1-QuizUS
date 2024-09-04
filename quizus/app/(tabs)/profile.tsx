@@ -6,9 +6,16 @@ import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, ScrollView, Text 
 import { Button } from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import config from '@/constants/config';
 
 export default function Profile() {
     const router = useRouter();
+
+    const handleLogout = () => {
+        config.removeFromSecureStore("id_player");
+
+        router.replace("/login")
+    }
     return (
     <LinearGradient
     colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
@@ -20,13 +27,18 @@ export default function Profile() {
     
         <View style={styles.container}>
             <Button text="Đăng xuất" type="primary" 
-                onPress={() => {router.replace("/login")}}>
+                onPress={() => {handleLogout()}}>
             </Button>
         </View>
 
         <View style={styles.container}>
             <Button text="Quiz" type="primary" 
-                onPress={() => {router.replace("/quiz/1")}}>
+                onPress={() => {router.push({
+                    pathname: "/quiz/greeting",
+                    params: {
+                        id_campaign: "64e9d9c8e8b4c21c4b2e9f5f"
+                    }
+                })}}>
             </Button>
         </View>
 

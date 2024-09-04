@@ -38,6 +38,15 @@ module.exports = function(sequelize, DataTypes) {
     facebook: {
       type: DataTypes.STRING(255),
       allowNull: true
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN(10),
+      allowNull: true
+    },
+    score: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 10
     }
   }, {
     sequelize,

@@ -9,7 +9,7 @@ import { useRouter, useLocalSearchParams  } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import auth from '@react-native-firebase/auth';
-import config from '@/constants/config.js';
+import config from '@/constants/config';
 
 export default function OTP() {
   const router = useRouter();

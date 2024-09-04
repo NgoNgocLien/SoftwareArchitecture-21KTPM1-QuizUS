@@ -11,12 +11,14 @@ const app = express();
 const campaignRoutes = require('./routes/campaignRoutes');
 const voucherRoutes = require('./routes/voucherRoutes');
 const itemRoutes = require('./routes/itemRoutes');
+const gameRoutes = require('./routes/gameRoutes');
 
 app.use(express.json());
 
 app.use('/api/', campaignRoutes);
 app.use('/api/voucher', voucherRoutes);
 app.use('/api/item', itemRoutes);
+app.use('/api/game', gameRoutes);
 
 mongoose.connect(dbURI, {
     useNewUrlParser: true,
