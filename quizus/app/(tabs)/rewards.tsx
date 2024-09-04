@@ -3,7 +3,6 @@ import {
     StyleSheet, 
     View, 
     Text,
-    Button,
     SafeAreaView,
     Image,
     TouchableWithoutFeedback,
@@ -18,7 +17,7 @@ import { VoucherCard } from '@/components/card/VoucherCard';
 
 export default function Rewards() {
 
-    let vouchers = [
+    let vouchers: any[] = [
         {
             id: 1,
             name: 'Ưu đãi 50k cho hóa đơn từ 100k',
@@ -115,67 +114,77 @@ export default function Rewards() {
     let itemVouchers = vouchers.filter(voucher => voucher.type === 'item');
 
     return (
-        <View style={styles.background} >
+        <View style={styles.background}>
             <Header />
-            <Image source={require('@/assets/images/banner-reward.png')} style={{width: '100%', height: 140}}  />
+            <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
             <View style={styles.tabContainer}>
                 <TouchableWithoutFeedback onPress={() => router.push('/')}>
                     <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/coin.png')} style={{width: 24, height: 24}} />
-                        <Text style={{color: Colors.light.subText}}>Xu thưởng</Text>
+                        <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Xu thưởng</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={() => router.push('/')}>
                     <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/gift.png')} style={{width: 24, height: 24}} />
-                        <Text style={{color: Colors.light.subText}}>Vật phẩm</Text>
+                        <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Vật phẩm</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={() => router.push('/')}>
                     <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/voucher.png')} style={{width: 24, height: 24}} />
-                        <Text style={{color: Colors.light.subText}}>Mã giảm giá</Text>
+                        <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Mã giảm giá</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={() => router.push('/')}>
                     <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/donate-coin.png')} style={{width: 24, height: 24}} />
-                        <Text style={{color: Colors.light.subText}}>Thanh toán</Text>
+                        <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Thanh toán</Text>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                <View style={[styles.container, styles.titleContainer]}>
-                    <Heading type="h4">Đổi xu lấy quà</Heading>
-                    <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/')}>Xem tất cả</Heading>
-                </View>
+            { 
+                vouchers.length === 0 ? (
+                    <View style={styles.emptyContainer}>
+                        <Image source={require('@/assets/images/empty-result.png')} style={styles.emptyImage} />
+                    </View>
+                ) : (
 
-                    
-                {coinVouchers.map((voucher, index) => (
-                    <VoucherCard 
-                        voucher = {voucher}
-                        key={index} 
-                    />
-                ))}
+                    <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+                        <View style={[styles.container, styles.titleContainer]}>
+                            <Heading type="h4">Đổi xu lấy quà</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/')}>Xem tất cả</Heading>
+                        </View>
 
-                <View style={[styles.container, styles.titleContainer]}>
-                    <Heading type="h4">Đổi mảnh ghép</Heading>
-                    <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/')}>Xem tất cả</Heading>
-                </View>
+                        {/* Lấy chỉ 2 mục */}
+                        {coinVouchers.slice(0, 2).map((voucher, index) => (
+                            <VoucherCard 
+                                voucher={voucher}
+                                key={index} 
+                            />
+                        ))}
 
-                {itemVouchers.map((voucher, index) => (
-                    <VoucherCard 
-                        voucher = {voucher}
-                        key={index} 
-                        style={index === itemVouchers.length - 1 ? { marginBottom: 32 } : { }} 
-                    />
-                ))}
+                        <View style={[styles.container, styles.titleContainer]}>
+                            <Heading type="h4">Đổi mảnh ghép</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/')}>Xem tất cả</Heading>
+                        </View>
 
-            </ScrollView>
+                        {/* Lấy chỉ 2 mục */}
+                        {itemVouchers.slice(0, 2).map((voucher, index) => (
+                            <VoucherCard 
+                                voucher={voucher}
+                                key={index} 
+                                style={index === itemVouchers.length - 1 ? { marginBottom: 32 } : {}} 
+                            />
+                        ))}
+                    </ScrollView>
+                )
+            }
+            
         </View>
     )
 }
@@ -185,16 +194,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.light.background,
     },
-    container: {
-        paddingHorizontal: 20,
-    },
-    titleContainer: {
-        marginTop: 20,
-        marginBottom: 10,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
+    banner: {
+        width: '100%',
+        height: 140,
     },
     tabContainer: {
         flexDirection: 'row',
@@ -207,5 +209,34 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         gap: 8,
-    }
+    },
+    icon: {
+        width: 24,
+        height: 24,
+    },
+    tabText: {
+        color: Colors.light.subText,
+    },
+    scrollView: {
+        paddingVertical: 12,
+    },
+    container: {
+        paddingHorizontal: 20,
+    },
+    titleContainer: {
+        marginTop: 20,
+        marginBottom: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    emptyImage: {
+        width: 250,
+        height: 210,
+    },
 });
