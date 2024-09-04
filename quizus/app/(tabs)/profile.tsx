@@ -31,17 +31,6 @@ export default function Profile() {
             </Button>
         </View>
 
-        <View style={styles.container}>
-            <Button text="Quiz" type="primary" 
-                onPress={() => {router.push({
-                    pathname: "/quiz/greeting",
-                    params: {
-                        id_campaign: "64e9d9c8e8b4c21c4b2e9f5f"
-                    }
-                })}}>
-            </Button>
-        </View>
-
     </SafeAreaView>
     </TouchableWithoutFeedback>
     </LinearGradient>
