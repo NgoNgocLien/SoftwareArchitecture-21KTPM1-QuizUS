@@ -119,6 +119,25 @@ const search = async (req, res) => {
     }
 }
 
+const getPlayerScore = async (req, res) => {
+    const { id_player } = req.body; 
+  
+    try {
+      const playerData = await player.findOne({
+        where: { id_player }
+      });
+  
+      if (!playerData) {
+        return failCode(res, null, "id_player không hợp lệ");
+      }
+  
+      return successCode(res, { score: playerData.score }, "Lấy điểm số thành công");
+    } catch (error) {
+      console.error('Error:', error);
+      return errorCode(res);
+    }
+  };
+
 module.exports = {signup, otp,
-    getAll, update, search
+    getAll, update, search, getPlayerScore
 }
