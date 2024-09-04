@@ -40,4 +40,23 @@ const getAll = async (req, res) => {
   }
 };
 
-module.exports = { signup,getAll }
+const search = async (req, res) => {
+  const { keyword } = req.params;
+
+  try {
+    const brands = await model.brand.findAll({
+      where: {
+        name: {
+          [Op.iLike]: `%${keyword}%`
+        }
+      }
+    });
+
+    return successCode(res, brands, 'Tìm kiếm brand thành công');
+  } catch (error) {
+    console.error('Error:', error);
+    return errorCode(res, 'Không thể tìm kiếm brand');
+  }
+};
+
+module.exports = { signup, getAll, search }
