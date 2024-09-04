@@ -17,12 +17,21 @@ export default function Result() {
     const point = params.point as string;
     const score = parseInt(params.score as string);
     const elapsedTime = parseInt(params.elapsedTime as string);
-    const id_campaign = params.id_campaign as string;
     const playerTurn = parseInt(params.playerTurn as string);
+
+    const id_campaign = params.id_campaign as string;
 
     const minutes = Math.floor(elapsedTime / config.DURATION).toString().padStart(2, '0');
     const seconds = Math.ceil((elapsedTime % config.DURATION) / 1000).toString().padStart(2, '0');
     console.log(elapsedTime);
+
+    const handlePlayAgain = () => {
+        router.replace('/campaign')
+    }
+
+    const handleShare = () => {
+
+    }
 
     return (
     <LinearGradient
@@ -88,21 +97,11 @@ export default function Result() {
             {
                 playerTurn ? (
                     <Button text="Chơi lại" type="tertiary" style={{marginBottom: 10}} 
-                        onPress={() => {router.push({
-                            pathname: "/quiz/greeting",
-                            params: {
-                                id_campaign: id_campaign
-                            }
-                        })}}>
+                        onPress={handlePlayAgain}>
                     </Button>
                 ) : (
                     <Button text="Chia sẻ" type="tertiary" style={{marginBottom: 10}}
-                        onPress={() => {router.push({
-                            pathname: "/quiz/greeting",
-                            params: {
-                                id_campaign: id_campaign
-                            }
-                        })}}>
+                        onPress={handleShare}>
                     </Button>
                 )
             }

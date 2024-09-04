@@ -9,6 +9,7 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import styles from './detail.styles';
 import config from '@/constants/config';
+import { McCard } from '@/components/card/McCard';
 
 export default function QuizDetail() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function QuizDetail() {
   const quizLength = questions.length;
 
   const [count, setCount] = useState(0);
+  const [showMC, setShowMC] = useState(true);
   const [correctAnswer, setCorrectAnswer] = useState(0);
   const [showAnswerKey, setShowAnswerKey] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -56,6 +58,15 @@ export default function QuizDetail() {
     }
   }, [isRunning, elapsedTime]);
 
+  useEffect(() => {
+    setShowMC(true);
+    const timer = setTimeout(() => {
+      setShowMC(false);
+      handleResume();
+    }, 5000); 
+
+    return () => clearTimeout(timer);
+  },[count])
 
   const handlePause = () => {
     progress.stopAnimation((value) => {
@@ -173,6 +184,12 @@ export default function QuizDetail() {
       )
     }
 
+    {
+      !showExitPopup && !showTimeUpPopup && showMC && (
+        <McCard  question_id = {questions[count].question_id} question_text={questions[count].question_text}></McCard>
+      )
+    }
+
     <View style={styles.container}>
       <View style={styles.statusContainer}>
         <View style={styles.circleMC} />
@@ -244,7 +261,7 @@ export default function QuizDetail() {
                 handleFinishGame();
               } else{
                 setCount(count + 1);
-                handleResume();
+                
               }
           }}></Button>
         )
