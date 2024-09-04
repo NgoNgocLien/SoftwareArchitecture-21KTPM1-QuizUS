@@ -93,6 +93,32 @@ const update =  async (req,res) =>  {
     }
 }
 
+const search = async (req, res) => {
+    const { keyword } = req.params;
+
+    try {
+        const players = await model.player.findAll({
+        where: {
+            [Op.or]: [
+            { username: { [Op.iLike]: `%${keyword}%` } }, 
+            { email: { [Op.iLike]: `%${keyword}%` } }, 
+            { phone: { [Op.iLike]: `%${keyword}%` } }, 
+            { facebook: { [Op.iLike]: `%${keyword}%` } } 
+            ]
+        }
+        });
+
+        if (players.length > 0) {
+        successCode(res, players, 'Tìm thấy player thành công');
+        } else {
+        failCode(res, [], 'Không tìm thấy player nào phù hợp');
+        }
+    } catch (error) {
+        console.error('Lỗi tìm kiếm player:', error);
+        errorCode(res);
+    }
+}
+
 module.exports = {signup, otp,
-    getAll, update,
+    getAll, update, search
 }
