@@ -11,17 +11,19 @@ import { Paragraph } from '../text/Paragraph';
 
 export function CampaignCard({
     campaign = {
-        id: 1,
-        brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-        brandName: 'SHOPEE',
-        start_datetime: '2024-08-25T12:00:00Z',
+        id: '64e9d9c8e8b4c21c4b2e9f5f',
+        brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
+        brandName: 'CGV',
+        start_datetime: '2024-07-31T12:00:00Z',
         end_datetime: '2024-09-25T12:00:00Z',
-        name: 'Kho báu biển xanh - Lướt sóng săn quà đỉnh',
-        
+        name: 'Lắc Tay Săn Kho Báu, Rinh Về Ngàn Quà Tặng',
+
         isFavorite: false,
         id_brand1: 1,
-        id_brand2: 2,
-        photo: '',
+        id_brand2: 2,        
+        photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
+        category: 'Giải trí',
+        description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
     },
     ...rest
 }) {
@@ -92,7 +94,10 @@ export function CampaignCard({
                         <Text style={styles.campaignName} numberOfLines={2}>{campaign.name}</Text>
                     </View>
                     <View style={styles.detail_bottom}>
-                        <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push('/campaign')}>
+                        <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push({
+                            pathname: '/campaign',
+                            params: { campaignName: campaign.name }
+                        })}>
                             <Text style={styles.joinButtonText}>Tham gia</Text>
                         </TouchableOpacity>
                         <MaterialCommunityIcons name={favorite ? 'heart' : 'heart-outline'} style={[styles.favoriteIcon, favorite ? {color: Colors.light.primary} : null]} onPress={handleFavorite} suppressHighlighting={true} />

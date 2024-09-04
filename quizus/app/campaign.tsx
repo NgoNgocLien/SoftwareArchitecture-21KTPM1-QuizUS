@@ -10,8 +10,8 @@ import {
     Share,
     Alert,
 } from 'react-native';
-import { Link, router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Link, router, useLocalSearchParams } from 'expo-router';
+
 import { SubHeader } from '@/components/header/SubHeader';
 import { Colors } from '@/constants/Colors';
 import { Paragraph } from '@/components/text/Paragraph';
@@ -20,15 +20,119 @@ import { Button } from '@/components/Button';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import config from '@/constants/config';
 
-export default function Campaign({
-    logo='https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-    name='Kho báu biển xanh, lướt sóng săn quà đỉnh',
-    photo='https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
-    start_date='2024-08-25T12:00:00Z',
-    end_date='2024-09-25T12:00:00Z',
-    description='Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-    id_campaign="64e9d9c8e8b4c21c4b2e9f5f"
-}) {
+export default function Campaign() {
+
+    let campaigns = [
+        {
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
+            brandName: 'GRAB',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Cuộc Đua Săn Quà, Trúng Lớn Mỗi Ngày',
+            
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
+            category: 'Mua sắm',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+        },
+        {
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
+            brandName: 'SHOPEE',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
+            
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
+            category: 'Mua sắm',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+        },
+        {
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
+            brandName: 'HIGHLANDS',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
+            
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
+            category: 'Cafe & Bánh',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+        },
+        {
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
+            brandName: 'PIZZA HUT',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-10-23T12:00:00Z',
+            name: 'Xoay Lắc Đèn Lồng, Mở Rương Quà Tặng',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
+            category: 'Nhà hàng',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+        },
+        {
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
+            brandName: 'KICHI KICHI',
+            start_datetime: '2024-07-31T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Bão Quà Cuồng Nhiệt',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
+            category: 'Nhà hàng',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+        }, 
+        {
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
+            brandName: 'CGV',
+            start_datetime: '2024-07-31T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Lắc Tay Săn Kho Báu, Rinh Về Ngàn Quà Tặng',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
+            category: 'Giải trí',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+        }, 
+        {
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
+            brandName: 'STARBUCKS',
+            start_datetime: '2024-09-01T12:00:00Z',
+            end_datetime: '2024-10-31T12:00:00Z',
+            name: 'Phiêu Lưu Xứ Sở Quà, Rinh Về Niềm Vui',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
+            category: 'Cafe & Bánh',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+        }, 
+    ]
+
+    const params = useLocalSearchParams();
+    const campaignName = params.campaignName;
+    const campaign: any = campaigns.find(campaign => campaign.name === campaignName);
 
     const handleShare = async () => {
         try {
@@ -56,7 +160,7 @@ export default function Campaign({
 
     const fetchQuiz = async () => {
         try{
-            const response = await fetch(`${config.CAMPAIGN_BE}/api/game/campaign/${id_campaign}`)
+            const response = await fetch(`${config.CAMPAIGN_BE}/api/game/campaign/${campaign.id}`)
             const data = await response.json()
             setQuizInfo(data.id_quiz)
 
@@ -80,23 +184,24 @@ export default function Campaign({
             <SubHeader/>
             <View style={styles.background}>
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
-                    <Image style={styles.banner} source={{uri: photo}} />
+                    <Image style={styles.banner} source={{uri: campaign.photo}} />
                             
                         <View style={styles.campaignHeaderContainer}>
-                            <Image source={{uri: logo}} style={styles.brandLogo} />
+                            <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo} />
                             <View style={{flex: 1, justifyContent: 'space-between'}}>
                                 <View style={styles.campaignHeader_top}>
-                                <View style={Date.now() < Date.parse(end_date) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                                    <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(end_date) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
-                                    { Date.now() < Date.parse(end_date) ? 
-                                        <Text style={styles.time}>{new Date(end_date).toLocaleDateString()}</Text> :
-                                        <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
+                                <View style={Date.now() < Date.parse(campaign.end_datetime) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                                    <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(campaign.end_datetime) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                                    { 
+                                        Date.now() < Date.parse(campaign.end_datetime) ? 
+                                            <Text style={styles.time}>{new Date(campaign.end_datetime).toLocaleDateString()}</Text> :
+                                            <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                                     }
                                 </View>
                                     <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={handleShare} suppressHighlighting={true} />
                                 </View>
                                 <View style={styles.campaignHeader_bottom}>
-                                    <Heading type='h5'>{name}</Heading>
+                                    <Heading type='h5'>{campaign.name}</Heading>
                                 </View>
                             </View>
                         </View>
@@ -104,7 +209,7 @@ export default function Campaign({
                             <View style={styles.game__container}>
                                 <Text style={styles.game_info_header}>Thưởng</Text>
                                 <Text style={styles.game_info_container}>
-                                    <Text style={styles.game_info_num}>400</Text>
+                                    <Text style={styles.game_info_num}>{config.QUIZ_SCORE}</Text>
                                     <Text style={styles.game_info_text}> xu</Text>
                                 </Text>
                             </View>
@@ -121,12 +226,12 @@ export default function Campaign({
                         <View style={styles.campaignDetailContainer}>
                             <Heading type="h5" style={styles.heading}>Giới thiệu</Heading>
                             <Paragraph type='p2'>
-                                {description}
+                                {campaign.description}
                             </Paragraph>
 
                             <Heading type="h5" style={styles.heading}>Phần thưởng</Heading>
                             <Paragraph type='p2'>
-                                <Text style={{fontSize: 18, fontWeight: '800'}}>+400</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
+                                <Text style={{fontSize: 18, fontWeight: '800'}}>+{config.QUIZ_SCORE}</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
                             </Paragraph>
                             <Paragraph type='p2' style={{color: Colors.light.subText}}>Trả lời đúng 10/10 câu</Paragraph>
 
@@ -139,7 +244,7 @@ export default function Campaign({
                             pathname: "/quiz/detail",
                             params: {
                                 quizInfo: JSON.stringify(quizInfo),
-                                id_campaign: id_campaign
+                                id_campaign: campaign.id
                             }
                         })}}/>
                 </View>
@@ -158,7 +263,7 @@ const styles = StyleSheet.create({
     },
     banner: {
         width: '100%',
-        height: 200,
+        height: 180,
     },
     campaignHeaderContainer: {
         paddingVertical: 10,
