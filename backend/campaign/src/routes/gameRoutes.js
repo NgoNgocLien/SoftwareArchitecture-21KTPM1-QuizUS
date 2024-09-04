@@ -125,4 +125,57 @@ router.post('/', async (req, res) => {
   }
 });
 
+// lấy lượt chơi của người chơi với 1 campaign
+router.get('/user/player_turn', async (req, res) => {
+  try {
+    const { id_player, id_brand } = req.body;
+
+    if (id_player) {
+      const playerGames = await PlayerGame.find({ id_player }).populate('id_campaign');
+      
+      if (!playerGames || playerGames.length === 0) {
+        return res.status(404).json({ message: 'No games found for this player.' });
+      }
+
+      const result = playerGames.map(playerGame => {
+        const campaign = playerGame.id_campaign;
+        return {
+          ...campaign.toObject(), 
+          player_turn: playerGame.player_turn 
+        };
+      });
+
+      return res.status(200).json(result);
+    }
+
+    if (id_brand) {
+      const campaigns = await Campaign.find({
+        $or: [{ id_brand1: id_brand }, { id_brand2: id_brand }]
+      });
+
+      if (!campaigns || campaigns.length === 0) {
+        return res.status(404).json({ message: 'No campaigns found for this brand.' });
+      }
+
+      const result = await Promise.all(campaigns.map(async (campaign) => {
+        const playerGames = await PlayerGame.find({ id_campaign: campaign._id });
+
+        const totalPlayerTurn = playerGames.reduce((total, playerGame) => {
+          return total + playerGame.player_turn;
+        }, 0);
+
+        return {
+          ...campaign.toObject(), 
+          player_turn: totalPlayerTurn
+        };
+      }));
+
+      return res.status(200).json(result);
+    }
+    return res.status(400).json({ message: 'id_player or id_brand is required' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
