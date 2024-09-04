@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import 'react-native-reanimated';
+import * as SecureStore from 'expo-secure-store';
+import config from '@/constants/config';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -16,12 +18,21 @@ export default function RootLayout() {
 
   const router = useRouter();
 
+  const [id_player, setIdPlayer] = useState<string|null>(null);
+  
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      router.push('/profile');
+
+      config.retrieveFromSecureStore('id_player', setIdPlayer);
+
+      if (id_player) {
+        router.push('/profile'); 
+      } else {
+        router.push('/'); 
+      }
     }
-  }, [loaded]);
+  }, [loaded, id_player]);
 
   if (!loaded) {
     return null;

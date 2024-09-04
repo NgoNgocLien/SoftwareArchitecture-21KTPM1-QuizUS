@@ -5,6 +5,14 @@ const brandRoute = require('./brandRoute');
 const gameRoute = require('./gameRoute');
 const playerRoute = require('./playerRoute');
 
+const db = require('../models/index');
+const sequelize = db.sequelize;
+const init_models = require('../models/init-models');
+const model = init_models(sequelize);
+const bcrypt = require('bcryptjs');
+
+const { successCode, failCode, errorCode } = require('../config/response');
+
 
 rootRoute.use("/admin", adminRoute);
 rootRoute.use("/brand", brandRoute);
@@ -24,7 +32,7 @@ rootRoute.post("/login", async (req, res) => {
         const isMatch = await bcrypt.compare(password, player.pwd);
 
         if (isMatch) {
-            successCode(res, true, "Đăng nhập thành công");
+            successCode(res, player, "Đăng nhập thành công");
         } else {
             failCode(res, null, "Mật khẩu không chính xác");
         }

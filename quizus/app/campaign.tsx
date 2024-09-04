@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
     View,
@@ -18,6 +18,7 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
 import { VoucherCard } from '@/components/card/VoucherCard';
+import config from '@/constants/config';
 
 export default function Campaign({
     logo='https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
@@ -26,6 +27,7 @@ export default function Campaign({
     start_date='2024-08-25T12:00:00Z',
     end_date='2024-09-25T12:00:00Z',
     description='Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+    id_campaign="64e9d9c8e8b4c21c4b2e9f5f"
 }) {
 
     const handleShare = async () => {
@@ -49,6 +51,29 @@ export default function Campaign({
             Alert.alert(error.message);
         }
     };
+
+    const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
+
+    const fetchQuiz = async () => {
+        try{
+            const response = await fetch(`${config.CAMPAIGN_BE}/api/game/campaign/${id_campaign}`)
+            const data = await response.json()
+            setQuizInfo(data.id_quiz)
+
+            if (!response.ok) {
+                const result = await response.json();
+                Alert.alert('Error', result.message);
+            } 
+
+        } catch(error){
+            console.error(error);
+            Alert.alert('Error', 'Lỗi từ frontend');
+        }
+    }
+
+    useEffect(() => {
+        fetchQuiz();
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -109,7 +134,14 @@ export default function Campaign({
                         <VoucherCard style={{marginBottom: 100}}/>
                 </ScrollView>
                 <View style={styles.joinButtonContainer} >
-                    <Button text='Chơi ngay' type='primary' style={styles.joinButton}/>
+                    <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
+                        onPress={() => {router.replace({
+                            pathname: "/quiz/detail",
+                            params: {
+                                quizInfo: JSON.stringify(quizInfo),
+                                id_campaign: id_campaign
+                            }
+                        })}}/>
                 </View>
             </View>
         </View>
