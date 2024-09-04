@@ -45,8 +45,8 @@ export default function Rewards() {
             item_2: 0,
             current_coin: 1000,
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
+            brandName: 'CGV',
         },
         {
             id: 3,
@@ -60,8 +60,8 @@ export default function Rewards() {
             item_2: 1,
             current_coin: 1000,
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_28_wk3gm5.png',
+            brandName: 'PHUC LONG',
         },
         {
             id: 4,
@@ -75,8 +75,8 @@ export default function Rewards() {
             item_2: 1,
             current_coin: 1000,
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
+            brandName: 'KICHI-KICHI',
         },
         {
             id: 5,
@@ -90,8 +90,8 @@ export default function Rewards() {
             item_2: 0,
             current_coin: 1000,
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
+            brandName: 'STARBUCKS',
         },
         {
             id: 6,
@@ -118,28 +118,28 @@ export default function Rewards() {
             <Header />
             <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
             <View style={styles.tabContainer}>
-                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Xu thưởng</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Vật phẩm</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Mã giảm giá</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Thanh toán</Text>
@@ -157,7 +157,7 @@ export default function Rewards() {
                     <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
                         <View style={[styles.container, styles.titleContainer]}>
                             <Heading type="h4">Đổi xu lấy quà</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/')}>Xem tất cả</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')}>Xem tất cả</Heading>
                         </View>
 
                         {/* Lấy chỉ 2 mục */}
@@ -170,7 +170,7 @@ export default function Rewards() {
 
                         <View style={[styles.container, styles.titleContainer]}>
                             <Heading type="h4">Đổi mảnh ghép</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/')}>Xem tất cả</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')}>Xem tất cả</Heading>
                         </View>
 
                         {/* Lấy chỉ 2 mục */}

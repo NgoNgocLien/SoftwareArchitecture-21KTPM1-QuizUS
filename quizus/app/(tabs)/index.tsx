@@ -43,7 +43,7 @@ export default function HomePage() {
 
     let campaigns = [
         {
-            id: 1,
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
             brandName: 'GRAB',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -52,12 +52,13 @@ export default function HomePage() {
             
             isFavorite: false,
             id_brand1: 1,
-            id_brand2: 2,
-            photo: '',
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
             category: 'Mua sắm',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: 2,
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
             brandName: 'SHOPEE',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -66,12 +67,13 @@ export default function HomePage() {
             
             isFavorite: false,
             id_brand1: 1,
-            id_brand2: 2,
-            photo: '',
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
             category: 'Mua sắm',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: 3,
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
             brandName: 'HIGHLANDS',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -80,12 +82,13 @@ export default function HomePage() {
             
             isFavorite: false,
             id_brand1: 1,
-            id_brand2: 2,
-            photo: '',
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
             category: 'Cafe & Bánh',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: 4,
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
             brandName: 'PIZZA HUT',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -94,12 +97,13 @@ export default function HomePage() {
 
             isFavorite: false,
             id_brand1: 1,
-            id_brand2: 2,
-            photo: '',
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
             category: 'Nhà hàng',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: 5,
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
             brandName: 'KICHI KICHI',
             start_datetime: '2024-07-31T12:00:00Z',
@@ -108,12 +112,13 @@ export default function HomePage() {
 
             isFavorite: false,
             id_brand1: 1,
-            id_brand2: 2,
-            photo: '',
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
             category: 'Nhà hàng',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
         {
-            id: 6,
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
             brandName: 'CGV',
             start_datetime: '2024-07-31T12:00:00Z',
@@ -122,12 +127,13 @@ export default function HomePage() {
 
             isFavorite: false,
             id_brand1: 1,
-            id_brand2: 2,
-            photo: '',
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
             category: 'Giải trí',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
         {
-            id: 7,
+            id: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
             brandName: 'STARBUCKS',
             start_datetime: '2024-09-01T12:00:00Z',
@@ -136,9 +142,10 @@ export default function HomePage() {
 
             isFavorite: false,
             id_brand1: 1,
-            id_brand2: 2,
-            photo: '',
+            id_brand2: 2,        
+            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
             category: 'Cafe & Bánh',
+            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
     ]
 
