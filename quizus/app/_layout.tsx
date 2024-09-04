@@ -27,9 +27,9 @@ export default function RootLayout() {
       config.retrieveFromSecureStore('id_player', setIdPlayer);
 
       if (id_player) {
-        router.push('/profile'); 
-      } else {
         router.push('/'); 
+      } else {
+        router.push('/login'); 
       }
     }
   }, [loaded, id_player]);

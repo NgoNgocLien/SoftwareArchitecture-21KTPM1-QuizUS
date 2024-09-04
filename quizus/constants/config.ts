@@ -37,6 +37,14 @@ const retrieveFromSecureStore = async (key: string, callback: any) => {
     console.error('Error retrieving id_player from SecureStore:', error);
   }
 };
+const removeFromSecureStore = async (key: string) => {
+  try {
+    await SecureStore.deleteItemAsync(key);
+    console.log(`${key} has been removed from SecureStore`);
+  } catch (error) {
+    console.error(`Error removing ${key} from SecureStore:`, error);
+  }
+}
 
 export default {
   USER_BE,
@@ -49,5 +57,6 @@ export default {
   ID_PLAYER,
 
   saveToSecureStore,
-  retrieveFromSecureStore
+  retrieveFromSecureStore,
+  removeFromSecureStore
 };
