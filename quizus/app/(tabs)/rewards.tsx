@@ -118,21 +118,21 @@ export default function Rewards() {
             <Header />
             <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
             <View style={styles.tabContainer}>
-                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Xu thưởng</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/items')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Vật phẩm</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Mã giảm giá</Text>

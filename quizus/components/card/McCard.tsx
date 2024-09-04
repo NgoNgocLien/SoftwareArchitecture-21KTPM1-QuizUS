@@ -93,10 +93,10 @@ export function McCard({
 
   return (
     <View style={styles.videoContainer}>
-      {/* <Image
+      <Image
             style={{width: '100%', height: '80%'}}
             source={require('@/assets/images/MC.gif')}
-        /> */}
+        />
     </View>
   );
 }

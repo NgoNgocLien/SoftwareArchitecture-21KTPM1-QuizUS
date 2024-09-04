@@ -13,7 +13,7 @@ export default function HomePage() {
     const tabNames = [
         { index: 0, name: 'Tất cả' },
         { index: 1, name: 'Nhà hàng' },
-        { index: 2, name: 'Cà phê & Bánh' },
+        { index: 2, name: 'Cafe & Bánh' },
         { index: 3, name: 'Mua sắm' },
         { index: 4, name: 'Giải trí' }
     ]
