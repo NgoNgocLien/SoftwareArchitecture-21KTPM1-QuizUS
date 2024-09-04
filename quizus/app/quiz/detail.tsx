@@ -7,7 +7,7 @@ import { Colors } from '@/constants/Colors';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
-import styles from './QuizDetail.styles';
+import styles from './detail.styles';
 import config from '@/constants/config';
 
 export default function QuizDetail() {
@@ -15,6 +15,7 @@ export default function QuizDetail() {
   const params = useLocalSearchParams(); 
 
   const id_campaign = params.id_campaign as string;
+  const score = config.QUIZ_SCORE;
   const quizInfoString = Array.isArray(params.quizInfo) ? params.quizInfo[0] : params.quizInfo;
   const quizInfo = JSON.parse(quizInfoString);
   const questions = quizInfo.questions;
@@ -91,20 +92,21 @@ export default function QuizDetail() {
       if (response.ok) {
 
         if (correctAnswer == questions.length){
-          // await fetch(`${config.USER_BE}/api/player`, {
-          //   method: 'PUT',
-          //   headers: {
-          //     'Content-Type': 'application/json',
-          //   },
-          //   body: JSON.stringify({
-          //     id_player: "100006",
-          //   }),
-          // });
+          await fetch(`${config.USER_BE}/api/player`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id_player: "100006",
+              score: score,
+            }),
+          });
         }
 
         const params = {
-          score: correctAnswer,
-          point: (correctAnswer == questions.length) ? 100 : 0,
+          point: correctAnswer,
+          score: (correctAnswer == questions.length) ? score : 0,
           elapsedTime: elapsedTime || duration,
           id_campaign: id_campaign,
           playerTurn: result.player_turn

@@ -22,7 +22,7 @@ export default function Login() {
         return;
       }
       
-      const response = await fetch(`${config.USER_BE}/api/player/login`, {
+      const response = await fetch(`${config.USER_BE}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

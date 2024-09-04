@@ -7,29 +7,6 @@ const { Op, literal, fn, col } = require("sequelize");
 
 const { successCode, failCode, errorCode } = require('../config/response');
 
-const login =  async (req,res) =>  {
-    try{
-        const {phoneNumber, password} = req.body;
-
-        const player = await model.player.findOne({ where: { phone: phoneNumber } });
-
-        if (!player) {
-            return failCode(res, null, "Số điện thoại không tồn tại");
-        }
-
-        const isMatch = await bcrypt.compare(password, player.pwd);
-
-        if (isMatch) {
-            successCode(res, true, "Đăng nhập thành công");
-        } else {
-            failCode(res, null, "Mật khẩu không chính xác");
-        }
-    }catch(err){
-        console.log(err)
-        errorCode(res)
-    }
-}
-
 const signup =  async (req,res) =>  {
     try{
         const {phoneNumber} = req.body;
@@ -116,6 +93,6 @@ const update =  async (req,res) =>  {
     }
 }
 
-module.exports = {signup, otp, login,
+module.exports = {signup, otp,
     getAll, update,
 }

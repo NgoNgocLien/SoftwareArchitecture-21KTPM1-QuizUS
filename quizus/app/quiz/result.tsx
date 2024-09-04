@@ -14,8 +14,8 @@ import config from '@/constants/config';
 export default function Result() {
     const router = useRouter();
     const params = useLocalSearchParams();
-    const score = params.score as string;
-    const point = parseInt(params.point as string);
+    const point = params.point as string;
+    const score = parseInt(params.score as string);
     const elapsedTime = parseInt(params.elapsedTime as string);
     const id_campaign = params.id_campaign as string;
     const playerTurn = parseInt(params.playerTurn as string);
@@ -59,7 +59,7 @@ export default function Result() {
                     Số câu đúng
                 </Paragraph>
                 <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    {score}/10
+                    {point}/10
                 </Paragraph>
             </TouchableOpacity>
             <TouchableOpacity style={styles.achievement}  activeOpacity={0.6}>
@@ -67,7 +67,7 @@ export default function Result() {
                     Xu thưởng
                 </Paragraph>
                 <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    {(point > 0) ? `+${point}` : 0}
+                    {(score > 0) ? `+${score}` : 0}
                 </Paragraph>
             </TouchableOpacity>
             <TouchableOpacity style={styles.achievement}  activeOpacity={0.6}>

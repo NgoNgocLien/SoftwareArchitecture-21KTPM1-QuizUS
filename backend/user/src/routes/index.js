@@ -11,4 +11,27 @@ rootRoute.use("/brand", brandRoute);
 rootRoute.use("/game", gameRoute);
 rootRoute.use("/player", playerRoute);
 
+rootRoute.post("/login", async (req, res) => {
+    try{
+        const {phoneNumber, password} = req.body;
+
+        const player = await model.player.findOne({ where: { phone: phoneNumber } });
+
+        if (!player) {
+            return failCode(res, null, "Số điện thoại không tồn tại");
+        }
+
+        const isMatch = await bcrypt.compare(password, player.pwd);
+
+        if (isMatch) {
+            successCode(res, true, "Đăng nhập thành công");
+        } else {
+            failCode(res, null, "Mật khẩu không chính xác");
+        }
+    }catch(err){
+        console.log(err)
+        errorCode(res)
+    }
+})
+
 module.exports = rootRoute;

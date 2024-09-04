@@ -11,11 +11,14 @@ const NOTI_BE = '';
 
 const DURATION = 15000;
 
+const QUIZ_SCORE = 100;
+
 export default {
   USER_BE,
   CAMPAIGN_BE,
   GAME_BE,
   NOTI_BE,
 
-  DURATION
+  DURATION,
+  QUIZ_SCORE
 };
