@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const PlayerVoucherSchema = new Schema({
   id_player: { 
-    type: Number, 
+    type: String, 
     required: true 
   },
   id_voucher: { 
