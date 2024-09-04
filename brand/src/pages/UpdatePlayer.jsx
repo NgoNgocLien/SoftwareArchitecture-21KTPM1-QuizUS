@@ -14,7 +14,7 @@ export default function UpdatePlayer() {
         dob: '2003-03-22',
         gender: 'female',
         facebook: 'http://www.facebook.com/ngoctran',
-        avatar: '/path/to/avatar.jpg'
+        avatar: '/images/google.png'
     });
 
     const handleChange = (e) => {
@@ -42,99 +42,102 @@ export default function UpdatePlayer() {
     };
 
     return (
-        <div className="update-player-container">
+        <div className="update-player-container bg-light">
             {<Backbar />}
-            <div className="form-container">
-                <div className="avatar-section">
+            <div className="container-fluid d-flex row">
+                <div className="avatar-section col-2">
                     <img src={player.avatar} alt="Avatar" className="avatar" />
                 </div>
-                <div className="info-section">
-                    <h3>Thông tin chung</h3>
-                    <div className="form-group">
-                        <label>Họ tên</label>
-                        <input
-                            type="text"
-                            name="fullName"
-                            value={player.fullName}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={player.email}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Số điện thoại</label>
-                        <input
-                            type="text"
-                            name="phoneNumber"
-                            value={player.phoneNumber}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Sinh nhật</label>
-                        <input
-                            type="date"
-                            name="dob"
-                            value={player.dob}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Giới tính</label>
-                        <div className="gender-options">
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="gender"
-                                    value="male"
-                                    checked={player.gender === 'male'}
-                                    onChange={handleGenderChange}
-                                />
-                                Nam
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="gender"
-                                    value="female"
-                                    checked={player.gender === 'female'}
-                                    onChange={handleGenderChange}
-                                />
-                                Nữ
-                            </label>
+                <div className="form-container col">
+                    <div className="info-section">
+                        <h3>Thông tin chung</h3>
+                        <div className="form-group">
+                            <label>Họ tên</label>
+                            <input
+                                type="text"
+                                name="fullName"
+                                value={player.fullName}
+                                onChange={handleChange}
+                            />
                         </div>
-                    </div>
-                    <div className="form-group">
-                        <label>Facebook</label>
-                        <input
-                            type="text"
-                            name="facebook"
-                            value={player.facebook}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group avatar-upload">
-                        <label>Avatar</label>
-                        <input type="file" onChange={handleAvatarChange} />
-                        <small>Bấm để tải lên hoặc kéo thả ảnh vào đây</small>
-                    </div>
-                    <div className="form-buttons">
-                        <button className="cancel-button" onClick={handleCancel}>
-                            Hủy
-                        </button>
-                        <button className="save-button" onClick={handleSave}>
-                            Lưu
-                        </button>
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={player.email}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Số điện thoại</label>
+                            <input
+                                type="text"
+                                name="phoneNumber"
+                                value={player.phoneNumber}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Sinh nhật</label>
+                            <input
+                                type="date"
+                                name="dob"
+                                value={player.dob}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Giới tính</label>
+                            <div className="gender-options">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="male"
+                                        checked={player.gender === 'male'}
+                                        onChange={handleGenderChange}
+                                    />
+                                    Nam
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="female"
+                                        checked={player.gender === 'female'}
+                                        onChange={handleGenderChange}
+                                    />
+                                    Nữ
+                                </label>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label>Facebook</label>
+                            <input
+                                type="text"
+                                name="facebook"
+                                value={player.facebook}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group avatar-upload">
+                            <label>Avatar</label>
+                            <input type="file" onChange={handleAvatarChange} />
+                            <small>Bấm để tải lên hoặc kéo thả ảnh vào đây</small>
+                        </div>
+                        <div className="form-buttons">
+                            <button className="cancel-button" onClick={handleCancel}>
+                                Hủy
+                            </button>
+                            <button className="save-button" onClick={handleSave}>
+                                Lưu
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }

@@ -10,17 +10,24 @@ import { Heading } from '../text/Heading';
 import { Paragraph } from '../text/Paragraph';
 
 export function CampaignCard({
-    brandLogo = 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-    brandName = 'SHOPEE',
-    startDate = '2024-08-25T12:00:00Z',
-    endDate = '2024-09-25T12:00:00Z',
-    campaignName = 'Kho báu biển xanh - Lướt sóng săn quà đỉnh',
-    isFavorite = false,
+    campaign = {
+        id: 1,
+        brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
+        brandName: 'SHOPEE',
+        start_datetime: '2024-08-25T12:00:00Z',
+        end_datetime: '2024-09-25T12:00:00Z',
+        name: 'Kho báu biển xanh - Lướt sóng săn quà đỉnh',
+        
+        isFavorite: false,
+        id_brand1: 1,
+        id_brand2: 2,
+        photo: '',
+    },
     ...rest
 }) {
     const [modalVisible, setModalVisible] = useState(false);
 
-    const [favorite, setFavorite] = React.useState(isFavorite);
+    const [favorite, setFavorite] = React.useState(campaign.isFavorite);
     const handleFavorite = () => {
         if (favorite) {
             setModalVisible(true);
@@ -36,6 +43,10 @@ export function CampaignCard({
         setFavorite(false);
         Toast.show(<ToastBar type='success' message='Sự kiện đã được xóa khỏi Yêu thích'/>, ToastBarOptions)
     }
+
+    // dd/MM
+    let startDateFormatted = new Date(campaign.start_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.start_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
+    let endDateFormatted = new Date(campaign.end_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.end_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
 
     return (
         <>
@@ -63,22 +74,22 @@ export function CampaignCard({
 
             <View style={[styles.campaignContainer, rest.style]}>
                 <View style={styles.brandContainer}>
-                    <Image source={{uri: brandLogo}} style={styles.brandLogo}/>
+                    <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo}/>
                 </View>
                 <View style={styles.detailContainer}>
                     <View style={styles.detail_top}>
-                        <Text style={styles.brandName}>{brandName}</Text>
-                        <View style={Date.now() < Date.parse(endDate) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                            <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(endDate) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
-                            { Date.now() < Date.parse(endDate) ? 
+                        <Text style={styles.brandName}>{campaign.brandName}</Text>
+                        <View style={Date.now() < Date.parse(campaign.end_datetime) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                            <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(campaign.end_datetime) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                            { Date.now() < Date.parse(campaign.end_datetime) ? 
                                 // formatted as 'MM/DD'
-                                <Text style={styles.time}>{new Date(startDate).getDate()}/{new Date(startDate).getMonth() + 1} - {new Date(endDate).getDate()}/{new Date(endDate).getMonth() + 1}</Text> :
+                                <Text style={styles.time}>{startDateFormatted} - {endDateFormatted}</Text> :
                                 <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                             }
                         </View>
                     </View>
                     <View style={styles.detail_middle}>
-                        <Text style={styles.campaignName}>{campaignName}</Text>
+                        <Text style={styles.campaignName} numberOfLines={2}>{campaign.name}</Text>
                     </View>
                     <View style={styles.detail_bottom}>
                         <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push('/campaign')}>
@@ -164,10 +175,13 @@ const styles = StyleSheet.create({
     detail_middle: {
         marginHorizontal: 15,
         marginVertical: 10,
+        height: 48,
     },
     campaignName: {
         fontSize: 18,
         fontWeight: '500',
+        overflow: 'hidden',
+        // overflow as ... if the text is too long
     },
 
     detail_bottom: {

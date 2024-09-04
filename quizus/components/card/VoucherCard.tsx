@@ -16,6 +16,9 @@ export function VoucherCard({
     ...rest
 }) {
 
+    let startDateFormatted = new Date(startDate).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(startDate).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
+    let endDateFormatted = new Date(endDate).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(endDate).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
+
     return (
         <View style={[styles.voucherContainer, rest.style]}>
             <View style={styles.brandContainer}>
@@ -27,7 +30,7 @@ export function VoucherCard({
                     <View style={Date.now() < Date.parse(endDate) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
                         <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(endDate) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
                         { Date.now() < Date.parse(endDate) ? 
-                            <Text style={styles.time}>{new Date(startDate).getDate()}/{new Date(startDate).getMonth() + 1} - {new Date(endDate).getDate()}/{new Date(endDate).getMonth() + 1}</Text> :
+                            <Text style={styles.time}>{startDateFormatted} - {endDateFormatted}</Text> :
                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                         }
                     </View>
@@ -36,7 +39,7 @@ export function VoucherCard({
                     <Text style={styles.voucherName}>{voucherName}</Text>
                 </View>
                 
-                <TouchableOpacity style={styles.viewButton} activeOpacity={0.6} onPress={() => router.push('/voucher')}>
+                <TouchableOpacity style={styles.viewButton} activeOpacity={0.6} onPress={() => router.push('/')}>
                     <Text style={styles.viewButtonText}>Xem</Text>
                 </TouchableOpacity>
             </View>

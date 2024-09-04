@@ -28,7 +28,6 @@ export default function Favorite({
             </View>
             <MaskedView maskElement={
                 <LinearGradient 
-                    // This worked for me, but it depends on your use-case
                     colors={["rgba(0,0,0,0)", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black"]}
                     style={{ flex: 1 }}
                 />

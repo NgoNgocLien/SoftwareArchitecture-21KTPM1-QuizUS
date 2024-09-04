@@ -1,44 +1,79 @@
 import React from 'react';
-import Toast from 'react-native-root-toast';
 import { 
     StyleSheet, 
     View, 
-    Keyboard, 
-    TouchableWithoutFeedback, 
-    Button
+    Text,
+    Button,
+    SafeAreaView,
+    Image,
+    TouchableWithoutFeedback
 } from 'react-native';
+import { router } from 'expo-router';
 
+import { Colors } from '@/constants/Colors';
+import { getCampaignsInProgess } from '@/api/CampaignApi';
 import { Header } from '@/components/header/Header';
-import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Rewards() {
-    return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <LinearGradient
-                colors={['#FFFFFF', '#FFFFFF', '#FFD7D9']} // Gradient colors
-                locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
-                style={styles.background}
-            >
-                <View>
-                    <Header />          
-                </View>
-                <Button title="Show Toast" onPress={() => Toast.show(
-                    <ToastBar type='info' message='Lorem ipsum dolor sit amet, consectetur adipiscing edit.'/>, ToastBarOptions
-                )} />
 
-            </LinearGradient>
-        </TouchableWithoutFeedback>
-        
+    console.log(getCampaignsInProgess());
+
+    return (
+        <View style={styles.background} >
+            <Header />
+            <Image source={require('@/assets/images/banner-reward.png')} style={{width: '100%', height: 140}}  />
+            <View style={styles.tabContainer}>
+                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/coin.png')} style={{width: 24, height: 24}} />
+                        <Text style={{color: Colors.light.subText}}>Xu thưởng</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/gift.png')} style={{width: 24, height: 24}} />
+                        <Text style={{color: Colors.light.subText}}>Vật phẩm</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/voucher.png')} style={{width: 24, height: 24}} />
+                        <Text style={{color: Colors.light.subText}}>Mã giảm giá</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => router.push('/')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/donate-coin.png')} style={{width: 24, height: 24}} />
+                        <Text style={{color: Colors.light.subText}}>Thanh toán</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
+
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     background: {
-      flex: 1,
+        flex: 1,
+        backgroundColor: Colors.light.background,
     },
     container: {
         paddingHorizontal: 20,
     },
-
+    tabContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+    },
+    tab: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 8,
+    }
 });

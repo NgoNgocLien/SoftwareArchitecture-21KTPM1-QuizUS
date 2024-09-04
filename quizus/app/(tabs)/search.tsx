@@ -10,7 +10,7 @@ export default function Search() {
     return (
         <View style={styles.container} >
             <SafeAreaView style={styles.searchHeader}>
-                <FontAwesome6 name={'chevron-left'} style={{fontSize: 20, color: Colors.gray._500}} onPress={() => router.dismiss()}/>
+                <FontAwesome6 name={'chevron-left'} style={{fontSize: 20, color: Colors.gray._500}} onPress={() => router.back()}/>
                 <SearchBar />
             </SafeAreaView>
         </View>
