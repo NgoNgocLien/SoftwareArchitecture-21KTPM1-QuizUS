@@ -16,7 +16,7 @@ export function CampaignCard({
         brandName: 'SHOPEE',
         start_datetime: '2024-08-25T12:00:00Z',
         end_datetime: '2024-09-25T12:00:00Z',
-        name: 'Kho báu biển xanh - Lướt sóng săn quà đỉnh hahaha',
+        name: 'Kho báu biển xanh - Lướt sóng săn quà đỉnh',
         
         isFavorite: false,
         id_brand1: 1,

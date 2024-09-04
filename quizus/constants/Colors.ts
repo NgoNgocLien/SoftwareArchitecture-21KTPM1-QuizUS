@@ -54,7 +54,6 @@ export const Colors = {
   light: {
     mainText: black,
     subText: gray_600,
-    subtext: gray_600,
     background: white, 
     primary: brand_400,
     secondary: brand_50,

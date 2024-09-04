@@ -30,6 +30,7 @@ export default function HomePage() {
         getCampaignsInProgess().then((res) => {
             // for each campaign, add brand name and logo and isFavorite
             let _campaigns = res.map((campaign: any) => {
+
                 return {
                     ...campaign,
                     brandName: 'SHOPEE',

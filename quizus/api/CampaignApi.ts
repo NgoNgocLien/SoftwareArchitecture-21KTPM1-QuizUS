@@ -1,4 +1,4 @@
-import config from '@/constants/config.js';
+import config from '@/constants/config';
 
 export const getCampaignsInProgess = async () => {
     try {
