@@ -41,7 +41,7 @@ export default function Signup() {
 
       if (response.ok) {
         router.push({
-          pathname: '/otp',
+          pathname: "/otp",
           params: { phoneNumber, password }, 
         });
       } else {

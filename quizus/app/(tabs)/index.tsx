@@ -184,7 +184,7 @@ export default function HomePage() {
                                 <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
                             </View>
                         ) : (
-                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingTop: 12 }}>
                             {campaigns.map((campaign, index) => (
                                 <CampaignCard 
                                     campaign={campaign}

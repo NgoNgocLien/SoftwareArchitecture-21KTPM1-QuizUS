@@ -116,75 +116,76 @@ export default function Rewards() {
     return (
         <View style={styles.background}>
             <Header />
-            <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
-            <View style={styles.tabContainer}>
-                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Xu thưởng</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-
-                <TouchableWithoutFeedback onPress={() => router.push('/items')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Vật phẩm</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-
-                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Mã giảm giá</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-
-                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Thanh toán</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>
-
-            { 
-                vouchers.length === 0 ? (
-                    <View style={styles.emptyContainer}>
-                        <Image source={require('@/assets/images/empty-result.png')} style={styles.emptyImage} />
-                    </View>
-                ) : (
-
-                    <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-                        <View style={[styles.container, styles.titleContainer]}>
-                            <Heading type="h4">Đổi xu lấy quà</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+                <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
+                <View style={styles.tabContainer}>
+                    <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Xu thưởng</Text>
                         </View>
+                    </TouchableWithoutFeedback>
 
-                        {/* Lấy chỉ 2 mục */}
-                        {coinVouchers.slice(0, 2).map((voucher, index) => (
-                            <VoucherCard 
-                                voucher={voucher}
-                                key={index} 
-                            />
-                        ))}
-
-                        <View style={[styles.container, styles.titleContainer]}>
-                            <Heading type="h4">Đổi mảnh ghép</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')} suppressHighlighting={true}>Xem tất cả</Heading>
+                    <TouchableWithoutFeedback onPress={() => router.push('/items')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Vật phẩm</Text>
                         </View>
+                    </TouchableWithoutFeedback>
 
-                        {/* Lấy chỉ 2 mục */}
-                        {itemVouchers.slice(0, 2).map((voucher, index) => (
-                            <VoucherCard 
-                                voucher={voucher}
-                                key={index} 
-                                style={index === itemVouchers.length - 1 ? { marginBottom: 32 } : {}} 
-                            />
-                        ))}
-                    </ScrollView>
-                )
-            }
-            
+                    <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Mã giảm giá</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+
+                    <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Thanh toán</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+
+                { 
+                    vouchers.length === 0 ? (
+                        <View style={styles.emptyContainer}>
+                            <Image source={require('@/assets/images/empty-result.png')} style={styles.emptyImage} />
+                        </View>
+                    ) : (
+                        <>
+
+                            <View style={[styles.container, styles.titleContainer]}>
+                                <Heading type="h4">Đổi xu lấy quà</Heading>
+                                <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>
+                            </View>
+
+                            {/* Lấy chỉ 2 mục */}
+                            {coinVouchers.slice(0, 2).map((voucher, index) => (
+                                <VoucherCard 
+                                    voucher={voucher}
+                                    key={index} 
+                                />
+                            ))}
+
+                            <View style={[styles.container, styles.titleContainer]}>
+                                <Heading type="h4">Đổi mảnh ghép</Heading>
+                                <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')} suppressHighlighting={true}>Xem tất cả</Heading>
+                            </View>
+
+                            {/* Lấy chỉ 2 mục */}
+                            {itemVouchers.slice(0, 2).map((voucher, index) => (
+                                <VoucherCard 
+                                    voucher={voucher}
+                                    key={index} 
+                                    style={index === 1 ? { marginBottom: 20 } : {}} 
+                                />
+                            ))}
+                        </>
+                    )
+                }
+            </ScrollView>    
         </View>
     )
 }
@@ -218,7 +219,6 @@ const styles = StyleSheet.create({
         color: Colors.light.subText,
     },
     scrollView: {
-        paddingVertical: 12,
     },
     container: {
         paddingHorizontal: 20,
