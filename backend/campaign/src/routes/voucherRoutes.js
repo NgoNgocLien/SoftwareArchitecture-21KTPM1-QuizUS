@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Voucher = require('../models/voucher');
+const PlayerVoucher = require('../models/playerVoucher');
 
 // Tìm kiếm voucher theo brand
 router.get('/search/:id_brand', async (req, res) => {
@@ -57,6 +58,49 @@ router.put('/', async (req, res) => {
     }
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// lấy tất cả voucher đã đổi của player
+router.post('/exchange', async (req, res) => {
+  try {
+    const id_player = req.body.id_player;
+    
+    if (!id_player) {
+      return res.status(400).json({ message: 'id_player is required' });
+    }
+
+    const playerVouchers = await PlayerVoucher.find({ id_player }).populate('id_voucher');
+
+    console.log(playerVouchers);
+
+    if (!playerVouchers || playerVouchers.length === 0) {
+      return res.status(404).json({ message: 'No vouchers found for this player.' });
+    }
+
+    const currentTime = new Date();
+
+    const result = playerVouchers.map(playerVoucher => {
+      const voucher = playerVoucher.id_voucher;
+
+      return {
+        id_voucher: voucher._id,
+        code: voucher.code,
+        qr_code: voucher.qr_code,
+        photo: voucher.photo,
+        price: voucher.price,
+        description: voucher.description,
+        expired_date: voucher.expired_date,
+        score_exchange: voucher.score_exchange,
+        status: voucher.status ? "Còn hạn" : "Hết hạn",
+        is_used: playerVoucher.is_used ? "Đã sử dụng" : "Chưa sử dụng"
+      };
+    });
+
+    res.status(200).json(result);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

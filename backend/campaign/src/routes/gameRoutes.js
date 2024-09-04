@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Quiz = require('../models/quiz');
 const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
