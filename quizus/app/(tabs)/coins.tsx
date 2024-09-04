@@ -1,10 +1,10 @@
-import { StyleSheet, TouchableWithoutFeedback, View, Image, Text, ScrollView } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View, Image, Text, ScrollView, SafeAreaView, Platform } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Button } from '@/components/Button';
 import { Header } from '@/components/header/Header';
-
 import { Colors } from '@/constants/Colors';
 import config from '@/constants/config';
 import { SubHeader } from '@/components/header/SubHeader';
@@ -133,8 +133,11 @@ export default function Coins() {
 
     return (
         <View style={styles.background}>
-            <SubHeader />
+            {/* <SubHeader style={{backgroundColor: 'transparent'}} /> */}
             <Image source={require('@/assets/images/banner-coins.png')} style={styles.banner} />
+            <SafeAreaView style={[styles.header]}>
+                <MaterialCommunityIcons name={'arrow-left'} size={28} color={Colors['light'].mainText} onPress={() => router.replace('/(tabs)/rewards')} suppressHighlighting={true}/>
+            </SafeAreaView>
 
             <View style={styles.coinsContainer}>
                 <View style={styles.coins}>
@@ -277,9 +280,16 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
     },
+    header: {
+        position: 'absolute',
+        top: Platform.OS === 'android' ? 50 : 0,
+        left: 20,
+        display: 'flex',
+        flexDirection: 'row',
+    },
     banner: {
         width: '100%',
-        height: 140,
+        height: 150,
 
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 0 },
