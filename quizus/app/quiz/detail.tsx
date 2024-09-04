@@ -23,7 +23,10 @@ export default function QuizDetail() {
   const quizLength = questions.length;
 
   const [count, setCount] = useState(0);
+
   const [showMC, setShowMC] = useState(true);
+  const [millisecondMC, setMillisecondMC] = useState(0);
+
   const [correctAnswer, setCorrectAnswer] = useState(0);
   const [showAnswerKey, setShowAnswerKey] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -31,7 +34,7 @@ export default function QuizDetail() {
   const [showExitPopup, setShowExitPopup] = useState(false);
 
   const duration = config.DURATION;
-  const [isRunning, setIsRunning] = useState(true); // Track whether the timer is running
+  const [isRunning, setIsRunning] = useState(false); // Track whether the timer is running
   const [elapsedTime, setElapsedTime] = useState(0); // Track elapsed time
   const [showTimeUpPopup, setShowTimeUpPopup] = useState(false);
 
@@ -59,14 +62,17 @@ export default function QuizDetail() {
   }, [isRunning, elapsedTime]);
 
   useEffect(() => {
-    setShowMC(true);
-    const timer = setTimeout(() => {
-      setShowMC(false);
-      handleResume();
-    }, 5000); 
-
-    return () => clearTimeout(timer);
-  },[count])
+    if (millisecondMC > 0){
+      setShowMC(true);
+      const timer = setTimeout(() => {
+        console.log(millisecondMC)
+        setShowMC(false);
+        handleResume();
+      }, 2000); 
+  
+      return () => clearTimeout(timer);
+    }
+  },[count, millisecondMC])
 
   const handlePause = () => {
     progress.stopAnimation((value) => {
@@ -186,7 +192,8 @@ export default function QuizDetail() {
 
     {
       !showExitPopup && !showTimeUpPopup && showMC && (
-        <McCard  question_id = {questions[count].question_id} question_text={questions[count].question_text}></McCard>
+        <McCard  question_id = {questions[count].question_id} setMillisecondMC={setMillisecondMC}
+          question_text={questions[count].question_text}></McCard>
       )
     }
 

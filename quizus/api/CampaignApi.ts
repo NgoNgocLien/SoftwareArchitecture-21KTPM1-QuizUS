@@ -10,6 +10,7 @@ export const getCampaignsInProgess = async () => {
         });
 
         if (response.ok) {
+            console.log(response.json)
             return response.json();
         } else {
             throw new Error('Failed to fetch data');

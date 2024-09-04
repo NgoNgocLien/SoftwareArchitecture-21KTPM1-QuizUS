@@ -43,7 +43,7 @@ export default function Result() {
     <SafeAreaView style={styles.background}>
     <View style={styles.container}>
         <View style={styles.playerTurnContainer}>
-            {
+            {/* {
                 Array(playerTurn).fill(null).map((_,index) => (
                     <TabBarIcon key={index} name={'cards-heart'} color={Colors.light.primary} />
                 ))
@@ -52,7 +52,7 @@ export default function Result() {
                 Array(3-playerTurn).fill(null).map((_,index) => (
                     <TabBarIcon key={index} name={'cards-heart'} color={Colors.gray._300} />
                 ))
-            }
+            } */}
         </View>  
 
         <Image
