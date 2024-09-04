@@ -3,6 +3,7 @@ const router = express.Router();
 const Quiz = require('../models/quiz');
 const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
+const Voucher = require('../models/voucher');
 
 // Tìm kiếm game theo campaign
 router.get('/campaign/:id_campaign', async (req, res) => {
@@ -23,7 +24,67 @@ router.get('/campaign/:id_campaign', async (req, res) => {
   }
 });
 
-// lưu kết quả chơi game của người dùng
+// lấy tất cả mảnh ghép (item) của người chơi
+router.get('/user/item/:id_player', async (req, res) => {
+  try {
+    const id_player = req.params.id_player;
+    
+    if (!id_player) {
+      return res.status(400).json({ message: 'id_player is required' });
+    }
+
+    const playerGames = await PlayerGame.find({ id_player }).populate({
+      path: 'id_campaign',
+      populate: {
+        path: 'id_voucher',
+        model: 'Voucher'
+      }
+    });
+    
+    if (!playerGames || playerGames.length === 0) {
+      return res.status(404).json({ message: 'No games found for this player.' });
+    }
+
+    const currentTime = new Date();
+
+    const result = playerGames
+      .filter(playerGame => {
+        const campaign = playerGame.id_campaign;
+        return campaign.start_datetime <= currentTime && campaign.end_datetime >= currentTime;
+      })
+      .map(playerGame => {
+        const campaign = playerGame.id_campaign;
+        const voucher = campaign.id_voucher;
+        return {
+          id_campaign: campaign._id,
+          name: campaign.name,
+          photo: campaign.photo,
+          item1_photo: campaign.item1_photo,
+          quantity_item1: playerGame.quantity_item1,
+          item2_photo: campaign.item2_photo,
+          quantity_item2: playerGame.quantity_item2,
+          start_datetime: campaign.start_datetime,
+          end_datetime: campaign.end_datetime,
+          vouchers: voucher ? {
+            id_voucher: voucher._id,
+            code: voucher.code,
+            qr_code: voucher.qr_code,
+            photo: voucher.photo,
+            price: voucher.price,
+            description: voucher.description,
+            expired_date: voucher.expired_date,
+            score_exchange: voucher.score_exchange,
+            status: voucher.status
+          } : null 
+        };
+      });
+      res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// lưu kết quả chơi game của người chơi
 router.post('/', async (req, res) => {
   try {
     if (!req.body.id_player ||!req.body.id_campaign) {
@@ -63,39 +124,5 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-// const fs = require("fs");
-// const path = require("path");
-// const speechFile = path.resolve("./speech.mp3");
-// const OpenAI = require("openai");
-// const openai = new OpenAI({apiKey: process.env.GPT_API_KEY});
-// router.post('/tts', async (req, res) => {
-//   const { text } = req.body;
-
-//   if (!text) {
-//     return res.status(400).json({ error: "Text is required" });
-//   }
-
-//   try {
-//     const mp3 = await openai.audio.speech.create({
-//       model: "tts-1",
-//       voice: "alloy",
-//       input: text,
-//     });
-
-//     // Convert the response to a buffer
-//     const buffer = Buffer.from(await mp3.arrayBuffer());
-
-//     // Write the file to the disk
-//     await fs.promises.writeFile(speechFile, buffer);
-
-//     // Send the file back as a response
-//     // res.setHeader("Content-Type", "audio/mpeg");
-//     // res.sendFile(speechFile);
-//   } catch (error) {
-//     console.error("Error generating speech:", error);
-//     res.status(500).json({ error: "Failed to generate speech" });
-//   }
-// });
 
 module.exports = router;
