@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast from 'react-native-root-toast';
 
@@ -32,7 +32,7 @@ export function VoucherCard({
     let enoughItem = voucher.item_1 >=1 && voucher.item_2 >= 1 ? '2/2' : voucher.item_1 >= 1 || voucher.item_2 >= 1 ? '1/2' : '0/2';
 
     return (
-        <View style={[styles.voucherContainer, rest.style]}>
+        <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => { }}>
             <View style={styles.brandContainer}>
                 <Image source={{uri: voucher.brandLogo}} style={styles.brandLogo}/>
             </View>
@@ -65,7 +65,7 @@ export function VoucherCard({
                 }
                 
             </View>
-        </View>
+        </Pressable>
     );
 }
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: 'center',
         alignItems: 'center'
-        
+
     },
     brandLogo: {
         width: 80,

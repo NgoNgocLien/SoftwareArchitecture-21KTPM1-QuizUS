@@ -19,28 +19,133 @@ export default function HomePage() {
     ]
 
     const [focusedTab, setFocusedTab] = useState(0);
-    const [campaigns, setCampaigns] = useState([]);
+    // const [campaigns, setCampaigns] = useState([]);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
     }
 
     // for each campaign, get the brand name and logo
-    useEffect(() => {
-        getCampaignsInProgess().then((res) => {
-            // for each campaign, add brand name and logo and isFavorite
-            let _campaigns = res.map((campaign: any) => {
+    // useEffect(() => {
+    //     getCampaignsInProgess().then((res) => {
+    //         // for each campaign, add brand name and logo and isFavoritfalse/         let _campaigns = res.map((campaign: any) => {
 
-                return {
-                    ...campaign,
-                    brandName: 'SHOPEE',
-                    brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-                    isFavorite: false,
-                }
-            });
-            setCampaigns(_campaigns); 
-        });
-    }, []);
+    //             return {
+    //                 ...campaign,
+    //                 brandName: 'SHOPEE',
+    //                 brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
+    //                 isFavorite: falsee,
+    //             }
+    //         });
+    //         setCampaigns(_campaigns); 
+    //     });
+    // }, []);
+
+    let campaigns = [
+        {
+            id: 1,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
+            brandName: 'GRAB',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Cuộc Đua Săn Quà, Trúng Lớn Mỗi Ngày',
+            
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+            category: 'Mua sắm',
+        },
+        {
+            id: 2,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
+            brandName: 'SHOPEE',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
+            
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+            category: 'Mua sắm',
+        },
+        {
+            id: 3,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
+            brandName: 'HIGHLANDS',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
+            
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+            category: 'Cafe & Bánh',
+        },
+        {
+            id: 4,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
+            brandName: 'PIZZA HUT',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-10-23T12:00:00Z',
+            name: 'Xoay Lắc Đèn Lồng, Mở Rương Quà Tặng',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+            category: 'Nhà hàng',
+        },
+        {
+            id: 5,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
+            brandName: 'KICHI KICHI',
+            start_datetime: '2024-07-31T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Bão Quà Cuồng Nhiệt',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+            category: 'Nhà hàng',
+        }, 
+        {
+            id: 6,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
+            brandName: 'CGV',
+            start_datetime: '2024-07-31T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Lắc Tay Săn Kho Báu, Rinh Về Ngàn Quà Tặng',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+            category: 'Giải trí',
+        }, 
+        {
+            id: 7,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
+            brandName: 'STARBUCKS',
+            start_datetime: '2024-09-01T12:00:00Z',
+            end_datetime: '2024-10-31T12:00:00Z',
+            name: 'Phiêu Lưu Xứ Sở Quà, Rinh Về Niềm Vui',
+
+            isFavorite: false,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+            category: 'Cafe & Bánh',
+        }, 
+    ]
+
+    let nhaHang = campaigns.filter(campaign => campaign.category === 'Nhà hàng');
+    let cafeBanh = campaigns.filter(campaign => campaign.category === 'Cafe & Bánh');
+    let muaSam = campaigns.filter(campaign => campaign.category === 'Mua sắm');
+    let giaiTri = campaigns.filter(campaign => campaign.category === 'Giải trí');
 
     return (
         <View style={styles.background} >
@@ -63,21 +168,101 @@ export default function HomePage() {
                 <View style={styles.emptyTab}></View>
             </ScrollView>
             
-            {campaigns.length === 0 ? (
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                </View>
-            ) : (
-                <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                {campaigns.map((campaign, index) => (
-                    <CampaignCard 
-                        campaign={campaign}
-                        key={index} 
-                        style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
-                    />
-                ))}
-                </ScrollView> 
-            )}
+            
+            {
+                focusedTab === 0 ? (
+                    <>
+                        {campaigns.length === 0 ? (
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
+                            </View>
+                        ) : (
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                            {campaigns.map((campaign, index) => (
+                                <CampaignCard 
+                                    campaign={campaign}
+                                    key={index} 
+                                    style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
+                                />
+                            ))}
+                            </ScrollView> 
+                        )}
+                    </>
+                ) : focusedTab === 1 ? (
+                    <>
+                        {nhaHang.length === 0 ? (
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
+                            </View>
+                        ) : (
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                            {nhaHang.map((campaign, index) => (
+                                <CampaignCard 
+                                    campaign={campaign}
+                                    key={index} 
+                                    style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
+                                />
+                            ))}
+                            </ScrollView> 
+                        )}
+                    </>
+                ) : focusedTab === 2 ? (
+                    <>
+                        {cafeBanh.length === 0 ? (
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
+                            </View>
+                        ) : (
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                            {cafeBanh.map((campaign, index) => (
+                                <CampaignCard 
+                                    campaign={campaign}
+                                    key={index} 
+                                    style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
+                                />
+                            ))}
+                            </ScrollView> 
+                        )}
+                    </>
+                ) : focusedTab === 3 ? (
+                    <>
+                        {muaSam.length === 0 ? (
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
+                            </View>
+                        ) : (
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                            {muaSam.map((campaign, index) => (
+                                <CampaignCard 
+                                    campaign={campaign}
+                                    key={index} 
+                                    style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
+                                />
+                            ))}
+                            </ScrollView> 
+                        )}
+                    </>
+                ) : focusedTab === 4 ? (
+                    <>
+                        {giaiTri.length === 0 ? (
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
+                            </View>
+                        ) : (
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                            {giaiTri.map((campaign, index) => (
+                                <CampaignCard 
+                                    campaign={campaign}
+                                    key={index} 
+                                    style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
+                                />
+                            ))}
+                            </ScrollView> 
+                        )}
+                    </>
+                ) : null
+            }
+            
         </View>
     )
 }

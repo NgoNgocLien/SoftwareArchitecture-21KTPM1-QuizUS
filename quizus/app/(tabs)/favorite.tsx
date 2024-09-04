@@ -12,11 +12,58 @@ import MaskedView from '@react-native-masked-view/masked-view';
 
 export default function Favorite({
     campaigns = [
-        {},
-        {},
-        {},
-        {},
-        {},
+        {
+            id: 1,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
+            brandName: 'GRAB',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Cuộc Đua Săn Quà, Trúng Lớn Mỗi Ngày',
+            
+            isFavorite: true,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+        },
+        {
+            id: 2,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
+            brandName: 'SHOPEE',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Kho báu biển xanh - Lướt sóng săn quà đỉnh',
+            
+            isFavorite: true,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+        },
+        {
+            id: 3,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
+            brandName: 'HIGHLANDS',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-09-25T12:00:00Z',
+            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
+            
+            isFavorite: true,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+        },
+        {
+            id: 4,
+            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
+            brandName: 'PIZZA HUT',
+            start_datetime: '2024-08-25T12:00:00Z',
+            end_datetime: '2024-10-23T12:00:00Z',
+            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
+
+            isFavorite: true,
+            id_brand1: 1,
+            id_brand2: 2,
+            photo: '',
+        },
     ]
 }) {
     return (
@@ -41,6 +88,7 @@ export default function Favorite({
                     <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                     {campaigns.map((campaign, index) => (
                         <CampaignCard 
+                            campaign={campaign}
                             key={index} 
                             style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
                         />
