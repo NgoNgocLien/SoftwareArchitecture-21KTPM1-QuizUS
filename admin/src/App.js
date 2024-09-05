@@ -1,24 +1,31 @@
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-dom';
+// import { useSelector } from 'react-redux';
+
+import Sidebar from './components/sidebar/Sidebar';
+import Backbar from './components/topbar/Backbar';
+import Dashboard from './pages/Dashboard';
+
+function Layout() {
+  return (
+    <div>
+      <Sidebar />
+      <Backbar />
+      <Outlet />
+    </div>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="" element={<Layout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

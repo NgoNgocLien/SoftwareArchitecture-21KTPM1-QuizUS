@@ -16,14 +16,12 @@ export default function Sidebar() {
     return (
         <div className="sidebar bg-black col-2">
             <div className="sidebar-brand d-flex align-items-center justify-content-between">
-                <img src="/logo-dark-svg.png" alt="Logo" width={90} height={45} />
-                <i style={{ fontSize: "20px" }} className={collapse ? "fa-solid fa-angles-right text-scheme-subtext" : "fa-solid fa-angles-left text-scheme-subtext"} onClick={handleCollapse}></i>
-
+                <img src="/images/logo.png" alt="logo" width="96" height="50" className="align-self-center"/>
             </div>
             <div className="horizontal-line"></div>
             <ul className="sidebar-nav">
                 <li className={focus === "dashboard" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("dashboard")}>
-                    <i class="fa-solid fa-house"></i>
+                    <img src="/icons/home.svg" alt="dashboard" />
                     <span>Tổng quan</span>
                 </li>
                 <li className={focus === "player" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("player")}>

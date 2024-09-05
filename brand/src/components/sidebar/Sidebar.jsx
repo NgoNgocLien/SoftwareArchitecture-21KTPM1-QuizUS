@@ -39,8 +39,6 @@ export default function Sidebar() {
                     <span>Trò chơi</span>
                 </li>
             </ul>
-
         </div>
-
     )
 }

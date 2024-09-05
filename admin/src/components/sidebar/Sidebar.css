@@ -6,33 +6,31 @@
     position: fixed;
     top: 0;
     left: 0;
+    width: 16.5rem;
 }
 
 .sidebar-brand {
-    height: 60px;
-    padding: 20px;
+    height: 56px;
+    padding: 16px 24px;
 }
 
 .sidebar-nav {
     width: 100%;
-    padding: 2px;
+    padding: 0px;
 }
 
 .sidebar-nav-item {
+    font-family: regular-font;
     font-size: 18px;
     line-height: 20px;
-    padding: 18px;
+    padding: 8px;
     height: 56px;
     border-radius: 6px;
-
     color: white;
-
     display: flex;
     flex-direction: row;
     align-items: center;
-
     cursor: pointer;
-
 }
 
 .sidebar-nav-item:hover {
