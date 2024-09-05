@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const port = 8082;
+const port = 8083;
 
 const dbURI = process.env.MONGODB_ATLAS_URI;
 console.log("Database URI:", dbURI);
