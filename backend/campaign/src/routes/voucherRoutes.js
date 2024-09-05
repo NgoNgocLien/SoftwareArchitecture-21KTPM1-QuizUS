@@ -62,23 +62,21 @@ router.put('/', async (req, res) => {
 });
 
 // lấy tất cả voucher đã đổi của player
-router.post('/exchange', async (req, res) => {
+router.get('/exchange/:id_player', async (req, res) => {
   try {
-    const id_player = req.body.id_player;
+    const id_player = req.params.id_player;
     
     if (!id_player) {
       return res.status(400).json({ message: 'id_player is required' });
     }
 
-    const playerVouchers = await PlayerVoucher.find({ id_player }).populate('id_voucher');
+    const playerVouchers = await PlayerVoucher.find({ id_player, is_used: true }).populate('id_voucher');
 
     console.log(playerVouchers);
 
     if (!playerVouchers || playerVouchers.length === 0) {
       return res.status(404).json({ message: 'No vouchers found for this player.' });
     }
-
-    const currentTime = new Date();
 
     const result = playerVouchers.map(playerVoucher => {
       const voucher = playerVoucher.id_voucher;
@@ -93,7 +91,7 @@ router.post('/exchange', async (req, res) => {
         expired_date: voucher.expired_date,
         score_exchange: voucher.score_exchange,
         status: voucher.status ? "Còn hạn" : "Hết hạn",
-        is_used: playerVoucher.is_used ? "Đã sử dụng" : "Chưa sử dụng"
+        is_used: "Đã sử dụng"
       };
     });
 
