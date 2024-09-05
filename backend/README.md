@@ -8,7 +8,7 @@
 ```shell
 cd F:/21KTPM1-SoftwareArchitecture-QuizUS/backend/
 ```
-3. Chạy các service bằng Docker Compose:
+2. Chạy các service bằng Docker Compose:
 * Để mỗi service chạy trên một server:
 ```shell
 docker compose up
