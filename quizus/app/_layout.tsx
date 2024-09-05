@@ -27,7 +27,7 @@ export default function RootLayout() {
       config.retrieveFromSecureStore('id_player', setIdPlayer);
 
       if (id_player) {
-        router.push('/'); 
+        router.push('/(tabs)');
       } else {
         router.push('/login'); 
       }
@@ -42,8 +42,8 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="login" />
-          <Stack.Screen name="signup" />
           <Stack.Screen name="otp" />
+          <Stack.Screen name="signup" />
 
           <Stack.Screen name="(tabs)" />
 

@@ -70,6 +70,24 @@ export default function TabLayout() {
                 tabBarButton: () => null,
             }} 
         />
+        <Tabs.Screen 
+            name="coins" 
+            options={{
+                tabBarButton: () => null,
+            }} 
+        />
+        <Tabs.Screen 
+            name="items" 
+            options={{
+                tabBarButton: () => null,
+            }} 
+        />
+        <Tabs.Screen 
+            name="my-vouchers" 
+            options={{
+                tabBarButton: () => null,
+            }}
+        />
 
     </Tabs>
     </RootSiblingParent> 

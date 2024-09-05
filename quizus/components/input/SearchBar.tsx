@@ -1,17 +1,18 @@
 import React from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
 export function SearchBar({
+    editable = true,
     ...rest
 }) {
   return (
-    <View style={styles.container}>
-        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện" {...rest} />
+    <Pressable style={[styles.container, rest.styles]} >
+        <TextInput style={styles.searchBar} placeholder="Tìm kiếm thương hiệu, sự kiện" editable={editable} onPress={rest.onPress} onSubmitEditing={rest.onSubmitEditing} />
         <FontAwesome name={'search'} style={styles.searchIcon} />
-    </View>
+    </Pressable>
   );
 };
 

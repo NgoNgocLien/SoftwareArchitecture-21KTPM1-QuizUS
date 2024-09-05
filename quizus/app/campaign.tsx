@@ -36,7 +36,7 @@ export default function Campaign() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Mua sắm',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Grab đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
             id: '64e9d9c8e8b4c21c4b2e9f5f',
@@ -66,7 +66,7 @@ export default function Campaign() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Cafe & Bánh',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Highlands đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
             id: '64e9d9c8e8b4c21c4b2e9f5f',
@@ -81,7 +81,7 @@ export default function Campaign() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Nhà hàng',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Pizza Hut đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
             id: '64e9d9c8e8b4c21c4b2e9f5f',
@@ -96,7 +96,7 @@ export default function Campaign() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Nhà hàng',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Kichi Kichi đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
         {
             id: '64e9d9c8e8b4c21c4b2e9f5f',
@@ -111,7 +111,7 @@ export default function Campaign() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Giải trí',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'CGV đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
         {
             id: '64e9d9c8e8b4c21c4b2e9f5f',
@@ -126,7 +126,7 @@ export default function Campaign() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Cafe & Bánh',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Starbucks đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
     ]
 
