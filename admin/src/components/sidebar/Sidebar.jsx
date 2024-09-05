@@ -33,7 +33,7 @@ export default function Sidebar() {
                     <span>Nhãn hàng</span>
                 </li>
                 <li className={focus === "game" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("game")}>
-                    <img src="/icons/brand.svg" alt="game" />
+                    <img src="/icons/game.svg" alt="game" />
                     <span>Trò chơi</span>
                 </li>
             </ul>
