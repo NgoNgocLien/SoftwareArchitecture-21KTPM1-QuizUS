@@ -4,15 +4,22 @@ import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-do
 // import { useSelector } from 'react-redux';
 
 import Sidebar from './components/sidebar/Sidebar';
+import Topbar from './components/topbar/Topbar';
 import Backbar from './components/topbar/Backbar';
 import Dashboard from './pages/Dashboard';
 
 function Layout() {
   return (
-    <div>
+    <div className="layout">
       <Sidebar />
-      <Backbar />
-      <Outlet />
+      <div className="content">
+        <Topbar />
+        <div className="page-content">
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 }
@@ -22,7 +29,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="" element={<Layout />}>
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="" element={<Dashboard />} />
         </Route>
       </Routes>
     </Router>
