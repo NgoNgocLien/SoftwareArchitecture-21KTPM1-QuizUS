@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Chart from "chart.js/auto";
+import LineChart from '../components/linechart/LineChart';
 import "../styles/common.css";
 import "../styles/dashboard.css";
 
@@ -27,11 +28,18 @@ export default function Dashboard() {
             </div>
 
             {/* Thống kê */}
-            <div className='statistics-ctn'>
+            <div className='col-9 statistics-ctn'>
                 {/* Thống kê người chơi */}
+                <div className='user-chart'>
+                    <p>Thống kê</p>
+                    <h6>Người chơi</h6>
+                    <LineChart />
+                </div>
                 
                 {/* Thống kê tình trạng vouchers */}
+                <div className='voucher-chart'>
 
+                </div>
                 {/* Thống kê người chơi theo loại trò chơi */}
             </div>
             

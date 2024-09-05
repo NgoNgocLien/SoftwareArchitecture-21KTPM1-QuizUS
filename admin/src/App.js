@@ -1,12 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
 
+// Components
 import Sidebar from './components/sidebar/Sidebar';
 import Topbar from './components/topbar/Topbar';
 import Backbar from './components/topbar/Backbar';
+import LineChart from './components/linechart/LineChart';
+
+// Pages
 import Dashboard from './pages/Dashboard';
+
 
 function Layout() {
   return (

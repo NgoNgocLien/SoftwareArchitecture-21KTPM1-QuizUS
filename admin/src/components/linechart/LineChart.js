@@ -13,19 +13,58 @@ function LineChart() {
       {
         label: 'Đăng ký',
         data: [10, 15, 20, 25, 30, 35, 30, 25], // Amount of money in millions for "Đăng ký"
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: '#007AFF', // Blue color
+        backgroundColor: 'rgba(0, 122, 255, 0.2)',
         tension: 0.4,
       },
       {
         label: 'Tham gia sự kiện',
         data: [5, 10, 15, 20, 25, 30, 20, 15], // Amount of money in millions for "Tham gia sự kiện"
-        borderColor: 'rgba(54, 162, 235, 1)',
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: '#34C759', // Green color
+        backgroundColor: 'rgba(52, 199, 89, 0.2)',
         tension: 0.4,
       },
       {
         label: 'Trao đổi vật phẩm',
         data: [8, 12, 18, 22, 28, 32, 25, 18], // Amount of money in millions for "Trao đổi vật phẩm"
-        borderColor: 'rgba(255, 99, 132, 1)',
-       
+        borderColor: '#FF3B30', // Red color
+        backgroundColor: 'rgba(255, 59, 48, 0.2)',
+        tension: 0.4,
+      },
+    ],
+  };
+
+  // Chart options
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false, // Disable aspect ratio to control height
+    plugins: {
+      legend: {
+        position: 'top', // Legend position
+      },
+      title: {
+        display: true,
+        text: 'Biểu đồ theo dõi số lượng người chơi theo tháng (triệu đồng)', // Chart title
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            return value + ' triệu'; // Show Y-axis as "triệu đồng"
+          },
+        },
+        suggestedMax: 40, // Set the max value to 40 million
+      },
+    },
+  };
+
+  return (
+    <div style={{ height: '400px' }}>  {/* Set chart width and height */}
+      <Line data={data} options={options} />
+    </div>
+  );
+}
+
+export default LineChart;

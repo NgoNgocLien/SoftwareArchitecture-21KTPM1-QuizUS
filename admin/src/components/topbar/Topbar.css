@@ -10,13 +10,13 @@
     padding-right: 24px;
 }
 
+.topbar h6 {
+    margin: 27px 24px;
+}
+
 .user-profile {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 8px;
-}
-
-h6 {
-    margin: 27px 24px;
 }

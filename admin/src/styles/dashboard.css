@@ -23,3 +23,26 @@
     margin: 0;
 }
 
+.user-chart {
+    width: 70.5%;
+    margin-top: 24px;
+    padding: 24px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #EAECF0;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.user-chart p {
+    color: #9291A5;
+}
+
+.user-chart h6 {
+    font-family: medium-font;
+    font-size: 24px;
+    margin: 0;
+}
+
+.voucher-chart {
+    
+}
