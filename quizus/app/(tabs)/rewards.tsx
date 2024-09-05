@@ -116,6 +116,7 @@ export default function Rewards() {
     return (
         <View style={styles.background}>
             <Header />
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
             <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
             <View style={styles.tabContainer}>
                 <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
@@ -182,7 +183,8 @@ export default function Rewards() {
                             ))}
                         </>
                     )
-                }   
+                }
+            </ScrollView>     
         </View>
     )
 }
