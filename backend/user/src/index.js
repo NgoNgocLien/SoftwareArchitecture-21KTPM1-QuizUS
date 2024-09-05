@@ -7,7 +7,7 @@ app.use(express.static("."));
 const cors = require('cors');
 app.use(cors());
 
-const port = 8081
+const port = 8081;
 app.listen(port);
 
 const bodyParser = require('body-parser');
