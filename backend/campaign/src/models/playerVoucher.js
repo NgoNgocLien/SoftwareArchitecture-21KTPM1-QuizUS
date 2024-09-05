@@ -6,9 +6,9 @@ const PlayerVoucherSchema = new Schema({
     type: String, 
     required: true 
   },
-  id_voucher: { 
+  id_campaign: { 
     type: Schema.Types.ObjectId, 
-    ref: 'Voucher', 
+    ref: 'Campaign', 
     required: true 
   },
   is_used: { 

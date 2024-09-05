@@ -117,36 +117,36 @@ export default function Rewards() {
         <View style={styles.background}>
             <Header />
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-                <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
-                <View style={styles.tabContainer}>
-                    <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
-                        <View style={styles.tab}>
-                            <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
-                            <Text style={styles.tabText}>Xu thưởng</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+            <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
+            <View style={styles.tabContainer}>
+                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Xu thưởng</Text>
+                    </View>
+                </TouchableWithoutFeedback>
 
-                    <TouchableWithoutFeedback onPress={() => router.push('/items')}>
-                        <View style={styles.tab}>
-                            <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
-                            <Text style={styles.tabText}>Vật phẩm</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => router.push('/items')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Vật phẩm</Text>
+                    </View>
+                </TouchableWithoutFeedback>
 
-                    <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
-                        <View style={styles.tab}>
-                            <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
-                            <Text style={styles.tabText}>Mã giảm giá</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Mã giảm giá</Text>
+                    </View>
+                </TouchableWithoutFeedback>
 
-                    <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
-                        <View style={styles.tab}>
-                            <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
-                            <Text style={styles.tabText}>Thanh toán</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </View>
+                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                    <View style={styles.tab}>
+                        <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
+                        <Text style={styles.tabText}>Thanh toán</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
 
                 { 
                     vouchers.length === 0 ? (
@@ -184,7 +184,7 @@ export default function Rewards() {
                         </>
                     )
                 }
-            </ScrollView>    
+            </ScrollView>     
         </View>
     )
 }
