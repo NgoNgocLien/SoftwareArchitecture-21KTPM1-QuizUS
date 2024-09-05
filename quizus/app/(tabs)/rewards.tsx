@@ -132,7 +132,7 @@ export default function Rewards() {
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/rewards/voucher')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Mã giảm giá</Text>
