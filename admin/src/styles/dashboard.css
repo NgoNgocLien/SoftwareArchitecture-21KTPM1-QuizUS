@@ -23,7 +23,14 @@
     margin: 0;
 }
 
+.statistics-ctn {
+    display: flex;
+    gap: 24px;
+}
+
 .user-chart {
+    display: flex;
+    flex-direction: column;
     width: 70.5%;
     margin-top: 24px;
     padding: 24px;
@@ -31,10 +38,12 @@
     border-radius: 10px;
     border: 1px solid #EAECF0;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    height: 500px;
 }
 
 .user-chart p {
     color: #9291A5;
+    margin-bottom: 8px;
 }
 
 .user-chart h6 {
@@ -43,6 +52,34 @@
     margin: 0;
 }
 
-.voucher-chart {
-    
+.piechart {
+    width: 23%;
 }
+.piechart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.voucher-chart, .player-chart {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-top: 24px;
+    padding: 24px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #EAECF0;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.voucher-chart p, .player-chart p {
+    font-size: 12px;
+    color: #9291A5;
+    margin: 0;
+}
+
+.voucher-chart h6, .player-chart h6 {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+

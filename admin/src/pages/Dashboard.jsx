@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Chart from "chart.js/auto";
 import LineChart from '../components/linechart/LineChart';
+import VoucherChart from '../components/piechart/VoucherChart';
+import PlayerChart from '../components/piechart/PlayerChart';
 import "../styles/common.css";
 import "../styles/dashboard.css";
 
@@ -28,7 +30,7 @@ export default function Dashboard() {
             </div>
 
             {/* Thống kê */}
-            <div className='col-9 statistics-ctn'>
+            <div className='statistics-ctn gap-2'>
                 {/* Thống kê người chơi */}
                 <div className='user-chart'>
                     <p>Thống kê</p>
@@ -36,16 +38,28 @@ export default function Dashboard() {
                     <LineChart />
                 </div>
                 
-                {/* Thống kê tình trạng vouchers */}
-                <div className='voucher-chart'>
-
+                <div className='piechart d-flex flex-column'>
+                    {/* Thống kê tình trạng vouchers */}
+                    <div className='voucher-chart'>
+                        <p>Thống kê</p>
+                        <h6>Tình trạng voucher</h6>
+                        <VoucherChart />
+                    </div>
+                    {/* Thống kê người chơi theo loại trò chơi */}
+                    <div className='player-chart'>
+                        <p>Thống kê</p>
+                        <h6>Người chơi theo loại trò chơi</h6>
+                        <PlayerChart />
+                    </div>
                 </div>
-                {/* Thống kê người chơi theo loại trò chơi */}
+                
+                
             </div>
             
-
-
             {/* Thống kê ngân sách */}
+            <div className='budget-chart'>
+                
+            </div>
         </div>
     );
 };
