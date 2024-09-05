@@ -11,7 +11,7 @@
 
 .sidebar-brand {
     height: 56px;
-    padding: 16px 24px;
+    padding: 10px 24px;
 }
 
 .sidebar-nav {
@@ -22,9 +22,9 @@
 .sidebar-nav-item {
     font-family: regular-font;
     font-size: 18px;
-    line-height: 20px;
-    padding: 8px;
-    height: 56px;
+    line-height: 24px;
+    padding: 16px 24px;
+    gap: 8px;
     border-radius: 6px;
     color: white;
     display: flex;

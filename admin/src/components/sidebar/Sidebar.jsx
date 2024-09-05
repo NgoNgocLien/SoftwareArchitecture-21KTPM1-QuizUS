@@ -25,15 +25,15 @@ export default function Sidebar() {
                     <span>Tổng quan</span>
                 </li>
                 <li className={focus === "player" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("player")}>
-                    <i class="fa-solid fa-user"></i>
+                    <img src="/icons/user.svg" alt="user" />
                     <span>Người chơi</span>
                 </li>
                 <li className={focus === "brand" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("brand")}>
-                    <i class="fa-solid fa-cart-shopping"></i>
+                    <img src="/icons/brand.svg" alt="brand" />
                     <span>Nhãn hàng</span>
                 </li>
                 <li className={focus === "game" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("game")}>
-                    <i class="fa-solid fa-gamepad"></i>
+                    <img src="/icons/brand.svg" alt="game" />
                     <span>Trò chơi</span>
                 </li>
             </ul>
