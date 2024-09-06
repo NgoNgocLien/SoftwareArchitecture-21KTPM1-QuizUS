@@ -33,6 +33,7 @@ router.get('/active', async (req, res) => {
                         ...item.campaign._doc,
                         brandName: brandResponse.data.name,
                         brandLogo: brandResponse.data.logo,
+                        brandField: brandResponse.data.field
                     },
                     voucher: item.voucher._doc
                 };
@@ -136,7 +137,7 @@ router.get('/exchange/:id_player', async (req, res) => {
                     campaign: {
                         ...campaignInfo,
                         brandName: brandResponse.data.name,
-                        brandLogo: brandResponse.data.logo
+                        brandLogo: brandResponse.data.logo,
                     },
                     voucher: id_voucher?._doc || '',
                     is_used: playerVoucher.is_used
@@ -181,7 +182,7 @@ router.post('/exchange/coin', async (req, res) => {
           }
 
       } catch (error) {
-          return res.status(500).json({ message: 'Failed to communicate with the coin deduction service.', error: error.message });
+          return res.status(500).json({ message: 'Failed to communicate with the user service.', error: error.message });
       }
   } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
