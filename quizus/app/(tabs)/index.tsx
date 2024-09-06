@@ -6,9 +6,10 @@ import { Header } from '@/components/header/Header';
 import { Colors } from '@/constants/Colors';
 import { CampaignCard } from '@/components/card/CampaignCard';
 import { SearchBar } from '@/components/input/SearchBar';
-import { getCampaignsInProgess } from '@/api/CampaignApi';
+import { getCampaignsInProgess, getLikedCampaigns } from '@/api/CampaignApi';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
+import config from '@/constants/config';
 
 export default function HomePage() {
 
@@ -22,6 +23,7 @@ export default function HomePage() {
     
     const [loading, setLoading] = useState(true);
     const [focusedTab, setFocusedTab] = useState(0);
+
     const [campaigns, setCampaigns] = useState<any[]>([]);
     const [cafeBanh, setCafeBanh] = useState<any[]>([]);
     const [muaSam, setMuaSam] = useState<any[]>([]);
@@ -36,21 +38,39 @@ export default function HomePage() {
 
     // for each campaign, get the brand name and logo
     useEffect(() => {
-        getCampaignsInProgess().then((res) => {
-            setCampaigns(res);
-            setNhaHang(res.filter((item: any) => item.brand.field === 'Nhà hàng'));
-            setCafeBanh(res.filter((item: any) => item.brand.field === 'Cafe & Bánh'));
-            setMuaSam(res.filter((item: any) => item.brand.field === 'Mua sắm'));
-            setGiaiTri(res.filter((item: any) => item.brand.field === 'Giải trí'));
-            console.log(res); 
 
-            setLoading(false);
+        getCampaignsInProgess().then((res) => {
+            config.retrieveFromSecureStore('id_player', (id_player: string) => {
+
+                getLikedCampaigns(id_player).then((likedCampaigns) => {
+                    res.map((campaign: any) => {
+                        campaign.isFavorite = likedCampaigns.some((likedCampaign: any) => likedCampaign.campaign_data._id === campaign._id);
+                    });
+                    setCampaigns(res);
+                    setLoading(false);
+
+                }).catch((err) => {
+                    console.log(err);
+                    setCampaigns(res);
+                    setLoading(false);
+                });
+            }).catch((err) => {
+                console.log(err);
+                setCampaigns(res);
+                setLoading(false);
+            });
         }).catch((err) => {
             console.log(err);
             setLoading(false);  
         });
     }, []);
 
+    useEffect(() => {
+        setNhaHang(campaigns.filter((item: any) => item.brand.field === 'Nhà hàng'));
+        setCafeBanh(campaigns.filter((item: any) => item.brand.field === 'Cafe & Bánh'));
+        setMuaSam(campaigns.filter((item: any) => item.brand.field === 'Mua sắm'));
+        setGiaiTri(campaigns.filter((item: any) => item.brand.field === 'Giải trí'));
+    }, [campaigns]);
 
     return (
         <View style={styles.background} >
@@ -85,6 +105,7 @@ export default function HomePage() {
                             {campaigns.map((campaign, index) => (
                                 <CampaignCard 
                                     campaign={campaign}
+                                    isFavorite={true}
                                     key={index} 
                                     style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -102,6 +123,7 @@ export default function HomePage() {
                             {nhaHang.map((campaign, index) => (
                                 <CampaignCard 
                                     campaign={campaign}
+                                    isFavorite={campaign.isFavorite}
                                     key={index} 
                                     style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -119,6 +141,7 @@ export default function HomePage() {
                             {cafeBanh.map((campaign, index) => (
                                 <CampaignCard 
                                     campaign={campaign}
+                                    isFavorite={campaign.isFavorite}
                                     key={index} 
                                     style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -136,6 +159,7 @@ export default function HomePage() {
                             {muaSam.map((campaign, index) => (
                                 <CampaignCard 
                                     campaign={campaign}
+                                    isFavorite={campaign.isFavorite}
                                     key={index} 
                                     style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -153,6 +177,7 @@ export default function HomePage() {
                             {giaiTri.map((campaign, index) => (
                                 <CampaignCard 
                                     campaign={campaign}
+                                    isFavorite={campaign.isFavorite}
                                     key={index} 
                                     style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
                                 />

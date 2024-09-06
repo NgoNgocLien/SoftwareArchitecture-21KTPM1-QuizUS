@@ -15,7 +15,7 @@ import dialogStyles from '@/components/modal/Dialog.styles';
 
 export function CampaignCard({
     campaign,
-    isFavorite = false,
+    isFavorite,
     ...rest
 }:{
     campaign: any,
@@ -24,14 +24,13 @@ export function CampaignCard({
 }) {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [favorite, setFavorite] = React.useState(campaign.isFavorite);
+    const [favorite, setFavorite] = useState(isFavorite);
 
     const handleFavorite = () => {
         if (favorite) {
             setModalVisible(true);
         } else {
             // TODO: Add to favorite
-            
             config.retrieveFromSecureStore('id_player', (id: string) => {
                 let id_player = id ? id : "";
 

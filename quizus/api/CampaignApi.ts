@@ -50,7 +50,7 @@ export const likeCampaign = async (id_player: string, id_campaign: string) => {
 
 export const getLikedCampaigns = async (id_player: string) => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/liked_campaigns/${id_player}`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/like/${id_player}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
