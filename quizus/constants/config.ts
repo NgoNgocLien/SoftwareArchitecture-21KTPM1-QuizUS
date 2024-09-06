@@ -7,9 +7,9 @@
 // const CAMPAIGN_BE = 'http://192.168.1.6:8083';
 
 // ml
-const USER_BE = 'http://192.168.2.177:8081';
-const GAME_BE = 'http://192.168.2.177:8082';
-const CAMPAIGN_BE = 'http://192.168.2.177:8083';
+const USER_BE = 'http://192.168.2.177:8080/user';
+const GAME_BE = 'http://192.168.2.177:8080/game';
+const CAMPAIGN_BE = 'http://192.168.2.177:8080/campaign';
 
 const NOTI_BE = '';
 
