@@ -33,7 +33,6 @@ export const getActiveVouchers = async () => {
 
         const result = await response.json();
         if (response.ok) {
-            console.log(result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);

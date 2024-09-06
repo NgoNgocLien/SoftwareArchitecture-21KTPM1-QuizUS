@@ -6,7 +6,8 @@ import {
     SafeAreaView,
     Image,
     TouchableWithoutFeedback,
-    ScrollView
+    ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
 
@@ -16,6 +17,9 @@ import { Heading } from '@/components/text/Heading';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import { getActiveVouchers } from '@/api/VoucherApi';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+import { EmptyView } from '@/components/EmptyView';
+import { LoadingView } from '@/components/LoadingView';
+import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 
 // call api
 const defaultPlayerInfo = {
@@ -26,37 +30,45 @@ const defaultPlayerInfo = {
 
 export default function Rewards() {
 
-    const [_vouchers, setVouchers] = useState<any[][] | null>(null);
+    const [vouchers, setVouchers] = useState<any[][] | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getActiveVouchers()
-        .then(vouchers => {
-
-            console.log(vouchers);
+        .then(voucherList => {
 
             let allVouchers: any[] = [];
-            let _coinVouchers: any[] = [];
-            let _itemVouchers: any[] = [];
+            let coinVouchers: any[] = [];
+            let itemVouchers: any[] = [];
 
-            vouchers.map((activeVoucher: {campaign?: any; voucher?: any; }) => {
-                const {voucher, ...newActiveVoucher} = activeVoucher
+            voucherList.map((voucher: {campaign: any; voucher: any; }) => {
 
-                if(activeVoucher.campaign.id_quiz !== "") {
-                    const newVoucher = VoucherFactory.createVoucher('coin', voucher);
+                if(voucher.campaign.id_quiz !== "") {
+                    const newVoucher = VoucherFactory.createVoucher('coin', voucher.voucher);
 
-                    _coinVouchers.push({...newActiveVoucher, voucher: newVoucher});
-                    allVouchers.push({...newActiveVoucher, voucher: newVoucher});
+                    coinVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                    allVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
                 } else {
-                    const newVoucher = VoucherFactory.createVoucher('item', voucher);
-                    _itemVouchers.push({...newActiveVoucher, voucher: newVoucher});
-                    allVouchers.push({...newActiveVoucher, voucher: newVoucher});
+                    const newVoucher = VoucherFactory.createVoucher('item', {
+                        ...voucher.voucher,
+                        ...voucher.campaign.item1_quantity,
+                        ...voucher.campaign.item2_quantity,
+                    });
+
+                    itemVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                    allVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
                 }
             }); 
             
-            setVouchers([allVouchers, _coinVouchers, _itemVouchers]);
+            setVouchers([allVouchers, coinVouchers, itemVouchers]);
+            setLoading(false);
+
+            console.log('Coin Vouchers:', coinVouchers);
+            // console.log('Item Vouchers:', itemVouchers);
         })
         .catch(error => {
             console.error('Error fetching player vouchers:', error);
+            setLoading(false);
         });
 
     }, []);
@@ -96,10 +108,9 @@ export default function Rewards() {
                 </View>
 
                 {
-                    !_vouchers || _vouchers[1]?.length === 0 || _vouchers[2]?.length === 0 ? (
-                        <View style={styles.emptyContainer}>
-                            <Image source={require('@/assets/images/empty-result.png')} style={styles.emptyImage} />
-                        </View>
+                    loading ? <LoadingView /> :
+                    !vouchers || (vouchers[1]?.length === 0 && vouchers[2]?.length === 0) ? (
+                        <EmptyView />
                     ) : (
                         <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
                             <View style={[styles.container, styles.titleContainer]}>
@@ -109,9 +120,10 @@ export default function Rewards() {
 
                             {/* Lấy chỉ 2 mục */}
                             
-                            { _vouchers[1]?.slice(0, 2).map((voucher, index) => (
+                            { vouchers[1]?.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher.getVoucher()}
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                 />
@@ -121,11 +133,12 @@ export default function Rewards() {
                                 <Heading type="h4">Đổi mảnh ghép</Heading>
                                 <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')} suppressHighlighting={true}>Xem tất cả</Heading>
                             </View>
-
+   
                             {/* Lấy chỉ 2 mục */}
-                            {_vouchers[2]?.slice(0, 2).map((voucher, index) => (
+                            {vouchers[2]?.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher.getVoucher()}
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === 1 ? { marginBottom: 20 } : {}} 
@@ -177,14 +190,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-    },
-    emptyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    emptyImage: {
-        width: 250,
-        height: 210,
     },
 });

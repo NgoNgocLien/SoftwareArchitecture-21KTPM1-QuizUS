@@ -19,27 +19,28 @@ export default function HomePage() {
     ]
 
     const [focusedTab, setFocusedTab] = useState(0);
-    // const [campaigns, setCampaigns] = useState([]);
+    const [campaignsss, setCampaigns] = useState([]);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
     }
 
     // for each campaign, get the brand name and logo
-    // useEffect(() => {
-    //     getCampaignsInProgess().then((res) => {
-    //         // for each campaign, add brand name and logo and isFavoritfalse/         let _campaigns = res.map((campaign: any) => {
-
-    //             return {
-    //                 ...campaign,
-    //                 brandName: 'SHOPEE',
-    //                 brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-    //                 isFavorite: falsee,
-    //             }
-    //         });
-    //         setCampaigns(_campaigns); 
-    //     });
-    // }, []);
+    useEffect(() => {
+        getCampaignsInProgess().then((res) => {
+            // for each campaign, add brand name and logo and isFavoritfalse
+            let _campaigns = res.map((campaign: any) => {
+                return {
+                    ...campaign,
+                    brandName: 'SHOPEE',
+                    brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
+                    isFavorite: false,
+                }
+            });
+            // console.log(_campaigns);
+            setCampaigns(_campaigns); 
+        });
+    }, []);
 
     let campaigns = [
         {
