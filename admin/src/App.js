@@ -11,6 +11,7 @@ import Backbar from './components/topbar/Backbar';
 import Dashboard from './pages/Dashboard';
 import ManageBrand from './pages/ManageBrand';
 import ManageUser from './pages/ManageUser';
+import ManageGame from './pages/ManageGame';
 
 function Layout() {
   return (
@@ -34,9 +35,10 @@ function App() {
     <Router>
       <Routes>
         <Route path="" element={<Layout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/brand" element={<ManageBrand />} />
           <Route path="/user" element={<ManageUser />} />
+          <Route path="/game" element={<ManageGame />} />
         </Route>
       </Routes>
     </Router>
