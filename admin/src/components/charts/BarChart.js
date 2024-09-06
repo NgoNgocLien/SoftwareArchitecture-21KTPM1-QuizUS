@@ -79,7 +79,7 @@ function BarChart() {
     }   
 
     return (
-        <div style={{ width: '790px', height: '400px' }}>
+        <div style={{ width: '100%', height: '900px' }}>
           <Bar data={barData} options={barOptions} />
         </div>
     );
