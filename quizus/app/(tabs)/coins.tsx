@@ -14,6 +14,15 @@ import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { LoadingView } from '@/components/LoadingView';
 import { EmptyView } from '@/components/EmptyView';
 
+
+// call api
+const defaultPlayerInfo = {
+    score: 100,
+    quantity_item1: 0,
+    quantity_item2: 0
+}
+
+
 export default function Coins() {
     const router = useRouter();
 
@@ -146,6 +155,7 @@ export default function Coins() {
                                     voucher={item.voucher}
                                     campaign={item.campaign}
                                     key={index} 
+                                    playerInfo={defaultPlayerInfo}
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
                             ))}
@@ -162,6 +172,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}  
                                     campaign={item.campaign}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -179,6 +190,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}
                                     campaign={item.campaign}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -196,6 +208,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}
                                     campaign={item.campaign}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -213,6 +226,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}
                                     campaign={item.campaign}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
                                 />

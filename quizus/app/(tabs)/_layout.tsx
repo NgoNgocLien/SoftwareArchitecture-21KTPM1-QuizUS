@@ -31,7 +31,7 @@ export default function TabLayout() {
         <Tabs.Screen
             name="index"
             options={{
-                title: 'Home',
+                title: 'Trang chủ',
                 tabBarIcon: ({ color, focused }) => (
                     <TabBarIcon name={'home-variant'} color={color} />
                 ),

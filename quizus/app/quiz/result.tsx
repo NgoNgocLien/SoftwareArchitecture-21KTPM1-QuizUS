@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, Image, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, Image, Text, TouchableOpacity, Modal } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
@@ -10,6 +10,9 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import config from '@/constants/config';
+import { FontAwesome6 } from '@expo/vector-icons';
+
+import dialogStyles from '@/components/modal/Dialog.styles'
 
 export default function Result() {
     const router = useRouter();
@@ -26,8 +29,13 @@ export default function Result() {
     console.log(elapsedTime);
 
     const handlePlayAgain = () => {
-        router.replace('/campaign')
+        router.replace({
+            pathname: '/campaign',
+            params: { id_campaign: id_campaign }
+        })
     }
+
+    const [isModalVisible, setModalVisible] = useState(false);
 
     const handleShare = () => {
 
@@ -43,7 +51,7 @@ export default function Result() {
     <SafeAreaView style={styles.background}>
     <View style={styles.container}>
         <View style={styles.playerTurnContainer}>
-            {/* {
+            {
                 Array(playerTurn).fill(null).map((_,index) => (
                     <TabBarIcon key={index} name={'cards-heart'} color={Colors.light.primary} />
                 ))
@@ -52,7 +60,7 @@ export default function Result() {
                 Array(3-playerTurn).fill(null).map((_,index) => (
                     <TabBarIcon key={index} name={'cards-heart'} color={Colors.gray._300} />
                 ))
-            } */}
+            }
         </View>  
 
         <Image
@@ -100,12 +108,36 @@ export default function Result() {
                         onPress={handlePlayAgain}>
                     </Button>
                 ) : (
-                    <Button text="Chia sẻ" type="tertiary" style={{marginBottom: 10}}
-                        onPress={handleShare}>
+                    <Button text="Thêm lượt chơi" type="tertiary" style={{marginBottom: 10}}
+                        onPress={() => {setModalVisible(true);}}>
                     </Button>
                 )
             }
         </View>
+
+        <Modal
+            transparent={true} 
+            animationType="fade" 
+            visible={isModalVisible}
+            onRequestClose={() => {setModalVisible(false);}}
+        >
+            <View style={dialogStyles.centeredView}>
+                <View style={dialogStyles.modalView}>
+                    <View style={dialogStyles.topView}>
+                        <Heading type={'h5'}>Thêm lượt chơi</Heading>
+
+                        <FontAwesome6 name='xmark' style={{fontSize: 20, padding: 5, color: Colors.gray._600}} 
+                            onPress={() => setModalVisible(false)} suppressHighlighting={true}/>
+                    </View>
+                    <View style={dialogStyles.buttonView}>
+                        <Button style={dialogStyles.button} text={'Chia sẻ sự kiện'} type='primary'></Button>
+                        <Button style={dialogStyles.button} text={'Xin lượt chơi từ bạn bè'} type='secondary'></Button>
+                    </View>
+                    
+                </View>
+            </View>
+        </Modal>
+
     </View>
     </SafeAreaView>
     </TouchableWithoutFeedback>

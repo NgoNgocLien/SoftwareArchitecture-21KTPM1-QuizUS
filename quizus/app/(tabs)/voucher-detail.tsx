@@ -19,173 +19,33 @@ import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import config from '@/constants/config';
-import { getQuizInfo, getPlayerTurn } from '@/api/QuizApi';
+import { getQuizInfo } from '@/api/QuizApi';
+import { Voucher } from '@/models/voucher/Voucher';
 
 export default function Campaign() {
-
-    let campaigns = [
-        {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
-            brandName: 'GRAB',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Cuộc Đua Săn Quà, Trúng Lớn Mỗi Ngày',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Grab đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: '64e9d9c8e8b4c21c4b2e9f60',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: 'a',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
-            brandName: 'HIGHLANDS',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Cafe & Bánh',
-            description: 'Highlands đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: 'b',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
-            brandName: 'PIZZA HUT',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-10-23T12:00:00Z',
-            name: 'Xoay Lắc Đèn Lồng, Mở Rương Quà Tặng',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Nhà hàng',
-            description: 'Pizza Hut đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: 'c',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
-            brandName: 'KICHI KICHI',
-            start_datetime: '2024-07-31T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Bão Quà Cuồng Nhiệt',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Nhà hàng',
-            description: 'Kichi Kichi đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-        {
-            id: 'd',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
-            brandName: 'CGV',
-            start_datetime: '2024-07-31T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Lắc Tay Săn Kho Báu, Rinh Về Ngàn Quà Tặng',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Giải trí',
-            description: 'CGV đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-        {
-            id: 'e',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
-            brandName: 'STARBUCKS',
-            start_datetime: '2024-09-01T12:00:00Z',
-            end_datetime: '2024-10-31T12:00:00Z',
-            name: 'Phiêu Lưu Xứ Sở Quà, Rinh Về Niềm Vui',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Cafe & Bánh',
-            description: 'Starbucks đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-    ]
-
     const params = useLocalSearchParams();
-    const id_campaign = params.id_campaign as string
+    const voucher = params.voucher;
 
-    const campaign: any = campaigns.find(campaign => campaign.id === id_campaign);
+    const [campaigns, setCampaigns] = useState<[] | null>(null);
 
-    const handleShare = async () => {
-        try {
-            const result = await Share.share({
-                message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-                url: 'exp://192.168.1.6:8081',
-            });
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // shared with activity type of result.activityType
-                    Alert.alert('Shared with activity type of result.activityType');
-                } else {
-                    // shared
-                    Alert.alert('Shared');
-                }
-            } else if (result.action === Share.dismissedAction) {
-                // dismissed
-            }
-        } catch (error: any) {
-            Alert.alert(error.message);
-        }
-    };
-
-    const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
-    const [playerTurn, setPlayerTurn] = useState <number>(0);
     useEffect(() => {
-        if (id_campaign){
+        // call api get campaign by id_voucher
 
-            getQuizInfo(id_campaign)
-            .then(quizInfo => {
-                setQuizInfo(quizInfo.id_quiz)
-            })
-            .catch(error => {
-                console.error('Error fetching quiz info:', error);
-            });
+        // getCampaignsByVoucher(voucher.id_voucher)
+        // .then(campaigns => {
+        //     setCampaigns(campaigns)
+        // })
+        // .catch(error => {
+        //     console.error('Error fetching quiz info:', error);
+        // });
+    }, [])
 
-            getPlayerTurn(config.ID_PLAYER, id_campaign)
-            .then(playerTurn => {
-                setPlayerTurn(playerTurn)
-            })
-            .catch(error => {
-                console.error('Error fetching quiz info:', error);
-            });
-        }
-    }, [id_campaign])
     return (
         <View style={styles.container}>
             <SubHeader/>
             <View style={styles.background}>
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
-                    <Image style={styles.banner} source={{uri: campaign.photo}} />
+                    <Image style={styles.banner} source={{uri: voucher.photo}} />
                             
                         <View style={styles.campaignHeaderContainer}>
                             <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo} />
@@ -237,7 +97,7 @@ export default function Campaign() {
                             <Paragraph type='p2' style={{color: Colors.light.subText}}>Trả lời đúng 10/10 câu</Paragraph>
 
                         </View>
-                        {/* <VoucherCard style={{marginBottom: 100}}/> */}
+                        <VoucherCard style={{marginBottom: 100}}/>
                 </ScrollView>
                 <View style={styles.joinButtonContainer} >
                     <Button text='Chơi ngay' type='primary' style={styles.joinButton} 

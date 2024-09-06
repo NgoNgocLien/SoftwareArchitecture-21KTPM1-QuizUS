@@ -9,23 +9,14 @@ import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
 import { Heading } from '../text/Heading';
 import { Paragraph } from '../text/Paragraph';
 
-export function CampaignCard({
-    campaign = {
-        id: '64e9d9c8e8b4c21c4b2e9f5f',
-        brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
-        brandName: 'CGV',
-        start_datetime: '2024-07-31T12:00:00Z',
-        end_datetime: '2024-09-25T12:00:00Z',
-        name: 'Lắc Tay Săn Kho Báu, Rinh Về Ngàn Quà Tặng',
+import dialogStyles from '@/components/modal/Dialog.styles';
 
-        isFavorite: false,
-        id_brand1: 1,
-        id_brand2: 2,        
-        photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723489893/Shopee-game-la-gi_hvpkdi.jpg',
-        category: 'Giải trí',
-        description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-    },
+export function CampaignCard({
+    campaign,
     ...rest
+}:{
+  campaign: any,
+  [key: string]: any 
 }) {
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -49,6 +40,8 @@ export function CampaignCard({
     // dd/MM
     let startDateFormatted = new Date(campaign.start_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.start_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
     let endDateFormatted = new Date(campaign.end_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.end_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
+
+    console.log("id_campaign: ", campaign.id_campaign)
 
     return (
         <>
@@ -96,7 +89,7 @@ export function CampaignCard({
                     <View style={styles.detail_bottom}>
                         <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push({
                             pathname: '/campaign',
-                            params: { campaignName: campaign.name }
+                            params: { id_campaign: campaign.id_campaign }
                         })}>
                             <Text style={styles.joinButtonText}>Tham gia</Text>
                         </TouchableOpacity>
@@ -217,61 +210,4 @@ const styles = StyleSheet.create({
         color: Colors.gray._500,
         fontSize: 28
     }
-});
-
-const dialogStyles = StyleSheet.create({
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    },
-    modalView: {
-        marginHorizontal: 20,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 20,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-
-    topView: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 10,
-    },
-    dangerIconContainer: {
-        backgroundColor: Colors.brand._200,
-        borderColor: Colors.brand._50,
-        borderWidth: 6,
-        borderRadius: 30,
-        width: 50,
-        height: 50,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    dangerIcon: {
-        color: Colors.light.primary,
-        fontSize: 20,
-    },
-    confirmButton: {
-        backgroundColor: Colors.light.primary,
-        padding: 12,
-        borderRadius: 10,
-        marginTop: 20,
-    },
-    confirmButtonText: {
-        color: 'white',
-        textAlign: 'center',
-        fontSize: 16,
-        fontWeight: '600',
-    },
 });
