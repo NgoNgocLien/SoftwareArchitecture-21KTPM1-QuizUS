@@ -20,9 +20,9 @@ docker compose up --scale user=2 --scale game=2 --scale campaign=2
 3. Gọi API thông qua API Gateway:
 * Base URL của API Gateway: `http://localhost:8000/`
 * Gọi API của các service cụ thể:
-  * User service: `http://localhost:8000/user/api`
-  * Game service: `http://localhost:8000/game/api`
-  * Campaign service: `http://localhost:8000/campaign/api`
+  * User service: `http://localhost:8000/user`
+  * Game service: `http://localhost:8000/game`
+  * Campaign service: `http://localhost:8000/campaign`
 
 ## Chạy độc lập từng service (nếu không sử dụng Docker):
 1. Mở terminal và điều hướng đến thư mục của service:
