@@ -24,7 +24,7 @@ router.get('/campaign/:id_campaign', async (req, res) => {
 });
 
 // lấy tất cả mảnh ghép (item) của người chơi
-router.get('/user/item/:id_player', async (req, res) => {
+router.get('/item/:id_player', async (req, res) => {
   try {
     const id_player = req.params.id_player;
     
@@ -125,7 +125,7 @@ router.post('/', async (req, res) => {
 });
 
 // lấy lượt chơi còn lại của người chơi với 1 campaign
-router.get('/user/player_turn/:id_player/:id_campaign', async (req, res) => {
+router.get('/player_turn/:id_player/:id_campaign', async (req, res) => {
   try {
     const { id_player, id_campaign } = req.params;
 

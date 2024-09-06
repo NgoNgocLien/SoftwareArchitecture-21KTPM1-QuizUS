@@ -42,7 +42,7 @@ export function Button({
         ) 
       }
       <Paragraph 
-        // style={{width: '100%', backgroundColor: Colors.brand._100, textAlign: 'center'}}
+        style={{textAlign: 'center'}}
         type="p2" 
         color={type === 'primary' ? Colors.light.background : Colors.light.mainText}>
           {text} 
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginBottom: 20,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    textAlign: 'center',
   },
   primary: {
     backgroundColor: Colors.light.primary, 
