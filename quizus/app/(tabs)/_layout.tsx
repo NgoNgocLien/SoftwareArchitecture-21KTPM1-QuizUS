@@ -88,7 +88,12 @@ export default function TabLayout() {
                 tabBarButton: () => null,
             }}
         />
-
+        <Tabs.Screen 
+            name="my-vouchers.styles" 
+            options={{
+                tabBarButton: () => null,
+            }}
+        />
     </Tabs>
     </RootSiblingParent> 
   );

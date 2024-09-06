@@ -70,28 +70,32 @@ router.get('/exchange/:id_player', async (req, res) => {
       return res.status(400).json({ message: 'id_player is required' });
     }
 
-    const playerVouchers = await PlayerVoucher.find({ id_player, is_used: true }).populate('id_voucher');
+    // const result = await PlayerVoucher.find();
 
-    console.log(playerVouchers);
+    const playerVouchers = await PlayerVoucher.find({ id_player })
+      .populate({
+        path: 'id_campaign',
+        populate: {
+          path: 'id_voucher'
+        }
+      });
+
+    // console.log(playerVouchers);
 
     if (!playerVouchers || playerVouchers.length === 0) {
       return res.status(404).json({ message: 'No vouchers found for this player.' });
     }
 
     const result = playerVouchers.map(playerVoucher => {
-      const voucher = playerVoucher.id_voucher;
+      const {id_voucher, ...campaignInfo} = playerVoucher.id_campaign._doc
+    
+      // get tên brand
 
       return {
-        id_voucher: voucher._id,
-        code: voucher.code,
-        qr_code: voucher.qr_code,
-        photo: voucher.photo,
-        price: voucher.price,
-        description: voucher.description,
-        expired_date: voucher.expired_date,
-        score_exchange: voucher.score_exchange,
-        status: voucher.status ? "Còn hạn" : "Hết hạn",
-        is_used: "Đã sử dụng"
+        id_playerVoucher: playerVoucher._id,
+        campaign: {...campaignInfo, id_campaign: campaignInfo._id},
+        voucher: {...id_voucher._doc, id_voucher: id_voucher._doc._id},
+        is_used: playerVoucher.is_used
       };
     });
 
