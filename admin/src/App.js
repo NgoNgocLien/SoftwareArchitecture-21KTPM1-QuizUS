@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import ManageBrand from './pages/ManageBrand';
 import ManageUser from './pages/ManageUser';
 import ManageGame from './pages/ManageGame';
+import Login from "./pages/Login";
 
 function Layout() {
   return (

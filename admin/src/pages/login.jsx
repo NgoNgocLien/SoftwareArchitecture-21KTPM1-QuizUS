@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../path/to/actions';
+import Loading from '../path/to/Loading';
 import "../styles/common.css";
 import "../styles/login.css";
 
+const DOMAIN = 'http://login.com';
+
 export default function Login(props) {
-    //const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    //const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
@@ -82,9 +87,8 @@ export default function Login(props) {
                         <i className="fa-solid fa-xmark close-button" onClick={props.toggle}></i>
                         <div>
                             <div className="navbar-brand-login">
-                                <img src="/logo128.png" alt="logo" width="22" height="22" className="align-self-center"/>
+                                <img src="/images/logo.png" alt="logo" width="113.82px" height="60px" className="align-self-center"/>
                                 <br></br>
-                                Xplore
                             </div>
                             
                             <h2>Log in to your account</h2>
