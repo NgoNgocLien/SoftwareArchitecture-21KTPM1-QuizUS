@@ -8,30 +8,52 @@ import { router } from 'expo-router';
 import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
 import { Heading } from '../text/Heading';
 import { Paragraph } from '../text/Paragraph';
+import { likeCampaign } from '@/api/CampaignApi';
+import config from '@/constants/config';
 
 import dialogStyles from '@/components/modal/Dialog.styles';
 
 export function CampaignCard({
     campaign,
+    isFavorite = false,
     ...rest
 }:{
-  campaign: any,
-  [key: string]: any 
+    campaign: any,
+    isFavorite?: boolean,
+    [key: string]: any 
 }) {
-    const [modalVisible, setModalVisible] = useState(false);
 
+    const [modalVisible, setModalVisible] = useState(false);
     const [favorite, setFavorite] = React.useState(campaign.isFavorite);
+
     const handleFavorite = () => {
         if (favorite) {
             setModalVisible(true);
         } else {
             // TODO: Add to favorite
-            Toast.show(<ToastBar type='success' message='Sự kiện đã được thêm vào Yêu thích'/>, ToastBarOptions)
-            setFavorite(true);
+            
+            config.retrieveFromSecureStore('id_player', (id: string) => {
+                let id_player = id ? id : "";
+
+                likeCampaign(id_player, campaign._id)
+                .then((res) => {
+                    console.log('Campaign liked:', res); 
+                    Toast.show(<ToastBar type='success' message='Sự kiện đã được thêm vào Yêu thích'/>, ToastBarOptions)
+                    setFavorite(true);
+                })
+                .catch((err) => {
+                    console.log('Error:', err);
+                    Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+                });
+            }).catch((err) => {
+                console.log('Error:', err);
+                Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+            });
         }
     }
 
     const handleRemoveFavourite = () => {
+        // call api to remove from favorite
         setModalVisible(!modalVisible);
         setFavorite(false);
         Toast.show(<ToastBar type='success' message='Sự kiện đã được xóa khỏi Yêu thích'/>, ToastBarOptions)
@@ -40,8 +62,6 @@ export function CampaignCard({
     // dd/MM
     let startDateFormatted = new Date(campaign.start_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.start_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
     let endDateFormatted = new Date(campaign.end_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.end_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
-
-    console.log("id_campaign: ", campaign.id_campaign)
 
     return (
         <>
@@ -69,11 +89,11 @@ export function CampaignCard({
 
             <View style={[styles.campaignContainer, rest.style]}>
                 <View style={styles.brandContainer}>
-                    <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo}/>
+                    <Image source={{uri: campaign.brand.logo}} style={styles.brandLogo}/>
                 </View>
                 <View style={styles.detailContainer}>
                     <View style={styles.detail_top}>
-                        <Text style={styles.brandName}>{campaign.brandName}</Text>
+                        <Text style={styles.brandName}>{campaign.brand.name}</Text>
                         <View style={Date.now() < Date.parse(campaign.end_datetime) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
                             <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(campaign.end_datetime) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
                             { Date.now() < Date.parse(campaign.end_datetime) ? 
@@ -89,7 +109,7 @@ export function CampaignCard({
                     <View style={styles.detail_bottom}>
                         <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push({
                             pathname: '/campaign',
-                            params: { id_campaign: campaign.id_campaign }
+                            params: { id_campaign: campaign._id }
                         })}>
                             <Text style={styles.joinButtonText}>Tham gia</Text>
                         </TouchableOpacity>

@@ -53,12 +53,13 @@ export const ToastBarOptions = {
 
 const styles = StyleSheet.create({
     container: {
+        minWidth: 180,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 8,
         backgroundColor: 'white',
         borderRadius: 8,
-        borderLeftColor: Colors.light.info,
+        borderLeftColor: Colors.feedback.info,
         borderLeftWidth: 4,
         gap: 8
     },
