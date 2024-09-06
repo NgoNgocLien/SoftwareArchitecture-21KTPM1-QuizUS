@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableHighlight, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Image, Clipboard, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Toast from 'react-native-root-toast';
 
@@ -11,6 +11,7 @@ import {Voucher} from '@/models/voucher/Voucher'
 import { CoinVoucher } from '@/models/voucher/CoinVoucher';
 import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+import { Paragraph } from '../text/Paragraph';
 
 const defaultCampaign = {
     brandName: 'NULL',
@@ -100,11 +101,13 @@ export function VoucherCard({
                             <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>{enoughItem}</Text>
                         </TouchableOpacity>
                     ) : (
-                        <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
-                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
-                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>
-                                abc
-                            </Text>
+                        <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
+                            onPress={() => {
+                                Clipboard.setString(voucher.code); 
+                                Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
+                            }}>
+                            <Paragraph type={'p2'}>{voucher.code}</Paragraph>
+                            <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
                         </TouchableOpacity>
                     )
                 }
