@@ -15,6 +15,13 @@ import { Header } from '@/components/header/Header';
 import { Heading } from '@/components/text/Heading';
 import { VoucherCard } from '@/components/card/VoucherCard';
 
+// call api
+const defaultPlayerInfo = {
+    score: 100,
+    quantity_item1: 0,
+    quantity_item2: 0
+}
+
 export default function Rewards() {
 
     let vouchers: any[] = [
@@ -163,7 +170,8 @@ export default function Rewards() {
                             {/* Lấy chỉ 2 mục */}
                             {coinVouchers.slice(0, 2).map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                 />
                             ))}
@@ -176,7 +184,8 @@ export default function Rewards() {
                             {/* Lấy chỉ 2 mục */}
                             {itemVouchers.slice(0, 2).map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === 1 ? { marginBottom: 20 } : {}} 
                                 />

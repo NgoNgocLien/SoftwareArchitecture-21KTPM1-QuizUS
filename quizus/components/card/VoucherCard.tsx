@@ -7,41 +7,75 @@ import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
 import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
 
+import {Voucher} from '@/models/voucher/Voucher'
+import { CoinVoucher } from '@/models/voucher/CoinVoucher';
+import { ItemVoucher } from '@/models/voucher/ItemVoucher';
+import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+
+const defaultCampaign = {
+    brandName: 'NULL',
+    brandLogo: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png'
+}
+
+const defaultVoucher = {
+    _id: "1",
+    id_brand: 1,
+    code: 'VOUCHER123',
+    qr_code: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png',
+    photo: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png',
+    price: 1000,
+    description: 'VOUCHER123',
+    expired_date: new Date('2024-09-25T12:00:00Z'),
+    status: true,
+    name: 'Ưu đãi 50k cho đơn 100k',
+    id_voucher: "1",
+    score_exchange: 400
+}
+
 export function VoucherCard({
-    voucher = {
-        id: 1,
-        name: 'Ưu đãi 50k cho đơn 100k',
-        expired_date: '2024-09-25T12:00:00Z',
-        price: 1000,
-        type: 'coin',
-        code: 'VOUCHER123',
-
-        item_1: 0,
-        item_2: 0,
-        current_coin: 1000,
-
-        brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-        brandName: 'SHOPEE',
-    },
+    voucher,
+    campaign = defaultCampaign,
+    playerInfo,
     ...rest
+}:{ 
+    voucher: Voucher | null,
+    campaign?:{
+        brandName: string,
+        brandLogo: string
+    },
+    playerInfo?: {
+        score: number,
+        quantity_item1: number,
+        quantity_item2: number
+    },
+    [key: string]: any;
 }) {
 
-    let expiredDateFormatted = new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
+    if (voucher == null){
+        voucher = VoucherFactory.createVoucher("coin", defaultVoucher);
+        console.log("voucher: ", voucher);
+    } 
 
-    let enoughCoin = voucher.price <= voucher.current_coin;
-    let enoughItem = voucher.item_1 >=1 && voucher.item_2 >= 1 ? '2/2' : voucher.item_1 >= 1 || voucher.item_2 >= 1 ? '1/2' : '0/2';
+    let expiredDateFormatted = voucher 
+    ?
+        new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2})
+    :
+        '';
+
+    let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && (playerInfo.score >= voucher.score_exchange);
+    let enoughItem = (voucher instanceof ItemVoucher) && playerInfo && (playerInfo.quantity_item1 >=1 && playerInfo.quantity_item2 >= 1 ? '2/2' : ((playerInfo.quantity_item1 >= 1 || playerInfo.quantity_item2 >= 1) ? '1/2' : '0/2'));
 
     return (
         <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => { }}>
             <View style={styles.brandContainer}>
-                <Image source={{uri: voucher.brandLogo}} style={styles.brandLogo}/>
+                <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo}/>
             </View>
             <View style={styles.detailContainer}>
                 <View style={styles.detail_top}>
-                    <Text style={styles.brandName}>{voucher.brandName}</Text>
-                    <View style={Date.now() < Date.parse(voucher.expired_date) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                        <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(voucher.expired_date) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
-                        { Date.now() < Date.parse(voucher.expired_date) ? 
+                    <Text style={styles.brandName}>{campaign.brandName}</Text>
+                    <View style={Date.now() < voucher?.expired_date.getTime() ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                        <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < voucher.expired_date.getTime() ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                        { Date.now() < voucher.expired_date.getTime() ? 
                             <Text style={styles.time}>{expiredDateFormatted}</Text> :
                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                         }
@@ -52,16 +86,27 @@ export function VoucherCard({
                 </View>
                 
                 {
-                    voucher.type === 'coin' ? 
-                        <TouchableOpacity style={styles.exchangeButton} activeOpacity={0.6} onPress={() => {}}>
-                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText]}>Đổi ngay</Text>
-                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText]}><Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/> {voucher.price}</Text>
+                    (playerInfo) ? (
+                        (voucher instanceof CoinVoucher) ? 
+                        <TouchableOpacity style={enoughCoin ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
+                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
+                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>
+                                <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/> {voucher.score_exchange}
+                            </Text>
                         </TouchableOpacity> :
 
-                        <TouchableOpacity style={styles.exchangeButton} activeOpacity={0.6} onPress={() => {}}>
+                        <TouchableOpacity style={enoughItem ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
                             <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
                             <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>{enoughItem}</Text>
                         </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
+                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
+                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>
+                                abc
+                            </Text>
+                        </TouchableOpacity>
+                    )
                 }
                 
             </View>
@@ -168,5 +213,5 @@ const styles = StyleSheet.create({
         color: Colors.feedback.warning,
         fontWeight: '600',
         fontSize: 16,
-    }
+    },
 });

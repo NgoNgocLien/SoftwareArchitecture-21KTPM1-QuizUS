@@ -9,7 +9,7 @@ const { successCode, failCode, errorCode } = require('../config/response');
 
 const signup = async (req, res) => {
   try {
-    const { name, field, address, lat, long, username, pwd, phone, email } = req.body;
+    const { name, field, address, lat, long, username, pwd, phone, email, logo } = req.body;
 
     const existingBrand = await model.brand.findOne({ where: { [Op.or]: [{ username }, { email }] } });
 
@@ -18,7 +18,8 @@ const signup = async (req, res) => {
     }
 
     const newBrand = await model.brand.create({
-      name, field, address, lat, long, is_active: true, username, pwd, phone, email
+      name, field, address, lat, long, is_active: true, username, pwd, phone, email,
+      logo: logo || 'https://res.cloudinary.com/dklt21uks/image/upload/v1725615538/quizus/bb3igtt4ujtuehytpnfu.svg'
     });
 
     return successCode(res, newBrand, 'Đăng ký brand thành công');

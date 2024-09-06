@@ -99,9 +99,10 @@ export default function MyVouchers() {
                             <EmptyResult/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {vouchers[0].map((voucher, index) => (
+                            {vouchers[0].map((item, index) => (
                                 <VoucherCard 
-                                
+                                    voucher={item.voucher.getVoucher()}
+                                    campaign={item.campaign}
                                     key={index} 
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -115,9 +116,10 @@ export default function MyVouchers() {
                             <EmptyResult/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {vouchers[1].map((voucher, index) => (
+                            {vouchers[1].map((item, index) => (
                                 <VoucherCard
-                            
+                                    voucher={item.voucher.getVoucher()}
+                                    campaign={item.campaign}
                                     key={index} 
                                     style={index === vouchers[1].length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -131,8 +133,10 @@ export default function MyVouchers() {
                             <EmptyResult/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {vouchers[2].map((voucher, index) => (
+                            {vouchers[2].map((item, index) => (
                                 <VoucherCard
+                                    voucher={item.voucher.getVoucher()}
+                                    campaign={item.campaign}
                                     key={index} 
                                     style={index === vouchers[2].length - 1 ? { marginBottom: 32 } : {}} 
                                 />
