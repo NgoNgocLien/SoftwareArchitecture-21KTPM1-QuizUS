@@ -21,3 +21,25 @@ export const getExchangedVouchers = async (id_player: string) => {
         throw new Error('Failed to fetch data');
     }
 }
+
+export const getActiveVouchers = async () => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/voucher/active`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            console.log(result)
+            return result;
+        } else {
+            throw new Error('Failed to fetch data ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data');
+    }
+}

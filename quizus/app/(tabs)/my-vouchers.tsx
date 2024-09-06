@@ -7,9 +7,7 @@ import { VoucherCard } from '@/components/card/VoucherCard';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Heading } from '@/components/text/Heading';
 import styles from './my-vouchers.styles';
-
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
-
 import { getExchangedVouchers } from '@/api/VoucherApi';
 
 const tabNames = [
