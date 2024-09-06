@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { 
     StyleSheet, 
     View, 
@@ -6,7 +6,8 @@ import {
     SafeAreaView,
     Image,
     TouchableWithoutFeedback,
-    ScrollView
+    ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
 
@@ -14,6 +15,11 @@ import { Colors } from '@/constants/Colors';
 import { Header } from '@/components/header/Header';
 import { Heading } from '@/components/text/Heading';
 import { VoucherCard } from '@/components/card/VoucherCard';
+import { getActiveVouchers } from '@/api/VoucherApi';
+import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+import { EmptyView } from '@/components/EmptyView';
+import { LoadingView } from '@/components/LoadingView';
+import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 
 // call api
 const defaultPlayerInfo = {
@@ -24,153 +30,100 @@ const defaultPlayerInfo = {
 
 export default function Rewards() {
 
-    let vouchers: any[] = [
-        {
-            id: 1,
-            name: 'Ưu đãi 50k cho hóa đơn từ 100k',
-            expired_date: '2024-09-25T12:00:00Z',
-            price: 1000,
-            type: 'coin',
-            code: 'VOUCHER123',
+    const [vouchers, setVouchers] = useState<any[][] | null>(null);
+    const [loading, setLoading] = useState(true);
 
-            item_1: 0,
-            item_2: 0,
-            current_coin: 1000,
+    useEffect(() => {
+        getActiveVouchers()
+        .then(voucherList => {
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-        },
-        {
-            id: 2,
-            name: 'Phiếu quà tặng 100k cho hóa đơn từ 200k',
-            expired_date: '2024-10-25T12:00:00Z',
-            price: 1500,
-            type: 'coin',
-            code: 'VOUCHER123',
+            let allVouchers: any[] = [];
+            let coinVouchers: any[] = [];
+            let itemVouchers: any[] = [];
 
-            item_1: 0,
-            item_2: 0,
-            current_coin: 1000,
+            voucherList.map((voucher: {campaign: any; voucher: any; }) => {
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
-            brandName: 'CGV',
-        },
-        {
-            id: 3,
-            name: 'Ưu đãi 50k cho hóa đơn từ 200k trở lên',
-            expired_date: '2024-09-25T12:00:00Z',
-            price: -1,
-            type: 'item',
-            code: 'VOUCHER123',
+                if(voucher.campaign.id_quiz !== "") {
+                    const newVoucher = VoucherFactory.createVoucher('coin', voucher.voucher);
 
-            item_1: 1,
-            item_2: 1,
-            current_coin: 1000,
+                    coinVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                    allVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                } else {
+                    const newVoucher = VoucherFactory.createVoucher('item', {
+                        ...voucher.voucher,
+                        ...voucher.campaign.item1_quantity,
+                        ...voucher.campaign.item2_quantity,
+                    });
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_28_wk3gm5.png',
-            brandName: 'PHUC LONG',
-        },
-        {
-            id: 4,
-            name: 'Ưu đãi 50% cho đơn 50k',
-            expired_date: '2024-10-01T12:00:00Z',
-            price: -1,
-            type: 'item',
-            code: 'VOUCHER123',
+                    itemVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                    allVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                }
+            }); 
+            
+            setVouchers([allVouchers, coinVouchers, itemVouchers]);
+            setLoading(false);
 
-            item_1: 0,
-            item_2: 1,
-            current_coin: 1000,
+            console.log('Coin Vouchers:', coinVouchers);
+            // console.log('Item Vouchers:', itemVouchers);
+        })
+        .catch(error => {
+            console.error('Error fetching player vouchers:', error);
+            setLoading(false);
+        });
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
-            brandName: 'KICHI-KICHI',
-        },
-        {
-            id: 5,
-            name: 'Ưu đãi 50k cho đơn 100k',
-            expired_date: '2024-09-25T12:00:00Z',
-            price: -1,
-            type: 'item',
-            code: 'VOUCHER123',
-
-            item_1: 1,
-            item_2: 0,
-            current_coin: 1000,
-
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
-            brandName: 'STARBUCKS',
-        },
-        {
-            id: 6,
-            name: 'Ưu đãi 50% cho hóa đơn từ 200k',
-            expired_date: '2024-10-14T12:00:00Z',
-            price: -1,
-            type: 'item',
-            code: 'VOUCHER123',
-
-            item_1: 1,
-            item_2: 1,
-            current_coin: 1000,
-
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-        }
-    ]
-
-    let coinVouchers = vouchers.filter(voucher => voucher.type === 'coin');
-    let itemVouchers = vouchers.filter(voucher => voucher.type === 'item');
+    }, []);
 
     return (
         <View style={styles.background}>
             <Header />
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-            <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
-            <View style={styles.tabContainer}>
-                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Xu thưởng</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-
-                <TouchableWithoutFeedback onPress={() => router.push('/items')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Vật phẩm</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-
-                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Mã giảm giá</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-
-                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Thanh toán</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>
-
-                { 
-                    vouchers.length === 0 ? (
-                        <View style={styles.emptyContainer}>
-                            <Image source={require('@/assets/images/empty-result.png')} style={styles.emptyImage} />
+                <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
+                <View style={styles.tabContainer}>
+                    <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Xu thưởng</Text>
                         </View>
+                    </TouchableWithoutFeedback>
+
+                    <TouchableWithoutFeedback onPress={() => router.push('/items')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Vật phẩm</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+
+                    <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Mã giảm giá</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+
+                    <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Thanh toán</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+
+                {
+                    loading ? <LoadingView /> :
+                    !vouchers || (vouchers[1]?.length === 0 && vouchers[2]?.length === 0) ? (
+                        <EmptyView />
                     ) : (
-                        <>
+                        <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
                             <View style={[styles.container, styles.titleContainer]}>
                                 <Heading type="h4">Đổi xu lấy quà</Heading>
                                 <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>
                             </View>
 
                             {/* Lấy chỉ 2 mục */}
-                            {coinVouchers.slice(0, 2).map((voucher, index) => (
+                            
+                            { vouchers[1]?.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher.getVoucher()}
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                 />
@@ -180,20 +133,20 @@ export default function Rewards() {
                                 <Heading type="h4">Đổi mảnh ghép</Heading>
                                 <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')} suppressHighlighting={true}>Xem tất cả</Heading>
                             </View>
-
+   
                             {/* Lấy chỉ 2 mục */}
-                            {itemVouchers.slice(0, 2).map((voucher, index) => (
+                            {vouchers[2]?.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher.getVoucher()}
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === 1 ? { marginBottom: 20 } : {}} 
                                 />
                             ))}
-                        </>
+                        </ScrollView>
                     )
                 }
-            </ScrollView>     
         </View>
     )
 }
@@ -237,14 +190,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-    },
-    emptyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    emptyImage: {
-        width: 250,
-        height: 210,
     },
 });
