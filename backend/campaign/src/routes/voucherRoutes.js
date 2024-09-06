@@ -181,7 +181,7 @@ router.post('/exchange/coin', async (req, res) => {
           }
 
       } catch (error) {
-          return res.status(500).json({ message: 'Failed to communicate with the coin deduction service.', error: error.message });
+          return res.status(500).json({ message: 'Failed to communicate with the user service.', error: error.message });
       }
   } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
