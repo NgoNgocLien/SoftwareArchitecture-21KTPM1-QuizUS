@@ -3,6 +3,7 @@ import Chart from "chart.js/auto";
 import LineChart from '../components/charts/LineChart';
 import VoucherChart from '../components/charts/VoucherChart';
 import PlayerChart from '../components/charts/PlayerChart';
+import BarChart from '../components/charts/BarChart';
 import "../styles/common.css";
 import "../styles/dashboard.css";
 
@@ -58,7 +59,9 @@ export default function Dashboard() {
             
             {/* Thống kê ngân sách */}
             <div className='budget-chart'>
-                
+                <p>Thống kê</p>
+                <h6>Ngân sách đã sử dụng theo lĩnh vực</h6>
+                <BarChart />
             </div>
         </div>
     );
