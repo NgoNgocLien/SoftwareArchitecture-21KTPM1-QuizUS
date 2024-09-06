@@ -5,7 +5,7 @@ const Voucher = require('../models/voucher');
 const PlayerVoucher = require('../models/playerVoucher');
 
 // Tìm kiếm voucher theo brand
-router.get('/search/:id_brand', async (req, res) => {
+router.get('/search/brand/:id_brand', async (req, res) => {
   try {
     const vouchers = await Voucher.find({ id_brand: req.params.id_brand });
     res.status(200).json(vouchers);
@@ -13,7 +13,6 @@ router.get('/search/:id_brand', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 // Tạo voucher
 router.post('/', async (req, res) => {

@@ -10,6 +10,15 @@ import config from '@/constants/config';
 import { SubHeader } from '@/components/header/SubHeader';
 import { VoucherCard } from '@/components/card/VoucherCard';
 
+
+// call api
+const defaultPlayerInfo = {
+    score: 100,
+    quantity_item1: 0,
+    quantity_item2: 0
+}
+
+
 export default function Coins() {
     const router = useRouter();
 
@@ -185,8 +194,8 @@ export default function Coins() {
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {vouchers.map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
-                                    key={index} 
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
                             ))}
@@ -203,7 +212,8 @@ export default function Coins() {
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {nhaHang.map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -221,7 +231,8 @@ export default function Coins() {
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {cafeBanh.map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -239,7 +250,8 @@ export default function Coins() {
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {muaSam.map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -257,7 +269,8 @@ export default function Coins() {
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {giaiTri.map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
                                 />

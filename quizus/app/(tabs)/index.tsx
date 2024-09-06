@@ -25,6 +25,9 @@ export default function HomePage() {
         setFocusedTab(index);
     }
 
+    // should get brand name and logo in backend
+
+
     // for each campaign, get the brand name and logo
     // useEffect(() => {
     //     getCampaignsInProgess().then((res) => {
@@ -43,7 +46,7 @@ export default function HomePage() {
 
     let campaigns = [
         {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            id_campaign: '64e9d9c8e8b4c21c4b2e9f5f',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
             brandName: 'GRAB',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -55,10 +58,10 @@ export default function HomePage() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Mua sắm',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Grab đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            id_campaign: '64e9d9c8e8b4c21c4b2e9f60',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
             brandName: 'SHOPEE',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -73,7 +76,7 @@ export default function HomePage() {
             description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            id_campaign: 'a',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
             brandName: 'HIGHLANDS',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -85,10 +88,10 @@ export default function HomePage() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Cafe & Bánh',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Highlands đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            id_campaign: 'b',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
             brandName: 'PIZZA HUT',
             start_datetime: '2024-08-25T12:00:00Z',
@@ -100,10 +103,10 @@ export default function HomePage() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Nhà hàng',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Pizza Hut đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         },
         {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            id_campaign: 'c',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
             brandName: 'KICHI KICHI',
             start_datetime: '2024-07-31T12:00:00Z',
@@ -115,10 +118,10 @@ export default function HomePage() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Nhà hàng',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Kichi Kichi đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
         {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            id_campaign: 'd',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
             brandName: 'CGV',
             start_datetime: '2024-07-31T12:00:00Z',
@@ -130,10 +133,10 @@ export default function HomePage() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Giải trí',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'CGV đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
         {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
+            id_campaign: 'e',
             brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
             brandName: 'STARBUCKS',
             start_datetime: '2024-09-01T12:00:00Z',
@@ -145,7 +148,7 @@ export default function HomePage() {
             id_brand2: 2,        
             photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
             category: 'Cafe & Bánh',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+            description: 'Starbucks đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
         }, 
     ]
 
