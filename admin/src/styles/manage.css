@@ -161,3 +161,35 @@ a:hover {
     line-height: 24px;
     color: #101828; /* Ensures the option text follows the same text style */
 }
+
+.add-brand-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.add-brand-btn {
+    display: inline-flex;
+    height: 44px;
+    padding: 16px;
+    align-items: center;
+    gap: 8px; /* var(--Sizes-8, 8px) */
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: #0063D6;
+    color: #FFF;
+    border: none;
+    font-family: regular-font;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    cursor: pointer;
+    right: 0;
+    align-self: flex-end;
+}
+
+.add-brand-icon {
+    width: 24px; /* Adjust width and height as needed */
+    height: 24px;
+}

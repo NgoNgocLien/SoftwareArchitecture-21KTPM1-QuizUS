@@ -16,6 +16,14 @@ export default function ManageBrand() {
     
     return (
         <div>
+            {/* Add brand */}
+            <div className="add-brand-container">
+                <button className="add-brand-btn">
+                    <img src="/icons/plus.svg" alt="add-brand-icon" className="add-brand-icon" />
+                    Thêm nhãn hàng
+                </button>
+            </div>
+            
             {/* Search bar */}
             <div className="search-bar">
                 <input
