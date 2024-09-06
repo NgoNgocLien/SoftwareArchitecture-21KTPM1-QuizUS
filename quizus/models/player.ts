@@ -1,6 +1,7 @@
 interface IPlayer {
     id_player: string;
     username: string;
+    password: string;
     avatar: string;
     dob: string;
     email: string;
@@ -8,5 +9,5 @@ interface IPlayer {
     gender: string;
     facebook: string;
     is_active: boolean;
-    score: number;
+    score: number; // current coins
 }

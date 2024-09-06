@@ -8,6 +8,7 @@ import { CampaignCard } from '@/components/card/CampaignCard';
 import { SearchBar } from '@/components/input/SearchBar';
 import { getCampaignsInProgess } from '@/api/CampaignApi';
 import { VoucherCard } from '@/components/card/VoucherCard';
+import { IVoucher } from '@/models/voucher';
 
 export default function MyVouchers() {
 
@@ -39,11 +40,11 @@ export default function MyVouchers() {
     //         setCampaigns(_campaigns); 
     //     });
     // }, []);
-    let allVouchers: Voucher[] = [];
+    let allVouchers: IVoucher[] = [];
     let coinVouchers = allVouchers.filter(voucher => voucher.score_exchange !== -1);
     let itemVouchers = allVouchers.filter(voucher => voucher.score_exchange === -1);
 
-    let vouchers: Voucher[][] = [];
+    let vouchers: IVoucher[][] = [];
     vouchers.push(allVouchers);
     vouchers.push(coinVouchers);
     vouchers.push(itemVouchers);
