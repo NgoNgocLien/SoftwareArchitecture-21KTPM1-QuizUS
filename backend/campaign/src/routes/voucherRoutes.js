@@ -33,6 +33,7 @@ router.get('/active', async (req, res) => {
                         ...item.campaign._doc,
                         brandName: brandResponse.data.name,
                         brandLogo: brandResponse.data.logo,
+                        brandField: brandResponse.data.field
                     },
                     voucher: item.voucher._doc
                 };
@@ -136,7 +137,7 @@ router.get('/exchange/:id_player', async (req, res) => {
                     campaign: {
                         ...campaignInfo,
                         brandName: brandResponse.data.name,
-                        brandLogo: brandResponse.data.logo
+                        brandLogo: brandResponse.data.logo,
                     },
                     voucher: id_voucher._doc,
                     is_used: playerVoucher.is_used
