@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableWithoutFeedback, View, Image, Text, ScrollView, SafeAreaView, Platform } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Button } from '@/components/Button';
@@ -9,6 +9,10 @@ import { Colors } from '@/constants/Colors';
 import config from '@/constants/config';
 import { SubHeader } from '@/components/header/SubHeader';
 import { VoucherCard } from '@/components/card/VoucherCard';
+import { getActiveVouchers } from '@/api/VoucherApi';
+import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+import { LoadingView } from '@/components/LoadingView';
+import { EmptyView } from '@/components/EmptyView';
 
 
 // call api
@@ -36,109 +40,60 @@ export default function Coins() {
         setFocusedTab(index);
     }
 
-    let vouchers: any[] = [
-        {
-            id: 1,
-            name: 'Ưu đãi 50k cho hóa đơn từ 100k',
-            expired_date: '2024-09-25T12:00:00Z',
-            price: 1000,
-            type: 'coin',
-            code: 'VOUCHER123',
+    const [vouchers, setVouchers] = useState<any[] | null>(null);
+    const [loading, setLoading] = useState(true);
 
-            item_1: 0,
-            item_2: 0,
-            current_coin: 1000,
+    const [nhaHang, setNhahang] = useState<any[] | null>(null);
+    const [cafeBanh, setCafeBanh] = useState<any[] | null>(null);
+    const [muaSam, setMuaSam] = useState<any[] | null>(null);
+    const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-            category: 'Mua sắm',
-        },
-        {
-            id: 2,
-            name: 'Phiếu quà tặng 100k cho hóa đơn từ 200k',
-            expired_date: '2024-10-25T12:00:00Z',
-            price: 1500,
-            type: 'coin',
-            code: 'VOUCHER123',
+    useEffect(() => {
+        getActiveVouchers()
+        .then(voucherList => {
 
-            item_1: 0,
-            item_2: 0,
-            current_coin: 1000,
+            let coinVouchers: any[] = [];
+            let nhaHangVouchers: any[] = [];
+            let cafeBanhVouchers: any[] = [];
+            let muaSamVouchers: any[] = [];
+            let giaiTriVouchers: any[] = [];
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
-            brandName: 'CGV',
-            category: 'Giải trí',
-        },
-        {
-            id: 3,
-            name: 'Ưu đãi 50k cho hóa đơn từ 200k trở lên',
-            expired_date: '2024-09-25T12:00:00Z',
-            price: 3000,
-            type: 'coin',
-            code: 'VOUCHER123',
+            voucherList.map((item: {campaign: any; voucher: any; }) => {
 
-            item_1: 1,
-            item_2: 1,
-            current_coin: 1000,
+                if(item.campaign.id_quiz !== "") {
+                    const newVoucher = VoucherFactory.createVoucher('coin', item.voucher);
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_28_wk3gm5.png',
-            brandName: 'PHUC LONG',
-            category: 'Cafe & Bánh',
-        },
-        {
-            id: 4,
-            name: 'Ưu đãi 50% cho đơn 50k',
-            expired_date: '2024-10-01T12:00:00Z',
-            price: 2000,
-            type: 'coin',
-            code: 'VOUCHER123',
+                    coinVouchers.push({ voucher: newVoucher, campaign: item.campaign });
 
-            item_1: 0,
-            item_2: 1,
-            current_coin: 1000,
+                    if (item.campaign.brandField === 'Nhà hàng') {
+                        nhaHangVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                    } else if (item.campaign.brandField === 'Cafe & Bánh') {
+                        cafeBanhVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                    } else if (item.campaign.brandField === 'Mua sắm') {
+                        muaSamVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                    } else if (item.campaign.brandField === 'Giải trí') {
+                        giaiTriVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                    }
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
-            brandName: 'KICHI-KICHI',
-            category: 'Nhà hàng',
-        },
-        {
-            id: 5,
-            name: 'Ưu đãi 50k cho đơn 100k',
-            expired_date: '2024-09-25T12:00:00Z',
-            price: 1200,
-            type: 'coin',
-            code: 'VOUCHER123',
+                }
+            }); 
+            
+            setVouchers(coinVouchers);
+            setNhahang(nhaHangVouchers);
+            setCafeBanh(cafeBanhVouchers);
+            setMuaSam(muaSamVouchers);
+            setGiaiTri(giaiTriVouchers);
 
-            item_1: 1,
-            item_2: 0,
-            current_coin: 1000,
+            setLoading(false);
 
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
-            brandName: 'STARBUCKS',
-            category: 'Cafe & Bánh',
-        },
-        {
-            id: 6,
-            name: 'Ưu đãi 50% cho hóa đơn từ 200k',
-            expired_date: '2024-10-14T12:00:00Z',
-            price: 1000,
-            type: 'coin',
-            code: 'VOUCHER123',
+            // console.log('Coin Vouchers:', coinVouchers);
+        })
+        .catch(error => {
+            console.error('Error fetching player vouchers:', error);
+            setLoading(false);
+        });
 
-            item_1: 1,
-            item_2: 1,
-            current_coin: 1000,
-
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-            category: 'Mua sắm',
-        }
-    ]
-
-    let nhaHang = vouchers.filter(voucher => voucher.category === 'Nhà hàng');
-    let cafeBanh = vouchers.filter(voucher => voucher.category === 'Cafe & Bánh');
-    let muaSam = vouchers.filter(voucher => voucher.category === 'Mua sắm');
-    let giaiTri = vouchers.filter(voucher => voucher.category === 'Giải trí');
+    }, []);
 
     return (
         <View style={styles.background}>
@@ -154,7 +109,7 @@ export default function Coins() {
                     <Text style={styles.coinsText}><Image source={require('@/assets/images/coin.png')} style={{width: 24, height: 24}}/> 2300</Text>
                 </View>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
+                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Đã đổi</Text>
@@ -182,8 +137,11 @@ export default function Coins() {
 
                 <View style={styles.emptyTab}></View>
             </ScrollView>
-
             {
+                !vouchers || loading ? (
+                    <LoadingView />
+                ) : 
+                
                 focusedTab === 0 ? (
                     <>
                         {vouchers.length === 0 ? (
@@ -192,9 +150,11 @@ export default function Coins() {
                             </View>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {vouchers.map((voucher, index) => (
+                            {vouchers.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher}
+                                    campaign={item.campaign}
+                                    key={index} 
                                     playerInfo={defaultPlayerInfo}
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -204,15 +164,14 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 1 ? (
                     <>
-                        {nhaHang.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                        {!nhaHang || nhaHang.length === 0 ? (
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {nhaHang.map((voucher, index) => (
+                            {nhaHang.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher}  
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
@@ -223,15 +182,14 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 2 ? (
                     <>
-                        {cafeBanh.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                        {!cafeBanh || cafeBanh.length === 0 ? (
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {cafeBanh.map((voucher, index) => (
+                            {cafeBanh.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher}
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
@@ -242,15 +200,14 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 3 ? (
                     <>
-                        {muaSam.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                        {!muaSam || muaSam.length === 0 ? (
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {muaSam.map((voucher, index) => (
+                            {muaSam.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher}
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
@@ -261,15 +218,14 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 4 ? (
                     <>
-                        {giaiTri.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                        {!giaiTri || giaiTri.length === 0 ? (
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {giaiTri.map((voucher, index) => (
+                            {giaiTri.map((item, index) => (
                                 <VoucherCard 
-                                    voucher={null}
+                                    voucher={item.voucher}
+                                    campaign={item.campaign}
                                     playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 

@@ -41,29 +41,29 @@ export default function Rewards() {
             let coinVouchers: any[] = [];
             let itemVouchers: any[] = [];
 
-            voucherList.map((voucher: {campaign: any; voucher: any; }) => {
+            voucherList.map((item: {campaign: any; voucher: any; }) => {
 
-                if(voucher.campaign.id_quiz !== "") {
-                    const newVoucher = VoucherFactory.createVoucher('coin', voucher.voucher);
+                if(item.campaign.id_quiz !== "") {
+                    const newVoucher = VoucherFactory.createVoucher('coin', item.voucher);
 
-                    coinVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
-                    allVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                    coinVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                    allVouchers.push({ voucher: newVoucher, campaign: item.campaign });
                 } else {
                     const newVoucher = VoucherFactory.createVoucher('item', {
-                        ...voucher.voucher,
-                        ...voucher.campaign.item1_quantity,
-                        ...voucher.campaign.item2_quantity,
+                        ...item.voucher,
+                        item1_quantity: item.campaign.item1_quantity,
+                        item2_quanity: item.campaign.item2_quantity,
                     });
 
-                    itemVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
-                    allVouchers.push({ voucher: newVoucher, campaign: voucher.campaign });
+                    itemVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                    allVouchers.push({ voucher: newVoucher, campaign: item.campaign });
                 }
             }); 
             
             setVouchers([allVouchers, coinVouchers, itemVouchers]);
             setLoading(false);
 
-            console.log('Coin Vouchers:', coinVouchers);
+            // console.log('Coin Vouchers:', coinVouchers);
             // console.log('Item Vouchers:', itemVouchers);
         })
         .catch(error => {
