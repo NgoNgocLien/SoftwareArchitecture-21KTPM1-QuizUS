@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
     View,
     Text,
@@ -9,6 +9,7 @@ import {
     Platform,
     Share,
     Alert,
+    Modal,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 
@@ -18,8 +19,11 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
 import { VoucherCard } from '@/components/card/VoucherCard';
+
+import dialogStyles from '@/components/modal/Dialog.styles'
+
 import config from '@/constants/config';
-import { getQuizInfo, getPlayerTurn } from '@/api/QuizApi';
+import { getQuizInfo, getPlayerTurn, increasePlayerTurn } from '@/api/GameApi';
 
 export default function Campaign() {
 
@@ -136,19 +140,51 @@ export default function Campaign() {
 
     const campaign: any = campaigns.find(campaign => campaign.id === id_campaign);
 
-    const handleShare = async () => {
+    const handleShare = async (addPlayerTurn: boolean) => {
         try {
             const result = await Share.share({
                 message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
                 url: 'exp://192.168.1.6:8081',
+            },{
+                excludedActivityTypes: [
+                    'com.apple.UIKit.activity.PostToWeibo',
+                    'com.apple.UIKit.activity.Print',
+                    'com.apple.UIKit.activity.CopyToPasteboard',
+                    'com.apple.UIKit.activity.AssignToContact',
+                    'com.apple.UIKit.activity.SaveToCameraRoll',
+                    'com.apple.UIKit.activity.AddToReadingList',
+                    'com.apple.UIKit.activity.PostToFlickr',
+                    'com.apple.UIKit.activity.PostToVimeo',
+                    'com.apple.UIKit.activity.PostToTencentWeibo',
+                    'com.apple.UIKit.activity.AirDrop',
+                    'com.apple.UIKit.activity.OpenInIBooks',
+                    'com.apple.UIKit.activity.MarkupAsPDF',
+                    'com.apple.reminders.RemindersEditorExtension',
+                    'com.apple.mobilenotes.SharingExtension',
+                    'com.apple.mobileslideshow.StreamShareService',
+                    'com.linkedin.LinkedIn.ShareExtension',
+                    'pinterest.ShareExtension',
+                    'com.google.GooglePlus.ShareExtension',
+                    'com.tumblr.tumblr.Share-With-Tumblr',
+                    'net.whatsapp.WhatsApp.ShareExtension'
+                ],
             });
+
             if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    // shared with activity type of result.activityType
-                    Alert.alert('Shared with activity type of result.activityType');
+                if (result.activityType && addPlayerTurn) {
+                    // On iOS: Shared with specific activity type (e.g., mail, social media)
+                    // increasePlayerTurn(config.ID_PLAYER, id_campaign)
+                    // .then(data => {
+                    //     setPlayerTurn(1)
+                    // })
                 } else {
-                    // shared
-                    Alert.alert('Shared');
+                    // On Android: Shared, but no confirmation of activity type
+                    if (addPlayerTurn){
+                        // increasePlayerTurn(config.ID_PLAYER, id_campaign)
+                        // .then(data => {
+                        //     setPlayerTurn(1)
+                        // })
+                    }
                 }
             } else if (result.action === Share.dismissedAction) {
                 // dismissed
@@ -169,17 +205,23 @@ export default function Campaign() {
             })
             .catch(error => {
                 console.error('Error fetching quiz info:', error);
-            });
+            });            
+        }
+    }, [id_campaign])
 
+    useEffect(() => {
+        if (id_campaign){
             getPlayerTurn(config.ID_PLAYER, id_campaign)
-            .then(playerTurn => {
-                setPlayerTurn(playerTurn)
+            .then(data => {
+                setPlayerTurn(data.player_turn)
             })
             .catch(error => {
                 console.error('Error fetching quiz info:', error);
             });
         }
-    }, [id_campaign])
+    },[id_campaign, playerTurn]);
+
+    const [isModalVisible, setModalVisible] = useState(false);
     return (
         <View style={styles.container}>
             <SubHeader/>
@@ -199,7 +241,7 @@ export default function Campaign() {
                                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                                     }
                                 </View>
-                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={handleShare} suppressHighlighting={true} />
+                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare(false)}} suppressHighlighting={true} />
                                 </View>
                                 <View style={styles.campaignHeader_bottom}>
                                     <Heading type='h5'>{campaign.name}</Heading>
@@ -240,14 +282,45 @@ export default function Campaign() {
                         {/* <VoucherCard style={{marginBottom: 100}}/> */}
                 </ScrollView>
                 <View style={styles.joinButtonContainer} >
-                    <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
-                        onPress={() => {router.replace({
-                            pathname: "/quiz/detail",
-                            params: {
-                                quizInfo: JSON.stringify(quizInfo),
-                                id_campaign: campaign.id
-                            }
-                        })}}/>
+                    {
+                        playerTurn 
+                        ?   <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
+                                onPress={() => {router.replace({
+                                    pathname: "/quiz/detail",
+                                    params: {
+                                        quizInfo: JSON.stringify(quizInfo),
+                                        id_campaign: campaign.id
+                                    }
+                            })}}/> 
+                        :   <Button text='Thêm lượt chơi' type='tertiary' style={styles.joinButton} 
+                                onPress={() => {setModalVisible(true);}}/> 
+                    }
+                    
+                    <Modal
+                        transparent={true} 
+                        animationType="fade" 
+                        visible={isModalVisible}
+                        onRequestClose={() => {setModalVisible(false);}}
+                    >
+                        <View style={dialogStyles.centeredView}>
+                            <View style={dialogStyles.modalView}>
+                                <View style={dialogStyles.topView}>
+                                    <Heading type={'h5'}>Thêm lượt chơi</Heading>
+                                    <FontAwesome6 name='xmark' style={{fontSize: 20, padding: 5, color: Colors.gray._600}} 
+                                        onPress={() => setModalVisible(false)} suppressHighlighting={true}/>
+                                </View>
+                                <Paragraph type={'p2'}>
+                                    Bạn đã hết lượt chơi. Chia sẻ sự kiện hoặc xin lượt chơi từ bạn bè để có thể tham gia sự kiện
+                                </Paragraph>
+                                <View style={dialogStyles.buttonView}>
+                                    <Button style={dialogStyles.button} text={'Chia sẻ sự kiện'} type='primary' 
+                                        onPress={() => {handleShare(true)}}></Button>
+                                    <Button style={dialogStyles.button} text={'Xin lượt chơi'} type='tertiary'></Button>
+                                </View>
+                                
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
             </View>
         </View>

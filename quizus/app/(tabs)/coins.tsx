@@ -195,6 +195,7 @@ export default function Coins() {
                             {vouchers.map((voucher, index) => (
                                 <VoucherCard 
                                     voucher={null}
+                                    key={index}
                                     playerInfo={defaultPlayerInfo}
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
                                 />

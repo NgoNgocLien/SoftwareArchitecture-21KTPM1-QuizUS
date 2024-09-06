@@ -19,7 +19,7 @@ import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import config from '@/constants/config';
-import { getQuizInfo } from '@/api/QuizApi';
+import { getQuizInfo } from '@/api/GameApi';
 import { Voucher } from '@/models/voucher/Voucher';
 
 export default function Campaign() {

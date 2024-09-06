@@ -21,13 +21,13 @@ const dialogStyles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+        gap: 20
     },
 
     topView: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10,
     },
     dangerIconContainer: {
         backgroundColor: Colors.brand._200,

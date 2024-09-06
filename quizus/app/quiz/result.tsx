@@ -125,13 +125,15 @@ export default function Result() {
                 <View style={dialogStyles.modalView}>
                     <View style={dialogStyles.topView}>
                         <Heading type={'h5'}>Thêm lượt chơi</Heading>
-
                         <FontAwesome6 name='xmark' style={{fontSize: 20, padding: 5, color: Colors.gray._600}} 
                             onPress={() => setModalVisible(false)} suppressHighlighting={true}/>
                     </View>
+                    <Paragraph type={'p2'}>
+                        Bạn đã hết lượt chơi. Chia sẻ sự kiện hoặc xin lượt chơi từ bạn bè để có thể tham gia sự kiện
+                    </Paragraph>
                     <View style={dialogStyles.buttonView}>
                         <Button style={dialogStyles.button} text={'Chia sẻ sự kiện'} type='primary'></Button>
-                        <Button style={dialogStyles.button} text={'Xin lượt chơi từ bạn bè'} type='secondary'></Button>
+                        <Button style={dialogStyles.button} text={'Xin lượt chơi'} type='tertiary'></Button>
                     </View>
                     
                 </View>
