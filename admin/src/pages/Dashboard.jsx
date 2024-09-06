@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Chart from "chart.js/auto";
-import LineChart from '../components/linechart/LineChart';
-import VoucherChart from '../components/piechart/VoucherChart';
-import PlayerChart from '../components/piechart/PlayerChart';
+import LineChart from '../components/charts/LineChart';
+import VoucherChart from '../components/charts/VoucherChart';
+import PlayerChart from '../components/charts/PlayerChart';
 import "../styles/common.css";
 import "../styles/dashboard.css";
 
