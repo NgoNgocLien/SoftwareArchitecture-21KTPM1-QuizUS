@@ -105,7 +105,7 @@ export default function HomePage() {
                             {campaigns.map((campaign, index) => (
                                 <CampaignCard 
                                     campaign={campaign}
-                                    isFavorite={true}
+                                    isFavorite={campaign.isFavorite}
                                     key={index} 
                                     style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
                                 />

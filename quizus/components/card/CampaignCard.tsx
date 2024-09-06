@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
 import { Heading } from '../text/Heading';
 import { Paragraph } from '../text/Paragraph';
-import { likeCampaign } from '@/api/CampaignApi';
+import { likeCampaign, unlikeCampaign } from '@/api/CampaignApi';
 import config from '@/constants/config';
 
 import dialogStyles from '@/components/modal/Dialog.styles';
@@ -36,7 +36,8 @@ export function CampaignCard({
 
                 likeCampaign(id_player, campaign._id)
                 .then((res) => {
-                    console.log('Campaign liked:', res); 
+                    // console.log('Campaign liked:', res); 
+                    
                     Toast.show(<ToastBar type='success' message='Sự kiện đã được thêm vào Yêu thích'/>, ToastBarOptions)
                     setFavorite(true);
                 })
@@ -53,9 +54,29 @@ export function CampaignCard({
 
     const handleRemoveFavourite = () => {
         // call api to remove from favorite
-        setModalVisible(!modalVisible);
-        setFavorite(false);
-        Toast.show(<ToastBar type='success' message='Sự kiện đã được xóa khỏi Yêu thích'/>, ToastBarOptions)
+        config.retrieveFromSecureStore('id_player', (id: string) => {
+            let id_player = id ? id : "";
+
+            unlikeCampaign(id_player, campaign._id)
+            .then((res) => {
+                // console.log('Campaign unliked:', res); 
+
+                setFavorite(false);
+                setModalVisible(!modalVisible);
+                Toast.show(<ToastBar type='success' message='Sự kiện đã được xóa khỏi Yêu thích'/>, ToastBarOptions)
+            })
+            .catch((err) => {
+                console.log('Error:', err);
+
+                setModalVisible(!modalVisible);
+                Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+            });
+        }).catch((err) => {
+            console.log('Error:', err);
+
+            setModalVisible(!modalVisible);
+            Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+        });
     }
 
     // dd/MM
