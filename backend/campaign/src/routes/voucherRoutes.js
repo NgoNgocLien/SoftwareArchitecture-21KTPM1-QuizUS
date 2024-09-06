@@ -138,11 +138,11 @@ router.get('/exchange/:id_player', async (req, res) => {
                         brandName: brandResponse.data.name,
                         brandLogo: brandResponse.data.logo
                     },
-                    voucher: id_voucher._doc,
+                    voucher: id_voucher?._doc || '',
                     is_used: playerVoucher.is_used
                 };
             } catch (axiosError) {
-                throw new Error("Failed to fetch brand information.");
+                throw new Error("Failed to fetch brand information ", axiosError);
             }
         }));
 

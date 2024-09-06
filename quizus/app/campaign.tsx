@@ -171,7 +171,7 @@ export default function Campaign() {
                 console.error('Error fetching quiz info:', error);
             });
 
-            getPlayerTurn(id_campaign)
+            getPlayerTurn(config.ID_PLAYER, id_campaign)
             .then(playerTurn => {
                 setPlayerTurn(playerTurn)
             })
