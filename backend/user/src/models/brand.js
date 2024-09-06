@@ -46,6 +46,10 @@ module.exports = function(sequelize, DataTypes) {
     email: {
       type: DataTypes.STRING(255),
       allowNull: true
+    },
+    logo:{
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,

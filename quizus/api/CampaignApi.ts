@@ -9,11 +9,12 @@ export const getCampaignsInProgess = async () => {
             },
         });
 
+        const result = await response.json();
         if (response.ok) {
-            console.log(response.json)
-            return response.json();
+            console.log(result)
+            return result;
         } else {
-            throw new Error('Failed to fetch data');
+            throw new Error('Failed to fetch data: ', result.message);
         }
     } catch (error) {
         console.error(error);

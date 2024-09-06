@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Quiz = require('./quiz');
 
 const CampaignSchema = new Schema({
   id_brand1: {

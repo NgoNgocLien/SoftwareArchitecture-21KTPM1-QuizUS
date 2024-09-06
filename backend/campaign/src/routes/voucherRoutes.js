@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const Voucher = require('../models/voucher');
 const PlayerVoucher = require('../models/playerVoucher');
 
@@ -62,40 +63,52 @@ router.put('/', async (req, res) => {
 });
 
 // lấy tất cả voucher đã đổi của player
-router.post('/exchange', async (req, res) => {
+router.get('/exchange/:id_player', async (req, res) => {
   try {
-    const id_player = req.body.id_player;
+    const id_player = req.params.id_player;
     
     if (!id_player) {
       return res.status(400).json({ message: 'id_player is required' });
     }
 
-    const playerVouchers = await PlayerVoucher.find({ id_player }).populate('id_voucher');
-
-    console.log(playerVouchers);
+    const playerVouchers = await PlayerVoucher.find({ id_player })
+      .populate({
+        path: 'id_campaign',
+        populate: {
+          path: 'id_voucher'
+        }
+      });
 
     if (!playerVouchers || playerVouchers.length === 0) {
       return res.status(404).json({ message: 'No vouchers found for this player.' });
     }
 
-    const currentTime = new Date();
+    const result = await Promise.all(playerVouchers.map(async (playerVoucher) => {
+      const { id_voucher, ...campaignInfo } = playerVoucher.id_campaign._doc;
+      
+      try {
+        const brandResponse = await axios.get(`http://localhost:8001/api/brand/${campaignInfo.id_brand1}`);
 
-    const result = playerVouchers.map(playerVoucher => {
-      const voucher = playerVoucher.id_voucher;
+        return {
+          id_playerVoucher: playerVoucher._id,
+          campaign: {
+            ...campaignInfo,
+            id_campaign: campaignInfo._id,
+            brandName: brandResponse.data.name,
+            brandLogo: brandResponse.data.logo 
+          },
+          voucher: {
+            ...id_voucher._doc,
+            id_voucher: id_voucher._doc._id
+          },
+          is_used: playerVoucher.is_used
+        };
+      } catch (axiosError) {
+        console.error("Error fetching brand info:", axiosError);
+        throw new Error("Failed to fetch brand information.");
+      }
 
-      return {
-        id_voucher: voucher._id,
-        code: voucher.code,
-        qr_code: voucher.qr_code,
-        photo: voucher.photo,
-        price: voucher.price,
-        description: voucher.description,
-        expired_date: voucher.expired_date,
-        score_exchange: voucher.score_exchange,
-        status: voucher.status ? "Còn hạn" : "Hết hạn",
-        is_used: playerVoucher.is_used ? "Đã sử dụng" : "Chưa sử dụng"
-      };
-    });
+    }));
 
     res.status(200).json(result);
 

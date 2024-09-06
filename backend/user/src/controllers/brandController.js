@@ -40,6 +40,27 @@ const getAll = async (req, res) => {
   }
 };
 
+// get brand by id
+const get = async (req, res) => {
+  const { id_brand } = req.params;
+
+  try {
+      const brand = await model.brand.findOne({
+          where: { id_brand }
+      });
+
+      if (brand) {
+          successCode(res, brand, "Lấy thông tin brand thành công");
+      } else {
+          failCode(res, null, "Không tìm thấy brand");
+      }
+  }
+  catch (error) {
+      console.error('Error:', error);
+      errorCode(res);
+  }
+};
+
 const search = async (req, res) => {
   const { keyword } = req.params;
 
@@ -111,4 +132,4 @@ const update = async (req, res) => {
   }
 };
 
-module.exports = { signup, getAll, search, update }
+module.exports = { signup, getAll, get, search, update }

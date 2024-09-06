@@ -5,19 +5,31 @@
 * Cài đặt Docker [tại đây](https://www.docker.com/)
 ### Cách chạy:
 1. Mở terminal và điều hướng đến thư mục dự án:
-``` cd F:/21KTPM1-SoftwareArchitecture-QuizUS/backend/ ```
+```shell
+cd F:/21KTPM1-SoftwareArchitecture-QuizUS/backend/
+```
 2. Chạy các service bằng Docker Compose:
-* Để mỗi service chạy trên một server: ``` docker compose up ```
-* Để scale lên nhiều server cho mỗi service: ``` docker compose up --scale user=2 --scale game=2 --scale campaign=2 ```
+* Để mỗi service chạy trên một server:
+```shell
+docker compose up
+```
+* Để scale lên nhiều server cho mỗi service:
+```shell
+docker compose up --scale user=2 --scale game=2 --scale campaign=2
+```
 3. Gọi API thông qua API Gateway:
-* Base URL của API Gateway: `http://localhost:8080/`
+* Base URL của API Gateway: `http://localhost:8000/`
 * Gọi API của các service cụ thể:
-  * User service: `http://localhost:8080/user/api`
-  * Game service: `http://localhost:8080/game/api`
-  * Campaign service: `http://localhost:8080/campaign/api`
+  * User service: `http://localhost:8000/user`
+  * Game service: `http://localhost:8000/game`
+  * Campaign service: `http://localhost:8000/campaign`
 
 ## Chạy độc lập từng service (nếu không sử dụng Docker):
 1. Mở terminal và điều hướng đến thư mục của service:
-``` cd F:/21KTPM1-SoftwareArchitecture-QuizUS/backend/<tên-service> ```
-2. Chạy service bằng lệnh:
-``` npm start ```
+```shell
+cd F:/21KTPM1-SoftwareArchitecture-QuizUS/backend/<tên-service>
+```
+3. Chạy service bằng lệnh:
+```shell
+npm start
+```

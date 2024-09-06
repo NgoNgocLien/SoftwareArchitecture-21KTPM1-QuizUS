@@ -31,7 +31,7 @@ services:
   gateway_proxy:
     image: nginx:latest
     ports:
-      - 8080:8080
+      - 8000:8000
     depends_on:
       - user_proxy
       - game_proxy
@@ -43,7 +43,7 @@ services:
   user_proxy:
     image: nginx:latest
     ports:
-      - 8081:8081
+      - 8001:8001
     depends_on:
       - user
     volumes:
@@ -53,7 +53,7 @@ services:
   game_proxy:
     image: nginx:latest
     ports:
-      - 8082:8082
+      - 8002:8002
     depends_on:
       - game
     volumes:
@@ -63,7 +63,7 @@ services:
   campaign_proxy:
     image: nginx:latest
     ports:
-      - 8083:8083
+      - 8003:8003
     depends_on:
       - campaign
     volumes:

@@ -7,28 +7,28 @@ const { Op, literal, fn, col } = require("sequelize");
 
 const { successCode, failCode, errorCode } = require('../config/response');
 
-const signup =  async (req,res) =>  {
-    try{
-        const {phoneNumber} = req.body;
+const signup = async (req, res) => {
+    try {
+        const { phoneNumber } = req.body;
         const player = await model.player.findOne({
-            where: { 
-                phone: phoneNumber 
+            where: {
+                phone: phoneNumber
             }
         })
 
         if (!player)
-            successCode(res,true, "Số điện thoại chưa đăng ký")
-        else 
-            failCode(res,null,"Số điện thoại đã được đăng ký")
-    }catch(err){
+            successCode(res, true, "Số điện thoại chưa đăng ký")
+        else
+            failCode(res, null, "Số điện thoại đã được đăng ký")
+    } catch (err) {
         console.log(err)
         errorCode(res)
     }
 }
 
-const otp =  async (req,res) =>  {
-    try{
-        const {phoneNumber, password} = req.body;
+const otp = async (req, res) => {
+    try {
+        const { phoneNumber, password } = req.body;
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -41,53 +41,74 @@ const otp =  async (req,res) =>  {
         console.log(player)
 
         if (player)
-            successCode(res,true, "Tạo tài khoản thành công")
-        else 
-            failCode(res,null,"Tạo tài khoản thất bại")
-    }catch(err){
+            successCode(res, true, "Tạo tài khoản thành công")
+        else
+            failCode(res, null, "Tạo tài khoản thất bại")
+    } catch (err) {
         console.log(err)
         errorCode(res)
     }
 }
 
 const getAll = async (req, res) => {
-    try{
+    try {
         const players = await model.player.findAll();
         successCode(res, players, "Danh sách người chơi")
-    }catch(err){
+    } catch (err) {
         console.log(err)
         errorCode(res)
     }
 }
 
-const update =  async (req,res) =>  {
-    try{
+// get player by id
+const get = async (req, res) => {
+    const { id_player } = req.params;
+
+    try {
+        const player = await model.player.findOne({
+            where: { id_player }
+        });
+
+        if (player) {
+            successCode(res, player, "Lấy thông tin player thành công");
+        } else {
+            failCode(res, null, "Không tìm thấy player");
+        }
+    }
+    catch (error) {
+        console.error('Error:', error);
+        errorCode(res);
+    }
+};
+
+const update = async (req, res) => {
+    try {
         const player = await model.player.findOne({
             where: {
                 id_player: req.body.id_player,
             }
         })
 
-        if (player){
+        if (player) {
             player.facebook = req.body.facebook || player.facebook;
             player.avatar = req.body.avatar || player.avatar;
             player.dob = req.body.dob || player.dob;
             player.email = req.body.email || player.email;
             player.phone = req.body.phone || player.phone;
             player.gender = req.body.gender || player.gender;
-            player.score = player.score += req.body.score 
+            player.score = player.score += req.body.score
 
-            if (req.body.password){
+            if (req.body.password) {
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password, salt);
                 player.pwd = hashedPassword;
             }
 
             const updatedPlayer = await player.save();
-            successCode(res,updatedPlayer, "Cập nhật thành công")
+            successCode(res, updatedPlayer, "Cập nhật thành công")
         } else
             failCode(res, null, "id_player không hợp lệ")
-    }catch(err){
+    } catch (err) {
         console.log(err)
         errorCode(res)
     }
@@ -98,20 +119,20 @@ const search = async (req, res) => {
 
     try {
         const players = await model.player.findAll({
-        where: {
-            [Op.or]: [
-            { username: { [Op.iLike]: `%${keyword}%` } }, 
-            { email: { [Op.iLike]: `%${keyword}%` } }, 
-            { phone: { [Op.iLike]: `%${keyword}%` } }, 
-            { facebook: { [Op.iLike]: `%${keyword}%` } } 
-            ]
-        }
+            where: {
+                [Op.or]: [
+                    { username: { [Op.iLike]: `%${keyword}%` } },
+                    { email: { [Op.iLike]: `%${keyword}%` } },
+                    { phone: { [Op.iLike]: `%${keyword}%` } },
+                    { facebook: { [Op.iLike]: `%${keyword}%` } }
+                ]
+            }
         });
 
         if (players.length > 0) {
-        successCode(res, players, 'Tìm thấy player thành công');
+            successCode(res, players, 'Tìm thấy player thành công');
         } else {
-        failCode(res, [], 'Không tìm thấy player nào phù hợp');
+            failCode(res, [], 'Không tìm thấy player nào phù hợp');
         }
     } catch (error) {
         console.error('Lỗi tìm kiếm player:', error);
@@ -120,24 +141,25 @@ const search = async (req, res) => {
 }
 
 const getPlayerScore = async (req, res) => {
-    const { id_player } = req.body; 
-  
-    try {
-      const playerData = await player.findOne({
-        where: { id_player }
-      });
-  
-      if (!playerData) {
-        return failCode(res, null, "id_player không hợp lệ");
-      }
-  
-      return successCode(res, { score: playerData.score }, "Lấy điểm số thành công");
-    } catch (error) {
-      console.error('Error:', error);
-      return errorCode(res);
-    }
-  };
+    const { id_player } = req.body;
 
-module.exports = {signup, otp,
-    getAll, update, search, getPlayerScore
+    try {
+        const playerData = await player.findOne({
+            where: { id_player }
+        });
+
+        if (!playerData) {
+            return failCode(res, null, "id_player không hợp lệ");
+        }
+
+        return successCode(res, { score: playerData.score }, "Lấy điểm số thành công");
+    } catch (error) {
+        console.error('Error:', error);
+        return errorCode(res);
+    }
+};
+
+module.exports = {
+    signup, otp,
+    get, getAll, update, search, getPlayerScore
 }

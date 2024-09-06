@@ -11,7 +11,7 @@ router.get('/campaign/:id_campaign', async (req, res) => {
       return res.status(400).json({ message: 'id_campaign is required' });
     }
 
-    const campaign = await Campaign.findById(req.params.id_campaign).populate('id_quiz');;
+    const campaign = await Campaign.findById(req.params.id_campaign).populate('id_quiz');
     if (!campaign) {
       res.status(404).json({ message: 'Campaign not found' });
     } else{

@@ -1,4 +1,5 @@
-interface Voucher {
+interface IVoucher {
+    _id: string;
     id_brand: number;
     code: string;
     qr_code: string;
@@ -9,6 +10,11 @@ interface Voucher {
     score_exchange: number;
     status: boolean;
     name: string;
+
+    type: string;
 }
 
-  
+// redeem with coins or items
+type VoucherType =
+    | 'COIN'
+    | 'ITEM';
