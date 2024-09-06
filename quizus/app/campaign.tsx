@@ -19,6 +19,7 @@ import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import config from '@/constants/config';
+import { getQuizInfo } from '@/api/QuizApi';
 
 export default function Campaign() {
 
@@ -158,25 +159,14 @@ export default function Campaign() {
 
     const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
 
-    const fetchQuiz = async () => {
-        try{
-            const response = await fetch(`${config.CAMPAIGN_BE}/api/game/campaign/${campaign.id}`)
-            const data = await response.json()
-            setQuizInfo(data.id_quiz)
-
-            if (!response.ok) {
-                const result = await response.json();
-                Alert.alert('Error', result.message);
-            } 
-
-        } catch(error){
-            console.error(error);
-            Alert.alert('Error', 'Lỗi từ frontend');
-        }
-    }
-
     useEffect(() => {
-        fetchQuiz();
+        getQuizInfo(campaign.id)
+        .then(quizInfo => {
+            setQuizInfo(quizInfo.id_quiz)
+        })
+        .catch(error => {
+            console.error('Error fetching quiz info:', error);
+        });
     }, [])
 
     return (

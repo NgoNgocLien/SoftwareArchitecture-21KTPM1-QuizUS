@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const Voucher = require('../models/voucher');
 const PlayerVoucher = require('../models/playerVoucher');
 
@@ -70,8 +71,6 @@ router.get('/exchange/:id_player', async (req, res) => {
       return res.status(400).json({ message: 'id_player is required' });
     }
 
-    // const result = await PlayerVoucher.find();
-
     const playerVouchers = await PlayerVoucher.find({ id_player })
       .populate({
         path: 'id_campaign',
@@ -86,15 +85,24 @@ router.get('/exchange/:id_player', async (req, res) => {
       return res.status(404).json({ message: 'No vouchers found for this player.' });
     }
 
-    const result = playerVouchers.map(playerVoucher => {
+    const result = playerVouchers.map( async (playerVoucher) => {
       const {id_voucher, ...campaignInfo} = playerVoucher.id_campaign._doc
     
-      // get tên brand
+      const brandResponse = await axios.get(`http://brand-api-url.com/brands/${campaignInfo.id_brand1}`);
+      const brand = brandResponse.data; 
 
       return {
         id_playerVoucher: playerVoucher._id,
-        campaign: {...campaignInfo, id_campaign: campaignInfo._id},
-        voucher: {...id_voucher._doc, id_voucher: id_voucher._doc._id},
+        campaign: {
+          ...campaignInfo, 
+          id_campaign: campaignInfo._id,
+          brandName: brand.name,
+          brandLogo: brand.logo 
+        },
+        voucher: {
+          ...id_voucher._doc, 
+          id_voucher: id_voucher._doc._id
+        },
         is_used: playerVoucher.is_used
       };
     });

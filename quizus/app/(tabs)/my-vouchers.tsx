@@ -18,6 +18,14 @@ const tabNames = [
     { index: 2, name: 'Mảnh ghép' },
 ]
 
+function EmptyResult(){
+    return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
+        </View>
+    )
+}
+
 export default function MyVouchers() {
     const [focusedTab, setFocusedTab] = useState(0);
     const [vouchers, setVouchers] = useState<any[][] | null>(null);
@@ -88,9 +96,7 @@ export default function MyVouchers() {
                 focusedTab === 0 ? (
                     <>
                         {vouchers === null || vouchers[0].length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyResult/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {vouchers[0].map((voucher, index) => (
@@ -106,9 +112,7 @@ export default function MyVouchers() {
                 ) : focusedTab === 1 ? (
                     <>
                         {vouchers === null || vouchers[1].length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyResult/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {vouchers[1].map((voucher, index) => (
@@ -124,9 +128,7 @@ export default function MyVouchers() {
                 ) : (
                     <>
                         {vouchers === null || vouchers[2].length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyResult/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {vouchers[2].map((voucher, index) => (

@@ -1,9 +1,11 @@
 const express = require('express');
 const brandRoute = express.Router();
 
-const { signup, getAll, search, update } = require('../controllers/brandController');
+const { signup, getAll, get, search, update } = require('../controllers/brandController');
 
 brandRoute.get('/', getAll);
+
+brandRoute.get('/:id_brand', get);
 
 brandRoute.get('/search/:keyword', search);
 

@@ -1,8 +1,8 @@
 import config from '@/constants/config';
 
-export const getCampaignsInProgess = async () => {
+export const getQuizInfo = async (id_campaign: string) => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/in_progress`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/campaign/${id_campaign}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ export const getCampaignsInProgess = async () => {
             console.log(result)
             return result;
         } else {
-            throw new Error('Failed to fetch data: ', result.message);
+            throw new Error('Failed to fetch data ', result.message);
         }
     } catch (error) {
         console.error(error);
