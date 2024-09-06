@@ -9,7 +9,8 @@ import Backbar from './components/topbar/Backbar';
 
 // Pages
 import Dashboard from './pages/Dashboard';
-
+import ManageBrand from './pages/ManageBrand';
+import ManageUser from './pages/ManageUser';
 
 function Layout() {
   return (
@@ -18,9 +19,10 @@ function Layout() {
       <div className="content">
         <Topbar />
         <div className="page-content">
-          <Routes>
+          {/* <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
+          </Routes> */}
+          <Outlet />
         </div>
       </div>
     </div>
@@ -32,7 +34,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="" element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/brand" element={<ManageBrand />} />
+          <Route path="/user" element={<ManageUser />} />
         </Route>
       </Routes>
     </Router>
