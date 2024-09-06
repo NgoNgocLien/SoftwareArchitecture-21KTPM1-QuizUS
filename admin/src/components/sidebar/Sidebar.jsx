@@ -1,8 +1,8 @@
 import "./Sidebar.css";
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 export default function Sidebar() {
-
     const [focus, setFocus] = useState("dashboard");
     const handleFocus = (tab) => {
         setFocus(tab);
@@ -22,19 +22,19 @@ export default function Sidebar() {
             <ul className="sidebar-nav">
                 <li className={focus === "dashboard" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("dashboard")}>
                     <img src="/icons/home.svg" alt="dashboard" />
-                    <span>Tổng quan</span>
+                    <Link to="/dashboard" className="link-text">Tổng quan</Link>
                 </li>
                 <li className={focus === "player" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("player")}>
                     <img src="/icons/user.svg" alt="user" />
-                    <span>Người chơi</span>
+                    <Link to="/user" className="link-text">Người chơi</Link>
                 </li>
                 <li className={focus === "brand" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("brand")}>
                     <img src="/icons/brand.svg" alt="brand" />
-                    <span>Nhãn hàng</span>
+                    <Link to="/brand" className="link-text">Nhãn hàng</Link>
                 </li>
                 <li className={focus === "game" ? "sidebar-nav-item focused" : "sidebar-nav-item"} onClick={() => handleFocus("game")}>
                     <img src="/icons/game.svg" alt="game" />
-                    <span>Trò chơi</span>
+                    <Link to="/game" className="link-text">Trò chơi</Link>
                 </li>
             </ul>
 
