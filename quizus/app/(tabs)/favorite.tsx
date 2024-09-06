@@ -13,6 +13,7 @@ import config from '@/constants/config';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import { useFocusEffect } from 'expo-router';
+import { showToast } from '@/components/ToastBar';
 
 export default function Favorite() {
     const [campaigns, setCampaigns] = useState<any[]>([]);
@@ -28,13 +29,16 @@ export default function Favorite() {
                 }
                 setCampaigns(likedCampaigns.map((likedCampaign: any) => likedCampaign.campaign_data));
                 setLoading(false);
+
             }).catch((err) => {
                 console.log(err);
                 setLoading(false);
+                showToast('error', 'Lỗi hệ thống');
             });
         }).catch((err) => {
             console.log(err);
             setLoading(false);
+            showToast('error', 'Không tìm thấy thông tin người dùng');
         });
     }, []);
 

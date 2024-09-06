@@ -11,6 +11,7 @@ import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import config from '@/constants/config';
 import { useFocusEffect } from 'expo-router';
+import { showToast } from '@/components/ToastBar';
 
 export default function HomePage() {
 
@@ -50,15 +51,18 @@ export default function HomePage() {
                     console.log(err);
                     setCampaigns(res);
                     setLoading(false);
+                    showToast('error', 'Lỗi hệ thống');
                 });
             }).catch((err) => {
                 console.log(err);
                 setCampaigns(res);
                 setLoading(false);
+                showToast('error', 'Không tìm thấy thông tin người dùng');
             });
         }).catch((err) => {
             console.log(err);
             setLoading(false);
+            showToast('error', 'Lỗi hệ thống');
         });
 
         return () => {

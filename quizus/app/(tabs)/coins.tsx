@@ -13,6 +13,7 @@ import { getActiveVouchers } from '@/api/VoucherApi';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { LoadingView } from '@/components/LoadingView';
 import { EmptyView } from '@/components/EmptyView';
+import { showToast } from '@/components/ToastBar';
 
 
 // call api
@@ -92,6 +93,7 @@ export default function Coins() {
         .catch(error => {
             console.error('Error fetching player vouchers:', error);
             setLoading(false);
+            showToast('error', 'Lỗi hệ thống');
         });
 
     }, []);

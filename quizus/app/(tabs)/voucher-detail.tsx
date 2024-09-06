@@ -22,7 +22,7 @@ import config from '@/constants/config';
 import { getQuizInfo } from '@/api/GameApi';
 import { Voucher } from '@/models/voucher/Voucher';
 
-export default function Campaign() {
+export default function VoucherDetail() {
     const params = useLocalSearchParams();
     const voucher = params.voucher;
 
@@ -40,78 +40,78 @@ export default function Campaign() {
         // });
     }, [])
 
-    return (
-        <View style={styles.container}>
-            <SubHeader/>
-            <View style={styles.background}>
-                <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
-                    <Image style={styles.banner} source={{uri: voucher.photo}} />
+    // return (
+        // <View style={styles.container}>
+        //     <SubHeader/>
+        //     <View style={styles.background}>
+        //         <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
+        //             <Image style={styles.banner} source={{uri: voucher.photo}} />
                             
-                        <View style={styles.campaignHeaderContainer}>
-                            <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo} />
-                            <View style={{flex: 1, justifyContent: 'space-between'}}>
-                                <View style={styles.campaignHeader_top}>
-                                <View style={Date.now() < Date.parse(campaign.end_datetime) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                                    <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(campaign.end_datetime) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
-                                    { 
-                                        Date.now() < Date.parse(campaign.end_datetime) ? 
-                                            <Text style={styles.time}>{new Date(campaign.end_datetime).toLocaleDateString()}</Text> :
-                                            <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
-                                    }
-                                </View>
-                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={handleShare} suppressHighlighting={true} />
-                                </View>
-                                <View style={styles.campaignHeader_bottom}>
-                                    <Heading type='h5'>{campaign.name}</Heading>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.gameInfoContainer}>
-                            <View style={styles.game__container}>
-                                <Text style={styles.game_info_header}>Thưởng</Text>
-                                <Text style={styles.game_info_container}>
-                                    <Text style={styles.game_info_num}>{config.QUIZ_SCORE}</Text>
-                                    <Text style={styles.game_info_text}> xu</Text>
-                                </Text>
-                            </View>
-                            <View style={styles.vertical_seperator}></View>
-                            <View style={styles.game__container}>
-                                <Text style={styles.game_info_header}>Câu hỏi</Text>
-                                <Text style={styles.game_info_container}>
-                                    <Text style={styles.game_info_num}>10</Text>
-                                    <Text style={styles.game_info_text}> câu hỏi</Text>
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.horizontal_seperator}></View>
-                        <View style={styles.campaignDetailContainer}>
-                            <Heading type="h5" style={styles.heading}>Giới thiệu</Heading>
-                            <Paragraph type='p2'>
-                                {campaign.description}
-                            </Paragraph>
+        //                 <View style={styles.campaignHeaderContainer}>
+        //                     <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo} />
+        //                     <View style={{flex: 1, justifyContent: 'space-between'}}>
+        //                         <View style={styles.campaignHeader_top}>
+        //                         <View style={Date.now() < Date.parse(campaign.end_datetime) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+        //                             <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(campaign.end_datetime) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+        //                             { 
+        //                                 Date.now() < Date.parse(campaign.end_datetime) ? 
+        //                                     <Text style={styles.time}>{new Date(campaign.end_datetime).toLocaleDateString()}</Text> :
+        //                                     <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
+        //                             }
+        //                         </View>
+        //                             <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={handleShare} suppressHighlighting={true} />
+        //                         </View>
+        //                         <View style={styles.campaignHeader_bottom}>
+        //                             <Heading type='h5'>{campaign.name}</Heading>
+        //                         </View>
+        //                     </View>
+        //                 </View>
+        //                 <View style={styles.gameInfoContainer}>
+        //                     <View style={styles.game__container}>
+        //                         <Text style={styles.game_info_header}>Thưởng</Text>
+        //                         <Text style={styles.game_info_container}>
+        //                             <Text style={styles.game_info_num}>{config.QUIZ_SCORE}</Text>
+        //                             <Text style={styles.game_info_text}> xu</Text>
+        //                         </Text>
+        //                     </View>
+        //                     <View style={styles.vertical_seperator}></View>
+        //                     <View style={styles.game__container}>
+        //                         <Text style={styles.game_info_header}>Câu hỏi</Text>
+        //                         <Text style={styles.game_info_container}>
+        //                             <Text style={styles.game_info_num}>10</Text>
+        //                             <Text style={styles.game_info_text}> câu hỏi</Text>
+        //                         </Text>
+        //                     </View>
+        //                 </View>
+        //                 <View style={styles.horizontal_seperator}></View>
+        //                 <View style={styles.campaignDetailContainer}>
+        //                     <Heading type="h5" style={styles.heading}>Giới thiệu</Heading>
+        //                     <Paragraph type='p2'>
+        //                         {campaign.description}
+        //                     </Paragraph>
 
-                            <Heading type="h5" style={styles.heading}>Phần thưởng</Heading>
-                            <Paragraph type='p2'>
-                                <Text style={{fontSize: 18, fontWeight: '800'}}>+{config.QUIZ_SCORE}</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
-                            </Paragraph>
-                            <Paragraph type='p2' style={{color: Colors.light.subText}}>Trả lời đúng 10/10 câu</Paragraph>
+        //                     <Heading type="h5" style={styles.heading}>Phần thưởng</Heading>
+        //                     <Paragraph type='p2'>
+        //                         <Text style={{fontSize: 18, fontWeight: '800'}}>+{config.QUIZ_SCORE}</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
+        //                     </Paragraph>
+        //                     <Paragraph type='p2' style={{color: Colors.light.subText}}>Trả lời đúng 10/10 câu</Paragraph>
 
-                        </View>
-                        <VoucherCard style={{marginBottom: 100}}/>
-                </ScrollView>
-                <View style={styles.joinButtonContainer} >
-                    <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
-                        onPress={() => {router.replace({
-                            pathname: "/quiz/detail",
-                            params: {
-                                quizInfo: JSON.stringify(quizInfo),
-                                id_campaign: campaign.id
-                            }
-                        })}}/>
-                </View>
-            </View>
-        </View>
-    )
+        //                 </View>
+        //                 <VoucherCard style={{marginBottom: 100}}/>
+        //         </ScrollView>
+        //         <View style={styles.joinButtonContainer} >
+        //             <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
+        //                 onPress={() => {router.replace({
+        //                     pathname: "/quiz/detail",
+        //                     params: {
+        //                         quizInfo: JSON.stringify(quizInfo),
+        //                         id_campaign: campaign.id
+        //                     }
+        //                 })}}/>
+        //         </View>
+        //     </View>
+        // </View>
+    // )
 }
 
 const styles = StyleSheet.create({

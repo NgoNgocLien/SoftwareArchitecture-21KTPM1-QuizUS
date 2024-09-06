@@ -5,7 +5,7 @@ import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
-import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
+import { showToast } from '@/components/ToastBar';
 import { Heading } from '../text/Heading';
 import { Paragraph } from '../text/Paragraph';
 import { likeCampaign, unlikeCampaign } from '@/api/CampaignApi';
@@ -40,16 +40,16 @@ export function CampaignCard({
                 .then((res) => {
                     // console.log('Campaign liked:', res); 
                     
-                    Toast.show(<ToastBar type='success' message='Sự kiện đã được thêm vào Yêu thích'/>, ToastBarOptions)
+                    showToast('success', 'Sự kiện đã được thêm vào Yêu thích');
                     setFavorite(true);
                 })
                 .catch((err) => {
                     console.log('Error:', err);
-                    Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+                    showToast('error', 'Lỗi hệ thống');
                 });
             }).catch((err) => {
                 console.log('Error:', err);
-                Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+                showToast('error', 'Lỗi hệ thống');
             });
         }
     }
@@ -65,7 +65,7 @@ export function CampaignCard({
 
                 setFavorite(false);
                 setModalVisible(!modalVisible);
-                Toast.show(<ToastBar type='success' message='Sự kiện đã được xóa khỏi Yêu thích'/>, ToastBarOptions)
+                showToast('success', 'Sự kiện đã được xóa khỏi Yêu thích');
                 if (onFavoriteRemoved) {
                     onFavoriteRemoved();
                 }
@@ -74,13 +74,13 @@ export function CampaignCard({
                 console.log('Error:', err);
 
                 setModalVisible(!modalVisible);
-                Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+                showToast('error', 'Lỗi hệ thống');
             });
         }).catch((err) => {
             console.log('Error:', err);
 
             setModalVisible(!modalVisible);
-            Toast.show(<ToastBar type='error' message='Lỗi hệ thống'/>, ToastBarOptions)
+            showToast('error', 'Lỗi hệ thống');
         });
     }
 

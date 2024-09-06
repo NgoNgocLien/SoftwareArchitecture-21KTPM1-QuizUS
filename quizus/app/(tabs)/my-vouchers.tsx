@@ -12,6 +12,7 @@ import { Heading } from '@/components/text/Heading';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { getExchangedVouchers } from '@/api/VoucherApi';
 import config from '@/constants/config';
+import { showToast } from '@/components/ToastBar';
 
 const tabNames = [
     { index: 0, name: 'Tất cả' },
@@ -58,10 +59,12 @@ export default function MyVouchers() {
                 .catch(error => {
                     console.error('Error fetching player vouchers:', error);
                     setLoading(false);
+                    showToast('error', 'Lỗi hệ thống');
                 });
         }).catch((err) => {
             console.log(err);
             setLoading(false);
+            showToast('error', 'Không tìm thấy thông tin người dùng');
         });
 
     }, []);

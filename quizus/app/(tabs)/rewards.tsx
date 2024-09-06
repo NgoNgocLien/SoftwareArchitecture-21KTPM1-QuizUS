@@ -18,6 +18,7 @@ import { getActiveVouchers } from '@/api/VoucherApi';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
+import { showToast } from '@/components/ToastBar';
 
 // Call API
 const defaultPlayerInfo = {
@@ -64,6 +65,7 @@ export default function Rewards() {
             .catch(error => {
                 console.error('Error fetching player vouchers:', error);
                 setLoading(false);
+                showToast('error', 'Lỗi hệ thống');
             });
     }, []);
 
