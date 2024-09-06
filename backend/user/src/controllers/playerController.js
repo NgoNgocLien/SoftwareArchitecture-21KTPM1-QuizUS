@@ -159,7 +159,28 @@ const getPlayerScore = async (req, res) => {
     }
 };
 
+const exchangeVoucherByCoin = async (req, res) => {
+    try {
+        const player = await model.player.findOne({
+            where: {
+                id_player: req.body.id_player,
+            }
+        })
+
+        if (player) {
+            player.score = player.score -= req.body.score
+
+            const updatedPlayer = await player.save();
+            successCode(res, updatedPlayer, "Cập nhật thành công")
+        } else
+            failCode(res, null, "id_player không hợp lệ")
+    } catch (err) {
+        console.log(err)
+        errorCode(res)
+    }
+}
+
 module.exports = {
     signup, otp,
-    get, getAll, update, search, getPlayerScore
+    get, getAll, update, search, getPlayerScore, exchangeVoucherByCoin
 }

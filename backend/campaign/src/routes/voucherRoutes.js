@@ -138,11 +138,11 @@ router.get('/exchange/:id_player', async (req, res) => {
                         brandName: brandResponse.data.name,
                         brandLogo: brandResponse.data.logo
                     },
-                    voucher: id_voucher._doc,
+                    voucher: id_voucher?._doc || '',
                     is_used: playerVoucher.is_used
                 };
             } catch (axiosError) {
-                throw new Error("Failed to fetch brand information.");
+                throw new Error("Failed to fetch brand information ", axiosError);
             }
         }));
 
@@ -150,6 +150,42 @@ router.get('/exchange/:id_player', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
+});
+
+// đổi voucher
+router.post('/exchange/coin', async (req, res) => {
+  try {
+      const { id_player, id_campaign, score_exchange } = req.body;
+
+      if (!id_player || !id_campaign || !score_exchange) {
+          return res.status(400).json({ message: 'id_player, id_campaign, and score_exchange are required' });
+      }
+
+      try {
+          const response = await axios.put('http://gateway_proxy:8000/user/api/player/coin', {
+              id_player,
+              score: score_exchange
+          });
+
+          if (response.status === 200) {
+              const playerVoucher = new PlayerVoucher({
+                  id_player,
+                  id_campaign,
+                  is_used: false
+              });
+
+              const savedPlayerVoucher = await playerVoucher.save();
+              return res.status(201).json(savedPlayerVoucher);
+          } else {
+              return res.status(500).json({ message: 'Failed to deduct coins from player.' });
+          }
+
+      } catch (error) {
+          return res.status(500).json({ message: 'Failed to communicate with the coin deduction service.', error: error.message });
+      }
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
 module.exports = router;
