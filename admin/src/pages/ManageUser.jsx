@@ -3,18 +3,26 @@ import "../styles/common.css";
 import "../styles/manage.css";
 
 export default function ManageUser() {
-    // const handleEdit = (id) => {
-    //     console.log('Chỉnh sửa người chơi có ID: ', id);
-    // };
-
-    // const handleDelete = (id) => {
-    //     console.log('Xóa người chơi có ID: ', id);
-    // };
+    const [searchText, setSearchText] = useState('')
+    const handleSearch = (e) => {
+        setSearchText(e.target.value);
+    };
 
     return (
         <div>
             {/* Search bar */}
+            <div className="search-bar">
+                <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Tìm kiếm theo ID, tên, email người dùng"
+                    value={searchText}
+                    onChange={handleSearch}
+                />
+                <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
+            </div>
 
+            {/* Table */}
             <div className='manage-user'>
                 <table className="user-table">
                     <thead>
@@ -64,7 +72,6 @@ export default function ManageUser() {
                     </tbody>
                 </table>
             </div>
-            
         </div>
     )
 }
