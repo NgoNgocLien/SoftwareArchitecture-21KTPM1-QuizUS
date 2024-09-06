@@ -169,6 +169,33 @@ router.get('/exchange/:id_player', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
-});
+
+    const result = await Promise.all(playerVouchers.map(async (playerVoucher) => {
+        const { id_voucher, ...campaignInfo } = playerVoucher.id_campaign._doc;
+
+        try {
+            const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${campaignInfo.id_brand1}`);
+
+            return {
+                id_playerVoucher: playerVoucher._id,
+                campaign: {
+                    ...campaignInfo,
+                    id_campaign: campaignInfo._id,
+                    brandName: brandResponse.data.name,
+                    brandLogo: brandResponse.data.logo
+                },
+                voucher: id_voucher,
+                is_used: playerVoucher.is_used
+            };
+        } catch (axiosError) {
+            console.error("Error fetching brand info:", axiosError);
+            throw new Error("Failed to fetch brand information.");
+        }
+
+    }));
+
+    res.status(200).json(result);
+}
+);
 
 module.exports = router;

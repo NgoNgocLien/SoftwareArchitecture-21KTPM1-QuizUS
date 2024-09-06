@@ -61,7 +61,7 @@ function LineChart() {
   };
 
   return (
-    <div style={{ height: '400px' }}>  {/* Set chart width and height */}
+    <div style={{ height: '600px' }}>
       <Line data={data} options={options} />
     </div>
   );

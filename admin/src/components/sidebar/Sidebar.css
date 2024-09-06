@@ -71,3 +71,7 @@ li>i {
 .sidebar-brand>i:hover {
     color: white;
 }
+
+.link-text {
+    color: white;
+}

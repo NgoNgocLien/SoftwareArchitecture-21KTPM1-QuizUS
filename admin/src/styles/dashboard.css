@@ -38,7 +38,6 @@
     border-radius: 10px;
     border: 1px solid #EAECF0;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    height: 500px;
 }
 
 .user-chart p {
@@ -83,3 +82,19 @@
     margin-bottom: 16px;
 }
 
+.budget-chart {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    margin-top: 24px;
+    right: 24px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #EAECF0;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    height: 500px;  
+}
+
+.budget-chart h6 {
+    margin-bottom: 48px;
+}

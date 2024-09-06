@@ -17,6 +17,13 @@ import { VoucherCard } from '@/components/card/VoucherCard';
 import { getActiveVouchers } from '@/api/VoucherApi';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 
+// call api
+const defaultPlayerInfo = {
+    score: 100,
+    quantity_item1: 0,
+    quantity_item2: 0
+}
+
 export default function Rewards() {
 
     const [_vouchers, setVouchers] = useState<any[][] | null>(null);
@@ -57,37 +64,36 @@ export default function Rewards() {
     return (
         <View style={styles.background}>
             <Header />
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-            <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
-            <View style={styles.tabContainer}>
-                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Xu thưởng</Text>
-                    </View>
-                </TouchableWithoutFeedback>
+                <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
+                <View style={styles.tabContainer}>
+                    <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/coin.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Xu thưởng</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/items')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Vật phẩm</Text>
-                    </View>
-                </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => router.push('/items')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/gift.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Vật phẩm</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Mã giảm giá</Text>
-                    </View>
-                </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Mã giảm giá</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
-                    <View style={styles.tab}>
-                        <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
-                        <Text style={styles.tabText}>Thanh toán</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>
+                    <TouchableWithoutFeedback onPress={() => router.push('/rewards')}>
+                        <View style={styles.tab}>
+                            <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
+                            <Text style={styles.tabText}>Thanh toán</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
 
                 {
                     !_vouchers || _vouchers[1]?.length === 0 || _vouchers[2]?.length === 0 ? (
@@ -95,7 +101,7 @@ export default function Rewards() {
                             <Image source={require('@/assets/images/empty-result.png')} style={styles.emptyImage} />
                         </View>
                     ) : (
-                        <>
+                        <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
                             <View style={[styles.container, styles.titleContainer]}>
                                 <Heading type="h4">Đổi xu lấy quà</Heading>
                                 <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>
@@ -105,7 +111,8 @@ export default function Rewards() {
                             
                             { _vouchers[1]?.slice(0, 2).map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                 />
                             ))}
@@ -118,15 +125,15 @@ export default function Rewards() {
                             {/* Lấy chỉ 2 mục */}
                             {_vouchers[2]?.slice(0, 2).map((voucher, index) => (
                                 <VoucherCard 
-                                    voucher={voucher}
+                                    voucher={null}
+                                    playerInfo={defaultPlayerInfo}
                                     key={index} 
                                     style={index === 1 ? { marginBottom: 20 } : {}} 
                                 />
                             ))}
-                        </>
+                        </ScrollView>
                     )
                 }
-            </ScrollView>     
         </View>
     )
 }
