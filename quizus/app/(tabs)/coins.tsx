@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableWithoutFeedback, View, Image, Text, ScrollView, SafeAreaView, Platform } from 'react-native';
-import { Link, useRouter } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
+import { useState, useEffect, useCallback } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Button } from '@/components/Button';
@@ -48,7 +48,8 @@ export default function Coins() {
     const [muaSam, setMuaSam] = useState<any[] | null>(null);
     const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
 
-    useEffect(() => {
+    const fetchCoinVouchers = useCallback(() => {
+        setLoading(true);
         getActiveVouchers()
         .then(voucherList => {
 
@@ -94,6 +95,8 @@ export default function Coins() {
         });
 
     }, []);
+
+    useFocusEffect(fetchCoinVouchers);
 
     return (
         <View style={styles.background}>

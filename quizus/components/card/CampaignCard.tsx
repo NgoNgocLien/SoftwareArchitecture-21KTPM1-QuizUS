@@ -16,11 +16,13 @@ import dialogStyles from '@/components/modal/Dialog.styles';
 export function CampaignCard({
     campaign,
     isFavorite,
+    onFavoriteRemoved = () => {},
     ...rest
 }:{
     campaign: any,
     isFavorite?: boolean,
-    [key: string]: any 
+    [key: string]: any,
+    onFavoriteRemoved?: () => void
 }) {
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -64,6 +66,9 @@ export function CampaignCard({
                 setFavorite(false);
                 setModalVisible(!modalVisible);
                 Toast.show(<ToastBar type='success' message='Sự kiện đã được xóa khỏi Yêu thích'/>, ToastBarOptions)
+                if (onFavoriteRemoved) {
+                    onFavoriteRemoved();
+                }
             })
             .catch((err) => {
                 console.log('Error:', err);
