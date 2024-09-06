@@ -73,15 +73,15 @@ export default function MyVouchers() {
                 <FontAwesome name={'search'} style={styles.searchIcon} />
             </View>
 
-            <View style={{ minHeight: 40, maxHeight: 40, flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
+            <View style={{ minHeight: 40, maxHeight: 40, flexDirection: 'row', display: 'flex' }}>
                 <View style={styles.emptyTab}></View>
 
                 {tabNames.map((tab, index) => (
                     <TouchableWithoutFeedback onPress={() => handleTabFocus(index)} key={tab.index}>
                         <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
                             <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>{tab.name}</Text>
-                            <View style={styles.categoryAmountText}>
-                                <Text style={[styles.categoryText, {fontSize: 14}, focusedTab === tab.index ? styles.focusedText : null]}>
+                            <View style={[styles.categoryAmountText, focusedTab === tab.index ? styles.focusedAmountText : null]}>
+                                <Text style={[styles.categoryText, {fontSize: 12}, focusedTab === tab.index ? styles.focusedText : null]}>
                                     {vouchers === null ? 0 : vouchers[index]?.length}
                                 </Text>
                             </View>

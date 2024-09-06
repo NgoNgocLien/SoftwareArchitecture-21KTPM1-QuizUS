@@ -58,19 +58,21 @@ const styles = StyleSheet.create({
 
     emptyTab: {
         width: 20,
-        height: 34,
+        height: 40,
         borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,    
     },
 
     categoryTab: {
-        height: 34,
-        flex: 1,
+        height: 40,
+        flexGrow: 1,
         justifyContent: 'center',
+        
         borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,
         flexDirection: 'row',
-        gap: 8
+        alignItems: 'center',
+        gap: 5
     },
 
     categoryText: {
@@ -81,10 +83,15 @@ const styles = StyleSheet.create({
 
     categoryAmountText:{
         backgroundColor: Colors.gray._200,
-        borderRadius: 8,
-        paddingHorizontal: 6,
-        paddingVertical: 2,
-        height: '60%'
+        borderRadius: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    focusedAmountText: {
+        backgroundColor: Colors.light.secondary,
     },
 
     focusedTab: {
