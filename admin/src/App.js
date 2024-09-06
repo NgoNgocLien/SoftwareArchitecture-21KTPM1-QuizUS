@@ -15,13 +15,6 @@ import ManageBrand from './pages/ManageBrand';
 import ManageUser from './pages/ManageUser';
 import ManageGame from './pages/ManageGame';
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-);
-
 function Layout() {
   return (
     <div className="layout">

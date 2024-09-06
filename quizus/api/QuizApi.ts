@@ -22,9 +22,9 @@ export const getQuizInfo = async (id_campaign: string) => {
     }
 }
 
-export const getPlayerTurn = async (id_campaign: string) => {
+export const getPlayerTurn = async (id_player: string, id_campaign: string) => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/user/player_turn/${id_campaign}`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/user/player_turn/${id_player}/${id_campaign}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
