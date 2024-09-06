@@ -1,0 +1,195 @@
+.manage-user, .manage-brand {
+    margin: 0;
+}
+
+.manage-user h3, .manage-brand h3 {
+    margin-bottom: 16px;
+}
+
+.user-table, .brand-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+    background-color: white;
+}
+
+.user-table thead, .brand-table thead  {
+    background-color: #F3F4F6;
+    font-family: semibold-font;
+    font-size: 14px;
+}
+
+.user-table th, .user-table td, .brand-table th, .brand-table td {
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.user-table th, .brand-table th {
+    font-weight: bold;
+}
+
+.user-table td, .brand-table td {
+    font-size: 14px;
+    font-family: regular-font;
+}
+
+.user-info, .brand-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    border-radius: 100%;
+}
+
+.brand-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+}
+
+a {
+    color: #007AFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    width: 100px;
+    gap: 10px;  /* Adds spacing between the buttons */
+}
+
+.edit-btn, .delete-btn {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.edit-btn img, .delete-btn img {
+    margin-right: 8px; /* Adds space between the icon and the text */
+}
+
+.edit-btn {
+    color: #007AFF;
+}
+
+.delete-btn {
+    color: #FF3B30;
+}
+
+/* Search bar */
+/* Search Bar Styling */
+.search-bar {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 12px 12px 35px;
+    box-sizing: border-box; 
+    font-family: regular-font;
+    font-size: 16px;
+    font-weight: 400;
+    color: #858688;
+    line-height: 18px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-input::placeholder {
+    color: #858688;
+}
+
+/* Dropdown */
+.field-select {
+    display: flex;
+    height: 44px;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    border-radius: 8px; /* var(--Radius-8, 8px) */
+    border: 1px solid #D0D5DD; /* var(--Gray-300, #D0D5DD) */
+    background: #FFF; /* var(--White, #FFF) */
+
+    /* Shadow/xs */
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+
+    /* Text styles */
+    overflow: hidden;
+    color: #101828; /* var(--Gray-900, #101828) */
+    text-overflow: ellipsis;
+    font-family: regular-font;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    padding: 12px;
+}
+
+.field-select option {
+    font-family: regular-font;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    color: #101828; /* Ensures the option text follows the same text style */
+}
+
+.add-brand-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.add-brand-btn {
+    display: inline-flex;
+    height: 44px;
+    padding: 16px;
+    align-items: center;
+    gap: 8px; /* var(--Sizes-8, 8px) */
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: #0063D6;
+    color: #FFF;
+    border: none;
+    font-family: regular-font;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    cursor: pointer;
+    right: 0;
+    align-self: flex-end;
+}
+
+.add-brand-icon {
+    width: 24px; /* Adjust width and height as needed */
+    height: 24px;
+}

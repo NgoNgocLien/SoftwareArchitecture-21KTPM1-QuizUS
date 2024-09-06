@@ -75,3 +75,7 @@ li>i {
 .link-text {
     color: white;
 }
+
+.link-text:hover {
+    text-decoration: none;
+}

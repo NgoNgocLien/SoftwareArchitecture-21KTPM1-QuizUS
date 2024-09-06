@@ -58,34 +58,40 @@ const styles = StyleSheet.create({
 
     emptyTab: {
         width: 20,
-        height: 35,
+        height: 40,
         borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,    
     },
 
     categoryTab: {
-        width: 'auto',
-        height: 35,
-        paddingHorizontal: 18,
+        height: 40,
+        flexGrow: 1,
         justifyContent: 'center',
+        
         borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,
         flexDirection: 'row',
-        gap: 8
+        alignItems: 'center',
+        gap: 5
     },
 
     categoryText: {
         color: Colors.light.subText,
-        fontWeight: 'medium',
+        fontWeight: '500',
         fontSize: 16,
     },
 
     categoryAmountText:{
-        backgroundColor: Colors.gray._100,
-        borderRadius: 8,
-        paddingHorizontal: 5,
-        paddingTop: 1,
-        height: '60%'
+        backgroundColor: Colors.gray._200,
+        borderRadius: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    focusedAmountText: {
+        backgroundColor: Colors.light.secondary,
     },
 
     focusedTab: {
@@ -95,7 +101,7 @@ const styles = StyleSheet.create({
 
     focusedText: {
         color: Colors.light.primary,
-        fontWeight: 500,
+        fontWeight: '700',
     }
 });
 

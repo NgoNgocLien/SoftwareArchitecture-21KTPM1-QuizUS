@@ -1,7 +1,7 @@
 const express = require('express');
 const playerRoute = express.Router();
 const { signup, otp,
-    get, getAll, update, search
+    get, getAll, update, search, exchangeVoucherByCoin
 } = require('../controllers/playerController');
 
 playerRoute.post('/signup', signup);
@@ -15,5 +15,7 @@ playerRoute.get('/:id_player', get);
 playerRoute.put('/', update);
 
 playerRoute.get('/search/:keyword', search);
+
+playerRoute.put('/coin', exchangeVoucherByCoin);
 
 module.exports = playerRoute
