@@ -1,4 +1,4 @@
-export interface IVoucher {
+interface IVoucher {
     _id: string;
     id_brand: number;
     code: string;
@@ -15,6 +15,6 @@ export interface IVoucher {
 }
 
 // redeem with coins or items
-export type VoucherType =
+type VoucherType =
     | 'COIN'
     | 'ITEM';

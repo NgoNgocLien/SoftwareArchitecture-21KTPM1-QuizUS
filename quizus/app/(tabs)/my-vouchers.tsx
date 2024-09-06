@@ -1,59 +1,70 @@
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView, Image } from 'react-native';
+import { Text, TouchableWithoutFeedback, View, ScrollView, Image, SafeAreaView } from 'react-native';
 
-import { Header } from '@/components/header/Header';
 import { Colors } from '@/constants/Colors';
-import { CampaignCard } from '@/components/card/CampaignCard';
-import { SearchBar } from '@/components/input/SearchBar';
-import { getCampaignsInProgess } from '@/api/CampaignApi';
 import { VoucherCard } from '@/components/card/VoucherCard';
-import { IVoucher } from '@/models/voucher';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Heading } from '@/components/text/Heading';
+import styles from './my-vouchers.styles';
+
+import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+
+import { getExchangedVouchers } from '@/api/VoucherApi';
+
+const tabNames = [
+    { index: 0, name: 'Tất cả' },
+    { index: 1, name: 'Đổi xu' },
+    { index: 2, name: 'Mảnh ghép' },
+]
 
 export default function MyVouchers() {
-
-    const tabNames = [
-        { index: 0, name: 'Tất cả' },
-        { index: 1, name: 'Đổi xu' },
-        { index: 2, name: 'Mảnh ghép' },
-    ]
-
     const [focusedTab, setFocusedTab] = useState(0);
-    // const [campaigns, setCampaigns] = useState([]);
+    const [vouchers, setVouchers] = useState<any[][] | null>(null);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
     }
 
-    // for each campaign, get the brand name and logo
-    // useEffect(() => {
-    //     getCampaignsInProgess().then((res) => {
-    //         // for each campaign, add brand name and logo and isFavoritfalse/         let _campaigns = res.map((campaign: any) => {
+    useEffect(() => {        
+        getExchangedVouchers("100006")
+        .then(playerVouchers => {
 
-    //             return {
-    //                 ...campaign,
-    //                 brandName: 'SHOPEE',
-    //                 brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-    //                 isFavorite: falsee,
-    //             }
-    //         });
-    //         setCampaigns(_campaigns); 
-    //     });
-    // }, []);
-    let allVouchers: IVoucher[] = [];
-    let coinVouchers = allVouchers.filter(voucher => voucher.score_exchange !== -1);
-    let itemVouchers = allVouchers.filter(voucher => voucher.score_exchange === -1);
+            let allVouchers: any[] = [];
+            let coinVouchers: any[] = [];
+            let itemVouchers: any[] = [];
 
-    let vouchers: IVoucher[][] = [];
-    vouchers.push(allVouchers);
-    vouchers.push(coinVouchers);
-    vouchers.push(itemVouchers);
+            playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; }) => {
+                const {voucher, ...newPlayerVoucher} = playerVoucher
+
+                if(playerVoucher.campaign.id_quiz !== "") {
+                    const newVoucher = VoucherFactory.createVoucher('coin', voucher);
+
+                    coinVouchers.push({...newPlayerVoucher, voucher: newVoucher});
+                    allVouchers.push({...newPlayerVoucher, voucher: newVoucher});
+                } else {
+                    const newVoucher = VoucherFactory.createVoucher('item', voucher);
+                    itemVouchers.push({...newPlayerVoucher, voucher: newVoucher});
+                    allVouchers.push({...newPlayerVoucher, voucher: newVoucher});
+                }
+            });
+
+            setVouchers([allVouchers, coinVouchers, itemVouchers]);
+        })
+        .catch(error => {
+            console.error('Error fetching player vouchers:', error);
+        });
+
+    }, []);
 
     return (
         <View style={styles.background} >
-            <Header />
-            <View style={[styles.container, {marginTop: 20, marginBottom: 10}]}>
-                <SearchBar editable={false}  />
+             <SafeAreaView style={styles.header}>
+                <MaterialCommunityIcons name={"arrow-left"} size={28} color={Colors.light.mainText} style={styles.backIcon} onPress={() => {router.replace('/(tabs)/rewards')}} suppressHighlighting={true}/>
+            </SafeAreaView>
+            <View style={[styles.container, styles.titleContainer]}>
+                <Heading type="h4">Mã giảm giá</Heading>
+                <FontAwesome name={'search'} style={styles.searchIcon} />
             </View>
 
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} bounces={false} style={{ minHeight: 40, maxHeight: 40}}>
@@ -63,7 +74,9 @@ export default function MyVouchers() {
                     <TouchableWithoutFeedback onPress={() => handleTabFocus(index)} key={tab.index}>
                         <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
                             <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>{tab.name}</Text>
-                            <Text style={[styles.categoryText, styles.categoryAmountText, focusedTab === tab.index ? styles.focusedText : null]}>{vouchers[index]?.length}</Text>
+                            <Text style={[styles.categoryText, styles.categoryAmountText, focusedTab === tab.index ? styles.focusedText : null]}>
+                                {vouchers === null ? 0 : vouchers[index]?.length}
+                            </Text>
                         </View>
                     </TouchableWithoutFeedback>
                 ))}
@@ -74,7 +87,7 @@ export default function MyVouchers() {
             {
                 focusedTab === 0 ? (
                     <>
-                        {vouchers[0].length === 0 ? (
+                        {vouchers === null || vouchers[0].length === 0 ? (
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                 <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
                             </View>
@@ -92,7 +105,7 @@ export default function MyVouchers() {
                     </>
                 ) : focusedTab === 1 ? (
                     <>
-                        {vouchers[1].length === 0 ? (
+                        {vouchers === null || vouchers[1].length === 0 ? (
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                 <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
                             </View>
@@ -110,7 +123,7 @@ export default function MyVouchers() {
                     </>
                 ) : (
                     <>
-                        {vouchers[2].length === 0 ? (
+                        {vouchers === null || vouchers[2].length === 0 ? (
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                 <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
                             </View>
@@ -130,66 +143,3 @@ export default function MyVouchers() {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    background: {
-      flex: 1,
-      backgroundColor: Colors.light.background,
-    },
-
-    container: {
-        paddingHorizontal: 20,
-    },
-
-    searchBar: {
-        height: 52,
-        width: '100%',
-        borderColor: Colors.light.subText,
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        backgroundColor: Colors.light.background,
-    },
-
-    emptyTab: {
-        width: 20,
-        height: 40,
-        borderBottomColor: Colors.gray._500,
-        borderBottomWidth: 1,    
-    },
-
-    categoryTab: {
-        width: 'auto',
-        height: 40,
-        paddingHorizontal: 10,
-        justifyContent: 'center',
-        borderBottomColor: Colors.gray._500,
-        borderBottomWidth: 1,
-        flexDirection: 'row',
-        gap: 8
-    },
-
-    categoryText: {
-        color: Colors.light.subText,
-        fontWeight: 'medium',
-        fontSize: 16,
-    },
-
-    categoryAmountText:{
-        backgroundColor: Colors.gray._100,
-        borderRadius: 5,
-        paddingHorizontal: 5,
-        paddingTop: 1,
-        height: '60%'
-    },
-
-    focusedTab: {
-        borderBottomColor: Colors.light.primary,
-        borderBottomWidth: 2,
-    },
-
-    focusedText: {
-        color: Colors.light.primary,
-        fontWeight: 500,
-    }
-});

@@ -24,13 +24,15 @@ export default function RootLayout() {
     if (loaded) {
       SplashScreen.hideAsync();
 
-      config.retrieveFromSecureStore('id_player', setIdPlayer);
+      // config.retrieveFromSecureStore('id_player', setIdPlayer);
 
-      if (id_player) {
-        router.push('/(tabs)');
-      } else {
-        router.push('/login'); 
-      }
+      // if (id_player) {
+      //   router.push('/(tabs)');
+      // } else {
+      //   router.push('/login'); 
+      // }
+
+      router.push('/(tabs)/my-vouchers')
     }
   }, [loaded, id_player]);
 
