@@ -24,16 +24,16 @@ export default function Sidebar() {
             </div>
             <div className="horizontal-line"></div>
             <ul className="sidebar-nav">
-                <li className={focus === "dashboard" ? "sidebar-nav-item focused" : "sidebar-nav-item"}>
-                    <img src="/icons/home.svg" alt="event" />
+                <li className={focus === "event" ? "sidebar-nav-item focused" : "sidebar-nav-item"}>
+                    <img src="/icons/event.svg" alt="event" />
                     <Link to="/event" className="link-text">Sự kiện</Link>
                 </li>
-                <li className={focus === "player" ? "sidebar-nav-item focused" : "sidebar-nav-item"}>
-                    <img src="/icons/user.svg" alt="user" />
+                <li className={focus === "voucher" ? "sidebar-nav-item focused" : "sidebar-nav-item"}>
+                    <img src="/icons/voucher.svg" alt="voucher" />
                     <Link to="/voucher" className="link-text">Voucher</Link>
                 </li>
-                <li className={focus === "brand" ? "sidebar-nav-item focused" : "sidebar-nav-item"}>
-                    <img src="/icons/brand.svg" alt="brand" />
+                <li className={focus === "info" ? "sidebar-nav-item focused" : "sidebar-nav-item"}>
+                    <img src="/icons/info.svg" alt="info" />
                     <Link to="/info" className="link-text">Thông tin</Link>
                 </li>
             </ul>
