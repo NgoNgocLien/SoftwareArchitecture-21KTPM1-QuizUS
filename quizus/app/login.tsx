@@ -33,6 +33,7 @@ export default function Login() {
           password,
         }),
       });
+      console.log(response)
 
       const result = await response.json();
       if (response.ok) {
