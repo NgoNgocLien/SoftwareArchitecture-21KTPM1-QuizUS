@@ -14,7 +14,6 @@ import Dashboard from './pages/Dashboard';
 import ManageBrand from './pages/ManageBrand';
 import ManageUser from './pages/ManageUser';
 import ManageGame from './pages/ManageGame';
-import Signup from './pages/signup';
 import Login from './pages/login';
 
 function Layout() {
@@ -36,7 +35,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="" element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/brand" element={<ManageBrand />} />

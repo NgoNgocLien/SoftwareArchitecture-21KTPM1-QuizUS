@@ -51,7 +51,7 @@ export default function Login(props) {
             console.log("result:", result)
             if (result?.status === 200) {
                 setLoading(false);
-                localStorage.setItem('user', JSON.stringify(result.data));
+                localStorage.setItem('admin', JSON.stringify(result.data));
 
                 setLoginSuccess(true);
                 setTimeout(() => {
@@ -71,10 +71,6 @@ export default function Login(props) {
         }
         
     }
-    
-    const handleNavigate = () => {
-        navigate("/signup");
-    };
       
     return (
         <div className="login-container">
@@ -119,9 +115,6 @@ export default function Login(props) {
                             Đăng nhập bằng Google
                         </button>
 
-                        <div className="sign-up">Chưa có tài khoản? 
-                            <span onClick={() => handleNavigate()} style={{color: "var(--scheme-primary)", cursor: "pointer", fontWeight: "600"}}> Tạo tài khoản</span>
-                        </div>
                         {loginSuccess && <div style={{ color: "var(--feedback-success)", fontStyle: "italic", fontFamily: "medium-font", marginTop: "10px" }}>Đăng nhập thành công!</div>}
                         {loginFail && <div style={{ color: "var(--feedback-error)", fontStyle: "italic", fontFamily: "medium-font", marginTop: "10px" }}>Email hoặc mật khẩu sai!</div>}
 
