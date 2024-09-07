@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, Image, Alert, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import config from '@/constants/config';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Paragraph } from '@/components/text/Paragraph';
@@ -9,21 +9,25 @@ import { Colors } from '@/constants/Colors';
 import LottieView from 'lottie-react-native';
 import { Accelerometer } from 'expo-sensors';
 
-const SHAKE_THRESHOLD = 1.78;
+const SHAKE_THRESHOLD = 2.3; // Adjust for sensitivity
+const COOLDOWN_PERIOD = 3000; // 2 seconds cooldown
 
-export default function Profile() {
+
+export default function ItemGameDetail() {
     const router = useRouter();
-    
-    const id_campaign = '64e9d9c8e8b4c21c4b2e9f68';
-    const itemInfo = {
-        item1_photo: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725647152/quizus/f9dog7ropzk6keybvsvz.jpg',
-        item2_photo: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725647152/quizus/mpufkyly2nb88hnfdsf7.jpg',
-    };
+    const params = useLocalSearchParams(); 
 
-    const [isItem1, setIsItem1] = useState<boolean>(false);
+    const id_campaign = params.id_campaign as string;
+    const itemInfoString = Array.isArray(params.itemInfo) ? params.itemInfo[0] : params.itemInfo;
+    const itemInfo = JSON.parse(itemInfoString);
+
+    const [hasNavigated, setHasNavigated] = useState(false);
 
     const handleFinishGame = async () => {
         try {
+            const isItem1 = Math.random() < 0.5;
+            Alert.alert('err',isItem1.toString())
+            
             const response = await fetch(`${config.CAMPAIGN_BE}/api/game`, {
                 method: 'POST',
                 headers: {
@@ -36,16 +40,20 @@ export default function Profile() {
                 }),
             });
 
+
             const result = await response.json();
 
             if (response.ok) {    
                 const params = {
-                    quantity_item_1: result.quantity_item_1,
-                    quantity_item_2: result.quantity_item_3,
+                    isItem1: isItem1.toString(),
+                    quantity_item1: result.quantity_item1,
+                    quantity_item2: result.quantity_item2,
                     id_campaign: id_campaign,
-                    playerTurn: result.player_turn
+                    playerTurn: result.player_turn,
+                    itemInfo: JSON.stringify(itemInfo),
                 };
 
+                setHasNavigated(true);
                 router.replace({
                     pathname: '/itemgame/result',
                     params,
@@ -60,6 +68,7 @@ export default function Profile() {
     };
 
     const handleCloseGame = () =>{
+        setHasNavigated(true);
         router.replace({
             pathname: '/campaign',
             params: {
@@ -70,7 +79,8 @@ export default function Profile() {
 
     const [data, setData] = useState({ x: 0, y: 0, z: 0 });
     const [subscription, setSubscription] = useState<any>(null);
-
+    const lastShakeTime = useRef<number>(0); // Ref to store the last shake time
+    
     const subscribe = () => {
         setSubscription(
             Accelerometer.addListener(accelerometerData => {
@@ -78,9 +88,10 @@ export default function Profile() {
                 const { x, y, z } = accelerometerData;
                 const totalForce = Math.sqrt(x * x + y * y + z * z);
 
-                if (totalForce > SHAKE_THRESHOLD) {
-                    Alert.alert('Shake detected!');
-                    // You can trigger the shake event here
+                const now = Date.now();
+                if (!hasNavigated && totalForce > SHAKE_THRESHOLD && now - lastShakeTime.current > COOLDOWN_PERIOD) {
+                    lastShakeTime.current = now; // Update the last shake time
+                    handleFinishGame();
                 }
             })
         );
@@ -97,6 +108,7 @@ export default function Profile() {
         return () => unsubscribe();
     }, []);
 
+
     return (
         <SafeAreaView style={styles.background}>
             {/* Background game image (behind the giftGame) */}
@@ -111,7 +123,7 @@ export default function Profile() {
             {/* Gift game view (on top of background) */}
             <View style={styles.giftGame}>
                 <TouchableOpacity style={styles.exitView} onPress={handleCloseGame}>
-                    <MaterialCommunityIcons name={'window-close'} size={28} color={Colors.light.background} onPress={() => router.replace('/(tabs)/rewards')} suppressHighlighting={true}/>                
+                    <MaterialCommunityIcons name={'window-close'} size={28} color={Colors.light.background} suppressHighlighting={true}/>                
                 </TouchableOpacity>
                 <LottieView
                     source={require('@/assets/animations/shaking.json')}
@@ -186,6 +198,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         opacity: 0.8,
+        zIndex: 1000
     },
     backgroundGame: {
         position: 'absolute',
@@ -196,7 +209,4 @@ const styles = StyleSheet.create({
         zIndex: -1, // Ensure it's behind giftGame
     },
 });
-function onShakeEvent(arg0: () => void) {
-    throw new Error('Function not implemented.');
-}
 

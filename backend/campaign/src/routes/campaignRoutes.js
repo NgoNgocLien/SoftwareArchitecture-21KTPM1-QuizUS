@@ -18,7 +18,8 @@ const {
     getRedeemableByItem,
     like,
     unlike,
-    getCampaignsOfVoucher
+    getCampaignsOfVoucher,
+    getStats
 } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -26,6 +27,9 @@ router.get('/', getAll);
 
 // Lấy tất cả các chiến dịch đang diễn ra
 router.get('/in_progress', getInProgress);
+
+//Lấy thông số từ database
+router.get('/stats', getStats);
 
 // Lấy tất cả các chiến dịch của một brand theo id_brand
 router.get('/brand/:id_brand', getBrandCampaign);
