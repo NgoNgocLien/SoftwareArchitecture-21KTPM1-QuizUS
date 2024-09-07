@@ -7,9 +7,14 @@
 // const CAMPAIGN_BE = 'http://192.168.1.11:8000/campaign';
 
 // ml
-const USER_BE = 'http://192.168.2.177:8000/user';
-const GAME_BE = 'http://192.168.2.177:8000/game';
-const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
+// const USER_BE = 'http://192.168.2.177:8000/user';
+// const GAME_BE = 'http://192.168.2.177:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
+
+// simple
+const USER_BE = 'http://192.168.0.225:8000/user';
+const GAME_BE = 'http://192.168.0.225:8000/game';
+const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
 
 const NOTI_BE = '';
 
@@ -18,6 +23,10 @@ const DURATION = 60000;
 const QUIZ_SCORE = 100;
 
 const ID_PLAYER = '100006';
+
+const QUIZ_GAME = 'quizgame';
+
+const ITEM_GAME = 'itemgame';
 
 import * as SecureStore from 'expo-secure-store';
 
@@ -58,6 +67,10 @@ export default {
 
   DURATION,
   QUIZ_SCORE,
+  QUIZ_GAME,
+
+  ITEM_GAME,
+
   ID_PLAYER,
 
   saveToSecureStore,

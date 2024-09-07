@@ -32,7 +32,7 @@ export default function RootLayout() {
       //   router.push('/login'); 
       // }
 
-      router.push('/(tabs)/my-vouchers')
+      router.push('/itemgame/detail')
     }
   }, [loaded, id_player]);
 
@@ -50,8 +50,8 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
 
           <Stack.Screen name="campaign" />
-          <Stack.Screen name="quiz/detail" />
-          <Stack.Screen name="quiz/result" />
+          <Stack.Screen name="quizgame/detail" />
+          <Stack.Screen name="quizgame/result" />
           <Stack.Screen name="+not-found" />
         </Stack>
     </ThemeProvider>
