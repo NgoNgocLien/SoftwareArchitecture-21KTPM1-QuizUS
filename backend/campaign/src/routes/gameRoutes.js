@@ -211,7 +211,7 @@ router.put('/player_turn/minus', async (req, res) => {
 });
 
 // xin lượt chơi từ bạn bè cho 1 campaign
-router.put('/player_turn/send', async (req, res) => {
+router.post('/player_turn/send', async (req, res) => {
   try {
     const { id_sender, id_receiver, id_campaign } = req.body;
 
@@ -248,4 +248,56 @@ router.put('/player_turn/send', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
+// người chơi chấp nhận cho bạn bè lượt chơi
+router.put('/player_turn/receive', async (req, res) => {
+  try {
+    const { id_request } = req.body;
+
+    if (!id_request) {
+      return res.status(400).json({ message: 'id_request are required' });
+    }
+
+    const turnRequest = await TurnRequest.findById(id_request);
+
+    if (!turnRequest) {
+      return res.status(404).json({ message: 'Turn request not found.' });
+    }
+
+    const { id_sender, id_receiver, id_campaign } = turnRequest;
+
+    const receiverGame = await PlayerGame.findOne({
+      id_player: id_receiver,
+      id_campaign: id_campaign
+    });
+
+    if (!receiverGame || receiverGame.player_turn < 1) {
+      return res.status(400).json({ message: 'Receiver has insufficient player turns.' });
+    }
+
+    let senderGame = await PlayerGame.findOne({
+      id_player: id_sender,
+      id_campaign: id_campaign
+    });
+
+    senderGame.player_turn += 1;
+    receiverGame.player_turn -= 1;
+    turnRequest.accept_time = new Date();
+
+    await receiverGame.save();
+    await senderGame.save();
+    await turnRequest.save();
+
+    return res.status(200).json({
+      message: 'Player turn successfully transferred.',
+      sender: { id_sender, player_turn: senderGame.player_turn },
+      receiver: { id_receiver, player_turn: receiverGame.player_turn },
+      turnRequest
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;
