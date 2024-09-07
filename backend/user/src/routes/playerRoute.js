@@ -10,7 +10,7 @@ playerRoute.post('/otp', otp);
 
 playerRoute.get('/', getAll);
 
-playerRoute.get('/score', getPlayerScore);
+playerRoute.get('/score/:id_player', getPlayerScore);
 
 playerRoute.get('/:id_player', get);
 
