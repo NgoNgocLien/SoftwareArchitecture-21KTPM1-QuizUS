@@ -11,10 +11,6 @@
 // const GAME_BE = 'http://192.168.2.177:8000/game';
 // const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 1d0ad3a4acf5973c338c10787a24797bdff33074
 // the simple cafe
 // const USER_BE = 'http://192.168.0.103:8000/user';
 // const GAME_BE = 'http://192.168.0.103:8000/game';
