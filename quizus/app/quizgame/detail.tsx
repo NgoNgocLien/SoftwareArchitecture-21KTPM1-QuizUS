@@ -7,7 +7,7 @@ import { Colors } from '@/constants/Colors';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
-import styles from './detail.styles';
+import styles from '@/styles/quiz-game-detail.styles';
 import config from '@/constants/config';
 import { McCard } from '@/components/card/McCard';
 
