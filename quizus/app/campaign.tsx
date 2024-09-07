@@ -28,7 +28,17 @@ import { getCampaignById } from '@/api/CampaignApi';
 import { showToast } from '@/components/ToastBar';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
+import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+import { Voucher } from '@/models/voucher/Voucher';
+import { CoinVoucher } from '@/models/voucher/CoinVoucher';
+import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 
+// Call API
+const defaultPlayerInfo = {
+    score: 100,
+    quantity_item1: 0,
+    quantity_item2: 0
+}
 
 export default function Campaign() {
 
@@ -43,14 +53,27 @@ export default function Campaign() {
     const [loading, setLoading] = useState<boolean>(true);
     const [campaign, setCampaign] = useState<any|null>(null);
     const [type_game, setTypeGame] = useState<string|null>(null);
+    const [voucher, setVoucher] = useState<Voucher|null>(null);
 
     // Fetch campaign info
     useEffect(() => {
         if (id_campaign){
-            getCampaignById(id_campaign).then(data => {
-                console.log(data)
-                setCampaign(data)
-                setTypeGame((campaign.id_quiz == null || campaign.id_quiz === "")  ? config.ITEM_GAME : config.QUIZ_GAME)
+            getCampaignById(id_campaign).then(result => {
+                
+                setCampaign(result)
+
+                if(result.id_quiz != null && result.id_quiz != undefined && result.id_quiz != ''){
+                    const newVoucher = VoucherFactory.createVoucher('coin', result.voucher);
+                    console.log("Coin")
+                    setVoucher(newVoucher);
+                    setTypeGame(config.QUIZ_GAME)
+                } else {
+                    const newVoucher = VoucherFactory.createVoucher('item', { ...result.voucher, item1_photo: result.item1_photo, item2_photo: result.item2_photo });
+                    console.log("Item")
+                    setVoucher(newVoucher);
+                    setTypeGame(config.ITEM_GAME)
+                }
+
                 setLoading(false)
             }).catch(error => {
                 console.error('Error fetching campaign info:', error);
@@ -213,17 +236,19 @@ export default function Campaign() {
                         </View>
                         <View style={styles.horizontal_seperator}></View>
                         <View style={styles.campaignDetailContainer}>
-                            <Heading type="h5" style={styles.heading}>Mô tả</Heading>
-                            <Paragraph type='p2'>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mô tả</Heading>
+                            <Paragraph type='p2' style={{marginHorizontal: 20}}>
                                 {campaign.description}
                             </Paragraph>
 
-                            <Heading type="h5" style={styles.heading}>Voucher có thể đổi</Heading>
-                            {/* <VoucherCard 
-                                voucher={}
-                            /> */}
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Voucher có thể đổi</Heading>
+                            <VoucherCard 
+                                style={{marginBottom: 100}}
+                                voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
+                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo}}
+                                playerInfo={defaultPlayerInfo}
+                            />
                         </View>
-                        {/* <VoucherCard style={{marginBottom: 100}}/> */}
                 </ScrollView>
                 )}
                 <View style={styles.joinButtonContainer} >
@@ -310,7 +335,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     campaignDetailContainer: {
-        paddingHorizontal: 20,
         paddingVertical: 10,
     },
 
