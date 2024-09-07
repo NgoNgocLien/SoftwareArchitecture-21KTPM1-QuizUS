@@ -10,13 +10,13 @@ playerRoute.post('/otp', otp);
 
 playerRoute.get('/', getAll);
 
+playerRoute.get('/score/:id_player', getPlayerScore);
+
 playerRoute.get('/:id_player', get);
 
 playerRoute.put('/', update);
 
 playerRoute.get('/search/:keyword', search);
-
-playerRoute.get('/score', getPlayerScore)
 
 playerRoute.put('/coin', exchangeVoucherByCoin);
 
