@@ -24,124 +24,15 @@ import dialogStyles from '@/components/modal/Dialog.styles'
 
 import config from '@/constants/config';
 import { getGameInfo, getPlayerTurn, increasePlayerTurn } from '@/api/GameApi';
+import { getCampaignById } from '@/api/CampaignApi';
 
 
 export default function Campaign() {
 
-    
-
-    let campaigns = [
-        {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
-            brandName: 'GRAB',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Cuộc Đua Săn Quà, Trúng Lớn Mỗi Ngày',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Grab đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: '64e9d9c8e8b4c21c4b2e9f60',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: 'a',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
-            brandName: 'HIGHLANDS',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Cafe & Bánh',
-            description: 'Highlands đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: 'b',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
-            brandName: 'PIZZA HUT',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-10-23T12:00:00Z',
-            name: 'Xoay Lắc Đèn Lồng, Mở Rương Quà Tặng',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Nhà hàng',
-            description: 'Pizza Hut đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: 'c',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
-            brandName: 'KICHI KICHI',
-            start_datetime: '2024-07-31T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Bão Quà Cuồng Nhiệt',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Nhà hàng',
-            description: 'Kichi Kichi đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-        {
-            id: 'd',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
-            brandName: 'CGV',
-            start_datetime: '2024-07-31T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Lắc Tay Săn Kho Báu, Rinh Về Ngàn Quà Tặng',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Giải trí',
-            description: 'CGV đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-        {
-            id: 'e',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
-            brandName: 'STARBUCKS',
-            start_datetime: '2024-09-01T12:00:00Z',
-            end_datetime: '2024-10-31T12:00:00Z',
-            name: 'Phiêu Lưu Xứ Sở Quà, Rinh Về Niềm Vui',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Cafe & Bánh',
-            description: 'Starbucks đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-    ]
-
     const params = useLocalSearchParams();
     const id_campaign = params.id_campaign as string
+    const campaign = JSON.parse(params.campaign as string)
 
-    const campaign: any = campaigns.find(campaign => campaign.id === id_campaign);
     const type_game = campaign.id_quiz != "" ? config.QUIZ_GAME : config.ITEM_GAME;
 
     const handleShare = async (addPlayerTurn: boolean) => {
@@ -242,7 +133,7 @@ export default function Campaign() {
                     <Image style={styles.banner} source={{uri: campaign.photo}} />
                             
                         <View style={styles.campaignHeaderContainer}>
-                            <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo} />
+                            <Image source={{uri: campaign.brand.logo}} style={styles.brandLogo} />
                             <View style={{flex: 1, justifyContent: 'space-between'}}>
                                 <View style={styles.campaignHeader_top}>
                                 <View style={Date.now() < Date.parse(campaign.end_datetime) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
