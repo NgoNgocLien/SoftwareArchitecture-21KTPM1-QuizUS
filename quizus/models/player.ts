@@ -11,3 +11,5 @@ interface IPlayer {
     is_active: boolean;
     score: number; // current coins
 }
+
+// no use

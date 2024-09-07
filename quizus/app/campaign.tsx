@@ -23,7 +23,8 @@ import { VoucherCard } from '@/components/card/VoucherCard';
 import dialogStyles from '@/components/modal/Dialog.styles'
 
 import config from '@/constants/config';
-import { getQuizInfo, getPlayerTurn, increasePlayerTurn } from '@/api/GameApi';
+import { getGameInfo, getPlayerTurn, increasePlayerTurn } from '@/api/GameApi';
+
 
 export default function Campaign() {
 
@@ -141,6 +142,7 @@ export default function Campaign() {
     const id_campaign = params.id_campaign as string
 
     const campaign: any = campaigns.find(campaign => campaign.id === id_campaign);
+    const type_game = campaign.id_quiz != "" ? config.QUIZ_GAME : config.ITEM_GAME;
 
     const handleShare = async (addPlayerTurn: boolean) => {
         try {
@@ -197,20 +199,28 @@ export default function Campaign() {
     };
 
     const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
-    const [playerTurn, setPlayerTurn] = useState <number>(0);
+    const [itemInfo, setItemInfo] = useState<Item|null>(null);
     useEffect(() => {
         if (id_campaign){
+            getGameInfo(id_campaign)
+            .then(gameInfo => {
 
-            getQuizInfo(id_campaign)
-            .then(quizInfo => {
-                setQuizInfo(quizInfo.id_quiz)
+                if (type_game === config.QUIZ_GAME)
+                    setQuizInfo(gameInfo.id_quiz)
+                else if (type_game === config.ITEM_GAME)
+                    setItemInfo({
+                        item1_photo: gameInfo.item1_photo,
+                        item2_photo: gameInfo.item2_photo,
+                    })
             })
             .catch(error => {
                 console.error('Error fetching quiz info:', error);
-            });            
+            });   
+      
         }
     }, [id_campaign])
 
+    const [playerTurn, setPlayerTurn] = useState <number>(0);
     useEffect(() => {
         if (id_campaign){
             getPlayerTurn(config.ID_PLAYER, id_campaign)
@@ -287,13 +297,25 @@ export default function Campaign() {
                     {
                         playerTurn 
                         ?   <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
-                                onPress={() => {router.replace({
-                                    pathname: "/quiz/detail",
-                                    params: {
-                                        quizInfo: JSON.stringify(quizInfo),
-                                        id_campaign: campaign.id
+                                onPress={() => {
+                                    if (type_game == config.QUIZ_GAME){
+                                        router.replace({
+                                            pathname: `/quizgame/detail`,
+                                            params: {
+                                                quizInfo: JSON.stringify(quizInfo),
+                                                id_campaign: campaign.id
+                                            }
+                                        })
+                                    } else if (type_game == config.ITEM_GAME){
+                                        router.replace({
+                                            pathname: `/itemgame/detail`,
+                                            params: {
+                                                itemInfo: JSON.stringify(itemInfo),
+                                                id_campaign: campaign.id
+                                            }
+                                        })
                                     }
-                            })}}/> 
+                            }}/> 
                         :   <Button text='Thêm lượt chơi' type='tertiary' style={styles.joinButton} 
                                 onPress={() => {setModalVisible(true);}}/> 
                     }

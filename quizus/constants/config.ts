@@ -11,6 +11,7 @@
 // const GAME_BE = 'http://192.168.2.177:8000/game';
 // const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
 
+<<<<<<< HEAD
 // the simple cafe
 // const USER_BE = 'http://192.168.0.103:8000/user';
 // const GAME_BE = 'http://192.168.0.103:8000/game';
@@ -20,6 +21,12 @@
 const USER_BE = 'http://192.168.0.109:8000/user';
 const GAME_BE = 'http://192.168.0.109:8000/game';
 const CAMPAIGN_BE = 'http://192.168.0.109:8000/campaign';
+=======
+// simple
+// const USER_BE = 'http://192.168.0.225:8000/user';
+// const GAME_BE = 'http://192.168.0.225:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
+>>>>>>> b86cc8ae5524a8df1a3457ee11ed39caafec3191
 
 const NOTI_BE = '';
 
@@ -28,6 +35,10 @@ const DURATION = 60000;
 const QUIZ_SCORE = 100;
 
 const ID_PLAYER = '100006';
+
+const QUIZ_GAME = 'quizgame';
+
+const ITEM_GAME = 'itemgame';
 
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -71,6 +82,10 @@ export default {
 
   DURATION,
   QUIZ_SCORE,
+  QUIZ_GAME,
+
+  ITEM_GAME,
+
   ID_PLAYER,
 
   saveToSecureStore,
