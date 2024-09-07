@@ -32,7 +32,7 @@ export default function RootLayout() {
       //   router.push('/login'); 
       // }
 
-      router.push('/itemgame/detail')
+      router.push('/(tabs)');
     }
   }, [loaded, id_player]);
 
