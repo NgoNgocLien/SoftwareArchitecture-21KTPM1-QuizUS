@@ -4,6 +4,7 @@ const axios = require('axios');
 const Voucher = require('../models/voucher');
 const PlayerVoucher = require('../models/playerVoucher');
 const Campaign = require('../models/campaign');
+const PlayerGame = require('../models/playerGame');
 
 // Lấy tất cả voucher đang hoạt động
 router.get('/active', async (req, res) => {
@@ -212,36 +213,86 @@ router.post('/exchange/coin', async (req, res) => {
 // đổi voucher bằng mảnh ghép
 router.post('/exchange/item', async (req, res) => {
   try {
-      // const { id_player, id_campaign, score_exchange } = req.body;
+    const { id_player, id_campaign, id_voucher } = req.body;
 
-      // if (!id_player || !id_campaign || !score_exchange) {
-      //     return res.status(400).json({ message: 'id_player, id_campaign, and score_exchange are required' });
-      // }
+    if (!id_player || !id_campaign || !id_voucher) {
+      return res.status(400).json({ message: 'id_player, id_campaign, and id_voucher are required' });
+    }
 
-      // try {
-      //     const response = await axios.put('http://gateway_proxy:8000/user/api/player/coin', {
-      //         id_player,
-      //         score: score_exchange
-      //     });
+    const playerGame = await PlayerGame.findOne({ id_player, id_campaign });
 
-      //     if (response.status === 200) {
-      //         const playerVoucher = new PlayerVoucher({
-      //             id_player,
-      //             id_campaign,
-      //             is_used: false
-      //         });
+    if (!playerGame) {
+      return res.status(404).json({ message: 'Player game data not found.' });
+    }
 
-      //         const savedPlayerVoucher = await playerVoucher.save();
-      //         return res.status(201).json(savedPlayerVoucher);
-      //     } else {
-      //         return res.status(500).json({ message: 'Failed to deduct coins from player.' });
-      //     }
+    // Kiểm tra quantity_item1 và quantity_item2 có đủ điều kiện không
+    if (playerGame.quantity_item1 < 1 || playerGame.quantity_item2 < 1) {
+      return res.status(400).json({ message: 'Insufficient items to exchange for voucher.' });
+    }
 
-      // } catch (error) {
-      //     return res.status(500).json({ message: 'Failed to communicate with the user service.', error: error.message });
-      // }
+    const campaign = await Campaign.findById(id_campaign);
+    if (!campaign) {
+      return res.status(404).json({ message: 'Campaign not found.' });
+    }
+
+    // Kiểm tra nếu số lượng given_amount_voucher đã đạt tối đa
+    if (campaign.given_amount_voucher >= campaign.max_amount_voucher) {
+      return res.status(400).json({ message: 'All vouchers have been redeemed for this campaign.' });
+    }
+
+    // Tạo bản ghi mới trong PlayerVoucher
+    const playerVoucher = new PlayerVoucher({
+      id_player,
+      id_campaign,
+      is_used: false
+    });
+
+    const savedPlayerVoucher = await playerVoucher.save();
+    playerGame.quantity_item1 -= 1;
+    playerGame.quantity_item2 -= 1;
+    await playerGame.save();
+
+    campaign.given_amount_voucher += 1;
+    await campaign.save();
+
+    return res.status(201).json({
+      playerVoucher: savedPlayerVoucher,
+      message: 'Voucher exchange successful, items deducted, and campaign updated.'
+    });
   } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Sử dụng voucher
+router.put('/used', async (req, res) => {
+  try {
+    const { id_player, id_campaign } = req.body;
+
+    if (!id_player || !id_campaign) {
+      return res.status(400).json({ message: 'id_player and id_campaign are required' });
+    }
+
+    const playerVoucher = await PlayerVoucher.findOne({ id_player, id_campaign });
+
+    if (!playerVoucher) {
+      return res.status(404).json({ message: 'Voucher not found for this player.' });
+    }
+
+    if (playerVoucher.is_used) {
+      return res.status(400).json({ message: 'This voucher has already been used.' });
+    }
+
+    playerVoucher.is_used = true;
+    await playerVoucher.save();
+
+    return res.status(200).json({
+      message: 'Voucher successfully used.',
+      playerVoucher
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

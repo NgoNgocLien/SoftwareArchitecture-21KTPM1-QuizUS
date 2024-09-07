@@ -130,7 +130,7 @@ export default function QuizDetail() {
         };
       
         router.replace({
-          pathname: '/quiz/result',
+          pathname: '/quizgame/result',
           params,
         });
       } else{

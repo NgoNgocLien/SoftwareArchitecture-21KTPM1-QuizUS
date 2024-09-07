@@ -241,6 +241,6 @@ const styles = StyleSheet.create({
     },
     focusedText: {
         color: Colors.light.primary,
-        fontWeight: '600',
+        fontWeight: 500,
     }
 });
