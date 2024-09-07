@@ -26,10 +26,6 @@ router.get('/in_progress', async (req, res) => {
             end_datetime: { $gte: now }
         }).sort({ start_datetime: 1 });
 
-        if (campaigns.length === 0) {
-            return res.status(404).json({ message: 'No campaigns in progress found' });
-        }
-
         const result = await Promise.all(campaigns.map(async (item) => {
             const id_brand1 = item.id_brand1;
             console.log(id_brand1);
@@ -91,11 +87,24 @@ router.get('/search/:id_brand/:keyword', async (req, res) => {
 });
 
 // Lấy thông tin của một chiến dịch
-router.get('/id/:id_campaign', async (req, res) => {
+router.get('/:id_campaign', async (req, res) => {
     try {
         const campaign = await Campaign.findById(req.params.id_campaign);
         if (campaign) {
-            res.status(200).json(campaign);
+            const id_brand1 = campaign.id_brand1;
+            try {
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand1}`);
+
+                // Combine the campaign data with the associated brand information
+                const result = {
+                    ...campaign._doc,
+                    brand: brandResponse.data
+                };
+
+                res.status(200).json(result);
+            } catch (axiosError) {
+                res.status(500).json({ message: 'Failed to fetch brand information.' });
+            }
         } else {
             res.status(404).json({ message: 'Campaign not found' });
         }
@@ -175,19 +184,38 @@ router.get('/like/:id_player', async (req, res) => {
         const playerLikes = await PlayerLikeCampaign.findOne({ id_player: req.params.id_player }).populate('campaigns.id_campaign');
 
         if (!playerLikes) {
-            return res.status(404).json({ message: 'No campaigns found for this player.' });
+            return res.json([]);
         }
 
-        const result = playerLikes.campaigns.map(like => ({
-            _id: like._id,
-            campaign_data: like.id_campaign
+        // Map over the campaigns to get the campaign data and associated brand information
+        const result = await Promise.all(playerLikes.campaigns.map(async (like) => {
+            const campaign = like.id_campaign;
+
+            try {
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${campaign.id_brand1}`);
+                const brand = brandResponse.data;
+
+                return {
+                    _id: like._id,
+                    campaign_data: {
+                        ...campaign._doc,
+                        brand: {
+                            ...brand
+                        }
+                    }
+                };
+            } catch (axiosError) {
+                throw new Error("Failed to fetch brand information.");
+            }
         }));
 
+        // Return the structured result
         res.json(result);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 //Lấy tất cả campaign có thể đổi thưởng bằng coin
 router.get('/type/coin', async (req, res) => {

@@ -11,7 +11,6 @@
 // const GAME_BE = 'http://192.168.2.177:8000/game';
 // const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
 
-
 // the simple cafe
 // const USER_BE = 'http://192.168.0.103:8000/user';
 // const GAME_BE = 'http://192.168.0.103:8000/game';

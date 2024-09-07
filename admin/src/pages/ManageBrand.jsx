@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
 import { getAllBrands, searchBrand } from '../api/brandApi';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function ManageBrand() {
-    const [selectedField, setSelectedField] = useState('');
+    // const [selectedField, setSelectedField] = useState('');
     const [brandData, setBrandData] = useState([]);
     
     const handleSearch = async (e) => {
@@ -12,9 +14,26 @@ export default function ManageBrand() {
         setBrandData(result);
     };
 
-    const handleFieldChange = (e) => {
-        setSelectedField(e.target.value);
-    };
+    // const handleFieldChange = (e) => {
+    //     setSelectedField(e.target.value);
+    // };
+
+    const onDelete = () => {
+        confirmAlert({
+            message: 'Bạn có chắc chắn muốn xóa nhãn hàng này không?',
+            buttons: [
+                {
+                    label: 'Có',
+                    onClick: () => {
+                        //Trống
+                    }
+                },
+                {
+                    label: 'Không'
+                }
+            ]
+        });
+    }
 
     useEffect(() => {
         const getData = async () => {
@@ -97,7 +116,7 @@ export default function ManageBrand() {
                                             <img src="/icons/edit.svg" alt="edit-btn" />
                                             Sửa
                                         </button>
-                                        <button className="delete-btn">
+                                        <button className="delete-btn" onClick={onDelete}>
                                             <img src="/icons/delete.svg" alt="delete-btn" />
                                             Xóa
                                         </button>
