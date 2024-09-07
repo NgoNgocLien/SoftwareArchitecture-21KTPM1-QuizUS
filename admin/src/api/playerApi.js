@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const getAllBrands = async () => {
+const getAllPlayers = async () => {
   try {
-    const url = `${process.env.REACT_APP_BRAND_URL}/api/brand`;
+    const url = `${process.env.REACT_APP_PLAYER_URL}/api/player`;
     const response = await axios.get(url);
     
     if (response?.data)
-      return response.data.sort((a, b) => a.id_brand - b.id_brand);
+      return response.data;
     else
       return [];
   }
@@ -17,5 +17,5 @@ const getAllBrands = async () => {
 }
 
 export {
-  getAllBrands
+  getAllPlayers
 };

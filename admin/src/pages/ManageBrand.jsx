@@ -79,12 +79,12 @@ export default function ManageBrand() {
                                     <td>
                                         <select
                                             className="field-select"
-                                            value={selectedField}
+                                            value={item.field}
                                             onChange={handleFieldChange}
                                         >
                                             <option value="">Chọn lĩnh vực</option>
                                             <option value="Nhà hàng">Nhà hàng</option>
-                                            <option value="Cafe & bánh">Cafe & bánh</option>
+                                            <option value="Cafe & Bánh">Cafe & Bánh</option>
                                             <option value="Mua sắm">Mua sắm</option>
                                             <option value="Giải trí">Giải trí</option>
                                         </select>
@@ -102,7 +102,12 @@ export default function ManageBrand() {
                                     </td>
                                 </tr>
                             ))
-                            : null
+                            : 
+                            <tr>
+                                <td colSpan={7} style={{width: '100%', textAlign: 'center'}}>
+                                    <p style={{width: '100%'}}>Không có dữ liệu</p>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
