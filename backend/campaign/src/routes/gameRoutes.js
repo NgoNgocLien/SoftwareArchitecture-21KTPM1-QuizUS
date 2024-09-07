@@ -3,6 +3,7 @@ const router = express.Router();
 const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
+const TurnRequest = require('../models/turnRequest');
 
 // Tìm kiếm game theo campaign
 router.get('/campaign/:id_campaign', async (req, res) => {
@@ -209,4 +210,42 @@ router.put('/player_turn/minus', async (req, res) => {
   }
 });
 
+// xin lượt chơi từ bạn bè cho 1 campaign
+router.put('/player_turn/send', async (req, res) => {
+  try {
+    const { id_sender, id_receiver, id_campaign } = req.body;
+
+    if (!id_sender || !id_receiver || !id_campaign) {
+      return res.status(400).json({ message: 'id_sender, id_receiver, and id_campaign are required' });
+    }
+
+    const playerGame = await PlayerGame.findOne({
+      id_player: id_receiver,
+      id_campaign: id_campaign
+    });
+
+    if (!playerGame) {
+      return res.status(404).json({ message: 'Receiver is not participating in this campaign.' });
+    }
+
+    // Tạo bản ghi mới trong TurnRequest (Lưu thông tin xin lượt chơi)
+    const turnRequest = new TurnRequest({
+      id_sender,
+      id_receiver,
+      id_campaign,
+      request_time: new Date(),
+      accept_time: null
+    });
+
+    const savedTurnRequest = await turnRequest.save();
+
+    return res.status(201).json({
+      message: 'Turn request sent.',
+      turnRequest: savedTurnRequest,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 module.exports = router;
