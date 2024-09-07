@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Modal, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
-import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
@@ -84,6 +83,15 @@ export function CampaignCard({
         });
     }
 
+    const handleJoinCampaign = () => {
+        router.push({
+            pathname: '/campaign',
+            params: { id_campaign: campaign._id }
+        });
+
+
+    }
+
     // dd/MM
     let startDateFormatted = new Date(campaign.start_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.start_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
     let endDateFormatted = new Date(campaign.end_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.end_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
@@ -135,7 +143,7 @@ export function CampaignCard({
                         <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push({
                             pathname: '/campaign',
                             params: { id_campaign: campaign._id }
-                        })}>
+                        })}> 
                             <Text style={styles.joinButtonText}>Tham gia</Text>
                         </TouchableOpacity>
                         <MaterialCommunityIcons name={favorite ? 'heart' : 'heart-outline'} style={[styles.favoriteIcon, favorite ? {color: Colors.light.primary} : null]} onPress={handleFavorite} suppressHighlighting={true} />
