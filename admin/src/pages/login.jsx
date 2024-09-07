@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-//import { loginAction } from '../path/to/actions';
+import { login } from '../api/authenticateApi';
 import Loading from '../components/system-feedback/Loading';
+
 import "../styles/common.css";
 import "../styles/login.css";
 
 export default function Login(props) {
-    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loginSuccess, setLoginSuccess] = useState(false);
+    const [loginFail, setLoginFail] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
@@ -34,31 +35,36 @@ export default function Login(props) {
             isValid = false;
         }
 
-        if(password.length < 8){
-            setPasswordError("Mật khẩu quá ngắn. Thử lại!");
-            isValid = false;
-        }
-
         if (!isValid) {
             return;
         }
 
         const user_login = {
             email: email,
-            password: password
+            pwd: password
         };
         console.log("user_login: ", user_login);
 
         setLoading(true);
         try {
-            //const result = await dispatch(loginAction(user_login));
-            const result = "";
-            if (result?.status === 200 && result?.data.message === "Đăng nhập thành công") {
+            const result = await login(user_login);
+            console.log("result:", result)
+            if (result?.status === 200) {
                 setLoading(false);
+                localStorage.setItem('user', JSON.stringify(result.data));
+
+                setLoginSuccess(true);
+                setTimeout(() => {
+                    setLoginSuccess(false); 
+                    navigate("/dashboard");
+                }, 3000); 
             } else {
-                alert("Email hoặc mật khẩu sai!");
                 setLoading(false);
-                navigate("/");
+                setLoginFail(true);
+                setTimeout(() => {
+                    setLoginFail(false); 
+                    navigate("/");
+                }, 3000); 
             }
         } catch (error) {
             console.log("error", error.message);
@@ -67,7 +73,7 @@ export default function Login(props) {
     }
     
     const handleNavigate = () => {
-        navigate("/", { state: { signup: true, check: true } });
+        navigate("/signup");
     };
       
     return (
@@ -89,12 +95,12 @@ export default function Login(props) {
                             <div className="form-group">
                                 <label>Email</label>
                                 <input type="email" placeholder="Nhập email" value={email} onChange={e => setEmail(e.target.value)}/>
-                                {emailError && <div className="error-message" style={{ textAlign: "left", color: "red", fontStyle: "italic", fontSize: "14px" }}>{emailError}</div>}
+                                {emailError && <div className="error-message" style={{ textAlign: "left", color: "red", fontStyle: "italic", fontSize: "14px", marginTop:"5px" }}>{emailError}</div>}
                             </div>
                             <div className="form-group">
                                 <label>Mật khẩu</label>
                                 <input type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)}/>
-                                {passwordError && <div className="error-message" style={{ textAlign: "left", color: "red", fontStyle: "italic", fontSize: "14px" }}>{passwordError}</div>}
+                                {passwordError && <div className="error-message" style={{ textAlign: "left", color: "red", fontStyle: "italic", fontSize: "14px", marginTop:"5px" }}>{passwordError}</div>}
                             </div>
 
                             <div className="form-row">
@@ -116,6 +122,9 @@ export default function Login(props) {
                         <div className="sign-up">Chưa có tài khoản? 
                             <span onClick={() => handleNavigate()} style={{color: "var(--scheme-primary)", cursor: "pointer", fontWeight: "600"}}> Tạo tài khoản</span>
                         </div>
+                        {loginSuccess && <div style={{ color: "var(--feedback-success)", fontStyle: "italic", fontFamily: "medium-font", marginTop: "10px" }}>Đăng nhập thành công!</div>}
+                        {loginFail && <div style={{ color: "var(--feedback-error)", fontStyle: "italic", fontFamily: "medium-font", marginTop: "10px" }}>Email hoặc mật khẩu sai!</div>}
+
                     </>
                 )} 
             </div>
