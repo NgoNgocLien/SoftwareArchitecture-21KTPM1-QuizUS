@@ -139,7 +139,7 @@ const getPlayerTurnByCampaign = async (req, res) => {
     });
 
     if (!playerGame) {
-      return res.status(404).json({ message: 'No campaign found for this player.' });
+      return res.status(200).json({ player_turn: 3 });
     }
 
     return res.status(200).json({ player_turn: playerGame.player_turn });
