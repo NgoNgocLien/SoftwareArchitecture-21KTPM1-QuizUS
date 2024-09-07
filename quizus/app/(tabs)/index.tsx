@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { router } from 'expo-router';
-import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, View, ScrollView } from 'react-native';
 
 import { Header } from '@/components/header/Header';
 import { Colors } from '@/constants/Colors';
 import { CampaignCard } from '@/components/card/CampaignCard';
 import { SearchBar } from '@/components/input/SearchBar';
-import { getCampaignsInProgess } from '@/api/CampaignApi';
+import { getCampaignsInProgess, getLikedCampaigns } from '@/api/CampaignApi';
+import { EmptyView } from '@/components/EmptyView';
+import { LoadingView } from '@/components/LoadingView';
+import config from '@/constants/config';
+import { useFocusEffect } from 'expo-router';
+import { showToast } from '@/components/ToastBar';
 
 export default function HomePage() {
 
@@ -16,156 +21,74 @@ export default function HomePage() {
         { index: 2, name: 'Cafe & Bánh' },
         { index: 3, name: 'Mua sắm' },
         { index: 4, name: 'Giải trí' }
-    ]
+    ];
 
+    const [loading, setLoading] = useState(true);
     const [focusedTab, setFocusedTab] = useState(0);
-    const [campaignsss, setCampaigns] = useState([]);
+    const [campaigns, setCampaigns] = useState<any[]>([]);
+    const [cafeBanh, setCafeBanh] = useState<any[]>([]);
+    const [muaSam, setMuaSam] = useState<any[]>([]);
+    const [giaiTri, setGiaiTri] = useState<any[]>([]);
+    const [nhaHang, setNhaHang] = useState<any[]>([]);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
-    }
+    };
 
-    // should get brand name and logo in backend
+    const fetchCampaignsInProgess = useCallback(() => {
+        setLoading(true);
 
-
-    // for each campaign, get the brand name and logo
-    useEffect(() => {
         getCampaignsInProgess().then((res) => {
-            // for each campaign, add brand name and logo and isFavoritfalse
-            let _campaigns = res.map((campaign: any) => {
-                return {
-                    ...campaign,
-                    brandName: 'SHOPEE',
-                    brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-                    isFavorite: false,
-                }
+            config.retrieveFromSecureStore('id_player', (id_player: string) => {
+                getLikedCampaigns(id_player).then((likedCampaigns) => {
+                    res.map((campaign: any) => {
+                        campaign.isFavorite = likedCampaigns.some((likedCampaign: any) => likedCampaign.campaign_data._id === campaign._id);
+                    });
+                    setCampaigns(res);
+                    setLoading(false);
+
+                }).catch((err) => {
+                    console.log(err);
+                    setCampaigns(res);
+                    setLoading(false);
+                    showToast('error', 'Lỗi hệ thống');
+                });
+            }).catch((err) => {
+                console.log(err);
+                setCampaigns(res);
+                setLoading(false);
+                showToast('error', 'Không tìm thấy thông tin người dùng');
             });
-            // console.log(_campaigns);
-            setCampaigns(_campaigns); 
+        }).catch((err) => {
+            console.log(err);
+            setLoading(false);
+            showToast('error', 'Lỗi hệ thống');
         });
+
+        return () => {
+            // Cleanup 
+            setCampaigns([]);
+        }
     }, []);
 
-    let campaigns = [
-        {
-            id_campaign: '64e9d9c8e8b4c21c4b2e9f5f',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
-            brandName: 'GRAB',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Cuộc Đua Săn Quà, Trúng Lớn Mỗi Ngày',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Grab đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id_campaign: '64e9d9c8e8b4c21c4b2e9f60',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id_campaign: 'a',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_27_yhpkap.png',
-            brandName: 'HIGHLANDS',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Cafe & Bánh',
-            description: 'Highlands đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id_campaign: 'b',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438808/image_29_daqusn.png',
-            brandName: 'PIZZA HUT',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-10-23T12:00:00Z',
-            name: 'Xoay Lắc Đèn Lồng, Mở Rương Quà Tặng',
+    // Use useFocusEffect to fetch data when the screen is focused
+    useFocusEffect(fetchCampaignsInProgess);
 
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Nhà hàng',
-            description: 'Pizza Hut đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id_campaign: 'c',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_31_wzigpo.png',
-            brandName: 'KICHI KICHI',
-            start_datetime: '2024-07-31T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Bão Quà Cuồng Nhiệt',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Nhà hàng',
-            description: 'Kichi Kichi đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-        {
-            id_campaign: 'd',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438714/image_26_ohwusp.png',
-            brandName: 'CGV',
-            start_datetime: '2024-07-31T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Lắc Tay Săn Kho Báu, Rinh Về Ngàn Quà Tặng',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Giải trí',
-            description: 'CGV đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-        {
-            id_campaign: 'e',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438809/image_21_azo1ib.png',
-            brandName: 'STARBUCKS',
-            start_datetime: '2024-09-01T12:00:00Z',
-            end_datetime: '2024-10-31T12:00:00Z',
-            name: 'Phiêu Lưu Xứ Sở Quà, Rinh Về Niềm Vui',
-
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Cafe & Bánh',
-            description: 'Starbucks đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        }, 
-    ]
-
-    let nhaHang = campaigns.filter(campaign => campaign.category === 'Nhà hàng');
-    let cafeBanh = campaigns.filter(campaign => campaign.category === 'Cafe & Bánh');
-    let muaSam = campaigns.filter(campaign => campaign.category === 'Mua sắm');
-    let giaiTri = campaigns.filter(campaign => campaign.category === 'Giải trí');
+    useEffect(() => {
+        setNhaHang(campaigns.filter((item: any) => item.brand.field === 'Nhà hàng'));
+        setCafeBanh(campaigns.filter((item: any) => item.brand.field === 'Cafe & Bánh'));
+        setMuaSam(campaigns.filter((item: any) => item.brand.field === 'Mua sắm'));
+        setGiaiTri(campaigns.filter((item: any) => item.brand.field === 'Giải trí'));
+    }, [campaigns]);
 
     return (
         <View style={styles.background} >
             <Header />
-            <View style={[styles.container, {marginTop: 20, marginBottom: 10}]}>
+            <View style={[styles.container, { marginTop: 20, marginBottom: 10 }]}>
                 <SearchBar editable={false} onPress={() => router.push('/(tabs)/search')} />
             </View>
 
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} bounces={false} style={{ minHeight: 40, maxHeight: 40}}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} alwaysBounceHorizontal={false} bounces={false} style={{ minHeight: 40, maxHeight: 40 }}>
                 <View style={styles.emptyTab}></View>
 
                 {tabNames.map((tab, index) => (
@@ -178,96 +101,94 @@ export default function HomePage() {
 
                 <View style={styles.emptyTab}></View>
             </ScrollView>
-            
-            
-            {
-                focusedTab === 0 ? (
+
+            {focusedTab === 0 ? 
+                loading ? <LoadingView /> : (
                     <>
                         {campaigns.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {campaigns.map((campaign, index) => (
-                                <CampaignCard 
-                                    campaign={campaign}
-                                    key={index} 
-                                    style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
-                                />
-                            ))}
+                                {campaigns.map((campaign, index) => (
+                                    <CampaignCard 
+                                        campaign={campaign}
+                                        isFavorite={campaign.isFavorite}
+                                        key={index} 
+                                        style={index === campaigns.length - 1 ? { marginBottom: 32 } : {}} 
+                                    />
+                                ))}
                             </ScrollView> 
                         )}
                     </>
-                ) : focusedTab === 1 ? (
+                ) : focusedTab === 1 ? 
+                loading ? <LoadingView /> : (
                     <>
                         {nhaHang.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {nhaHang.map((campaign, index) => (
-                                <CampaignCard 
-                                    campaign={campaign}
-                                    key={index} 
-                                    style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
-                                />
-                            ))}
+                                {nhaHang.map((campaign, index) => (
+                                    <CampaignCard 
+                                        campaign={campaign}
+                                        isFavorite={campaign.isFavorite}
+                                        key={index} 
+                                        style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
+                                    />
+                                ))}
                             </ScrollView> 
                         )}
                     </>
-                ) : focusedTab === 2 ? (
+                ) : focusedTab === 2 ? 
+                loading ? <LoadingView /> : (
                     <>
                         {cafeBanh.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {cafeBanh.map((campaign, index) => (
-                                <CampaignCard 
-                                    campaign={campaign}
-                                    key={index} 
-                                    style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
-                                />
-                            ))}
+                                {cafeBanh.map((campaign, index) => (
+                                    <CampaignCard 
+                                        campaign={campaign}
+                                        isFavorite={campaign.isFavorite}
+                                        key={index} 
+                                        style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
+                                    />
+                                ))}
                             </ScrollView> 
                         )}
                     </>
-                ) : focusedTab === 3 ? (
+                ) : focusedTab === 3 ? 
+                loading ? <LoadingView /> : (
                     <>
                         {muaSam.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {muaSam.map((campaign, index) => (
-                                <CampaignCard 
-                                    campaign={campaign}
-                                    key={index} 
-                                    style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
-                                />
-                            ))}
+                                {muaSam.map((campaign, index) => (
+                                    <CampaignCard 
+                                        campaign={campaign}
+                                        isFavorite={campaign.isFavorite}
+                                        key={index} 
+                                        style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
+                                    />
+                                ))}
                             </ScrollView> 
                         )}
                     </>
-                ) : focusedTab === 4 ? (
+                ) : focusedTab === 4 ? 
+                loading ? <LoadingView /> : (
                     <>
                         {giaiTri.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                            {giaiTri.map((campaign, index) => (
-                                <CampaignCard 
-                                    campaign={campaign}
-                                    key={index} 
-                                    style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
-                                />
-                            ))}
+                                {giaiTri.map((campaign, index) => (
+                                    <CampaignCard 
+                                        campaign={campaign}
+                                        isFavorite={campaign.isFavorite}
+                                        key={index} 
+                                        style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
+                                    />
+                                ))}
                             </ScrollView> 
                         )}
                     </>
@@ -275,19 +196,17 @@ export default function HomePage() {
             }
             
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     background: {
-      flex: 1,
-      backgroundColor: Colors.light.background,
+        flex: 1,
+        backgroundColor: Colors.light.background,
     },
-
     container: {
         paddingHorizontal: 20,
     },
-
     searchBar: {
         height: 52,
         width: '100%',
@@ -297,14 +216,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         backgroundColor: Colors.light.background,
     },
-
     emptyTab: {
         width: 20,
         height: 40,
         borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,    
     },
-
     categoryTab: {
         width: 'auto',
         height: 40,
@@ -313,18 +230,15 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.gray._500,
         borderBottomWidth: 1,
     },
-
     categoryText: {
         color: Colors.light.subText,
         fontWeight: 'medium',
         fontSize: 16,
     },
-
     focusedTab: {
         borderBottomColor: Colors.light.primary,
         borderBottomWidth: 2,
     },
-
     focusedText: {
         color: Colors.light.primary,
         fontWeight: 500,

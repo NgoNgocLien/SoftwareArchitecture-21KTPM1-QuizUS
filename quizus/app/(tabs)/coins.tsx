@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableWithoutFeedback, View, Image, Text, ScrollView, SafeAreaView, Platform } from 'react-native';
-import { Link, useRouter } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
+import { useState, useEffect, useCallback } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Button } from '@/components/Button';
@@ -13,6 +13,7 @@ import { getActiveVouchers } from '@/api/VoucherApi';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { LoadingView } from '@/components/LoadingView';
 import { EmptyView } from '@/components/EmptyView';
+import { showToast } from '@/components/ToastBar';
 
 
 // call api
@@ -48,7 +49,8 @@ export default function Coins() {
     const [muaSam, setMuaSam] = useState<any[] | null>(null);
     const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
 
-    useEffect(() => {
+    const fetchCoinVouchers = useCallback(() => {
+        setLoading(true);
         getActiveVouchers()
         .then(voucherList => {
 
@@ -91,9 +93,12 @@ export default function Coins() {
         .catch(error => {
             console.error('Error fetching player vouchers:', error);
             setLoading(false);
+            showToast('error', 'Lỗi hệ thống');
         });
 
     }, []);
+
+    useFocusEffect(fetchCoinVouchers);
 
     return (
         <View style={styles.background}>

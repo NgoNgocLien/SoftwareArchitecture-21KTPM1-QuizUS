@@ -94,6 +94,12 @@ export default function TabLayout() {
                 tabBarButton: () => null,
             }}
         />
+        <Tabs.Screen 
+            name="voucher-detail"
+            options={{
+                tabBarButton: () => null,
+            }}
+        />
     </Tabs>
     </RootSiblingParent> 
   );

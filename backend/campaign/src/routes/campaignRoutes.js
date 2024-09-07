@@ -20,10 +20,11 @@ router.get('/in_progress', async (req, res) => {
         const now = new Date();
 
         // Lấy tất cả các chiến dịch có start_datetime <= now <= end_datetime
+        // order by start_datetime ASC
         const campaigns = await Campaign.find({
             start_datetime: { $lte: now },
             end_datetime: { $gte: now }
-        });
+        }).sort({ start_datetime: 1 });
 
         if (campaigns.length === 0) {
             return res.status(404).json({ message: 'No campaigns in progress found' });

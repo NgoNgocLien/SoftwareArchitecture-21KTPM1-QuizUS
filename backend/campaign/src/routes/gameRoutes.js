@@ -3,6 +3,7 @@ const router = express.Router();
 const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
+const TurnRequest = require('../models/turnRequest');
 
 // Tìm kiếm game theo campaign
 router.get('/campaign/:id_campaign', async (req, res) => {
@@ -146,6 +147,156 @@ router.get('/player_turn/:id_player/:id_campaign', async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+// thêm lượt chơi của 1 campaign với 1 người chơi
+router.put('/player_turn/add', async (req, res) => {
+  try {
+    const { id_player, id_campaign } = req.body;
+
+    if (!id_player || !id_campaign ) {
+      return res.status(400).json({ message: 'id_player, id_campaign are required' });
+    }
+
+    const playerGame = await PlayerGame.findOne({ id_player, id_campaign });
+
+    if (!playerGame) {
+      return res.status(404).json({ message: 'Player game data not found for this campaign.' });
+    }
+
+    playerGame.player_turn += 1;
+    await playerGame.save();
+
+    return res.status(200).json({
+      message: 'Player turns successfully added.',
+      playerGame
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// giảm lượt chơi của 1 campaign với 1 người chơi
+router.put('/player_turn/minus', async (req, res) => {
+  try {
+    const { id_player, id_campaign } = req.body;
+
+    if (!id_player || !id_campaign ) {
+      return res.status(400).json({ message: 'id_player, id_campaign are required' });
+    }
+
+    const playerGame = await PlayerGame.findOne({ id_player, id_campaign });
+
+    if (!playerGame) {
+      return res.status(404).json({ message: 'Player game data not found for this campaign.' });
+    }
+
+    if (playerGame.player_turn < 1) {
+      return res.status(400).json({ message: 'Not enough player turns to reduce.' });
+    }
+
+    playerGame.player_turn -= 1;
+    await playerGame.save();
+
+    return res.status(200).json({
+      message: 'Player turns successfully reduced.',
+      playerGame
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// xin lượt chơi từ bạn bè cho 1 campaign
+router.post('/player_turn/send', async (req, res) => {
+  try {
+    const { id_sender, id_receiver, id_campaign } = req.body;
+
+    if (!id_sender || !id_receiver || !id_campaign) {
+      return res.status(400).json({ message: 'id_sender, id_receiver, and id_campaign are required' });
+    }
+
+    const playerGame = await PlayerGame.findOne({
+      id_player: id_receiver,
+      id_campaign: id_campaign
+    });
+
+    if (!playerGame) {
+      return res.status(404).json({ message: 'Receiver is not participating in this campaign.' });
+    }
+
+    // Tạo bản ghi mới trong TurnRequest (Lưu thông tin xin lượt chơi)
+    const turnRequest = new TurnRequest({
+      id_sender,
+      id_receiver,
+      id_campaign,
+      request_time: new Date(),
+      accept_time: null
+    });
+
+    const savedTurnRequest = await turnRequest.save();
+
+    return res.status(201).json({
+      message: 'Turn request sent.',
+      turnRequest: savedTurnRequest,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// người chơi chấp nhận cho bạn bè lượt chơi
+router.put('/player_turn/receive', async (req, res) => {
+  try {
+    const { id_request } = req.body;
+
+    if (!id_request) {
+      return res.status(400).json({ message: 'id_request are required' });
+    }
+
+    const turnRequest = await TurnRequest.findById(id_request);
+
+    if (!turnRequest) {
+      return res.status(404).json({ message: 'Turn request not found.' });
+    }
+
+    const { id_sender, id_receiver, id_campaign } = turnRequest;
+
+    const receiverGame = await PlayerGame.findOne({
+      id_player: id_receiver,
+      id_campaign: id_campaign
+    });
+
+    if (!receiverGame || receiverGame.player_turn < 1) {
+      return res.status(400).json({ message: 'Receiver has insufficient player turns.' });
+    }
+
+    let senderGame = await PlayerGame.findOne({
+      id_player: id_sender,
+      id_campaign: id_campaign
+    });
+
+    senderGame.player_turn += 1;
+    receiverGame.player_turn -= 1;
+    turnRequest.accept_time = new Date();
+
+    await receiverGame.save();
+    await senderGame.save();
+    await turnRequest.save();
+
+    return res.status(200).json({
+      message: 'Player turn successfully transferred.',
+      sender: { id_sender, player_turn: senderGame.player_turn },
+      receiver: { id_receiver, player_turn: receiverGame.player_turn },
+      turnRequest
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

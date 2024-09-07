@@ -6,12 +6,12 @@ import { Heading } from "./text/Heading";
 import { Paragraph } from "./text/Paragraph";
 import Toast from "react-native-root-toast";
 
-export type ToastBarProps = ViewProps & {
+type ToastBarProps = ViewProps & {
     type?: 'success' | 'error' | 'warning' | 'info'; 
     message: string;
 }
 
-export function ToastBar({
+function ToastBar({
     type = 'info',
     message,
     ...rest
@@ -32,7 +32,7 @@ export function ToastBar({
     );
 };
 
-export const ToastBarOptions = {
+const ToastBarOptions = {
     duration: Toast.durations.LONG, 
     backgroundColor: 'transparent', 
     shadow: false, 
@@ -53,12 +53,13 @@ export const ToastBarOptions = {
 
 const styles = StyleSheet.create({
     container: {
+        minWidth: 180,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 8,
         backgroundColor: 'white',
         borderRadius: 8,
-        borderLeftColor: Colors.light.info,
+        borderLeftColor: Colors.feedback.info,
         borderLeftWidth: 4,
         gap: 8
     },
@@ -66,3 +67,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
 });
+
+export function showToast(type: 'success' | 'error' | 'warning' | 'info', message: string) {
+    Toast.show(<ToastBar type={type} message={message} />, ToastBarOptions);
+}
