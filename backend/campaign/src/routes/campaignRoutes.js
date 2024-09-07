@@ -4,6 +4,7 @@ const axios = require('axios');
 const Campaign = require('../models/campaign');
 const PlayerLikeCampaign = require('../models/playerLikeCampaign');
 const PlayerGame = require('../models/playerGame');
+const Voucher = require('../models/voucher');
 // Lấy tất cả các chiến dịch
 router.get('/', async (req, res) => {
     try {
@@ -90,20 +91,28 @@ router.get('/search/:id_brand/:keyword', async (req, res) => {
 router.get('/:id_campaign', async (req, res) => {
     try {
         const campaign = await Campaign.findById(req.params.id_campaign);
+
         if (campaign) {
             const id_brand1 = campaign.id_brand1;
+            const id_voucher = campaign.id_voucher; // Lấy id_voucher từ campaign
+
             try {
+                // Fetch brand information
                 const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand1}`);
 
-                // Combine the campaign data with the associated brand information
+                // Fetch voucher information from MongoDB
+                const voucher = await Voucher.findById(id_voucher);
+
+                // Combine the campaign data with the associated brand and voucher information
                 const result = {
                     ...campaign._doc,
-                    brand: brandResponse.data
+                    brand: brandResponse.data,
+                    voucher: voucher // Thêm thông tin voucher vào kết quả
                 };
 
                 res.status(200).json(result);
-            } catch (axiosError) {
-                res.status(500).json({ message: 'Failed to fetch brand information.' });
+            } catch (error) {
+                res.status(500).json({ message: 'Failed to fetch brand or voucher information.' });
             }
         } else {
             res.status(404).json({ message: 'Campaign not found' });

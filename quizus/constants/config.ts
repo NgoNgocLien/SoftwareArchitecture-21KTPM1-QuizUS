@@ -39,7 +39,6 @@ const QUIZ_GAME = 'quizgame';
 const ITEM_GAME = 'itemgame';
 
 import * as SecureStore from 'expo-secure-store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const saveToSecureStore = async (key: string, value: string) => {
   try {
