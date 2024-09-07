@@ -13,10 +13,6 @@ export default function Dashboard() {
             {/* Số lượng */}
             <div className='total-ctn'>
                 <div className='total d-flex flex-column'>
-                    <p>Tổng nhãn hàng</p>
-                    <h5>2420</h5>
-                </div>
-                <div className='total d-flex flex-column'>
                     <p>Tổng sự kiện</p>
                     <h5>2420</h5>
                 </div>
