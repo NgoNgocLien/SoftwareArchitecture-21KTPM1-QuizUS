@@ -38,9 +38,6 @@ const QUIZ_GAME = 'quizgame';
 
 const ITEM_GAME = 'itemgame';
 
-
-
-
 export default {
   USER_BE,
   CAMPAIGN_BE,
