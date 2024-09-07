@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const getAllPlayers = async () => {
   try {
-    const url = `${process.env.REACT_APP_PLAYER_URL}/api/player`;
+    const url = `${process.env.REACT_APP_USER_URL}/api/player`;
     const response = await axios.get(url);
     
     if (response?.data)
@@ -18,9 +18,9 @@ const getAllPlayers = async () => {
 
 const searchPlayer = async (keyword) => {
   try {
-    let url = `${process.env.REACT_APP_PLAYER_URL}/api/player/search/${keyword}`;
+    let url = `${process.env.REACT_APP_USER_URL}/api/player/search/${keyword}`;
     if (!keyword || keyword.length === 0)
-      url = `${process.env.REACT_APP_BRAND_URL}/api/player`;
+      url = `${process.env.REACT_APP_USER_URL}/api/player`;
     const result = await axios.get(url);
     console.log(result);
 

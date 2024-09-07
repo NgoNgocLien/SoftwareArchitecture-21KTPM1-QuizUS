@@ -96,10 +96,19 @@ const deleteAdmin = async (req, res) => {
   }
 }
 
-
+const getStats = async (req, res) => {
+  try {
+    const playerCount = await model.player.count();
+    const brandCount = await model.brand.count();
+    successCode(res, { totlaPlayers : playerCount, totalBrands: brandCount });
+  } catch (error) {
+    errorCode(res);
+  }
+}
 
 module.exports = {
   createAdmin,
   updateAdmin,
-  deleteAdmin
+  deleteAdmin,
+  getStats
 }

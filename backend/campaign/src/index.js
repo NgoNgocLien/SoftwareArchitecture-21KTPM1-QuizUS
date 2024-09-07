@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const cors = require('cors');
 
 const port = 8003;
 
@@ -14,6 +15,7 @@ const itemRoutes = require('./routes/itemRoutes');
 const gameRoutes = require('./routes/gameRoutes');
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/campaign', campaignRoutes);
 app.use('/api/voucher', voucherRoutes);

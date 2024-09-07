@@ -1,7 +1,9 @@
 const axios = require('axios');
 const Campaign = require('../models/campaign');
 const PlayerLikeCampaign = require('../models/playerLikeCampaign');
+const Voucher = require('../models/voucher');
 const PlayerGame = require('../models/playerGame');
+const PlayerVoucher = require('../models/playerVoucher');
 
 // Lấy tất cả các chiến dịch
 const getAll = async (req, res) => {
@@ -345,6 +347,68 @@ const getCampaignsOfVoucher = async (req, res) => {
     }
 };
 
+const getStats = async (req, res) => {
+    try {
+        const currentDate = new Date();
+        const totalCampaigns = await Campaign.countDocuments();
+        const totalVouchers = await PlayerVoucher.countDocuments();
+        const voucherStats = await PlayerVoucher.aggregate([
+            {
+            $lookup: {
+                from: 'vouchers', 
+                localField: 'id_voucher',
+                foreignField: '_id',
+                as: 'voucherDetails'
+            }
+            },
+            {
+                $unwind: '$voucherDetails' 
+            }
+        ]);
+
+        const validUnusedVouchers = voucherStats.reduce((accumulator, item) => {
+            const expiryDate = new Date(item.voucherDetails.expired_date); 
+            if (!item.is_used && expiryDate >= currentDate) {
+              accumulator++;
+            }
+            return accumulator; 
+          }, 0);
+
+          const validUsedVouchers = voucherStats.reduce((accumulator, item) => {
+            const expiryDate = new Date(item.voucherDetails.expired_date); 
+            if (item.is_used && expiryDate > currentDate) {
+              accumulator++;
+            }
+            return accumulator; 
+          }, 0);
+
+        const expiredVouchers = voucherStats.reduce((accumulator, item) => {
+            const expiryDate = new Date(item.voucherDetails.expired_date); 
+            if (expiryDate <= currentDate) {
+              accumulator++;
+            }
+            return accumulator; 
+          }, 0);
+
+        const totalValue = voucherStats.reduce((accumulator, item) => {
+            accumulator += item.voucherDetails.price; 
+            return accumulator; 
+        }, 0); 
+
+        res.status(200).json({
+            totalCampaigns,
+            totalVouchers,
+            totalValue,
+            validUsedVouchers,
+            validUnusedVouchers,
+            expiredVouchers
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
 module.exports = {
   getAll,
   getInProgress,
@@ -359,5 +423,6 @@ module.exports = {
   getRedeemableByItem,
   like,
   unlike,
-  getCampaignsOfVoucher
+  getCampaignsOfVoucher,
+  getStats
 };
