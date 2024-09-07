@@ -9,13 +9,14 @@ import Topbar from './components/topbar/Topbar';
 // Pages
 import ManageEvent from './pages/ManageEvent'; 
 import ManageVoucher from './pages/ManageVoucher';
+import UpdatePlayer from './pages/UpdatePlayer';
 
 function Layout() {
   return (
     <div className="layout">
       <Sidebar />
       <div className="content">
-        {/* <Topbar /> */}
+        <Topbar />
         <div className="page-content">
           <Outlet />
         </div>
@@ -32,6 +33,7 @@ function App() {
           <Route path="/event" element={<ManageEvent />} />
           <Route path="/voucher" element={<ManageVoucher />} />
           {/* <Route path="/info" element={<BrandInfo />} /> */}
+          <Route path="/edit" element={<UpdatePlayer />} />
         </Route>
       </Routes>
     </Router>
