@@ -6,7 +6,8 @@ import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, ScrollView, Text 
 import { Button } from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
-import config from '@/constants/config';
+
+import {removeFromSecureStore} from '@/api/SecureStoreService'
 
 import { TextToSpeechContext } from '@/models/text-to-speech/TextToSpeechContext';
 import { ElevenLabsTTS } from '@/models/text-to-speech/ElevenLabsTTS';
@@ -16,7 +17,8 @@ export default function Profile() {
     const router = useRouter();
 
     const handleLogout = () => {
-        config.removeFromSecureStore("id_player");
+        removeFromSecureStore("id_player");
+
         router.replace("/login")
     }
 
@@ -57,3 +59,4 @@ const styles = StyleSheet.create({
     }
     
 });
+

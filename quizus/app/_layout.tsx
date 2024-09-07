@@ -7,7 +7,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import 'react-native-reanimated';
 import * as SecureStore from 'expo-secure-store';
 import config from '@/constants/config';
-
+import {retrieveFromSecureStore} from '@/api/SecureStoreService'
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -24,9 +24,7 @@ export default function RootLayout() {
     if (loaded) {
       SplashScreen.hideAsync();
 
-      config.saveToSecureStore('id_player', '100006');
-      router.push('/(tabs)');
-    //   config.retrieveFromSecureStore('id_player', setIdPlayer);
+      retrieveFromSecureStore('id_player', setIdPlayer);
 
 
     //   if (id_player) {

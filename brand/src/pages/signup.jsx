@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import "../styles/common.css";
 import "../styles/signup.css";
-import { RoleKey } from "../util/config";
+//import { RoleKey } from "../util/config";
 
 export default function Signup(props) {
     const dispatch = useDispatch();
@@ -11,7 +11,7 @@ export default function Signup(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     //const [loading, setLoading] = useState(false);
-    const roleId = localStorage.getItem(RoleKey);
+    //const roleId = localStorage.getItem(RoleKey);
     const [showNotification, setShowNotification] = useState(false);
 
     const handleSignup = async (e) => {
@@ -27,7 +27,7 @@ export default function Signup(props) {
                 fullname: fullname,
                 email: email,
                 password: password,
-                id_role: roleId
+                //id_role: roleId
             };
             try {
                 //const result = await dispatch(signupAction(user_signup));

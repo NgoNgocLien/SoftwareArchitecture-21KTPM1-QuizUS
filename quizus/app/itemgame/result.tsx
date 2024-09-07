@@ -65,7 +65,7 @@ export default function ItemGameResult() {
         </View>  
 
         <Image
-            style={{width: 200, height: 200}}
+            style={{width: 150, height: 150, borderRadius: 10}}
             source={isItem1 ? {uri: itemInfo.item1_photo} : {uri: itemInfo.item2_photo} }
         />
 

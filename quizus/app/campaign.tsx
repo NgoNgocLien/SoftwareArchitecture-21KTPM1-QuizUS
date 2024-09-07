@@ -53,7 +53,7 @@ export default function Campaign() {
     useEffect(() => {
         if (id_campaign){
             getCampaignById(id_campaign).then(result => {
-                
+                // console.log('Campaign fetched:', result);
                 setCampaign(result)
 
                 if(result.id_quiz != null && result.id_quiz != undefined && result.id_quiz != ''){
@@ -77,7 +77,7 @@ export default function Campaign() {
         }
     }, [id_campaign])
 
-    const handleShare = async (addPlayerTurn: boolean) => {
+    const handleShare = async () => {
         try {
             const result = await Share.share({
                 message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
@@ -108,7 +108,7 @@ export default function Campaign() {
             });
 
             if (result.action === Share.sharedAction) {
-                if (result.activityType && addPlayerTurn) {
+                if (result.activityType ) {
                     // On iOS: Shared with specific activity type (e.g., mail, social media)
                     // increasePlayerTurn(config.ID_PLAYER, id_campaign)
                     // .then(data => {
@@ -116,12 +116,6 @@ export default function Campaign() {
                     // })
                 } else {
                     // On Android: Shared, but no confirmation of activity type
-                    if (addPlayerTurn){
-                        // increasePlayerTurn(config.ID_PLAYER, id_campaign)
-                        // .then(data => {
-                        //     setPlayerTurn(1)
-                        // })
-                    }
                 }
             } else if (result.action === Share.dismissedAction) {
                 // dismissed
@@ -133,12 +127,13 @@ export default function Campaign() {
 
     const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
     const [itemInfo, setItemInfo] = useState<Item|null>(null);
-
+    
     useEffect(() => {
-        if (type_game){
+        if (type_game ){ 
             getGameInfo(id_campaign)
             .then(gameInfo => {
                 if (type_game == config.QUIZ_GAME){
+                    // console.log("gameInfo: ", gameInfo)
                     setQuizInfo(gameInfo.id_quiz)
                 }
                 else if (type_game == config.ITEM_GAME)
@@ -159,6 +154,7 @@ export default function Campaign() {
         if (id_campaign){
             getPlayerTurn(config.ID_PLAYER, id_campaign)
             .then(data => {
+                // console.log(data)
                 setPlayerTurn(data.player_turn)
             })
             .catch(error => {
@@ -168,7 +164,11 @@ export default function Campaign() {
     },[id_campaign, playerTurn]);
 
     const [isModalVisible, setModalVisible] = useState(false);
-    // console.log(itemInfo);
+    // console.log("itemInfo:", itemInfo);
+
+    // console.log("loading:", loading)
+    // console.log("playerTurn: ", playerTurn)
+    // console.log("quizInfo: ", quizInfo)
     return (
         <View style={styles.container}>
             <SubHeader/>
@@ -192,7 +192,7 @@ export default function Campaign() {
                                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                                     }
                                 </View>
-                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare(false)}} suppressHighlighting={true} />
+                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare()}} suppressHighlighting={true} />
                                 </View>
                                 <View style={styles.campaignHeader_bottom}>
                                     <Heading type='h5'>{campaign.name}</Heading>

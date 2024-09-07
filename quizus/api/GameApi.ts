@@ -12,7 +12,6 @@ export const getGameInfo = async (id_campaign: string) => {
 
         const result = await response.json();
         if (response.ok) {
-            // console.log('game: ', result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);

@@ -35,38 +35,6 @@ const ITEM_GAME = 'itemgame';
 
 const ELEVENLABS_API_KEY = 'sk_a2a6129948bb65f5b2461b4d8903094ed17aff082441ec5f';
 
-import * as SecureStore from 'expo-secure-store';
-
-const saveToSecureStore = async (key: string, value: string) => {
-  try {
-    await SecureStore.setItemAsync(key, value);
-    console.log('Data stored securely ', value);
-  } catch (error) {
-    console.error('Error saving data:', error);
-  }
-}
-
-const retrieveFromSecureStore = async (key: string, callback: any) => {
-  try {
-    const value = await SecureStore.getItemAsync(key);
-    console.log(value);
-    if (value) {
-      callback(value);
-    }
-  } catch (error) {
-    console.error('Error retrieving id_player from SecureStore:', error);
-  }
-};
-
-const removeFromSecureStore = async (key: string) => {
-  try {
-    await SecureStore.deleteItemAsync(key);
-    console.log(`${key} has been removed from SecureStore`);
-  } catch (error) {
-    console.error(`Error removing ${key} from SecureStore:`, error);
-  }
-}
-
 export default {
   USER_BE,
   CAMPAIGN_BE,
@@ -81,9 +49,5 @@ export default {
 
   ID_PLAYER,
 
-  ELEVENLABS_API_KEY,
-
-  saveToSecureStore,
-  retrieveFromSecureStore,
-  removeFromSecureStore
+  ELEVENLABS_API_KEY
 };
