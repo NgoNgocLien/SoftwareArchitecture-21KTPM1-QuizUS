@@ -120,9 +120,10 @@ export default function Campaign() {
         if (id_campaign){ 
             getGameInfo(id_campaign)
             .then(gameInfo => {
-
-                if (type_game === config.QUIZ_GAME)
+                
+                if (type_game === config.QUIZ_GAME){
                     setQuizInfo(gameInfo.id_quiz)
+                }
                 else if (type_game === config.ITEM_GAME)
                     setItemInfo({
                         item1_photo: gameInfo.item1_photo,
@@ -144,7 +145,7 @@ export default function Campaign() {
                 setPlayerTurn(data.player_turn)
             })
             .catch(error => {
-                console.error('Error fetching quiz info:', error);
+                console.error('Error fetching player turn:', error);
             });
         }
     },[id_campaign, playerTurn]);

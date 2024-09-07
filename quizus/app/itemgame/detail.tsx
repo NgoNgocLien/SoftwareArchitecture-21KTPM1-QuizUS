@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -6,6 +6,10 @@ import config from '@/constants/config';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Colors } from '@/constants/Colors';
+import LottieView from 'lottie-react-native';
+import { Accelerometer } from 'expo-sensors';
+
+const SHAKE_THRESHOLD = 1.78;
 
 export default function Profile() {
     const router = useRouter();
@@ -64,6 +68,35 @@ export default function Profile() {
         })
     }
 
+    const [data, setData] = useState({ x: 0, y: 0, z: 0 });
+    const [subscription, setSubscription] = useState<any>(null);
+
+    const subscribe = () => {
+        setSubscription(
+            Accelerometer.addListener(accelerometerData => {
+                setData(accelerometerData);
+                const { x, y, z } = accelerometerData;
+                const totalForce = Math.sqrt(x * x + y * y + z * z);
+
+                if (totalForce > SHAKE_THRESHOLD) {
+                    Alert.alert('Shake detected!');
+                    // You can trigger the shake event here
+                }
+            })
+        );
+        Accelerometer.setUpdateInterval(100); // Adjust the update interval
+    };
+
+    const unsubscribe = () => {
+        subscription && subscription.remove();
+        setSubscription(null);
+    };
+
+    useEffect(() => {
+        subscribe();
+        return () => unsubscribe();
+    }, []);
+
     return (
         <SafeAreaView style={styles.background}>
             {/* Background game image (behind the giftGame) */}
@@ -80,9 +113,11 @@ export default function Profile() {
                 <TouchableOpacity style={styles.exitView} onPress={handleCloseGame}>
                     <MaterialCommunityIcons name={'window-close'} size={28} color={Colors.light.background} onPress={() => router.replace('/(tabs)/rewards')} suppressHighlighting={true}/>                
                 </TouchableOpacity>
-                <Image
-                    style={styles.giftImage} // Modified style for the GIF
-                    source={require('@/assets/images/gift.gif')}
+                <LottieView
+                    source={require('@/assets/animations/shaking.json')}
+                    style={styles.giftImage}
+                    autoPlay
+                    loop
                 />
                 <View style={styles.gradientText}>
                     <MaterialCommunityIcons name={'vibrate'} size={28} color={Colors.light.background}  style={{ transform: [{ rotate: '-15deg' }] }} onPress={() => router.replace('/(tabs)/rewards')} suppressHighlighting={true}/>
@@ -92,6 +127,7 @@ export default function Profile() {
                     style={styles.gradientImage} // Modified style for the gradient image
                     source={require('@/assets/images/gradient-shape-game.png')}
                 />
+                
             </View>
         </SafeAreaView>
     );
@@ -114,10 +150,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent', // Make sure it’s transparent
     },
     giftImage: {
-        width: '100%',  // Adjust the size of the GIF
-        height: '100%',
+        width: '150%',  // Adjust the size of the GIF
+        height: '150%',
         resizeMode: 'contain', // Ensure it scales properly
         alignSelf: 'center',
+        top: -35
     },
     gradientImage: {
         width: '100%',
@@ -159,3 +196,7 @@ const styles = StyleSheet.create({
         zIndex: -1, // Ensure it's behind giftGame
     },
 });
+function onShakeEvent(arg0: () => void) {
+    throw new Error('Function not implemented.');
+}
+

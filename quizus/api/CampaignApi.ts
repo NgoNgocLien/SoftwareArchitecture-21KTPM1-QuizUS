@@ -2,7 +2,7 @@ import config from '@/constants/config';
 
 export const getCampaignById = async (id_campaign: string) => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/${id_campaign}`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/${id_campaign}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const getCampaignById = async (id_campaign: string) => {
 
 export const getCampaignsInProgess = async () => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/in_progress`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/in_progress`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export const likeCampaign = async (id_player: string, id_campaign: string) => {
     try {
         let player = "100006";
         let campaign = "100001";
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/like`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/like`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const likeCampaign = async (id_player: string, id_campaign: string) => {
 
 export const unlikeCampaign = async (id_player: string, id_campaign: string) => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/unlike`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/unlike`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export const unlikeCampaign = async (id_player: string, id_campaign: string) => 
 
 export const getLikedCampaigns = async (id_player: string) => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/like/${id_player}`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/like/${id_player}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

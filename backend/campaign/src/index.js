@@ -15,7 +15,7 @@ const gameRoutes = require('./routes/gameRoutes');
 
 app.use(express.json());
 
-app.use('/api/', campaignRoutes);
+app.use('/api/campaign', campaignRoutes);
 app.use('/api/voucher', voucherRoutes);
 app.use('/api/item', itemRoutes);
 app.use('/api/game', gameRoutes);
