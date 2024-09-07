@@ -65,18 +65,18 @@ export default function Profile() {
         })
     }
 
-    useEffect(() => {
-        // Set up shake event listener
-        const shakeListener = onShakeEvent(() => {
-            Alert.alert('Shake detected!');
-        });
+    // useEffect(() => {
+    //     // Set up shake event listener
+    //     const shakeListener = onShakeEvent(() => {
+    //         Alert.alert('Shake detected!');
+    //     });
 
-        return () => {
-            onShakeEvent(() => {
-                console.log("remove shake")
-            }); 
-        };
-    }, []);
+    //     return () => {
+    //         onShakeEvent(() => {
+    //             console.log("remove shake")
+    //         }); 
+    //     };
+    // }, []);
 
     return (
         <SafeAreaView style={styles.background}>
