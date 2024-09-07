@@ -13,7 +13,7 @@ import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { getExchangedVouchers } from '@/api/VoucherApi';
 import config from '@/constants/config';
 import { showToast } from '@/components/ToastBar';
-
+import {retrieveFromSecureStore} from '@/api/SecureStoreService'
 const tabNames = [
     { index: 0, name: 'Tất cả' },
     { index: 1, name: 'Đổi xu' },
@@ -31,25 +31,38 @@ export default function MyVouchers() {
 
     const fetchMyVouchers = useCallback(() => {
         setLoading(true);
-        config.retrieveFromSecureStore('id_player', (id_player: string) => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
             getExchangedVouchers(id_player)
                 .then(playerVouchers => {
                     let allVouchers: any[] = [];
                     let coinVouchers: any[] = [];
                     let itemVouchers: any[] = [];
 
-                    playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; }) => {
+                    playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; is_used?:boolean}) => {
                         const { voucher, ...newPlayerVoucher } = playerVoucher;
 
                         if (playerVoucher.campaign.id_quiz !== "") {
                             const newVoucher = VoucherFactory.createVoucher('coin', voucher);
-
-                            coinVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-                            allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+                            
+                            if (playerVoucher.is_used || Date.now() >= newVoucher.expired_date.getTime()){
+                                coinVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+                                allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+                            } else{
+                                coinVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
+                                allVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
+                            }
+                            
                         } else {
                             const newVoucher = VoucherFactory.createVoucher('item', voucher);
-                            itemVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-                            allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+
+                            if (playerVoucher.is_used || Date.now() >= newVoucher.expired_date.getTime()){
+                                itemVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+                                allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+                            } else{
+                                itemVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
+                                allVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
+                            }
+                            
                         }
                     });
 
@@ -124,6 +137,7 @@ export default function MyVouchers() {
                                         voucher={item.voucher.getVoucher()}
                                         campaign={item.campaign}
                                         key={index} 
+                                        is_used={item.is_used}
                                         style={index === vouchers[0].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}
@@ -143,6 +157,7 @@ export default function MyVouchers() {
                                         voucher={item.voucher.getVoucher()}
                                         campaign={item.campaign}
                                         key={index} 
+                                        is_used={item.is_used}
                                         style={index === vouchers[1].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}
@@ -162,6 +177,7 @@ export default function MyVouchers() {
                                         voucher={item.voucher.getVoucher()}
                                         campaign={item.campaign}
                                         key={index} 
+                                        is_used={item.is_used}
                                         style={index === vouchers[2].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}

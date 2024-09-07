@@ -33,6 +33,7 @@ export function VoucherCard({
     voucher,
     campaign = defaultCampaign,
     playerInfo,
+    is_used,
     ...rest
 }:{ 
     voucher: Voucher,    
@@ -45,6 +46,7 @@ export function VoucherCard({
         quantity_item1: number,
         quantity_item2: number
     },
+    is_used?: boolean,
     [key: string]: any;
 }) {
 
@@ -97,7 +99,12 @@ export function VoucherCard({
                             </TouchableOpacity>
                         )
                     ) : (
-                        <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
+                        is_used ? (
+                            <View style={[styles.exchangeButton, {backgroundColor: Colors.gray._200}]}>
+                                <Paragraph type={'p2'} color={ Colors.gray._500}>Đã sử dụng</Paragraph>
+                            </View>
+                        )  : (
+                        (Date.now() < voucher.expired_date.getTime()) && <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
                             onPress={() => {
                                 Clipboard.setString(voucher.code); 
                                 Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
@@ -105,6 +112,8 @@ export function VoucherCard({
                             <Paragraph type={'p2'}>{voucher.code}</Paragraph>
                             <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
                         </TouchableOpacity>
+                        )
+                        
                     )
                 }
                 

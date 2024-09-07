@@ -38,37 +38,7 @@ const QUIZ_GAME = 'quizgame';
 
 const ITEM_GAME = 'itemgame';
 
-import * as SecureStore from 'expo-secure-store';
 
-const saveToSecureStore = async (key: string, value: string) => {
-  try {
-    await SecureStore.setItemAsync(key, value);
-    console.log('Data stored securely ', value);
-  } catch (error) {
-    console.error('Error saving data:', error);
-  }
-}
-
-const retrieveFromSecureStore = async (key: string, callback: any) => {
-  try {
-    const value = await SecureStore.getItemAsync(key);
-    console.log(value);
-    if (value) {
-      callback(value);
-    }
-  } catch (error) {
-    console.error('Error retrieving id_player from SecureStore:', error);
-  }
-};
-
-const removeFromSecureStore = async (key: string) => {
-  try {
-    await SecureStore.deleteItemAsync(key);
-    console.log(`${key} has been removed from SecureStore`);
-  } catch (error) {
-    console.error(`Error removing ${key} from SecureStore:`, error);
-  }
-}
 
 
 export default {
@@ -84,8 +54,4 @@ export default {
   ITEM_GAME,
 
   ID_PLAYER,
-
-  saveToSecureStore,
-  retrieveFromSecureStore,
-  removeFromSecureStore
 };

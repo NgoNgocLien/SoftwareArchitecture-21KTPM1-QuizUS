@@ -11,11 +11,6 @@ import config from '@/constants/config';
 export default function Items() {
     const router = useRouter();
 
-    const handleLogout = () => {
-        config.removeFromSecureStore("id_player");
-
-        router.replace("/login")
-    }
     return (
     <LinearGradient
     colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
@@ -24,8 +19,7 @@ export default function Items() {
     >
     
         <SafeAreaView style={styles.container}>
-            <Button text="Đăng xuất" type="primary" 
-                onPress={() => {handleLogout()}}>
+            <Button text="Đăng xuất" type="primary" >
             </Button>
         </SafeAreaView>
 

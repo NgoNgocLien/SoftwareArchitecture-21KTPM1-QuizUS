@@ -7,13 +7,14 @@ import LottieView from "lottie-react-native";
 import { Button } from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
-import config from '@/constants/config';
+
+import {removeFromSecureStore} from '@/api/SecureStoreService'
 
 export default function Profile() {
     const router = useRouter();
 
     const handleLogout = () => {
-        config.removeFromSecureStore("id_player");
+        removeFromSecureStore("id_player");
 
         router.replace("/login")
     }
@@ -63,3 +64,4 @@ const styles = StyleSheet.create({
     }
     
 });
+
