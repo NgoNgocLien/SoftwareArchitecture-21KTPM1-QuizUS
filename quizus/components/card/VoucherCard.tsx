@@ -1,12 +1,8 @@
 import React from 'react';
 import { View, Text, Image, Clipboard, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Toast from 'react-native-root-toast';
 
 import { Colors } from '@/constants/Colors';
-import { router } from 'expo-router';
-import { ToastBar, ToastBarOptions } from '@/components/ToastBar';
-
 import {Voucher} from '@/models/voucher/Voucher'
 import { CoinVoucher } from '@/models/voucher/CoinVoucher';
 import { ItemVoucher } from '@/models/voucher/ItemVoucher';
@@ -39,7 +35,7 @@ export function VoucherCard({
     playerInfo,
     ...rest
 }:{ 
-    voucher: Voucher | null,
+    voucher: Voucher,    
     campaign?:{
         brandName: string,
         brandLogo: string
@@ -51,11 +47,6 @@ export function VoucherCard({
     },
     [key: string]: any;
 }) {
-
-    if (voucher == null){
-        voucher = VoucherFactory.createVoucher("coin", defaultVoucher);
-        console.log("voucher: ", voucher);
-    } 
 
     let expiredDateFormatted = voucher 
     ?
@@ -74,7 +65,7 @@ export function VoucherCard({
             <View style={styles.detailContainer}>
                 <View style={styles.detail_top}>
                     <Text style={styles.brandName}>{campaign.brandName}</Text>
-                    <View style={Date.now() < voucher?.expired_date.getTime() ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                    <View style={Date.now() < voucher.expired_date.getTime() ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
                         <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < voucher.expired_date.getTime() ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
                         { Date.now() < voucher.expired_date.getTime() ? 
                             <Text style={styles.time}>{expiredDateFormatted}</Text> :
@@ -91,15 +82,19 @@ export function VoucherCard({
                         (voucher instanceof CoinVoucher) ? 
                         <TouchableOpacity style={enoughCoin ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
                             <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
-                            <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>
-                                <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/> {voucher.score_exchange}
-                            </Text>
+                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                <Image source={require('@/assets/images/coin.png')} style={{width: 20, height: 20}}/> 
+                                <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}> {voucher.score_exchange}</Text>
+                            </View>
                         </TouchableOpacity> 
                         : (
-                            <TouchableOpacity style={enoughItem ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
-                            <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
-                            <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>{enoughItem}</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity style={enoughItem == '2/2' ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
+                                <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
+                                <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                    <Image source={require('@/assets/images/puzzle.png')} style={{width: 20, height: 20}}/>
+                                    <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}> {enoughItem}</Text>
+                                </View>
+                            </TouchableOpacity>
                         )
                     ) : (
                         <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
