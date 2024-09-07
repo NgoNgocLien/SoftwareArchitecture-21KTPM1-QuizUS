@@ -33,7 +33,7 @@ export default function Campaign() {
     const id_campaign = params.id_campaign as string
     const campaign = JSON.parse(params.campaign as string)
 
-    const type_game = campaign.id_quiz != "" ? config.QUIZ_GAME : config.ITEM_GAME;
+    const type_game = campaign.id_quiz != undefined ? config.QUIZ_GAME : config.ITEM_GAME;
 
     const handleShare = async (addPlayerTurn: boolean) => {
         try {
@@ -95,9 +95,10 @@ export default function Campaign() {
         if (id_campaign){
             getGameInfo(id_campaign)
             .then(gameInfo => {
-
-                if (type_game === config.QUIZ_GAME)
+                
+                if (type_game === config.QUIZ_GAME){
                     setQuizInfo(gameInfo.id_quiz)
+                }
                 else if (type_game === config.ITEM_GAME)
                     setItemInfo({
                         item1_photo: gameInfo.item1_photo,
@@ -119,7 +120,7 @@ export default function Campaign() {
                 setPlayerTurn(data.player_turn)
             })
             .catch(error => {
-                console.error('Error fetching quiz info:', error);
+                console.error('Error fetching player turn:', error);
             });
         }
     },[id_campaign, playerTurn]);
