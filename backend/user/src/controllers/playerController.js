@@ -144,7 +144,7 @@ const getPlayerScore = async (req, res) => {
     const { id_player } = req.body;
 
     try {
-        const playerData = await player.findOne({
+        const playerData = await model.player.findOne({
             where: { id_player }
         });
 
