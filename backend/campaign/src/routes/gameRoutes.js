@@ -4,6 +4,7 @@ const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
 const TurnRequest = require('../models/turnRequest');
+const PlayerGift = require('../models/playerGift');
 
 // Tìm kiếm game theo campaign
 router.get('/campaign/:id_campaign', async (req, res) => {
@@ -293,6 +294,67 @@ router.put('/player_turn/receive', async (req, res) => {
       sender: { id_sender, player_turn: senderGame.player_turn },
       receiver: { id_receiver, player_turn: receiverGame.player_turn },
       turnRequest
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// tặng mảnh ghép cho bạn
+router.post('/item/send', async (req, res) => {
+  try {
+    const { id_sender, id_receiver, id_item, id_campaign } = req.body;
+
+    if (!id_sender || !id_receiver || !id_item || !id_campaign) {
+      return res.status(400).json({ message: 'id_sender, id_receiver, id_item, and id_campaign are required' });
+    }
+
+    const senderGame = await PlayerGame.findOne({
+      id_player: id_sender,
+      id_campaign: id_campaign
+    });
+
+    // Kiểm tra số lượng item dựa trên id_item
+    if (id_item === 1 && senderGame.quantity_item1 < 1) {
+      return res.status(400).json({ message: 'Sender does not have enough item1 to send.' });
+    }
+    if (id_item === 2 && senderGame.quantity_item2 < 1) {
+      return res.status(400).json({ message: 'Sender does not have enough item2 to send.' });
+    }
+
+    let receiverGame = await PlayerGame.findOne({
+      id_player: id_receiver,
+      id_campaign: id_campaign
+    });
+
+    // Nếu người nhận chưa tham gia campaign, tạo một bản ghi mới trong PlayerGame
+    if (!receiverGame) {
+      receiverGame = new PlayerGame({
+        id_player: id_receiver,
+        id_campaign: id_campaign,
+        player_turn: 3,
+        quantity_item1: 0,
+        quantity_item2: 0
+      });
+      await receiverGame.save(); 
+    }
+
+    // Tạo bản ghi mới trong PlayerGift để lưu thông tin mảnh ghép đã tặng
+    const newGift = new PlayerGift({
+      id_sender,
+      id_receiver,
+      id_item,
+      id_campaign,
+      gift_time: new Date(),  
+      accept_time: null      
+    });
+
+    await newGift.save();
+
+    return res.status(201).json({
+      message: 'Gift successfully sent, awaiting acceptance.',
+      gift: newGift
     });
 
   } catch (error) {

@@ -3,27 +3,29 @@ const Schema = mongoose.Schema;
 
 const PlayerGiftSchema = new Schema({
   id_sender: { 
-    type: Number, 
+    type: String, 
     required: true 
   },
   id_receiver: { 
-    type: Number, 
+    type: String, 
     required: true 
   },
   id_item: { 
-    type: Schema.Types.ObjectId, 
-    ref: 'CampaignItem', 
+    type: Number,  
     required: true 
   },
-  id_campaign_game: { 
+  id_campaign: { 
     type: Schema.Types.ObjectId, 
-    ref: 'CampaignGame', 
+    ref: 'Campaign', 
     required: true 
   },
   gift_time: { 
-    type: String, 
+    type: Date, 
     required: true 
+  },
+  accept_time: { 
+    type: Date
   }
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('PlayerGift', PlayerGiftSchema);
