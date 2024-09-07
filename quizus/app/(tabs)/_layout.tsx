@@ -89,19 +89,7 @@ export default function TabLayout() {
             }}
         />
         <Tabs.Screen 
-            name="my-vouchers.styles" 
-            options={{
-                tabBarButton: () => null,
-            }}
-        />
-        <Tabs.Screen 
             name="voucher-detail"
-            options={{
-                tabBarButton: () => null,
-            }}
-        />
-        <Tabs.Screen 
-            name="voucher-detail.styles"
             options={{
                 tabBarButton: () => null,
             }}

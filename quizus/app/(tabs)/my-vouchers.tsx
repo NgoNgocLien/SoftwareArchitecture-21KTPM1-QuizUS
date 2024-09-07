@@ -3,7 +3,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, TouchableWithoutFeedback, View, ScrollView, Image, SafeAreaView } from 'react-native';
 
-import styles from './my-vouchers.styles';
+import styles from '@/styles/my-vouchers.styles';
 import { Colors } from '@/constants/Colors';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import { LoadingView } from '@/components/LoadingView';
