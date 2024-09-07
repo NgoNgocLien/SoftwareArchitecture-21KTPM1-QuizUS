@@ -7,6 +7,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Colors } from '@/constants/Colors';
 import LottieView from 'lottie-react-native';
+import { Accelerometer } from 'expo-sensors';
+
+const SHAKE_THRESHOLD = 1.78;
 
 export default function Profile() {
     const router = useRouter();
@@ -65,18 +68,34 @@ export default function Profile() {
         })
     }
 
-    // useEffect(() => {
-    //     // Set up shake event listener
-    //     const shakeListener = onShakeEvent(() => {
-    //         Alert.alert('Shake detected!');
-    //     });
+    const [data, setData] = useState({ x: 0, y: 0, z: 0 });
+    const [subscription, setSubscription] = useState<any>(null);
 
-    //     return () => {
-    //         onShakeEvent(() => {
-    //             console.log("remove shake")
-    //         }); 
-    //     };
-    // }, []);
+    const subscribe = () => {
+        setSubscription(
+            Accelerometer.addListener(accelerometerData => {
+                setData(accelerometerData);
+                const { x, y, z } = accelerometerData;
+                const totalForce = Math.sqrt(x * x + y * y + z * z);
+
+                if (totalForce > SHAKE_THRESHOLD) {
+                    Alert.alert('Shake detected!');
+                    // You can trigger the shake event here
+                }
+            })
+        );
+        Accelerometer.setUpdateInterval(100); // Adjust the update interval
+    };
+
+    const unsubscribe = () => {
+        subscription && subscription.remove();
+        setSubscription(null);
+    };
+
+    useEffect(() => {
+        subscribe();
+        return () => unsubscribe();
+    }, []);
 
     return (
         <SafeAreaView style={styles.background}>
