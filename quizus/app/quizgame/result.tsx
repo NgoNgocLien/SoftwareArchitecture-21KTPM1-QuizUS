@@ -13,6 +13,7 @@ import config from '@/constants/config';
 import { FontAwesome6 } from '@expo/vector-icons';
 
 import dialogStyles from '@/components/modal/Dialog.styles'
+import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
 
 export default function QuizGameResult() {
     const router = useRouter();
@@ -36,11 +37,6 @@ export default function QuizGameResult() {
     }
 
     const [isModalVisible, setModalVisible] = useState(false);
-
-    const handleShare = () => {
-
-    }
-
     return (
     <LinearGradient
     colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
@@ -115,30 +111,13 @@ export default function QuizGameResult() {
             }
         </View>
 
-        <Modal
-            transparent={true} 
-            animationType="fade" 
-            visible={isModalVisible}
-            onRequestClose={() => {setModalVisible(false);}}
+        <PLayerTurnModal 
+            isModalVisible={isModalVisible}
+            setModalVisible={setModalVisible}
+            id_campaign={id_campaign}
+            afterShare={handlePlayAgain}
         >
-            <View style={dialogStyles.centeredView}>
-                <View style={dialogStyles.modalView}>
-                    <View style={dialogStyles.topView}>
-                        <Heading type={'h5'}>Thêm lượt chơi</Heading>
-                        <FontAwesome6 name='xmark' style={{fontSize: 20, padding: 5, color: Colors.gray._600}} 
-                            onPress={() => setModalVisible(false)} suppressHighlighting={true}/>
-                    </View>
-                    <Paragraph type={'p2'}>
-                        Bạn đã hết lượt chơi. Chia sẻ sự kiện hoặc xin lượt chơi từ bạn bè để có thể tham gia sự kiện
-                    </Paragraph>
-                    <View style={dialogStyles.buttonView}>
-                        <Button style={dialogStyles.button} text={'Chia sẻ sự kiện'} type='primary'></Button>
-                        <Button style={dialogStyles.button} text={'Xin lượt chơi'} type='tertiary'></Button>
-                    </View>
-                    
-                </View>
-            </View>
-        </Modal>
+        </PLayerTurnModal>
 
     </View>
     </SafeAreaView>

@@ -20,10 +20,8 @@ import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
 import { VoucherCard } from '@/components/card/VoucherCard';
 
-import dialogStyles from '@/components/modal/Dialog.styles'
-
 import config from '@/constants/config';
-import { getGameInfo, getPlayerTurn, increasePlayerTurn } from '@/api/GameApi';
+import { getGameInfo, getPlayerTurn } from '@/api/GameApi';
 import { getCampaignById } from '@/api/CampaignApi';
 import { showToast } from '@/components/ToastBar';
 import { EmptyView } from '@/components/EmptyView';
@@ -32,6 +30,7 @@ import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { Voucher } from '@/models/voucher/Voucher';
 import { CoinVoucher } from '@/models/voucher/CoinVoucher';
 import { ItemVoucher } from '@/models/voucher/ItemVoucher';
+import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
 
 // Call API
 const defaultPlayerInfo = {
@@ -140,14 +139,15 @@ export default function Campaign() {
     const [itemInfo, setItemInfo] = useState<Item|null>(null);
 
     useEffect(() => {
-        if (id_campaign){ 
+        if (type_game ){ 
+            console.log(id_campaign)
             getGameInfo(id_campaign)
             .then(gameInfo => {
-                
-                if (type_game === config.QUIZ_GAME){
+                // console.log("gameInfo: ", gameInfo)
+                if (type_game == config.QUIZ_GAME){
                     setQuizInfo(gameInfo.id_quiz)
                 }
-                else if (type_game === config.ITEM_GAME)
+                else if (type_game == config.ITEM_GAME)
                     setItemInfo({
                         item1_photo: gameInfo.item1_photo,
                         item2_photo: gameInfo.item2_photo,
@@ -158,9 +158,9 @@ export default function Campaign() {
             });   
       
         }
-    }, [id_campaign])
+    }, [type_game])
 
-    const [playerTurn, setPlayerTurn] = useState <number>(0);
+    const [playerTurn, setPlayerTurn] = useState <number|null>(null);
     useEffect(() => {
         if (id_campaign){
             getPlayerTurn(config.ID_PLAYER, id_campaign)
@@ -174,13 +174,15 @@ export default function Campaign() {
     },[id_campaign, playerTurn]);
 
     const [isModalVisible, setModalVisible] = useState(false);
+    // console.log(itemInfo);
     return (
         <View style={styles.container}>
             <SubHeader/>
             <View style={styles.background}>
 
-                {loading ? <LoadingView /> : campaign == null ? <EmptyView /> :
+                {(loading || playerTurn == null || (quizInfo == null && itemInfo == null)) ? <LoadingView /> : campaign == null ? <EmptyView /> :
                 (
+                <>
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
                     <Image style={styles.banner} source={{uri: campaign.photo}} />
                             
@@ -250,7 +252,7 @@ export default function Campaign() {
                             />
                         </View>
                 </ScrollView>
-                )}
+                
                 <View style={styles.joinButtonContainer} >
                     {
                         playerTurn 
@@ -265,6 +267,7 @@ export default function Campaign() {
                                             }
                                         })
                                     } else if (type_game == config.ITEM_GAME){
+
                                         router.replace({
                                             pathname: `/itemgame/detail`,
                                             params: {
@@ -278,32 +281,16 @@ export default function Campaign() {
                                 onPress={() => {setModalVisible(true);}}/> 
                     }
                     
-                    <Modal
-                        transparent={true} 
-                        animationType="fade" 
-                        visible={isModalVisible}
-                        onRequestClose={() => {setModalVisible(false);}}
-                    >
-                        <View style={dialogStyles.centeredView}>
-                            <View style={dialogStyles.modalView}>
-                                <View style={dialogStyles.topView}>
-                                    <Heading type={'h5'}>Thêm lượt chơi</Heading>
-                                    <FontAwesome6 name='xmark' style={{fontSize: 20, padding: 5, color: Colors.gray._600}} 
-                                        onPress={() => setModalVisible(false)} suppressHighlighting={true}/>
-                                </View>
-                                <Paragraph type={'p2'}>
-                                    Bạn đã hết lượt chơi. Chia sẻ sự kiện hoặc xin lượt chơi từ bạn bè để có thể tham gia sự kiện
-                                </Paragraph>
-                                <View style={dialogStyles.buttonView}>
-                                    <Button style={dialogStyles.button} text={'Chia sẻ sự kiện'} type='primary' 
-                                        onPress={() => {handleShare(true)}}></Button>
-                                    <Button style={dialogStyles.button} text={'Xin lượt chơi'} type='tertiary'></Button>
-                                </View>
-                                
-                            </View>
-                        </View>
-                    </Modal>
+                    <PLayerTurnModal 
+                        isModalVisible={isModalVisible}
+                        setModalVisible={setModalVisible}
+                        id_campaign={campaign._id}
+                        afterShare={() => {setPlayerTurn(1)}}
+                        >
+                    </PLayerTurnModal>
                 </View>
+                </>
+                )}
             </View>
         </View>
     )

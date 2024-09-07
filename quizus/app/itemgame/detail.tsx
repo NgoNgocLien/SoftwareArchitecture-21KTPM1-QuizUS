@@ -20,7 +20,7 @@ export default function ItemGameDetail() {
     const id_campaign = params.id_campaign as string;
     const itemInfoString = Array.isArray(params.itemInfo) ? params.itemInfo[0] : params.itemInfo;
     const itemInfo = JSON.parse(itemInfoString);
-
+    
     const [hasNavigated, setHasNavigated] = useState(false);
 
     const handleFinishGame = async () => {
