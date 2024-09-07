@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-dom';
-import { Provider } from 'react-redux';
+//import { Provider } from 'react-redux';
 import { store } from './redux/store';
 
 // Components

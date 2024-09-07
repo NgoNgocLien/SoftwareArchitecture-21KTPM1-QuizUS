@@ -34,7 +34,7 @@ export const getCampaignsInProgess = async () => {
         if (response.ok) {
             return result;
         } else {
-            throw new Error('Failed to fetch data: ', result.message);
+            throw new Error('Failed to fetch data getCampaignsInProgess: ', result.message);
         }
     } catch (error) {
         console.error(error);
@@ -107,7 +107,7 @@ export const getLikedCampaigns = async (id_player: string) => {
         if (response.ok) {
             return result;
         } else {
-            throw new Error('Failed to fetch liked campaigns: ' + result.message);
+            throw new Error('Failed to fetch liked campaigns: getLikedCampaigns' + result.message);
         }
     } catch (error) {
         console.error(error);

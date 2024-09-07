@@ -1,31 +1,45 @@
+import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
-import React from 'react';
-import Login from './pages/Login';
+import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+
+// Components
 import Sidebar from './components/sidebar/Sidebar';
-import UpdatePlayer from './pages/UpdatePlayer.jsx';
+// import Topbar from './components/topbar/Topbar';
+
+// Pages
+// import Dashboard from './pages/Dashboard';
+// import ManageBrand from './pages/ManageBrand';
+// import ManageUser from './pages/ManageUser';
+// import ManageGame from './pages/ManageGame';
 
 function Layout() {
-    return (
-        <div className="">
-            <Sidebar />
-            <Outlet />
+  return (
+    <div className="layout">
+      <Sidebar />
+      <div className="content">
+        <Topbar />
+        <div className="page-content">
+          <Outlet />
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="login" element={<Login />} />
-                <Route path="" element={<Layout />}>
-                    <Route path="update-player" element={<UpdatePlayer />} />
-                </Route>
-                
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <Routes>
+        <Route path="" element={<Layout />}>
+          <Route path="/event" element={<ManageEvent />} />
+          <Route path="/voucher" element={<ManageBrand />} />
+          <Route path="/info" element={<BrandInfo />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

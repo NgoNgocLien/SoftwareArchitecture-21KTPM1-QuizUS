@@ -2,6 +2,7 @@ const db = require('../models/index');
 const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
+const bcrypt = require('bcryptjs');
 
 const { Op, literal, fn, col } = require("sequelize");
 
@@ -133,4 +134,41 @@ const update = async (req, res) => {
   }
 };
 
-module.exports = { signup, getAll, get, search, update }
+// Harshing brand password
+const updatePassword = async(req,res) => {
+  let { id_brand, new_password } = req.body;
+  
+  try{
+    let brand = await model.brand.findOne({
+      where: {
+        id_brand: id_brand
+      }
+    });
+    if(brand){
+      let passWordHash = bcrypt.hashSync(new_password, 10);
+      await model.brand.update({
+        pwd:passWordHash
+      }, {
+        where: {
+          id_brand: id_brand
+        }
+      })
+      
+      let data = await model.brand.findOne({
+        where: {
+          id_brand:id_brand
+        }
+      });
+      
+      successCode(res, data, "Update thành công");
+      return;
+    }
+    else{
+      failCode(res, null, "Invalid id")
+    }     
+  }catch(err){
+      errorCode(res,"Lỗi BE")
+  }
+}
+
+module.exports = { signup, getAll, get, search, update, updatePassword }
