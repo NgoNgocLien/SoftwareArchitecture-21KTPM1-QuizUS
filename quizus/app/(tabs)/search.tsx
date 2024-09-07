@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ScrollView, TextInput, Alert } from 'react-native';
@@ -13,10 +13,10 @@ import { CampaignCard } from '@/components/card/CampaignCard';
 export default function Search() {
     type RecentSearch = {key: string};
 
-    const [recentSearches, setRecentSearches] = React.useState<RecentSearch[]>([]);
-    const [searchText, setSearchText] = React.useState<string>('');
+    const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
+    const [searchText, setSearchText] = useState<string>('');
 
-    React.useEffect(() => {
+    useEffect(() => {
         const loadRecentSearches = async () => {
             try {
                 const searches = await AsyncStorage.getItem('CAMPAIGN_SEARCHES');

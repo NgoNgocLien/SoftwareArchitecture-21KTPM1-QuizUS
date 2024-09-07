@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
-import { getAllPlayers } from '../api/playerApi';
+import { getAllPlayers, searchPlayer } from '../api/playerApi';
 
 export default function ManageUser() {
-    const [searchText, setSearchText] = useState('')
     const [playerData, setPlayerData] = useState([]);
     
-    const handleSearch = (e) => {
-        setSearchText(e.target.value);
+    const handleSearch = async (e) => {
+        const result = await searchPlayer(e.target.value);
+        setPlayerData(result);
     };
 
     useEffect(() => {
@@ -28,8 +28,7 @@ export default function ManageUser() {
                     type="text"
                     className="search-input"
                     placeholder="Tìm kiếm theo ID, tên, email người dùng"
-                    value={searchText}
-                    onChange={handleSearch}
+                    onChange={(e) => handleSearch(e)}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
             </div>

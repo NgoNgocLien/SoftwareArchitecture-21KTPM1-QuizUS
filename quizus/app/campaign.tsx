@@ -28,6 +28,8 @@ import { getGameInfo, getPlayerTurn, increasePlayerTurn } from '@/api/GameApi';
 
 export default function Campaign() {
 
+    
+
     let campaigns = [
         {
             id: '64e9d9c8e8b4c21c4b2e9f5f',
