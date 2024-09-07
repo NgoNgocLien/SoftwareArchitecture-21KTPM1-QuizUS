@@ -2,14 +2,24 @@
 // rồi mọi ng để config này vô file gitignore
 
 // liên
-const USER_BE = 'http://192.168.1.11:8000/user';
-const GAME_BE = 'http://192.168.1.11:8000/game';
-const CAMPAIGN_BE = 'http://192.168.1.11:8000/campaign';
+// const USER_BE = 'http://192.168.1.11:8000/user';
+// const GAME_BE = 'http://192.168.1.11:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.1.11:8000/campaign';
 
 // ml
 // const USER_BE = 'http://192.168.2.177:8000/user';
 // const GAME_BE = 'http://192.168.2.177:8000/game';
 // const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
+
+// the simple cafe
+// const USER_BE = 'http://192.168.0.103:8000/user';
+// const GAME_BE = 'http://192.168.0.103:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.0.103:8000/campaign';
+
+// the simple cafe L1
+const USER_BE = 'http://192.168.0.109:8000/user';
+const GAME_BE = 'http://192.168.0.109:8000/game';
+const CAMPAIGN_BE = 'http://192.168.0.109:8000/campaign';
 
 const NOTI_BE = '';
 
@@ -20,6 +30,7 @@ const QUIZ_SCORE = 100;
 const ID_PLAYER = '100006';
 
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const saveToSecureStore = async (key: string, value: string) => {
   try {
@@ -41,6 +52,7 @@ const retrieveFromSecureStore = async (key: string, callback: any) => {
     console.error('Error retrieving id_player from SecureStore:', error);
   }
 };
+
 const removeFromSecureStore = async (key: string) => {
   try {
     await SecureStore.deleteItemAsync(key);
@@ -49,6 +61,7 @@ const removeFromSecureStore = async (key: string) => {
     console.error(`Error removing ${key} from SecureStore:`, error);
   }
 }
+
 
 export default {
   USER_BE,
