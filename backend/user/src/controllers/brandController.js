@@ -17,9 +17,10 @@ const signup = async (req, res) => {
     if (existingBrand) {
       return failCode(res, null, 'Username hoặc email đã tồn tại.');
     }
-
+    
+    let passWordHash = bcrypt.hashSync(pwd, 10);
     const newBrand = await model.brand.create({
-      name, field, address, lat, long, is_active: true, username, pwd, phone, email,
+      name, field, address, lat, long, is_active: true, username, pwd:passWordHash, phone, email,
       logo: logo || 'https://res.cloudinary.com/dklt21uks/image/upload/v1725615538/quizus/bb3igtt4ujtuehytpnfu.svg'
     });
 
