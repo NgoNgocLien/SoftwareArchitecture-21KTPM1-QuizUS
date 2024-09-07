@@ -32,7 +32,7 @@ export const getPlayerTurn = async (id_player: string, id_campaign: string) => {
             },
         });
 
-        console.log(response)
+        // console.log(response)
 
         const result = await response.json();
         if (response.ok) {

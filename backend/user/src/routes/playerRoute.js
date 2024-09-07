@@ -20,4 +20,7 @@ playerRoute.get('/search/:keyword', search);
 
 playerRoute.put('/coin', exchangeVoucherByCoin);
 
+playerRoute.get('/score', getPlayerScore);
+
+
 module.exports = playerRoute

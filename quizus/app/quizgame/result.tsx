@@ -14,7 +14,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 
 import dialogStyles from '@/components/modal/Dialog.styles'
 
-export default function Result() {
+export default function QuizGameResult() {
     const router = useRouter();
     const params = useLocalSearchParams();
     const point = params.point as string;
