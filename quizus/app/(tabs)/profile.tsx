@@ -14,7 +14,6 @@ export default function Profile() {
 
     const handleLogout = () => {
         config.removeFromSecureStore("id_player");
-
         router.replace("/login")
     }
     return (

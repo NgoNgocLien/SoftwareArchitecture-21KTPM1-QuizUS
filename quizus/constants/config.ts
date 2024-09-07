@@ -17,14 +17,14 @@
 // const CAMPAIGN_BE = 'http://192.168.0.103:8000/campaign';
 
 // the simple cafe L1
-const USER_BE = 'http://192.168.0.109:8000/user';
-const GAME_BE = 'http://192.168.0.109:8000/game';
-const CAMPAIGN_BE = 'http://192.168.0.109:8000/campaign';
+// const USER_BE = 'http://192.168.0.109:8000/user';
+// const GAME_BE = 'http://192.168.0.109:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.0.109:8000/campaign';
 
 // simple
-// const USER_BE = 'http://192.168.0.225:8000/user';
-// const GAME_BE = 'http://192.168.0.225:8000/game';
-// const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
+const USER_BE = 'http://192.168.0.225:8000/user';
+const GAME_BE = 'http://192.168.0.225:8000/game';
+const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
 
 const NOTI_BE = '';
 
@@ -52,7 +52,7 @@ const saveToSecureStore = async (key: string, value: string) => {
 const retrieveFromSecureStore = async (key: string, callback: any) => {
   try {
     const value = await SecureStore.getItemAsync(key);
-    console.log(value);
+    // console.log(value);
     if (value) {
       callback(value);
     }
@@ -69,7 +69,6 @@ const removeFromSecureStore = async (key: string) => {
     console.error(`Error removing ${key} from SecureStore:`, error);
   }
 }
-
 
 export default {
   USER_BE,

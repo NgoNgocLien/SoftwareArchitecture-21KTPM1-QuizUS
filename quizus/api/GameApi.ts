@@ -50,7 +50,7 @@ export const getPlayerTurn = async (id_player: string, id_campaign: string) => {
 export const increasePlayerTurn = async (id_player: string, id_campaign: string) => {
     try {
         const response = await fetch(`${config.CAMPAIGN_BE}/api/game/player_turn/add`, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -60,6 +60,7 @@ export const increasePlayerTurn = async (id_player: string, id_campaign: string)
             }),
         });
 
+        // console.log(response);
         const result = await response.json();
         if (response.ok) {
             console.log(result)

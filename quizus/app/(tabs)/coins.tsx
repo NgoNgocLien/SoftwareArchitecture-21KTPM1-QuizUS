@@ -14,11 +14,12 @@ import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { LoadingView } from '@/components/LoadingView';
 import { EmptyView } from '@/components/EmptyView';
 import { showToast } from '@/components/ToastBar';
+import { getPlayerScore } from '@/api/PlayerApi';
 
 
 // call api
 const defaultPlayerInfo = {
-    score: 100,
+    score: 0,
     quantity_item1: 0,
     quantity_item2: 0
 }
@@ -35,11 +36,13 @@ export default function Coins() {
         { index: 4, name: 'Giải trí' }
     ]
 
-    const [focusedTab, setFocusedTab] = useState(0);
+    const [playerInfo, setPlayerInfo] = useState({
+        score: 0,
+        quantity_item1: 0,
+        quantity_item2: 0
+    });
 
-    const handleTabFocus = (index: number) => {
-        setFocusedTab(index);
-    }
+    const [focusedTab, setFocusedTab] = useState(0);
 
     const [vouchers, setVouchers] = useState<any[] | null>(null);
     const [loading, setLoading] = useState(true);
@@ -48,6 +51,30 @@ export default function Coins() {
     const [cafeBanh, setCafeBanh] = useState<any[] | null>(null);
     const [muaSam, setMuaSam] = useState<any[] | null>(null);
     const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
+
+    const getPlayerInfo = useCallback(() => {
+        config.retrieveFromSecureStore('id_player', (id_player: string) => {
+            getPlayerScore(id_player).then((data) => {
+                setPlayerInfo({
+                    score: data.score,
+                    quantity_item1: 0,
+                    quantity_item2: 0
+                });
+            }).catch((error) => {
+                console.error('Error fetching player score:', error);
+                showToast('error', 'Lỗi hệ thống');
+            });
+        }).catch((error) => {
+            console.error('Error retrieving id_player from SecureStore:', error);
+            showToast('error', 'Không tìm thấy thông tin người chơi');
+        });
+    }, []);
+
+    useFocusEffect(getPlayerInfo);
+
+    const handleTabFocus = (index: number) => {
+        setFocusedTab(index);
+    }
 
     const fetchCoinVouchers = useCallback(() => {
         setLoading(true);
@@ -111,7 +138,7 @@ export default function Coins() {
             <View style={styles.coinsContainer}>
                 <View style={styles.coins}>
                     <Text style={styles.coinsLabel}>Xu thưởng</Text>
-                    <Text style={styles.coinsText}><Image source={require('@/assets/images/coin.png')} style={{width: 24, height: 24}}/> 2300</Text>
+                    <Text style={styles.coinsText}><Image source={require('@/assets/images/coin.png')} style={{width: 24, height: 24}}/> {playerInfo.score}</Text>
                 </View>
 
                 <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
