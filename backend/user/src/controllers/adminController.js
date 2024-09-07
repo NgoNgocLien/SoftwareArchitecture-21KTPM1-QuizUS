@@ -2,6 +2,7 @@ const db = require('../models/index');
 const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
+const bcrypt = require('bcryptjs');
 
 const { Op, literal, fn, col } = require("sequelize");
 
@@ -97,9 +98,46 @@ const deleteAdmin = async (req, res) => {
 }
 
 
+// Harshing brand password
+const updatePassword = async(req,res) => {
+  let { email, new_password } = req.body;
+  
+  try{
+    let admin = await model.admin.findOne({
+      where: {
+        email: email
+      }
+    });
+    if(admin){
+      let passWordHash = bcrypt.hashSync(new_password, 10);
+      await model.admin.update({
+        pwd:passWordHash
+      }, {
+        where: {
+          email: email
+        }
+      })
+      
+      let data = await model.admin.findOne({
+        where: {
+          email:email
+        }
+      });
+      
+      successCode(res, data, "Update thành công");
+      return;
+    }
+    else{
+      failCode(res, null, "Invalid id")
+    }     
+  }catch(err){
+      errorCode(res,"Lỗi BE")
+  }
+}
 
 module.exports = {
   createAdmin,
   updateAdmin,
-  deleteAdmin
+  deleteAdmin,
+  updatePassword
 }

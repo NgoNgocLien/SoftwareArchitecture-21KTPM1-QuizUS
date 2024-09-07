@@ -25,15 +25,62 @@ import dialogStyles from '@/components/modal/Dialog.styles'
 import config from '@/constants/config';
 import { getGameInfo, getPlayerTurn, increasePlayerTurn } from '@/api/GameApi';
 import { getCampaignById } from '@/api/CampaignApi';
+import { showToast } from '@/components/ToastBar';
+import { EmptyView } from '@/components/EmptyView';
+import { LoadingView } from '@/components/LoadingView';
+import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+import { Voucher } from '@/models/voucher/Voucher';
+import { CoinVoucher } from '@/models/voucher/CoinVoucher';
+import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 
+// Call API
+const defaultPlayerInfo = {
+    score: 100,
+    quantity_item1: 0,
+    quantity_item2: 0
+}
 
 export default function Campaign() {
 
     const params = useLocalSearchParams();
     const id_campaign = params.id_campaign as string
-    const campaign = JSON.parse(params.campaign as string)
 
-    const type_game = campaign.id_quiz != undefined ? config.QUIZ_GAME : config.ITEM_GAME;
+    if (!id_campaign){
+        router.back();
+        showToast('error', 'Lỗi hệ thống');
+    }
+
+    const [loading, setLoading] = useState<boolean>(true);
+    const [campaign, setCampaign] = useState<any|null>(null);
+    const [type_game, setTypeGame] = useState<string|null>(null);
+    const [voucher, setVoucher] = useState<Voucher|null>(null);
+
+    // Fetch campaign info
+    useEffect(() => {
+        if (id_campaign){
+            getCampaignById(id_campaign).then(result => {
+                
+                setCampaign(result)
+
+                if(result.id_quiz != null && result.id_quiz != undefined && result.id_quiz != ''){
+                    const newVoucher = VoucherFactory.createVoucher('coin', result.voucher);
+                    console.log("Coin")
+                    setVoucher(newVoucher);
+                    setTypeGame(config.QUIZ_GAME)
+                } else {
+                    const newVoucher = VoucherFactory.createVoucher('item', { ...result.voucher, item1_photo: result.item1_photo, item2_photo: result.item2_photo });
+                    console.log("Item")
+                    setVoucher(newVoucher);
+                    setTypeGame(config.ITEM_GAME)
+                }
+
+                setLoading(false)
+            }).catch(error => {
+                console.error('Error fetching campaign info:', error);
+                setLoading(false)
+            });
+        }
+    }, [id_campaign])
 
     const handleShare = async (addPlayerTurn: boolean) => {
         try {
@@ -91,8 +138,9 @@ export default function Campaign() {
 
     const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
     const [itemInfo, setItemInfo] = useState<Item|null>(null);
+
     useEffect(() => {
-        if (id_campaign){
+        if (id_campaign){ 
             getGameInfo(id_campaign)
             .then(gameInfo => {
                 
@@ -130,6 +178,9 @@ export default function Campaign() {
         <View style={styles.container}>
             <SubHeader/>
             <View style={styles.background}>
+
+                {loading ? <LoadingView /> : campaign == null ? <EmptyView /> :
+                (
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
                     <Image style={styles.banner} source={{uri: campaign.photo}} />
                             
@@ -153,38 +204,53 @@ export default function Campaign() {
                             </View>
                         </View>
                         <View style={styles.gameInfoContainer}>
+
                             <View style={styles.game__container}>
                                 <Text style={styles.game_info_header}>Thưởng</Text>
-                                <Text style={styles.game_info_container}>
-                                    <Text style={styles.game_info_num}>{config.QUIZ_SCORE}</Text>
-                                    <Text style={styles.game_info_text}> xu</Text>
-                                </Text>
+                                <View style={styles.game_info_container}>
+                                    {type_game === config.QUIZ_GAME ? (
+                                        <>
+                                            <Image source={require('@/assets/images/coin.png')} style={{width: 20, height: 20}}/>
+                                            <Text style={styles.game_info_num}>{config.QUIZ_SCORE}</Text>
+                                            <Text style={styles.game_info_text}>xu</Text>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Image source={require('@/assets/images/puzzle.png')} style={{width: 20, height: 20}}/>
+                                            <Text style={styles.game_info_num}>2</Text>
+                                            <Text style={styles.game_info_text}>mảnh</Text>
+                                        </>
+                                    )}
+                                </View>
                             </View>
+
                             <View style={styles.vertical_seperator}></View>
+
                             <View style={styles.game__container}>
-                                <Text style={styles.game_info_header}>Câu hỏi</Text>
+                                <Text style={styles.game_info_header}>Trò chơi</Text>
                                 <Text style={styles.game_info_container}>
-                                    <Text style={styles.game_info_num}>10</Text>
-                                    <Text style={styles.game_info_text}> câu hỏi</Text>
+                                    <Text style={styles.game_info_num}>{type_game === config.QUIZ_GAME ? 'Trắc nghiệm' : 'Lắc vật phẩm'}</Text>
                                 </Text>
                             </View>
+
                         </View>
                         <View style={styles.horizontal_seperator}></View>
                         <View style={styles.campaignDetailContainer}>
-                            <Heading type="h5" style={styles.heading}>Giới thiệu</Heading>
-                            <Paragraph type='p2'>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mô tả</Heading>
+                            <Paragraph type='p2' style={{marginHorizontal: 20}}>
                                 {campaign.description}
                             </Paragraph>
 
-                            <Heading type="h5" style={styles.heading}>Phần thưởng</Heading>
-                            <Paragraph type='p2'>
-                                <Text style={{fontSize: 18, fontWeight: '800'}}>+{config.QUIZ_SCORE}</Text> xu thưởng <Image source={require('@/assets/images/coin.png')} style={{width: 16, height: 16}}/>
-                            </Paragraph>
-                            <Paragraph type='p2' style={{color: Colors.light.subText}}>Trả lời đúng 10/10 câu</Paragraph>
-
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Voucher có thể đổi</Heading>
+                            <VoucherCard 
+                                style={{marginBottom: 100}}
+                                voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
+                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo}}
+                                playerInfo={defaultPlayerInfo}
+                            />
                         </View>
-                        {/* <VoucherCard style={{marginBottom: 100}}/> */}
                 </ScrollView>
+                )}
                 <View style={styles.joinButtonContainer} >
                     {
                         playerTurn 
@@ -254,6 +320,7 @@ const styles = StyleSheet.create({
     banner: {
         width: '100%',
         height: 180,
+        backgroundColor: Colors.gray._200,
     },
     campaignHeaderContainer: {
         paddingVertical: 10,
@@ -268,7 +335,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     campaignDetailContainer: {
-        paddingHorizontal: 20,
         paddingVertical: 10,
     },
 
@@ -330,15 +396,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     game_info_container: {
-        color: Colors.light.mainText,
-        fontWeight: '500',
-        fontSize: 16,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 2,
     },
 
     game_info_num: {
+        fontWeight: '500',
+        fontSize: 16,
+        color: Colors.light.mainText,
     },
 
     game_info_text: {
+        fontWeight: '500',
+        fontSize: 16,
         color: Colors.light.subText,
     },
 

@@ -4,7 +4,7 @@ const axios = require('axios');
 const Campaign = require('../models/campaign');
 const PlayerLikeCampaign = require('../models/playerLikeCampaign');
 const PlayerGame = require('../models/playerGame');
-const { 
+const {
     getAll,
     getInProgress,
     getBrandCampaign,
@@ -19,7 +19,7 @@ const {
     like,
     unlike,
     getCampaignsOfVoucher
- } = require('../controllers/campaignController');
+} = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
 router.get('/', getAll);

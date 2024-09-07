@@ -1,18 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
 
 // Components
 import Sidebar from './components/sidebar/Sidebar';
-// import Topbar from './components/topbar/Topbar';
+import Topbar from './components/topbar/Topbar';
 
 // Pages
-// import Dashboard from './pages/Dashboard';
-// import ManageBrand from './pages/ManageBrand';
-// import ManageUser from './pages/ManageUser';
-// import ManageGame from './pages/ManageGame';
+import ManageEvent from './pages/ManageEvent'; 
+import ManageVoucher from './pages/ManageVoucher';
+import UpdatePlayer from './pages/UpdatePlayer';
 
 function Layout() {
   return (
@@ -34,8 +31,9 @@ function App() {
       <Routes>
         <Route path="" element={<Layout />}>
           <Route path="/event" element={<ManageEvent />} />
-          <Route path="/voucher" element={<ManageBrand />} />
-          <Route path="/info" element={<BrandInfo />} />
+          <Route path="/voucher" element={<ManageVoucher />} />
+          {/* <Route path="/info" element={<BrandInfo />} /> */}
+          <Route path="/edit" element={<UpdatePlayer />} />
         </Route>
       </Routes>
     </Router>

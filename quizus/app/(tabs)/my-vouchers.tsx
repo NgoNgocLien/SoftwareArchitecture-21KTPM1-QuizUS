@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { router, useFocusEffect } from 'expo-router';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, TouchableWithoutFeedback, View, ScrollView, Image, SafeAreaView } from 'react-native';
+import { Text, TouchableWithoutFeedback, View, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 
 import styles from '@/styles/my-vouchers.styles';
 import { Colors } from '@/constants/Colors';

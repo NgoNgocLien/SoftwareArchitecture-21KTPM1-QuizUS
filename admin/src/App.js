@@ -1,8 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
+//import { Provider } from 'react-redux';
+//import { store } from './redux/store';
 
 // Components
 import Sidebar from './components/sidebar/Sidebar';
@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard';
 import ManageBrand from './pages/ManageBrand';
 import ManageUser from './pages/ManageUser';
 import ManageGame from './pages/ManageGame';
+import Signup from './pages/signup';
 
 function Layout() {
   return (
@@ -34,6 +35,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="" element={<Layout />}>
+          {/* <Route path="" element={<Signup />} /> */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/brand" element={<ManageBrand />} />
           <Route path="/user" element={<ManageUser />} />
