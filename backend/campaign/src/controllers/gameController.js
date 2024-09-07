@@ -101,7 +101,7 @@ const saveResult = async (req, res) => {
         id_campaign: req.body.id_campaign,
         player_turn: 2,
         quantity_item1: req.body.isItem1 ? 1 : 0,
-        quantity_item2: req.body.isItem2 ? 1 : 0,
+        quantity_item2: !req.body.isItem1 ? 1 : 0,
       });
   
       const savedPlayerGame = await newPlayerGame.save();
@@ -112,7 +112,7 @@ const saveResult = async (req, res) => {
       if (req.body.isItem1) {
         playerGame.quantity_item1 = (playerGame.quantity_item1 || 0) + 1;
       }
-      if (req.body.isItem2) {
+      else {
         playerGame.quantity_item2 = (playerGame.quantity_item2 || 0) + 1;
       }
 

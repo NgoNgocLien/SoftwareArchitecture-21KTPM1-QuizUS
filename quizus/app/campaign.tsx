@@ -195,7 +195,7 @@ export default function Campaign() {
                                             pathname: `/quizgame/detail`,
                                             params: {
                                                 quizInfo: JSON.stringify(quizInfo),
-                                                id_campaign: campaign.id
+                                                id_campaign: campaign._id
                                             }
                                         })
                                     } else if (type_game == config.ITEM_GAME){
@@ -203,7 +203,7 @@ export default function Campaign() {
                                             pathname: `/itemgame/detail`,
                                             params: {
                                                 itemInfo: JSON.stringify(itemInfo),
-                                                id_campaign: campaign.id
+                                                id_campaign: campaign._id
                                             }
                                         })
                                     }
