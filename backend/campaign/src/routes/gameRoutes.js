@@ -4,6 +4,7 @@ const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
 const TurnRequest = require('../models/turnRequest');
+const PlayerGift = require('../models/playerGift');
 
 // Tìm kiếm game theo campaign
 router.get('/campaign/:id_campaign', async (req, res) => {
@@ -264,6 +265,10 @@ router.put('/player_turn/receive', async (req, res) => {
       return res.status(404).json({ message: 'Turn request not found.' });
     }
 
+    if (turnRequest.accept_time !== null) {
+      return res.status(400).json({ message: 'This request has already been accepted.' });
+    }
+
     const { id_sender, id_receiver, id_campaign } = turnRequest;
 
     const receiverGame = await PlayerGame.findOne({
@@ -299,5 +304,149 @@ router.put('/player_turn/receive', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
+// tặng mảnh ghép cho bạn
+router.post('/item/send', async (req, res) => {
+  try {
+    const { id_sender, id_receiver, id_item, id_campaign } = req.body;
+
+    if (!id_sender || !id_receiver || !id_item || !id_campaign) {
+      return res.status(400).json({ message: 'id_sender, id_receiver, id_item, and id_campaign are required' });
+    }
+
+    const senderGame = await PlayerGame.findOne({
+      id_player: id_sender,
+      id_campaign: id_campaign
+    });
+
+    // Kiểm tra số lượng item dựa trên id_item
+    if (id_item === 1 && senderGame.quantity_item1 < 1) {
+      return res.status(400).json({ message: 'Sender does not have enough item1 to send.' });
+    }
+    if (id_item === 2 && senderGame.quantity_item2 < 1) {
+      return res.status(400).json({ message: 'Sender does not have enough item2 to send.' });
+    }
+
+    let receiverGame = await PlayerGame.findOne({
+      id_player: id_receiver,
+      id_campaign: id_campaign
+    });
+
+    // Nếu người nhận chưa tham gia campaign, tạo một bản ghi mới trong PlayerGame
+    if (!receiverGame) {
+      receiverGame = new PlayerGame({
+        id_player: id_receiver,
+        id_campaign: id_campaign,
+        player_turn: 3,
+        quantity_item1: 0,
+        quantity_item2: 0
+      });
+      await receiverGame.save(); 
+    }
+
+    // Tạo bản ghi mới trong PlayerGift để lưu thông tin mảnh ghép đã tặng
+    const newGift = new PlayerGift({
+      id_sender,
+      id_receiver,
+      id_item,
+      id_campaign,
+      gift_time: new Date(),  
+      accept_time: null      
+    });
+
+    await newGift.save();
+
+    return res.status(201).json({
+      message: 'Gift successfully sent, awaiting acceptance.',
+      gift: newGift
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// nhận mảnh ghép từ bạn
+router.put('/item/receive', async (req, res) => {
+  try {
+    const { id_gift } = req.body;
+
+    if (!id_gift) {
+      return res.status(400).json({ message: 'id_gift is required' });
+    }
+
+    const gift = await PlayerGift.findById(id_gift);
+
+    if (!gift) {
+      return res.status(404).json({ message: 'Gift not found.' });
+    }
+
+    if (gift.accept_time !== null) {
+      return res.status(400).json({ message: 'This gift has already been accepted.' });
+    }
+
+    const { id_sender, id_receiver, id_item, id_campaign } = gift;
+
+    const senderGame = await PlayerGame.findOne({
+      id_player: id_sender,
+      id_campaign: id_campaign
+    });
+
+    const receiverGame = await PlayerGame.findOne({
+      id_player: id_receiver,
+      id_campaign: id_campaign
+    });
+
+    // Kiểm tra và cập nhật số lượng item
+    if (id_item === 1) {
+      // Giảm 1 quantity_item1 của người gửi
+      if (senderGame.quantity_item1 < 1) {
+        return res.status(400).json({ message: 'Sender does not have enough item1 to transfer.' });
+      }
+
+      senderGame.quantity_item1 -= 1;
+
+      // Tăng 1 quantity_item1 của người nhận
+      receiverGame.quantity_item1 += 1;
+    } else if (id_item === 2) {
+      // Giảm 1 quantity_item2 của người gửi
+      if (senderGame.quantity_item2 < 1) {
+        return res.status(400).json({ message: 'Sender does not have enough item2 to transfer.' });
+      }
+
+      senderGame.quantity_item2 -= 1;
+
+      // Tăng 1 quantity_item2 của người nhận
+      receiverGame.quantity_item2 += 1;
+    } else {
+      return res.status(400).json({ message: 'Invalid item id. Only 1 or 2 are valid.' });
+    }
+
+    gift.accept_time = new Date();
+
+    await senderGame.save();
+    await receiverGame.save();
+    await gift.save();
+
+    return res.status(200).json({
+      message: 'Gift successfully accepted.',
+      sender: {
+        id_sender,
+        quantity_item1: senderGame.quantity_item1,
+        quantity_item2: senderGame.quantity_item2
+      },
+      receiver: {
+        id_receiver,
+        quantity_item1: receiverGame.quantity_item1,
+        quantity_item2: receiverGame.quantity_item2
+      },
+      gift
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 
 module.exports = router;

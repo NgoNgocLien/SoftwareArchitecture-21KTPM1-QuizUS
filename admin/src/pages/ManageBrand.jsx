@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
-import { getAllBrands } from '../api/brandApi';
+import { getAllBrands, searchBrand } from '../api/brandApi';
 
 export default function ManageBrand() {
-    const [searchText, setSearchText] = useState('');
     const [selectedField, setSelectedField] = useState('');
     const [brandData, setBrandData] = useState([]);
     
-    const handleSearch = (e) => {
-        setSearchText(e.target.value);
+    const handleSearch = async (e) => {
+        const result = await searchBrand(e.target.value);
+        setBrandData(result);
     };
 
     const handleFieldChange = (e) => {
@@ -41,8 +41,7 @@ export default function ManageBrand() {
                     type="text"
                     className="search-input"
                     placeholder="Tìm kiếm theo ID, tên, email người dùng"
-                    value={searchText}
-                    onChange={handleSearch}
+                    onChange={(e) => handleSearch(e)}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
             </div>
@@ -77,7 +76,7 @@ export default function ManageBrand() {
                                     <td>{item.address}</td>
                                     
                                     <td>
-                                        <select
+                                        {/* <select
                                             className="field-select"
                                             value={item.field}
                                             onChange={handleFieldChange}
@@ -87,7 +86,10 @@ export default function ManageBrand() {
                                             <option value="Cafe & Bánh">Cafe & Bánh</option>
                                             <option value="Mua sắm">Mua sắm</option>
                                             <option value="Giải trí">Giải trí</option>
-                                        </select>
+                                        </select> */}
+                                        <div className="brand-info">
+                                            <span>{item.field}</span>
+                                        </div>
                                     </td>
 
                                     <td className='action-buttons'>
