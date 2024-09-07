@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const getAllBrands = async () => {
   try {
-    const url = `${process.env.REACT_APP_BRAND_URL}/api/brand`;
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand`;
     const response = await axios.get(url);
     
     if (response?.data)
@@ -18,9 +18,9 @@ const getAllBrands = async () => {
 
 const searchBrand = async (keyword) => {
   try {
-    let url = `${process.env.REACT_APP_PLAYER_URL}/api/brand/search/${keyword}`;
+    let url = `${process.env.REACT_APP_USER_URL}/api/brand/search/${keyword}`;
     if (!keyword || keyword.length === 0)
-      url = `${process.env.REACT_APP_BRAND_URL}/api/brand`;
+      url = `${process.env.REACT_APP_USER_URL}/api/brand`;
     const result = await axios.get(url);
     console.log(result);
 

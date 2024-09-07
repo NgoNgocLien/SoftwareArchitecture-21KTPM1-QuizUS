@@ -13,20 +13,21 @@ import config from '@/constants/config';
 import { FontAwesome6 } from '@expo/vector-icons';
 
 import dialogStyles from '@/components/modal/Dialog.styles'
+import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
 
-export default function Result() {
+export default function ItemGameResult() {
     const router = useRouter();
     const params = useLocalSearchParams();
-    const point = params.point as string;
-    const score = parseInt(params.score as string);
-    const elapsedTime = parseInt(params.elapsedTime as string);
+
     const playerTurn = parseInt(params.playerTurn as string);
 
     const id_campaign = params.id_campaign as string;
+    const quantity_item1 = parseInt(params.quantity_item1 as string);
+    const quantity_item2 = parseInt(params.quantity_item2 as string);
+    const isItem1 = (params.isItem1 as string) == 'true';
 
-    const minutes = Math.floor(elapsedTime / config.DURATION).toString().padStart(2, '0');
-    const seconds = Math.ceil((elapsedTime % config.DURATION) / 1000).toString().padStart(2, '0');
-    console.log(elapsedTime);
+    const itemInfoString = Array.isArray(params.itemInfo) ? params.itemInfo[0] : params.itemInfo;
+    const itemInfo = JSON.parse(itemInfoString);
 
     const handlePlayAgain = () => {
         router.replace({
@@ -37,18 +38,18 @@ export default function Result() {
 
     const [isModalVisible, setModalVisible] = useState(false);
 
-    const handleShare = () => {
-
-    }
-
     return (
-    <LinearGradient
-    colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
-        locations={[0, 0.49, 0.79]} // Start the gradient at 49% and end at 79%
-        style={styles.background}
-    >
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <SafeAreaView style={styles.background}>
+    {/* Background game image (behind the giftGame) */}
+    <View style={styles.overlayBackground}>
+    </View>
+    <View style={styles.backgroundGame}>
+        <Image
+            style={{ width: '100%', height: '120%' }}
+            source={require('@/assets/images/background-item-game.png')}
+            resizeMode="cover" // Ensures the background image covers the entire area
+        />
+    </View>
     <View style={styles.container}>
         <View style={styles.playerTurnContainer}>
             {
@@ -65,85 +66,50 @@ export default function Result() {
 
         <Image
             style={{width: 200, height: 200}}
-            source={require('@/assets/images/success.png')}
+            source={isItem1 ? {uri: itemInfo.item1_photo} : {uri: itemInfo.item2_photo} }
         />
 
-        <Heading type={"h1"}>Hoàn thành</Heading>
-
-        <View style={styles.achievementContainer}>
-            <TouchableOpacity style={styles.achievement}  activeOpacity={0.6}>
-                <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    Số câu đúng
-                </Paragraph>
-                <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    {point}/10
-                </Paragraph>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.achievement}  activeOpacity={0.6}>
-                <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    Xu thưởng
-                </Paragraph>
-                <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    {(score > 0) ? `+${score}` : 0}
-                </Paragraph>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.achievement}  activeOpacity={0.6}>
-                <Paragraph color={Colors.brand._800} type={'p2'}> 
-                    Thời gian
-                </Paragraph>
-                <Paragraph color={Colors.brand._800} type={'p2'}> 
-                {`${minutes}:${seconds}`}
-                </Paragraph>
-            </TouchableOpacity>
-            
+        <View style={styles.headingContainer}>
+            <Paragraph type={'p2'} color={Colors.feedback.warning}>Chúc mừng bạn đã nhận được</Paragraph>
+            <Heading type={"h1"} color={Colors.feedback.warning}>Mảnh ghép {isItem1 ? 1 : 2}/2</Heading>
         </View>
+        <Paragraph type={'p2'} color={Colors.light.background} style={{textAlign: 'center'}}>Đây là 1 trong 2 mảnh ghép để đổi voucher Grab. Thu thập đủ 2 mảnh ghép để đổi voucher ngay nhé!</Paragraph>
+
+        <Button text="Đổi voucher" type="primary" 
+            style={{
+                marginBottom: -10,
+                backgroundColor: (quantity_item1 >= 1 && quantity_item2 >= 1) ? Colors.feedback.warning : Colors.gray._500
+            }} 
+            onPress={() => {router.replace("/")}}>
+        </Button>
+        <Paragraph type={'p3'} color={Colors.light.background} style={{alignSelf: 'flex-start'}}>Đang có: {quantity_item1 + quantity_item2} mảnh Grab</Paragraph>
 
         <View style={styles.buttonContainer}>
-            <Button text="Trang chủ" type="primary" style={{marginBottom: 10}}
+            <Button text="Trang chủ" type="primary" style={{marginBottom: 10, width: '48%'}}
                 onPress={() => {router.replace("/")}}>
             </Button>
             {
                 playerTurn ? (
-                    <Button text="Chơi lại" type="tertiary" style={{marginBottom: 10}} 
+                    <Button text="Chơi lại" type="tertiary" style={{marginBottom: 10, width: '48%'}} 
                         onPress={handlePlayAgain}>
                     </Button>
                 ) : (
-                    <Button text="Thêm lượt chơi" type="tertiary" style={{marginBottom: 10}}
+                    <Button text="Thêm lượt chơi" type="tertiary" style={{marginBottom: 10 , width: '48%'}}
                         onPress={() => {setModalVisible(true);}}>
                     </Button>
                 )
             }
         </View>
 
-        <Modal
-            transparent={true} 
-            animationType="fade" 
-            visible={isModalVisible}
-            onRequestClose={() => {setModalVisible(false);}}
-        >
-            <View style={dialogStyles.centeredView}>
-                <View style={dialogStyles.modalView}>
-                    <View style={dialogStyles.topView}>
-                        <Heading type={'h5'}>Thêm lượt chơi</Heading>
-                        <FontAwesome6 name='xmark' style={{fontSize: 20, padding: 5, color: Colors.gray._600}} 
-                            onPress={() => setModalVisible(false)} suppressHighlighting={true}/>
-                    </View>
-                    <Paragraph type={'p2'}>
-                        Bạn đã hết lượt chơi. Chia sẻ sự kiện hoặc xin lượt chơi từ bạn bè để có thể tham gia sự kiện
-                    </Paragraph>
-                    <View style={dialogStyles.buttonView}>
-                        <Button style={dialogStyles.button} text={'Chia sẻ sự kiện'} type='primary'></Button>
-                        <Button style={dialogStyles.button} text={'Xin lượt chơi'} type='tertiary'></Button>
-                    </View>
-                    
-                </View>
-            </View>
-        </Modal>
+        <PLayerTurnModal 
+            isModalVisible={isModalVisible}
+            setModalVisible={setModalVisible}
+            id_campaign={id_campaign}
+            afterShare={handlePlayAgain}>
+        </PLayerTurnModal>
 
     </View>
     </SafeAreaView>
-    </TouchableWithoutFeedback>
-    </LinearGradient>
     )
 }
 
@@ -163,24 +129,32 @@ const styles = StyleSheet.create({
         gap: 5,
         justifyContent: 'center',
     },
-    achievement:{
-        height: 50,
-        borderRadius: 8,
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: "100%",
-        marginBottom: 10,
-        paddingHorizontal: 20,
-        flexDirection: "row",
-        backgroundColor: Colors.light.background,
-        borderColor: Colors.light.secondary,
-        borderWidth: 3,
-    },
-    achievementContainer:{
+    headingContainer:{
+        gap: 5,
+        marginBottom: -10,
     },
     buttonContainer:{
         width: '100%',
-        marginTop: 'auto'
+        marginTop: 'auto',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    backgroundGame: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%', // Ensure it covers the entire view
+        zIndex: -2, // Ensure it's behind giftGame
+    },
+    overlayBackground:{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '120%', 
+        backgroundColor: Colors.light.mainText,
+        opacity: 0.5,  
+        zIndex: -1, 
     }
-    
 });

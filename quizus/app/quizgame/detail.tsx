@@ -11,7 +11,7 @@ import styles from '@/styles/quiz-game-detail.styles';
 import config from '@/constants/config';
 import { McCard } from '@/components/card/McCard';
 
-export default function QuizDetail() {
+export default function QuizGameDetail() {
   const router = useRouter();
   const params = useLocalSearchParams(); 
 
