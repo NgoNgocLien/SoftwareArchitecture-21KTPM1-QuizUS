@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
 import { getAllPlayers, searchPlayer } from '../api/playerApi';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function ManageUser() {
     const [playerData, setPlayerData] = useState([]);
@@ -10,6 +12,23 @@ export default function ManageUser() {
         const result = await searchPlayer(e.target.value);
         setPlayerData(result);
     };
+
+    const onDelete = () => {
+        confirmAlert({
+            message: 'Bạn có chắc chắn muốn xóa người chơi này không?',
+            buttons: [
+                {
+                    label: 'Có',
+                    onClick: () => {
+                        //Trống
+                    }
+                },
+                {
+                    label: 'Không'
+                }
+            ]
+        });
+    }
 
     useEffect(() => {
         const getData = async () => {
@@ -77,7 +96,7 @@ export default function ManageUser() {
                                             <img src="/icons/edit.svg" alt="edit-btn" />
                                             Sửa
                                         </button>
-                                        <button className="delete-btn">
+                                        <button className="delete-btn" onClick={onDelete}>
                                             <img src="/icons/delete.svg" alt="delete-btn" />
                                             Xóa
                                         </button>
