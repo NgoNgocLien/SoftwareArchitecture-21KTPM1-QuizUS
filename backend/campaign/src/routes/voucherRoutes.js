@@ -264,4 +264,36 @@ router.post('/exchange/item', async (req, res) => {
   }
 });
 
+// Sử dụng voucher
+router.put('/used', async (req, res) => {
+  try {
+    const { id_player, id_campaign } = req.body;
+
+    if (!id_player || !id_campaign) {
+      return res.status(400).json({ message: 'id_player and id_campaign are required' });
+    }
+
+    const playerVoucher = await PlayerVoucher.findOne({ id_player, id_campaign });
+
+    if (!playerVoucher) {
+      return res.status(404).json({ message: 'Voucher not found for this player.' });
+    }
+
+    if (playerVoucher.is_used) {
+      return res.status(400).json({ message: 'This voucher has already been used.' });
+    }
+
+    playerVoucher.is_used = true;
+    await playerVoucher.save();
+
+    return res.status(200).json({
+      message: 'Voucher successfully used.',
+      playerVoucher
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;
