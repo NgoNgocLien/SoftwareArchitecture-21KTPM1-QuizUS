@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
+import { getAllBrands } from '../api/brandApi';
 
 export default function ManageBrand() {
     const [searchText, setSearchText] = useState('');
     const [selectedField, setSelectedField] = useState('');
+    const [brandData, setBrandData] = useState([]);
     
     const handleSearch = (e) => {
         setSearchText(e.target.value);
@@ -13,7 +15,16 @@ export default function ManageBrand() {
     const handleFieldChange = (e) => {
         setSelectedField(e.target.value);
     };
-    
+
+    useEffect(() => {
+        const getData = async () => {
+            const data = await getAllBrands();
+            if (data.length > 0) 
+                setBrandData(data);
+        }
+        getData();
+    }, [])
+
     return (
         <div>
             {/* Add brand */}
@@ -50,43 +61,49 @@ export default function ManageBrand() {
                     </thead>
                     <tbody>
                     {/* Row */}
-                        <tr>
-                            <td><input type="checkbox" />#123456</td>
+                        {
+                            brandData.length > 0 ?
+                            brandData.map((item, index) => (
+                                <tr key={item.id_brand}>
+                                    <td><input type="checkbox" />#{item.id_brand}</td>
 
-                            <td>
-                                <div className="brand-info">
-                                    <img src="/images/brand-logo.svg" alt="brand-logo" className="brand-logo" />
-                                    <span>Shopee</span>
-                                </div>
-                            </td>
+                                    <td>
+                                        <div className="brand-info">
+                                            <img src={item.logo} alt="brand-logo" className="brand-logo" />
+                                            <span>{item.name}</span>
+                                        </div>
+                                    </td>
 
-                            <td>123 Đường A, Phường B, Thành phố C, Việt Nam</td>
-                            
-                            <td>
-                                <select
-                                    className="field-select"
-                                    value={selectedField}
-                                    onChange={handleFieldChange}
-                                >
-                                    <option value="">Chọn lĩnh vực</option>
-                                    <option value="Nhà hàng">Nhà hàng</option>
-                                    <option value="Cafe & bánh">Cafe & bánh</option>
-                                    <option value="Mua sắm">Mua sắm</option>
-                                    <option value="Giải trí">Giải trí</option>
-                                </select>
-                            </td>
+                                    <td>{item.address}</td>
+                                    
+                                    <td>
+                                        <select
+                                            className="field-select"
+                                            value={selectedField}
+                                            onChange={handleFieldChange}
+                                        >
+                                            <option value="">Chọn lĩnh vực</option>
+                                            <option value="Nhà hàng">Nhà hàng</option>
+                                            <option value="Cafe & bánh">Cafe & bánh</option>
+                                            <option value="Mua sắm">Mua sắm</option>
+                                            <option value="Giải trí">Giải trí</option>
+                                        </select>
+                                    </td>
 
-                            <td className='action-buttons'>
-                                <button className="edit-btn">
-                                    <img src="/icons/edit.svg" alt="edit-btn" />
-                                    Sửa
-                                </button>
-                                <button className="delete-btn">
-                                    <img src="/icons/delete.svg" alt="delete-btn" />
-                                    Xóa
-                                </button>
-                            </td>
-                        </tr>
+                                    <td className='action-buttons'>
+                                        <button className="edit-btn">
+                                            <img src="/icons/edit.svg" alt="edit-btn" />
+                                            Sửa
+                                        </button>
+                                        <button className="delete-btn">
+                                            <img src="/icons/delete.svg" alt="delete-btn" />
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                            : null
+                        }
                     </tbody>
                 </table>
             </div>
