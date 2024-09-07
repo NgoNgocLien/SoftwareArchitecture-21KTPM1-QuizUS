@@ -18,6 +18,7 @@ const {
     getRedeemableByItem,
     like,
     unlike,
+    getCampaignsOfVoucher
  } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -31,6 +32,9 @@ router.get('/brand/:id_brand', getBrandCampaign);
 
 // Tìm kiếm chiến dịch
 router.get('/search/:keyword', search);
+
+//lấy tẩt cả campaign của 1 voucher
+router.get('/search/voucher/:id_voucher', getCampaignsOfVoucher);
 
 // Tìm kiếm chiến dịch của một brand
 router.get('/search/:id_brand/:keyword', searchByBrand);

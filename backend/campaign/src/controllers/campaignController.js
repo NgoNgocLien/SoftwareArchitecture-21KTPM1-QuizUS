@@ -327,6 +327,24 @@ const unlike = async (req, res) => {
     }
 };
 
+//lấy tẩt cả campaign của 1 voucher
+const getCampaignsOfVoucher = async (req, res) => {
+    try {
+        const { id_voucher } = req.params;
+
+        const campaigns = await Campaign.find({ id_voucher: id_voucher });
+
+        if (campaigns.length === 0) {
+            return res.status(404).json({ message: 'Không tìm thấy campaign nào với id_voucher này.' });
+        }
+
+        res.status(200).json({ data: campaigns });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Có lỗi xảy ra trong quá trình lấy campaign.' });
+    }
+};
+
 module.exports = {
   getAll,
   getInProgress,
@@ -341,4 +359,5 @@ module.exports = {
   getRedeemableByItem,
   like,
   unlike,
+  getCampaignsOfVoucher
 };
