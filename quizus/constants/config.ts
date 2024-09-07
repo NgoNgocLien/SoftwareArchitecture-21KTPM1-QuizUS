@@ -52,7 +52,7 @@ const saveToSecureStore = async (key: string, value: string) => {
 const retrieveFromSecureStore = async (key: string, callback: any) => {
   try {
     const value = await SecureStore.getItemAsync(key);
-    console.log(value);
+    // console.log(value);
     if (value) {
       callback(value);
     }
@@ -69,7 +69,6 @@ const removeFromSecureStore = async (key: string) => {
     console.error(`Error removing ${key} from SecureStore:`, error);
   }
 }
-
 
 export default {
   USER_BE,

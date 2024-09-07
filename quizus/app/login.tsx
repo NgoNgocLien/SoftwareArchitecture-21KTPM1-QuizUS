@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 
 import config from '@/constants/config';
+import { getPlayerById } from '@/api/PlayerApi';
 
 export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -38,7 +39,6 @@ export default function Login() {
       const result = await response.json();
       if (response.ok) {
         config.saveToSecureStore("id_player", result.id_player);
-
         router.replace('/(tabs)');
       } else {
         const result = await response.json();
