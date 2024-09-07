@@ -30,6 +30,14 @@ export default function Sidebar() {
             <div className="horizontal-line"></div>
             <ul className="sidebar-nav">
                 <li 
+                    className={focus === "dashboard" || location.pathname.includes("/dashboard") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
+                    onClick={() => handleClick("dashboard")}
+                >
+                    <img src="/icons/home.svg" alt="dashboard" />
+                    <Link to="/dashboard" className="link-text">Thống kê</Link>
+                </li>
+
+                <li 
                     className={focus === "event" || location.pathname.includes("/event") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
                     onClick={() => handleClick("event")}
                 >
