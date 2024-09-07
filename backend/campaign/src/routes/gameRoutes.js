@@ -177,4 +177,36 @@ router.put('/player_turn/add', async (req, res) => {
   }
 });
 
+// giảm lượt chơi của 1 campaign với 1 người chơi
+router.put('/player_turn/minus', async (req, res) => {
+  try {
+    const { id_player, id_campaign } = req.body;
+
+    if (!id_player || !id_campaign ) {
+      return res.status(400).json({ message: 'id_player, id_campaign are required' });
+    }
+
+    const playerGame = await PlayerGame.findOne({ id_player, id_campaign });
+
+    if (!playerGame) {
+      return res.status(404).json({ message: 'Player game data not found for this campaign.' });
+    }
+
+    if (playerGame.player_turn < 1) {
+      return res.status(400).json({ message: 'Not enough player turns to reduce.' });
+    }
+
+    playerGame.player_turn -= 1;
+    await playerGame.save();
+
+    return res.status(200).json({
+      message: 'Player turns successfully reduced.',
+      playerGame
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;
