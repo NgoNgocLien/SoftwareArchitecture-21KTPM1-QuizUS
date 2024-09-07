@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, View, Image, Alert } from 'react-native';
+import { StyleSheet, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import config from '@/constants/config';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Paragraph } from '@/components/text/Paragraph';
+import { Colors } from '@/constants/Colors';
 
 export default function Profile() {
     const router = useRouter();
@@ -52,6 +55,15 @@ export default function Profile() {
         }
     };
 
+    const handleCloseGame = () =>{
+        router.replace({
+            pathname: '/campaign',
+            params: {
+                id_campaign: id_campaign
+            }
+        })
+    }
+
     return (
         <SafeAreaView style={styles.background}>
             {/* Background game image (behind the giftGame) */}
@@ -65,10 +77,17 @@ export default function Profile() {
 
             {/* Gift game view (on top of background) */}
             <View style={styles.giftGame}>
+                <TouchableOpacity style={styles.exitView} onPress={handleCloseGame}>
+                    <MaterialCommunityIcons name={'window-close'} size={28} color={Colors.light.background} onPress={() => router.replace('/(tabs)/rewards')} suppressHighlighting={true}/>                
+                </TouchableOpacity>
                 <Image
                     style={styles.giftImage} // Modified style for the GIF
                     source={require('@/assets/images/gift.gif')}
                 />
+                <View style={styles.gradientText}>
+                    <MaterialCommunityIcons name={'vibrate'} size={28} color={Colors.light.background}  style={{ transform: [{ rotate: '-15deg' }] }} onPress={() => router.replace('/(tabs)/rewards')} suppressHighlighting={true}/>
+                    <Paragraph type={'p2'} color={Colors.light.background}>Hãy lắc điện thoại để nhận vật phẩm</Paragraph>
+                </View>
                 <Image
                     style={styles.gradientImage} // Modified style for the gradient image
                     source={require('@/assets/images/gradient-shape-game.png')}
@@ -106,6 +125,30 @@ const styles = StyleSheet.create({
         opacity: 0.8,
         position: 'absolute', // Ensure it's positioned within the giftGame view
         bottom: 10, // Position the gradient image at the bottom of the giftGame
+    },
+    gradientText:{
+        width: '100%',
+        height: '8%',
+        opacity: 0.8,
+        position: 'absolute', // Ensure it's positioned within the giftGame view
+        bottom: 10, // Position the gradient image at the bottom of the giftGame
+        zIndex: 3,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10
+    },
+    exitView: {
+        width: '10%',
+        height: '6%',
+        position: 'absolute',
+        backgroundColor: Colors.light.primary, 
+        top: 30,
+        right: 20,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        opacity: 0.8,
     },
     backgroundGame: {
         position: 'absolute',
