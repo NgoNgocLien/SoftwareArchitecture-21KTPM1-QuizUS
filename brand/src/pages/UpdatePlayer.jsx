@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import "./UpdatePlayer.css";
+import "../styles/UpdatePlayer.css";
 import Backbar from '../components/topbar/Backbar';
 // import 'react-datepicker/dist/react-datepicker.css';
 // import DatePicker from 'react-datepicker';
