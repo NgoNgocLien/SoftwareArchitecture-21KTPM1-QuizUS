@@ -164,7 +164,7 @@ a:hover {
     color: #101828; /* Ensures the option text follows the same text style */
 }
 
-.add-brand-container {
+.add-brand-ctn {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 16px;
@@ -194,4 +194,12 @@ a:hover {
 .add-brand-icon {
     width: 24px; /* Adjust width and height as needed */
     height: 24px;
+}
+
+.add-brand-ctn:hover {
+    text-decoration: none;
+}
+
+.add-brand-btn:hover {
+    background: #007AFF;
 }
