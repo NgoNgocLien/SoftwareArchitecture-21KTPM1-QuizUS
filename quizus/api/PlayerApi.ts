@@ -53,6 +53,7 @@ export const getPlayerItem = async (id_player: string) => {
 
         const result = await response.json();
         if (response.ok) {
+            // console.log("Result: ", result)
             return result;
         } else {
             throw new Error('Failed to fetch player item ', result.message);

@@ -19,13 +19,9 @@ import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import { showToast } from '@/components/ToastBar';
-
-// Call API
-const defaultPlayerInfo = {
-    score: 100,
-    quantity_item1: 0,
-    quantity_item2: 0
-}
+import { PlayerInfo } from '@/models/game/PlayerInfo';
+import { retrieveFromSecureStore } from '@/api/SecureStoreService';
+import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
 
 export default function Rewards() {
 
@@ -45,8 +41,8 @@ export default function Rewards() {
                     if (item.campaign.id_quiz !== "") {
                         const newVoucher = VoucherFactory.createVoucher('coin', item.voucher);
 
-                        coinVouchers.push({ voucher: newVoucher, campaign: item.campaign });
-                        allVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                        coinVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
+                        allVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
                     } else {
                         const newVoucher = VoucherFactory.createVoucher('item', {
                             ...item.voucher,
@@ -54,8 +50,8 @@ export default function Rewards() {
                             item2_quantity: item.campaign.item2_quantity,
                         });
 
-                        itemVouchers.push({ voucher: newVoucher, campaign: item.campaign });
-                        allVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                        itemVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
+                        allVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
                     }
                 }); 
                 
@@ -72,6 +68,51 @@ export default function Rewards() {
     // Refetch data when the screen comes into focus
     useFocusEffect(fetchVouchers);
 
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
+
+    useEffect(() => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+            getPlayerItem(id_player).then((data: any) => {
+                const player_items = data.map((data: { 
+                    vouchers: { id_voucher: any; }; id_campaign: any;
+                    quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
+                }) => {
+                    return {
+                        id_campaign: data.id_campaign,
+                        id_voucher: data.vouchers.id_voucher,
+                        quantity_item1: data.quantity_item1,
+                        quantity_item2: data.quantity_item2,
+                        item1_photo: data.item1_photo,
+                        item2_photo: data.item2_photo,
+                    }
+                })
+
+                getPlayerScore(id_player).then((data) => {
+                    console.log({
+                        player_score: data.score,
+                        player_items: player_items,
+                    })
+                    setPlayerInfo(new PlayerInfo({
+                        player_score: data.score,
+                        player_items: player_items,
+                    }))
+                }).catch((error) => {
+                    console.error('Error fetching player score:', error);
+                    showToast('error', 'Lỗi hệ thống');
+                });
+
+            }).catch((error) => {
+                console.error('Error fetching player score:', error);
+                showToast('error', 'Lỗi hệ thống');
+            });
+
+            
+        }).catch((error) => {
+            console.error('Error retrieving id_player from SecureStore:', error);
+            showToast('error', 'Không tìm thấy thông tin người chơi');
+        });
+    },[]);
+    
     return (
         <View style={styles.background}>
             <Header />
@@ -114,7 +155,7 @@ export default function Rewards() {
                     <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
                         <View style={[styles.container, styles.titleContainer]}>
                             <Heading type="h4">Đổi xu lấy quà</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.replace('/coins')} suppressHighlighting={true}>Xem tất cả</Heading>
                         </View>
 
                         {/* Lấy chỉ 2 mục */}
@@ -122,14 +163,14 @@ export default function Rewards() {
                             <VoucherCard 
                                 voucher={item.voucher.getVoucher()}
                                 campaign={item.campaign}
-                                playerInfo={defaultPlayerInfo}
+                                playerInfo={playerInfo}
                                 key={index} 
                             />
                         ))}
 
                         <View style={[styles.container, styles.titleContainer]}>
                             <Heading type="h4">Đổi mảnh ghép</Heading>
-                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.push('/rewards')} suppressHighlighting={true}>Xem tất cả</Heading>
+                            <Heading type="h6" color={Colors.light.primary} onPress={() => router.replace('/items')} suppressHighlighting={true}>Xem tất cả</Heading>
                         </View>
    
                         {/* Lấy chỉ 2 mục */}
@@ -137,7 +178,7 @@ export default function Rewards() {
                             <VoucherCard 
                                 voucher={item.voucher.getVoucher()}
                                 campaign={item.campaign}
-                                playerInfo={defaultPlayerInfo}
+                                playerInfo={playerInfo}
                                 key={index} 
                                 style={index === 1 ? { marginBottom: 20 } : {}} 
                             />

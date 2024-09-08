@@ -6,6 +6,9 @@ const VoucherSchema = new Schema({
     type: Number, 
     required: true 
   },
+  name: { 
+    type: String, 
+  },
   code: { 
     type: String, 
   },

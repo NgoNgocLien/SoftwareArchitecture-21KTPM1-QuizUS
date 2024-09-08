@@ -31,6 +31,9 @@ import { Voucher } from '@/models/voucher/Voucher';
 import { CoinVoucher } from '@/models/voucher/CoinVoucher';
 import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
+import { PlayerInfo } from '@/models/game/PlayerInfo';
+import { retrieveFromSecureStore } from '@/api/SecureStoreService';
+import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
 
 // Call API
 const defaultPlayerInfo = {
@@ -150,15 +153,55 @@ export default function Campaign() {
     }, [type_game])
 
     const [playerTurn, setPlayerTurn] = useState <number|null>(null);
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
+
     useEffect(() => {
         if (id_campaign){
-            getPlayerTurn(config.ID_PLAYER, id_campaign)
-            .then(data => {
-                // console.log(data)
-                setPlayerTurn(data.player_turn)
-            })
-            .catch(error => {
-                console.error('Error fetching player turn:', error);
+            retrieveFromSecureStore('id_player', (id_player: string) => {
+                getPlayerTurn(id_player, id_campaign)
+                .then(data => {
+                    setPlayerTurn(data.player_turn)
+                })
+                .catch(error => {
+                    console.error('Error fetching player turn:', error);
+                });
+
+                getPlayerItem(id_player).then((data) => {
+                    const player_items = data.map((data: {
+                        id_campaign: any; vouchers: { id_voucher: any; }; 
+                        quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
+                    }) => {
+                        return {
+                            id_campaign: data.id_campaign,
+                            id_voucher: data.vouchers.id_voucher,
+                            quantity_item1: data.quantity_item1,
+                            quantity_item2: data.quantity_item2,
+                            item1_photo: data.item1_photo,
+                            item2_photo: data.item2_photo,
+                        }
+                    })
+
+                    // console.log("items: ", player_items)
+
+                    getPlayerScore(id_player).then((data) => {
+                        setPlayerInfo(new PlayerInfo({
+                            player_score: data.score,
+                            player_items: player_items,
+                        }))
+                    }).catch((error) => {
+                        console.error('Error fetching player score:', error);
+                        showToast('error', 'Lỗi hệ thống');
+                    });
+
+                }).catch((error) => {
+                    console.error('Error fetching player score:', error);
+                    showToast('error', 'Lỗi hệ thống');
+                });
+
+                
+            }).catch((error) => {
+                console.error('Error retrieving id_player from SecureStore:', error);
+                showToast('error', 'Không tìm thấy thông tin người chơi');
             });
         }
     },[id_campaign, playerTurn]);
@@ -241,8 +284,8 @@ export default function Campaign() {
                             <VoucherCard 
                                 style={{marginBottom: 100}}
                                 voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
-                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo}}
-                                playerInfo={defaultPlayerInfo}
+                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo, id_campaign: id_campaign}}
+                                playerInfo={playerInfo}
                             />
                         </View>
                 </ScrollView>

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, ScrollView, Text, Image, Platform } from 'react-native';
@@ -12,8 +12,9 @@ import { VoucherCard } from '@/components/card/VoucherCard';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import { retrieveFromSecureStore } from '@/api/SecureStoreService';
-import { getPlayerScore } from '@/api/PlayerApi';
+import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
 import { showToast } from '@/components/ToastBar';
+import { PlayerInfo } from '@/models/game/PlayerInfo';
 
 export default function Items() {
     const router = useRouter();
@@ -25,12 +26,6 @@ export default function Items() {
         { index: 3, name: 'Mua sắm' },
         { index: 4, name: 'Giải trí' }
     ]
-
-    const [playerInfo, setPlayerInfo] = useState({
-        score: 0,
-        quantity_item1: 0,
-        quantity_item2: 0
-    });
 
     const [focusedTab, setFocusedTab] = useState(0);
 
@@ -46,26 +41,50 @@ export default function Items() {
         setFocusedTab(index);
     }
 
-    const getPlayerInfo = useCallback(() => {
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
+
+    useEffect(() => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            getPlayerScore(id_player).then((data) => {
-                setPlayerInfo({
-                    score: data.score,
-                    quantity_item1: 0,
-                    quantity_item2: 0
+            getPlayerItem(id_player).then((data: any) => {
+                const player_items = data.map((data: {
+                    id_campaign: any; vouchers: { id_voucher: any; }; quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
+}) => {
+                    return {
+                        id_campaign: data.id_campaign,
+                        id_voucher: data.vouchers.id_voucher,
+                        quantity_item1: data.quantity_item1,
+                        quantity_item2: data.quantity_item2,
+                        item1_photo: data.item1_photo,
+                        item2_photo: data.item2_photo,
+                    }
+                })
+
+                getPlayerScore(id_player).then((data) => {
+                    console.log({
+                        player_score: data.score,
+                        player_items: player_items,
+                    })
+                    setPlayerInfo(new PlayerInfo({
+                        player_score: data.score,
+                        player_items: player_items,
+                    }))
+                }).catch((error) => {
+                    console.error('Error fetching player score:', error);
+                    showToast('error', 'Lỗi hệ thống');
                 });
+
             }).catch((error) => {
                 console.error('Error fetching player score:', error);
                 showToast('error', 'Lỗi hệ thống');
             });
+
+            
         }).catch((error) => {
             console.error('Error retrieving id_player from SecureStore:', error);
             showToast('error', 'Không tìm thấy thông tin người chơi');
         });
-    }, []);
-
-    useFocusEffect(getPlayerInfo);
-
+    },[]);
+    
     return (
         <View style={styles.background}>
             {/* <SubHeader style={{backgroundColor: 'transparent'}} /> */}
@@ -77,7 +96,7 @@ export default function Items() {
             <View style={styles.coinsContainer}>
                 <View style={styles.coins}>
                     <Text style={styles.coinsLabel}>Mảnh ghép</Text>
-                    <Text style={styles.coinsText}><Image source={require('@/assets/images/puzzle.png')} style={{width: 24, height: 24}}/> {playerInfo.score}</Text>
+                    <Text style={styles.coinsText}><Image source={require('@/assets/images/puzzle.png')} style={{width: 24, height: 24}}/> {playerInfo?.getTotalQuantityItems()}</Text>
                 </View>
             </View>
 

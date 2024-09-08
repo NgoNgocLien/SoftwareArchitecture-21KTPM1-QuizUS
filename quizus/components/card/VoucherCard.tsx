@@ -8,8 +8,10 @@ import { CoinVoucher } from '@/models/voucher/CoinVoucher';
 import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { Paragraph } from '../text/Paragraph';
+import { PlayerInfo } from '@/models/game/PlayerInfo';
 
 const defaultCampaign = {
+    id_campaign: '1',
     brandName: 'NULL',
     brandLogo: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png'
 }
@@ -38,14 +40,11 @@ export function VoucherCard({
 }:{ 
     voucher: Voucher,    
     campaign?:{
+        id_campaign: string,
         brandName: string,
         brandLogo: string
     },
-    playerInfo?: {
-        score: number,
-        quantity_item1: number,
-        quantity_item2: number
-    },
+    playerInfo?: PlayerInfo
     is_used?: boolean,
     [key: string]: any;
 }) {
@@ -56,9 +55,12 @@ export function VoucherCard({
     :
         '';
 
-    let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && (playerInfo.score >= voucher.score_exchange);
-    let enoughItem = (voucher instanceof ItemVoucher) && playerInfo && (playerInfo.quantity_item1 >=1 && playerInfo.quantity_item2 >= 1 ? '2/2' : ((playerInfo.quantity_item1 >= 1 || playerInfo.quantity_item2 >= 1) ? '1/2' : '0/2'));
+    let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && playerInfo.getPlayerScore() >= voucher.score_exchange;
+    let quantity_item1 = playerInfo ? playerInfo.getPlayerQuantityItem1(campaign.id_campaign, voucher._id) : 0;
+    let quantity_item2 = playerInfo ? playerInfo.getPlayerQuantityItem2(campaign.id_campaign, voucher._id) : 0;
+    let enoughItem = (voucher instanceof ItemVoucher) && playerInfo && (quantity_item1 >=1 && quantity_item2 >= 1 ? '2/2' : ((quantity_item1 >= 1 || quantity_item2 >= 1) ? '1/2' : '0/2'));
 
+    console.log(quantity_item2)
     return (
         <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => { }}>
             <View style={styles.brandContainer}>
