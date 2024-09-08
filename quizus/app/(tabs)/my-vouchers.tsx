@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { router, useFocusEffect } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, TouchableWithoutFeedback, View, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 
@@ -22,7 +22,11 @@ const tabNames = [
 
 export default function MyVouchers() {
     const [loading, setLoading] = useState(true);
-    const [focusedTab, setFocusedTab] = useState(0);
+
+    const params= useLocalSearchParams();
+    const focusTabIndex = parseInt(params.focusTabIndex as string);
+    const [focusedTab, setFocusedTab] = useState(focusTabIndex);
+
     const [vouchers, setVouchers] = useState<any[][] | null>(null);
 
     const handleTabFocus = (index: number) => {

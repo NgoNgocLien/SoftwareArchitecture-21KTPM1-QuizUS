@@ -85,7 +85,7 @@ export function VoucherCard({
                         <TouchableOpacity style={enoughCoin ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
                             <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
                             <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                <Image source={require('@/assets/images/coin.png')} style={[{width: 20, height: 20}, enoughCoin ? {backgroundColor: Colors.yellow} : {backgroundColor: Colors.gray._200}]}/>
+                                <Image source={enoughCoin ? require('@/assets/images/coin.png') : require('@/assets/images/coin-grayscale.png')} style={[{width: 20, height: 20}]}/>
                                 <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}> {voucher.score_exchange}</Text>
                             </View>
                         </TouchableOpacity> 
@@ -93,7 +93,7 @@ export function VoucherCard({
                             <TouchableOpacity style={enoughItem == '2/2' ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
                                 <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
                                 <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                    <Image source={require('@/assets/images/puzzle.png')} style={{width: 20, height: 20}}/>
+                                    <Image source={enoughItem === '2/2' ? require('@/assets/images/puzzle.png') : require('@/assets/images/puzzle-grayscale.png')} style={{width: 20, height: 20}}/>
                                     <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}> {enoughItem}</Text>
                                 </View>
                             </TouchableOpacity>

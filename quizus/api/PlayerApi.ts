@@ -41,3 +41,24 @@ export const getPlayerScore = async (id_player: string) => {
         throw new Error('Failed to fetch player score');
     }
 }
+
+export const getPlayerItem = async (id_player: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/item/${id_player}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            return result;
+        } else {
+            throw new Error('Failed to fetch player item ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch player item');
+    }
+}

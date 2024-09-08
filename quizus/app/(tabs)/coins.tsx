@@ -16,7 +16,7 @@ import { EmptyView } from '@/components/EmptyView';
 import { showToast } from '@/components/ToastBar';
 import { getPlayerScore } from '@/api/PlayerApi';
 
-
+import {retrieveFromSecureStore} from '@/api/SecureStoreService'
 // call api
 const defaultPlayerInfo = {
     score: 0,
@@ -53,12 +53,11 @@ export default function Coins() {
     const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
 
     const getPlayerInfo = useCallback(() => {
-        config.retrieveFromSecureStore('id_player', (id_player: string) => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
             getPlayerScore(id_player).then((data) => {
                 setPlayerInfo({
+                    ...playerInfo,
                     score: data.score,
-                    quantity_item1: 0,
-                    quantity_item2: 0
                 });
             }).catch((error) => {
                 console.error('Error fetching player score:', error);
@@ -141,14 +140,19 @@ export default function Coins() {
                     <Text style={styles.coinsText}><Image source={require('@/assets/images/coin.png')} style={{width: 24, height: 24}}/> {playerInfo.score}</Text>
                 </View>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
+                <TouchableWithoutFeedback onPress={() => router.replace({
+                    pathname: '/my-vouchers',
+                    params: {
+                        focusTabIndex: 1
+                    }
+                })}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Đã đổi</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
+                <TouchableWithoutFeedback>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/time.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Lịch sử</Text>
