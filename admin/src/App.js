@@ -12,6 +12,7 @@ import ManagePlayer from './pages/ManagePlayer';
 import ManageGame from './pages/ManageGame';
 import Login from './pages/login';
 import AddBrand from './pages/AddBrand';
+import EditUser from './pages/EditUser';
 
 function Layout() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/player" element={<ManagePlayer />} />
           <Route path="/game" element={<ManageGame />} />
           <Route path="/add-brand" element={<AddBrand />} />
+          <Route path="/edit-user" element={<EditUser />} />
         </Route>
       </Routes>
     </Router>
