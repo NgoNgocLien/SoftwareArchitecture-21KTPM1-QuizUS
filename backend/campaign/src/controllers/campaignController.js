@@ -124,6 +124,8 @@ const getById = async (req, res) => {
 // Tạo một chiến dịch mới
 const create = async (req, res) => {
     try {
+        // tạo quiz trong campaign, nếu ko tạo quiz -> id_quiz = null
+
         const newCampaign = new Campaign({
             id_brand1: req.body.id_brand1,
             id_brand2: req.body.id_brand2,

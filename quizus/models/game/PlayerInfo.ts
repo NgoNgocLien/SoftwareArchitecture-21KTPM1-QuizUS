@@ -30,14 +30,13 @@ export class PlayerInfo {
 
     getPlayerQuantityItem1(id_campaign: string, id_voucher: string): number{
         const data = this.player_items.filter(player_item => player_item.id_voucher === id_voucher && player_item.id_campaign === id_campaign);
-        return data[0].quantity_item1;
+        console.log("data: ", data);
+        return (data != undefined && data.length > 0) ? data[0].quantity_item1 : 0;
     }
 
     getPlayerQuantityItem2(id_campaign: string, id_voucher: string): number{
         const data = this.player_items.filter(player_item => player_item.id_voucher === id_voucher && player_item.id_campaign === id_campaign);
-        console.log(data[0]);
-        console.log(data[0].quantity_item2);
-        return data[0].quantity_item2;
+        return (data != undefined && data.length > 0) ? data[0].quantity_item2 : 0;
     }
 
     isEnoughCoin(score_exchange: number): boolean{

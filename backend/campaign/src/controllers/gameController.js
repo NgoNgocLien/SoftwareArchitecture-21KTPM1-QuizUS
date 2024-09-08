@@ -49,7 +49,7 @@ const getAllItem = async (req, res) => {
     const result = playerGames
       .filter(playerGame => {
         const campaign = playerGame.id_campaign;
-        return campaign.start_datetime <= currentTime && campaign.end_datetime >= currentTime;
+        return campaign.start_datetime <= currentTime && campaign.end_datetime >= currentTime && campaign.id_quiz == null;
       })
       .map(playerGame => {
         const campaign = playerGame.id_campaign;

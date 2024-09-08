@@ -56,11 +56,11 @@ export function VoucherCard({
         '';
 
     let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && playerInfo.getPlayerScore() >= voucher.score_exchange;
-    let quantity_item1 = playerInfo ? playerInfo.getPlayerQuantityItem1(campaign.id_campaign, voucher._id) : 0;
-    let quantity_item2 = playerInfo ? playerInfo.getPlayerQuantityItem2(campaign.id_campaign, voucher._id) : 0;
+    let quantity_item1 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem1(campaign.id_campaign, voucher._id) : 0;
+    let quantity_item2 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem2(campaign.id_campaign, voucher._id) : 0;
     let enoughItem = (voucher instanceof ItemVoucher) && playerInfo && (quantity_item1 >=1 && quantity_item2 >= 1 ? '2/2' : ((quantity_item1 >= 1 || quantity_item2 >= 1) ? '1/2' : '0/2'));
 
-    console.log(quantity_item2)
+    console.log(playerInfo)
     return (
         <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => { }}>
             <View style={styles.brandContainer}>
