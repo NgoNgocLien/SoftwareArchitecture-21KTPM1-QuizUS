@@ -164,7 +164,7 @@ a:hover {
     color: #101828; /* Ensures the option text follows the same text style */
 }
 
-.add-brand-container {
+.add-brand-ctn {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 16px;
@@ -203,6 +203,15 @@ a:hover {
     column-gap: 24px;
 }
 
+.add-brand-ctn:hover {
+    text-decoration: none;
+}
+
+.add-brand-btn:hover {
+    background: #007AFF;
+}
+
+/* manageGame */
 .game {
     padding: 16px;
     background-color: #ffffff;
@@ -224,3 +233,4 @@ a:hover {
     font-weight: 500;
     font-size: 16px;
 }
+/* ------------------------------ */
