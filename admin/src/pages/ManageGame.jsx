@@ -5,15 +5,15 @@ import "../styles/manage.css";
 export default function ManageGame() {
     return (
       <div className='game-container'>
-        <div className='game'>
+        <button className='game'>
           <img className='game-img' src='/images/quiz.png' alt='Trắc nghiệm' />
           <h6 className='game-name'>Trắc nghiệm</h6>
-        </div>
+        </button>
 
-        <div className='game'>
+        <button className='game'>
           <img className='game-img' src='/images/lacxu.png' alt='Trắc nghiệm' />
           <h6 className='game-name'>Trắc nghiệm</h6>
-        </div>
+        </button>
       </div>
     )
 }

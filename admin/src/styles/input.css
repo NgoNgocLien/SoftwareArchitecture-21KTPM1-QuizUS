@@ -75,7 +75,6 @@ label {
 
 input[type="text"], input[type="url"], select {
     width: 100%;
-    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
@@ -93,6 +92,10 @@ input[type="text"], input[type="url"], select {
 .field select {
     width: 100%;
 }
+
+select {
+    padding: 10px;
+}   
 
 .form-group:first-child {
     flex: 7;
