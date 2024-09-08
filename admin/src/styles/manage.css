@@ -195,3 +195,32 @@ a:hover {
     width: 24px; /* Adjust width and height as needed */
     height: 24px;
 }
+
+.game-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 24px;
+}
+
+.game {
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.235);
+}
+
+.game:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.game-img {
+    width: 232px;
+    height: 236px;
+}
+
+.game-name {
+    font-weight: 500;
+    font-size: 16px;
+}
