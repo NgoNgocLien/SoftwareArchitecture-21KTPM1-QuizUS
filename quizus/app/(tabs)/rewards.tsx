@@ -102,7 +102,7 @@ export default function Rewards() {
                 });
 
             }).catch((error) => {
-                console.error('Error fetching player score:', error);
+                console.error('Error fetching player item:', error);
                 showToast('error', 'Lỗi hệ thống');
             });
 
@@ -113,6 +113,7 @@ export default function Rewards() {
         });
     },[]);
     
+    console.log(playerInfo)
     return (
         <View style={styles.background}>
             <Header />
@@ -148,7 +149,7 @@ export default function Rewards() {
             </View>
 
             {
-                loading ? <LoadingView /> :
+                (loading || playerInfo == undefined) ? <LoadingView /> :
                 !vouchers || (vouchers[1]?.length === 0 && vouchers[2]?.length === 0) ? (
                     <EmptyView />
                 ) : (
@@ -174,7 +175,7 @@ export default function Rewards() {
                         </View>
    
                         {/* Lấy chỉ 2 mục */}
-                        {vouchers[2]?.slice(0, 2).map((item, index) => (
+                        {/* {vouchers[2]?.slice(0, 2).map((item, index) => (
                             <VoucherCard 
                                 voucher={item.voucher.getVoucher()}
                                 campaign={item.campaign}
@@ -182,7 +183,7 @@ export default function Rewards() {
                                 key={index} 
                                 style={index === 1 ? { marginBottom: 20 } : {}} 
                             />
-                        ))}
+                        ))} */}
                     </ScrollView>
                 )
             }

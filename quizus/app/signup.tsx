@@ -39,15 +39,15 @@ export default function Signup() {
         }),
       });
 
-      if (response.ok) {
-        router.push({
-          pathname: "/otp",
-          params: { phoneNumber, password }, 
-        });
-      } else {
-        const result = await response.json();
-        Alert.alert('Error', result.message);
-      } 
+      // if (response.ok) {
+      //   router.push({
+      //     pathname: "/otp",
+      //     params: { phoneNumber, password }, 
+      //   });
+      // } else {
+      //   const result = await response.json();
+      //   Alert.alert('Error', result.message);
+      // } 
 
     } catch (error) {
       console.error(error);

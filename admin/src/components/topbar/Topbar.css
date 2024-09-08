@@ -21,6 +21,11 @@
     gap: 8px;
 }
 
+.user-profile img{
+    height: 34px;
+    width: 34px;
+}
+
 .dropdown-menu {
     position: absolute;
     top: 60px;
