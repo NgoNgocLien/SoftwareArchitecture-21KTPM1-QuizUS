@@ -109,13 +109,71 @@ export const sendItem = async (
 export const receiveItem = async (
     id_gift: string, ) => {
     try {
-        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/item/send`, {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/item/receive`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 id_gift,
+            }),
+        });
+
+        // console.log(response);
+        const result = await response.json();
+        if (response.ok) {
+            console.log(result)
+            return result;
+        } else {
+            throw new Error('Failed to fetch data ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data');
+    }
+}
+
+export const sendTurn = async (
+    id_sender: string, 
+    id_receiver: string, 
+    id_campaign: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/player_turn/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_sender,
+                id_receiver,
+                id_campaign
+            }),
+        });
+
+        // console.log(response);
+        const result = await response.json();
+        if (response.ok) {
+            console.log(result)
+            return result;
+        } else {
+            throw new Error('Failed to fetch data ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data');
+    }
+}
+
+export const receiveTurn = async (
+    id_request: string, ) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/player_turn/receive`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_request,
             }),
         });
 
