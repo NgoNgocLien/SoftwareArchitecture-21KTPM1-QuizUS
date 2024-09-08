@@ -3,38 +3,43 @@ const Voucher = require('../models/voucher');
 const PlayerVoucher = require('../models/playerVoucher');
 const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
+const campaign = require('../models/campaign');
 
 // Lấy tất cả voucher đang hoạt động
 const getActive = async (req, res) => {
     try {
-        const vouchers = await Voucher.find({
-            status: true,
-            expired_date: { $gt: new Date() }
-        });
+        const campaigns = await Campaign.find().populate('id_voucher');
 
-        const activeVouchersWithCampaigns = await Promise.all(vouchers.map(async (voucher) => {
+        // for each campaign, get the voucher and add type field
+        const quizCampaignVouchers = campaigns.filter(campaign => campaign.id_quiz !== null).map(campaign => { return { type: 'quizgame', ...campaign.id_voucher._doc } }).filter(voucher => voucher.status && voucher.expired_date > new Date());
+        const itemCampaignVouchers = campaigns.filter(campaign => campaign.id_quiz === null).map(campaign => { return { type: 'itemgame', ...campaign.id_voucher._doc } }).filter(voucher => voucher.status && voucher.expired_date > new Date());
+
+        const vouchers = [...quizCampaignVouchers, ...itemCampaignVouchers];
+
+        // for each voucher, get campaign info
+
+        await Promise.all(vouchers.map(async (voucher) => {
             const campaign = await Campaign.findOne({ id_voucher: voucher._id });
-
-            if (campaign && campaign.given_amount_voucher < campaign.max_amount_voucher) {
-                return { voucher, campaign };
+            if (!campaign) {
+                throw new Error("Campaign not found for voucher.");
             }
-            return null;
+            voucher.campaign = campaign;
         }));
 
-        const filteredVouchers = activeVouchersWithCampaigns.filter(item => item !== null);
-
-        const result = await Promise.all(filteredVouchers.map(async (item) => {
-            const id_brand1 = item.campaign.id_brand1;
+        const result = await Promise.all(vouchers.map(async (item) => {
+            const id_brand = item.id_brand;
+            console.log(id_brand);
             try {
-                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand1}`);
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand}`);
+                const { campaign, ...rest } = item;
                 return {
                     campaign: {
                         ...item.campaign._doc,
                         brandName: brandResponse.data.name,
                         brandLogo: brandResponse.data.logo,
-                        brandField: brandResponse.data.field
+                        brandField: brandResponse.data.field,
                     },
-                    voucher: item.voucher._doc
+                    ...rest
                 };
             } catch (axiosError) {
                 throw new Error("Failed to fetch brand information.");
@@ -49,12 +54,12 @@ const getActive = async (req, res) => {
 
 // Tìm kiếm voucher theo brand
 const searchByBrand = async (req, res) => {
-  try {
-    const vouchers = await Voucher.find({ id_brand: req.params.id_brand });
-    res.status(200).json(vouchers);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+    try {
+        const vouchers = await Voucher.find({ id_brand: req.params.id_brand });
+        res.status(200).json(vouchers);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
 // Tạo voucher
@@ -154,155 +159,155 @@ const getExchanged = async (req, res) => {
 
 // đổi voucher bằng xu
 const exchangeByCoin = async (req, res) => {
-  try {
-    const { id_player, id_campaign, score_exchange } = req.body;
-
-    if (!id_player || !id_campaign || !score_exchange) {
-      return res.status(400).json({ message: 'id_player, id_campaign, and score_exchange are required' });
-    }
-
-    const campaign = await Campaign.findById(id_campaign);
-    if (!campaign) {
-      return res.status(404).json({ message: 'Campaign not found.' });
-    }
-
-    // Kiểm tra số lượng voucher đã phát có còn dưới mức tối đa không
-    if (campaign.given_amount_voucher >= campaign.max_amount_voucher) {
-      return res.status(400).json({ message: 'No more vouchers available for this campaign.' });
-    }
-
-    // Gọi API để trừ xu của người chơi
     try {
-      const response = await axios.put('http://gateway_proxy:8000/user/api/player/coin', {
-        id_player,
-        score: score_exchange
-      });
+        const { id_player, id_campaign, score_exchange } = req.body;
 
-      if (response.status === 200) {
-        // Tạo mới một bản ghi trong bảng PlayerVoucher
-        const playerVoucher = new PlayerVoucher({
-          id_player,
-          id_campaign,
-          is_used: false
-        });
+        if (!id_player || !id_campaign || !score_exchange) {
+            return res.status(400).json({ message: 'id_player, id_campaign, and score_exchange are required' });
+        }
 
-        const savedPlayerVoucher = await playerVoucher.save();
+        const campaign = await Campaign.findById(id_campaign);
+        if (!campaign) {
+            return res.status(404).json({ message: 'Campaign not found.' });
+        }
 
-        // Cập nhật giá trị given_amount_voucher của campaign
-        campaign.given_amount_voucher += 1;
-        await campaign.save();
+        // Kiểm tra số lượng voucher đã phát có còn dưới mức tối đa không
+        if (campaign.given_amount_voucher >= campaign.max_amount_voucher) {
+            return res.status(400).json({ message: 'No more vouchers available for this campaign.' });
+        }
 
-        return res.status(201).json({
-          playerVoucher: savedPlayerVoucher,
-          message: 'Voucher exchange successful, voucher has been saved.'
-        });
-      } else {
-        return res.status(500).json({ message: 'Failed to deduct coins from player.' });
-      }
+        // Gọi API để trừ xu của người chơi
+        try {
+            const response = await axios.put('http://gateway_proxy:8000/user/api/player/coin', {
+                id_player,
+                score: score_exchange
+            });
 
+            if (response.status === 200) {
+                // Tạo mới một bản ghi trong bảng PlayerVoucher
+                const playerVoucher = new PlayerVoucher({
+                    id_player,
+                    id_campaign,
+                    is_used: false
+                });
+
+                const savedPlayerVoucher = await playerVoucher.save();
+
+                // Cập nhật giá trị given_amount_voucher của campaign
+                campaign.given_amount_voucher += 1;
+                await campaign.save();
+
+                return res.status(201).json({
+                    playerVoucher: savedPlayerVoucher,
+                    message: 'Voucher exchange successful, voucher has been saved.'
+                });
+            } else {
+                return res.status(500).json({ message: 'Failed to deduct coins from player.' });
+            }
+
+        } catch (error) {
+            return res.status(500).json({ message: 'Failed to communicate with the user service.', error: error.message });
+        }
     } catch (error) {
-      return res.status(500).json({ message: 'Failed to communicate with the user service.', error: error.message });
-    }  
-  } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
-  }
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
 };
 
 // đổi voucher bằng mảnh ghép
 const exchangeByItem = async (req, res) => {
-  try {
-    const { id_player, id_campaign, id_voucher } = req.body;
+    try {
+        const { id_player, id_campaign, id_voucher } = req.body;
 
-    if (!id_player || !id_campaign || !id_voucher) {
-      return res.status(400).json({ message: 'id_player, id_campaign, and id_voucher are required' });
+        if (!id_player || !id_campaign || !id_voucher) {
+            return res.status(400).json({ message: 'id_player, id_campaign, and id_voucher are required' });
+        }
+
+        const playerGame = await PlayerGame.findOne({ id_player, id_campaign });
+
+        if (!playerGame) {
+            return res.status(404).json({ message: 'Player game data not found.' });
+        }
+
+        // Kiểm tra quantity_item1 và quantity_item2 có đủ điều kiện không
+        if (playerGame.quantity_item1 < 1 || playerGame.quantity_item2 < 1) {
+            return res.status(400).json({ message: 'Insufficient items to exchange for voucher.' });
+        }
+
+        const campaign = await Campaign.findById(id_campaign);
+        if (!campaign) {
+            return res.status(404).json({ message: 'Campaign not found.' });
+        }
+
+        // Kiểm tra nếu số lượng given_amount_voucher đã đạt tối đa
+        if (campaign.given_amount_voucher >= campaign.max_amount_voucher) {
+            return res.status(400).json({ message: 'All vouchers have been redeemed for this campaign.' });
+        }
+
+        // Tạo bản ghi mới trong PlayerVoucher
+        const playerVoucher = new PlayerVoucher({
+            id_player,
+            id_campaign,
+            is_used: false
+        });
+
+        const savedPlayerVoucher = await playerVoucher.save();
+        playerGame.quantity_item1 -= 1;
+        playerGame.quantity_item2 -= 1;
+        await playerGame.save();
+
+        campaign.given_amount_voucher += 1;
+        await campaign.save();
+
+        return res.status(201).json({
+            playerVoucher: savedPlayerVoucher,
+            message: 'Voucher exchange successful, items deducted, and campaign updated.'
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
-
-    const playerGame = await PlayerGame.findOne({ id_player, id_campaign });
-
-    if (!playerGame) {
-      return res.status(404).json({ message: 'Player game data not found.' });
-    }
-
-    // Kiểm tra quantity_item1 và quantity_item2 có đủ điều kiện không
-    if (playerGame.quantity_item1 < 1 || playerGame.quantity_item2 < 1) {
-      return res.status(400).json({ message: 'Insufficient items to exchange for voucher.' });
-    }
-
-    const campaign = await Campaign.findById(id_campaign);
-    if (!campaign) {
-      return res.status(404).json({ message: 'Campaign not found.' });
-    }
-
-    // Kiểm tra nếu số lượng given_amount_voucher đã đạt tối đa
-    if (campaign.given_amount_voucher >= campaign.max_amount_voucher) {
-      return res.status(400).json({ message: 'All vouchers have been redeemed for this campaign.' });
-    }
-
-    // Tạo bản ghi mới trong PlayerVoucher
-    const playerVoucher = new PlayerVoucher({
-      id_player,
-      id_campaign,
-      is_used: false
-    });
-
-    const savedPlayerVoucher = await playerVoucher.save();
-    playerGame.quantity_item1 -= 1;
-    playerGame.quantity_item2 -= 1;
-    await playerGame.save();
-
-    campaign.given_amount_voucher += 1;
-    await campaign.save();
-
-    return res.status(201).json({
-      playerVoucher: savedPlayerVoucher,
-      message: 'Voucher exchange successful, items deducted, and campaign updated.'
-    });
-  } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
-  }
 };
 
 // Sử dụng voucher
 const use = async (req, res) => {
-  try {
-    const { id_player, id_campaign } = req.body;
+    try {
+        const { id_player, id_campaign } = req.body;
 
-    if (!id_player || !id_campaign) {
-      return res.status(400).json({ message: 'id_player and id_campaign are required' });
+        if (!id_player || !id_campaign) {
+            return res.status(400).json({ message: 'id_player and id_campaign are required' });
+        }
+
+        const playerVoucher = await PlayerVoucher.findOne({ id_player, id_campaign });
+
+        if (!playerVoucher) {
+            return res.status(404).json({ message: 'Voucher not found for this player.' });
+        }
+
+        if (playerVoucher.is_used) {
+            return res.status(400).json({ message: 'This voucher has already been used.' });
+        }
+
+        playerVoucher.is_used = true;
+        await playerVoucher.save();
+
+        return res.status(200).json({
+            message: 'Voucher successfully used.',
+            playerVoucher
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
-
-    const playerVoucher = await PlayerVoucher.findOne({ id_player, id_campaign });
-
-    if (!playerVoucher) {
-      return res.status(404).json({ message: 'Voucher not found for this player.' });
-    }
-
-    if (playerVoucher.is_used) {
-      return res.status(400).json({ message: 'This voucher has already been used.' });
-    }
-
-    playerVoucher.is_used = true;
-    await playerVoucher.save();
-
-    return res.status(200).json({
-      message: 'Voucher successfully used.',
-      playerVoucher
-    });
-
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
 };
 
 
 
 module.exports = {
-  getActive,
-  searchByBrand,
-  create,
-  update,
-  getExchanged,
-  exchangeByCoin,
-  exchangeByItem,
-  use,
+    getActive,
+    searchByBrand,
+    create,
+    update,
+    getExchanged,
+    exchangeByCoin,
+    exchangeByItem,
+    use,
 };
