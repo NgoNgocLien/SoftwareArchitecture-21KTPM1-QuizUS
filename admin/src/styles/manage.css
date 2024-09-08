@@ -44,12 +44,14 @@
     height: 30px;
     margin-right: 8px;
     border-radius: 100%;
+    object-fit: cover;
 }
 
 .brand-logo {
     width: 30px;
     height: 30px;
     margin-right: 8px;
+    object-fit: cover;
 }
 
 a {

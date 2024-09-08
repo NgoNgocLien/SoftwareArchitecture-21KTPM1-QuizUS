@@ -11,6 +11,7 @@ import ManageBrand from './pages/ManageBrand';
 import ManagePlayer from './pages/ManagePlayer';
 import ManageGame from './pages/ManageGame';
 import Login from './pages/login';
+import AddBrand from './pages/AddBrand';
 
 function Layout() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/brand" element={<ManageBrand />} />
           <Route path="/player" element={<ManagePlayer />} />
           <Route path="/game" element={<ManageGame />} />
+          <Route path="/add-brand" element={<AddBrand />} />
         </Route>
       </Routes>
     </Router>

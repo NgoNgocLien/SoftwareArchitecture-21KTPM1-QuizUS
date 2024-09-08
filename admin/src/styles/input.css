@@ -1,0 +1,8 @@
+.avatar-ctn {
+    width: 10rem;
+    height: 10rem;
+}
+
+.avatar-ctn img {
+    object-fit: contain;
+}
