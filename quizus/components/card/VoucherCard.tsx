@@ -52,7 +52,7 @@ export function VoucherCard({
 
     let expiredDateFormatted = voucher 
     ?
-        new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2})
+        new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + new Date(voucher.expired_date).getFullYear()
     :
         '';
 

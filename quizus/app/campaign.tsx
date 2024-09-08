@@ -42,12 +42,7 @@ const defaultPlayerInfo = {
 export default function Campaign() {
 
     const params = useLocalSearchParams();
-    const id_campaign = params.id_campaign as string
-
-    if (!id_campaign){
-        router.back();
-        showToast('error', 'Lỗi hệ thống');
-    }
+    const id_campaign = params.id_campaign as string;
 
     const [loading, setLoading] = useState<boolean>(true);
     const [campaign, setCampaign] = useState<any|null>(null);
@@ -63,12 +58,10 @@ export default function Campaign() {
 
                 if(result.id_quiz != null && result.id_quiz != undefined && result.id_quiz != ''){
                     const newVoucher = VoucherFactory.createVoucher('coin', result.voucher);
-                    console.log("Coin")
                     setVoucher(newVoucher);
                     setTypeGame(config.QUIZ_GAME)
                 } else {
                     const newVoucher = VoucherFactory.createVoucher('item', { ...result.voucher, item1_photo: result.item1_photo, item2_photo: result.item2_photo });
-                    console.log("Item")
                     setVoucher(newVoucher);
                     setTypeGame(config.ITEM_GAME)
                 }
@@ -78,6 +71,9 @@ export default function Campaign() {
                 console.error('Error fetching campaign info:', error);
                 setLoading(false)
             });
+        } else {
+            router.back();
+            showToast('error', 'Lỗi hệ thống');
         }
     }, [id_campaign])
 
@@ -85,7 +81,7 @@ export default function Campaign() {
         try {
             const result = await Share.share({
                 message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-                url: 'exp://192.168.1.6:8081',
+                url: 'https://expo.io',
             },{
                 excludedActivityTypes: [
                     'com.apple.UIKit.activity.PostToWeibo',
@@ -136,7 +132,6 @@ export default function Campaign() {
         if (type_game ){ 
             getGameInfo(id_campaign)
             .then(gameInfo => {
-                // console.log("gameInfo: ", gameInfo)
                 if (type_game == config.QUIZ_GAME){
                     // console.log("gameInfo: ", gameInfo)
                     setQuizInfo(gameInfo.id_quiz)
