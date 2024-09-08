@@ -17,6 +17,29 @@ export default function AddBrand() {
             </div>
             
             <div className='input-ctn'>
+                <h6>Thông tin đăng nhập</h6>
+                <div className='form-row'>
+                    <div className="form-group">
+                        <label htmlFor="username">Tên đăng nhập</label>
+                        <input type="text" id="username" placeholder="Nhập tên đăng nhập" />
+                    </div>
+                </div>
+                <div className='form-row'>
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input type="text" id="address" placeholder="Nhập email nhãn hàng" />
+                    </div>
+                </div>
+                <div className='form-row'>
+                    <div className="form-group">
+                        <label htmlFor="email">Mật khẩu</label>
+                        <input type="text" id="pwd" placeholder="••••••••" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div className='input-ctn'>
                 <h6>Thông tin chung</h6>
 
                 {/* Name & Field */}
