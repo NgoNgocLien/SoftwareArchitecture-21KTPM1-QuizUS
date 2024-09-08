@@ -46,8 +46,7 @@ const CampaignSchema = new Schema({
     },
     id_quiz: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Quiz',
-        required: true
+        ref: 'Quiz'
     },
     item1_photo: {
         type: String,
