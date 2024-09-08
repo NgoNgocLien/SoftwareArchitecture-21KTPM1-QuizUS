@@ -14,11 +14,12 @@ import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { LoadingView } from '@/components/LoadingView';
 import { EmptyView } from '@/components/EmptyView';
 import { showToast } from '@/components/ToastBar';
-import { getPlayerScore } from '@/api/PlayerApi';
+import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
 
-
+import {retrieveFromSecureStore} from '@/api/SecureStoreService'
+import { PlayerInfo } from '@/models/game/PlayerInfo';
 // call api
-const defaultPlayerInfo = {
+const playerInfo = {
     score: 0,
     quantity_item1: 0,
     quantity_item2: 0
@@ -36,12 +37,6 @@ export default function Coins() {
         { index: 4, name: 'Giải trí' }
     ]
 
-    const [playerInfo, setPlayerInfo] = useState({
-        score: 0,
-        quantity_item1: 0,
-        quantity_item2: 0
-    });
-
     const [focusedTab, setFocusedTab] = useState(0);
 
     const [vouchers, setVouchers] = useState<any[] | null>(null);
@@ -52,25 +47,49 @@ export default function Coins() {
     const [muaSam, setMuaSam] = useState<any[] | null>(null);
     const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
 
-    const getPlayerInfo = useCallback(() => {
-        config.retrieveFromSecureStore('id_player', (id_player: string) => {
-            getPlayerScore(id_player).then((data) => {
-                setPlayerInfo({
-                    score: data.score,
-                    quantity_item1: 0,
-                    quantity_item2: 0
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
+
+    useEffect(() => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+            getPlayerItem(id_player).then((data: any) => {
+                const player_items = data.map((data: {
+                    id_camapign: any; vouchers: { id_voucher: any; }; quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
+}) => {
+                    return {
+                        id_campaign: data.id_camapign,
+                        id_voucher: data.vouchers.id_voucher,
+                        quantity_item1: data.quantity_item1,
+                        quantity_item2: data.quantity_item2,
+                        item1_photo: data.item1_photo,
+                        item2_photo: data.item2_photo,
+                    }
+                })
+
+                getPlayerScore(id_player).then((data) => {
+                    console.log({
+                        player_score: data.score,
+                        player_items: player_items,
+                    })
+                    setPlayerInfo(new PlayerInfo({
+                        player_score: data.score,
+                        player_items: player_items,
+                    }))
+                }).catch((error) => {
+                    console.error('Error fetching player score:', error);
+                    showToast('error', 'Lỗi hệ thống');
                 });
+
             }).catch((error) => {
                 console.error('Error fetching player score:', error);
                 showToast('error', 'Lỗi hệ thống');
             });
+
+            
         }).catch((error) => {
             console.error('Error retrieving id_player from SecureStore:', error);
             showToast('error', 'Không tìm thấy thông tin người chơi');
         });
-    }, []);
-
-    useFocusEffect(getPlayerInfo);
+    },[]);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
@@ -92,16 +111,16 @@ export default function Coins() {
                 if(item.campaign.id_quiz !== "") {
                     const newVoucher = VoucherFactory.createVoucher('coin', item.voucher);
 
-                    coinVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                    coinVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
 
                     if (item.campaign.brandField === 'Nhà hàng') {
-                        nhaHangVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                        nhaHangVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
                     } else if (item.campaign.brandField === 'Cafe & Bánh') {
-                        cafeBanhVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                        cafeBanhVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
                     } else if (item.campaign.brandField === 'Mua sắm') {
-                        muaSamVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                        muaSamVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
                     } else if (item.campaign.brandField === 'Giải trí') {
-                        giaiTriVouchers.push({ voucher: newVoucher, campaign: item.campaign });
+                        giaiTriVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
                     }
 
                 }
@@ -138,17 +157,22 @@ export default function Coins() {
             <View style={styles.coinsContainer}>
                 <View style={styles.coins}>
                     <Text style={styles.coinsLabel}>Xu thưởng</Text>
-                    <Text style={styles.coinsText}><Image source={require('@/assets/images/coin.png')} style={{width: 24, height: 24}}/> {playerInfo.score}</Text>
+                    <Text style={styles.coinsText}><Image source={require('@/assets/images/coin.png')} style={{width: 24, height: 24}}/> {playerInfo?.getPlayerScore()}</Text>
                 </View>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/my-vouchers')}>
+                <TouchableWithoutFeedback onPress={() => router.replace({
+                    pathname: '/my-vouchers',
+                    params: {
+                        focusTabIndex: 1
+                    }
+                })}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/voucher.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Đã đổi</Text>
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.push('/coins')}>
+                <TouchableWithoutFeedback>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/time.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Lịch sử</Text>
@@ -187,7 +211,7 @@ export default function Coins() {
                                     voucher={item.voucher}
                                     campaign={item.campaign}
                                     key={index} 
-                                    playerInfo={defaultPlayerInfo}
+                                    playerInfo={playerInfo}
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
                             ))}
@@ -204,7 +228,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}  
                                     campaign={item.campaign}
-                                    playerInfo={defaultPlayerInfo}
+                                    playerInfo={playerInfo}
                                     key={index} 
                                     style={index === nhaHang.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -222,7 +246,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}
                                     campaign={item.campaign}
-                                    playerInfo={defaultPlayerInfo}
+                                    playerInfo={playerInfo}
                                     key={index} 
                                     style={index === cafeBanh.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -240,7 +264,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}
                                     campaign={item.campaign}
-                                    playerInfo={defaultPlayerInfo}
+                                    playerInfo={playerInfo}
                                     key={index} 
                                     style={index === muaSam.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
@@ -258,7 +282,7 @@ export default function Coins() {
                                 <VoucherCard 
                                     voucher={item.voucher}
                                     campaign={item.campaign}
-                                    playerInfo={defaultPlayerInfo}
+                                    playerInfo={playerInfo}
                                     key={index} 
                                     style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
                                 />

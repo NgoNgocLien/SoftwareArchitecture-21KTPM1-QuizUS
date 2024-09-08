@@ -31,6 +31,9 @@ import { Voucher } from '@/models/voucher/Voucher';
 import { CoinVoucher } from '@/models/voucher/CoinVoucher';
 import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
+import { PlayerInfo } from '@/models/game/PlayerInfo';
+import { retrieveFromSecureStore } from '@/api/SecureStoreService';
+import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
 
 // Call API
 const defaultPlayerInfo = {
@@ -42,12 +45,7 @@ const defaultPlayerInfo = {
 export default function Campaign() {
 
     const params = useLocalSearchParams();
-    const id_campaign = params.id_campaign as string
-
-    if (!id_campaign){
-        router.back();
-        showToast('error', 'Lỗi hệ thống');
-    }
+    const id_campaign = params.id_campaign as string;
 
     const [loading, setLoading] = useState<boolean>(true);
     const [campaign, setCampaign] = useState<any|null>(null);
@@ -58,17 +56,15 @@ export default function Campaign() {
     useEffect(() => {
         if (id_campaign){
             getCampaignById(id_campaign).then(result => {
-                
+                // console.log('Campaign fetched:', result);
                 setCampaign(result)
 
                 if(result.id_quiz != null && result.id_quiz != undefined && result.id_quiz != ''){
                     const newVoucher = VoucherFactory.createVoucher('coin', result.voucher);
-                    console.log("Coin")
                     setVoucher(newVoucher);
                     setTypeGame(config.QUIZ_GAME)
                 } else {
                     const newVoucher = VoucherFactory.createVoucher('item', { ...result.voucher, item1_photo: result.item1_photo, item2_photo: result.item2_photo });
-                    console.log("Item")
                     setVoucher(newVoucher);
                     setTypeGame(config.ITEM_GAME)
                 }
@@ -78,14 +74,17 @@ export default function Campaign() {
                 console.error('Error fetching campaign info:', error);
                 setLoading(false)
             });
+        } else {
+            router.back();
+            showToast('error', 'Lỗi hệ thống');
         }
     }, [id_campaign])
 
-    const handleShare = async (addPlayerTurn: boolean) => {
+    const handleShare = async () => {
         try {
             const result = await Share.share({
                 message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-                url: 'exp://192.168.1.6:8081',
+                url: 'https://expo.io',
             },{
                 excludedActivityTypes: [
                     'com.apple.UIKit.activity.PostToWeibo',
@@ -112,7 +111,7 @@ export default function Campaign() {
             });
 
             if (result.action === Share.sharedAction) {
-                if (result.activityType && addPlayerTurn) {
+                if (result.activityType ) {
                     // On iOS: Shared with specific activity type (e.g., mail, social media)
                     // increasePlayerTurn(config.ID_PLAYER, id_campaign)
                     // .then(data => {
@@ -120,12 +119,6 @@ export default function Campaign() {
                     // })
                 } else {
                     // On Android: Shared, but no confirmation of activity type
-                    if (addPlayerTurn){
-                        // increasePlayerTurn(config.ID_PLAYER, id_campaign)
-                        // .then(data => {
-                        //     setPlayerTurn(1)
-                        // })
-                    }
                 }
             } else if (result.action === Share.dismissedAction) {
                 // dismissed
@@ -137,14 +130,13 @@ export default function Campaign() {
 
     const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
     const [itemInfo, setItemInfo] = useState<Item|null>(null);
-
+    
     useEffect(() => {
         if (type_game ){ 
-            console.log(id_campaign)
             getGameInfo(id_campaign)
             .then(gameInfo => {
-                // console.log("gameInfo: ", gameInfo)
                 if (type_game == config.QUIZ_GAME){
+                    // console.log("gameInfo: ", gameInfo)
                     setQuizInfo(gameInfo.id_quiz)
                 }
                 else if (type_game == config.ITEM_GAME)
@@ -161,20 +153,65 @@ export default function Campaign() {
     }, [type_game])
 
     const [playerTurn, setPlayerTurn] = useState <number|null>(null);
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
+
     useEffect(() => {
         if (id_campaign){
-            getPlayerTurn(config.ID_PLAYER, id_campaign)
-            .then(data => {
-                setPlayerTurn(data.player_turn)
-            })
-            .catch(error => {
-                console.error('Error fetching player turn:', error);
+            retrieveFromSecureStore('id_player', (id_player: string) => {
+                getPlayerTurn(id_player, id_campaign)
+                .then(data => {
+                    setPlayerTurn(data.player_turn)
+                })
+                .catch(error => {
+                    console.error('Error fetching player turn:', error);
+                });
+
+                getPlayerItem(id_player).then((data) => {
+                    const player_items = data.map((data: {
+                        id_campaign: any; vouchers: { id_voucher: any; }; 
+                        quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
+                    }) => {
+                        return {
+                            id_campaign: data.id_campaign,
+                            id_voucher: data.vouchers.id_voucher,
+                            quantity_item1: data.quantity_item1,
+                            quantity_item2: data.quantity_item2,
+                            item1_photo: data.item1_photo,
+                            item2_photo: data.item2_photo,
+                        }
+                    })
+
+                    // console.log("items: ", player_items)
+
+                    getPlayerScore(id_player).then((data) => {
+                        setPlayerInfo(new PlayerInfo({
+                            player_score: data.score,
+                            player_items: player_items,
+                        }))
+                    }).catch((error) => {
+                        console.error('Error fetching player score:', error);
+                        showToast('error', 'Lỗi hệ thống');
+                    });
+
+                }).catch((error) => {
+                    console.error('Error fetching player score:', error);
+                    showToast('error', 'Lỗi hệ thống');
+                });
+
+                
+            }).catch((error) => {
+                console.error('Error retrieving id_player from SecureStore:', error);
+                showToast('error', 'Không tìm thấy thông tin người chơi');
             });
         }
     },[id_campaign, playerTurn]);
 
     const [isModalVisible, setModalVisible] = useState(false);
-    // console.log(itemInfo);
+    // console.log("itemInfo:", itemInfo);
+
+    // console.log("loading:", loading)
+    // console.log("playerTurn: ", playerTurn)
+    // console.log("quizInfo: ", quizInfo)
     return (
         <View style={styles.container}>
             <SubHeader/>
@@ -198,7 +235,7 @@ export default function Campaign() {
                                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                                     }
                                 </View>
-                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare(false)}} suppressHighlighting={true} />
+                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare()}} suppressHighlighting={true} />
                                 </View>
                                 <View style={styles.campaignHeader_bottom}>
                                     <Heading type='h5'>{campaign.name}</Heading>
@@ -247,8 +284,8 @@ export default function Campaign() {
                             <VoucherCard 
                                 style={{marginBottom: 100}}
                                 voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
-                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo}}
-                                playerInfo={defaultPlayerInfo}
+                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo, id_campaign: id_campaign}}
+                                playerInfo={playerInfo}
                             />
                         </View>
                 </ScrollView>

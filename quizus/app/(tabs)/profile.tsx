@@ -1,21 +1,32 @@
-import React from 'react';
+import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, ScrollView, Text } from 'react-native';
-import LottieView from "lottie-react-native";
 
 import { Button } from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
-import config from '@/constants/config';
+
+import {removeFromSecureStore} from '@/api/SecureStoreService'
+
+import { TextToSpeechContext } from '@/models/text-to-speech/TextToSpeechContext';
+import { ElevenLabsTTS } from '@/models/text-to-speech/ElevenLabsTTS';
+
 
 export default function Profile() {
     const router = useRouter();
 
     const handleLogout = () => {
-        config.removeFromSecureStore("id_player");
+        removeFromSecureStore("id_player");
+
         router.replace("/login")
     }
+
+    const playAudio = (text: string) => {
+        const context = new TextToSpeechContext(new ElevenLabsTTS(text));
+        context.convertTextToSpeech();
+    }
+
     return (
     <LinearGradient
     colors={[Colors.light.background, Colors.light.background, Colors.light.secondary]} // Gradient colors
@@ -28,23 +39,9 @@ export default function Profile() {
                 onPress={() => {handleLogout()}}>
             </Button>
 
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <LottieView
-                    source={require('@/assets/animations/shaking.json')}
-                    style={{width: "100%", height: "100%"}}
-                    autoPlay
-                    loop
-                />
-            </View>
-
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <LottieView
-                    source={require('@/assets/animations/open.json')}
-                    style={{width: "100%", height: "100%"}}
-                    autoPlay
-                    loop
-                />
-            </View>
+            <Button text="Tạo file audio" type="primary" 
+                onPress={() => {playAudio("Trái đất có bao nhiêu lục địa?")}}>
+            </Button>
 
         </SafeAreaView>
 
@@ -62,3 +59,4 @@ const styles = StyleSheet.create({
     }
     
 });
+

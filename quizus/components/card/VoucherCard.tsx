@@ -8,8 +8,10 @@ import { CoinVoucher } from '@/models/voucher/CoinVoucher';
 import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { Paragraph } from '../text/Paragraph';
+import { PlayerInfo } from '@/models/game/PlayerInfo';
 
 const defaultCampaign = {
+    id_campaign: '1',
     brandName: 'NULL',
     brandLogo: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png'
 }
@@ -33,30 +35,32 @@ export function VoucherCard({
     voucher,
     campaign = defaultCampaign,
     playerInfo,
+    is_used,
     ...rest
 }:{ 
     voucher: Voucher,    
     campaign?:{
+        id_campaign: string,
         brandName: string,
         brandLogo: string
     },
-    playerInfo?: {
-        score: number,
-        quantity_item1: number,
-        quantity_item2: number
-    },
+    playerInfo?: PlayerInfo
+    is_used?: boolean,
     [key: string]: any;
 }) {
 
     let expiredDateFormatted = voucher 
     ?
-        new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2})
+        new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + new Date(voucher.expired_date).getFullYear()
     :
         '';
 
-    let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && (playerInfo.score >= voucher.score_exchange);
-    let enoughItem = (voucher instanceof ItemVoucher) && playerInfo && (playerInfo.quantity_item1 >=1 && playerInfo.quantity_item2 >= 1 ? '2/2' : ((playerInfo.quantity_item1 >= 1 || playerInfo.quantity_item2 >= 1) ? '1/2' : '0/2'));
+    let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && playerInfo.getPlayerScore() >= voucher.score_exchange;
+    let quantity_item1 = playerInfo ? playerInfo.getPlayerQuantityItem1(campaign.id_campaign, voucher._id) : 0;
+    let quantity_item2 = playerInfo ? playerInfo.getPlayerQuantityItem2(campaign.id_campaign, voucher._id) : 0;
+    let enoughItem = (voucher instanceof ItemVoucher) && playerInfo && (quantity_item1 >=1 && quantity_item2 >= 1 ? '2/2' : ((quantity_item1 >= 1 || quantity_item2 >= 1) ? '1/2' : '0/2'));
 
+    console.log(quantity_item2)
     return (
         <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => { }}>
             <View style={styles.brandContainer}>
@@ -83,7 +87,7 @@ export function VoucherCard({
                         <TouchableOpacity style={enoughCoin ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
                             <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
                             <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                <Image source={require('@/assets/images/coin.png')} style={[{width: 20, height: 20}, enoughCoin ? {backgroundColor: Colors.yellow} : {backgroundColor: Colors.gray._200}]}/>
+                                <Image source={enoughCoin ? require('@/assets/images/coin.png') : require('@/assets/images/coin-grayscale.png')} style={[{width: 20, height: 20}]}/>
                                 <Text style={enoughCoin ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}> {voucher.score_exchange}</Text>
                             </View>
                         </TouchableOpacity> 
@@ -91,13 +95,18 @@ export function VoucherCard({
                             <TouchableOpacity style={enoughItem == '2/2' ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
                                 <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
                                 <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                    <Image source={require('@/assets/images/puzzle.png')} style={{width: 20, height: 20}}/>
+                                    <Image source={enoughItem === '2/2' ? require('@/assets/images/puzzle.png') : require('@/assets/images/puzzle-grayscale.png')} style={{width: 20, height: 20}}/>
                                     <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}> {enoughItem}</Text>
                                 </View>
                             </TouchableOpacity>
                         )
                     ) : (
-                        <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
+                        is_used ? (
+                            <View style={[styles.exchangeButton, {backgroundColor: Colors.gray._200}]}>
+                                <Paragraph type={'p2'} color={ Colors.gray._500}>Đã sử dụng</Paragraph>
+                            </View>
+                        )  : (
+                        (Date.now() < voucher.expired_date.getTime()) && <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
                             onPress={() => {
                                 Clipboard.setString(voucher.code); 
                                 Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
@@ -105,6 +114,8 @@ export function VoucherCard({
                             <Paragraph type={'p2'}>{voucher.code}</Paragraph>
                             <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
                         </TouchableOpacity>
+                        )
+                        
                     )
                 }
                 

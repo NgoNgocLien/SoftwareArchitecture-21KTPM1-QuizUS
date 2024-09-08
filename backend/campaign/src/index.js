@@ -11,7 +11,6 @@ console.log("Database URI:", dbURI);
 const app = express();
 const campaignRoutes = require('./routes/campaignRoutes');
 const voucherRoutes = require('./routes/voucherRoutes');
-const itemRoutes = require('./routes/itemRoutes');
 const gameRoutes = require('./routes/gameRoutes');
 
 app.use(express.json());
@@ -19,7 +18,6 @@ app.use(cors());
 
 app.use('/api/campaign', campaignRoutes);
 app.use('/api/voucher', voucherRoutes);
-app.use('/api/item', itemRoutes);
 app.use('/api/game', gameRoutes);
 
 mongoose.connect(dbURI, {

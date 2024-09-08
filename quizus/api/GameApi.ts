@@ -12,7 +12,6 @@ export const getGameInfo = async (id_campaign: string) => {
 
         const result = await response.json();
         if (response.ok) {
-            // console.log('game: ', result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);
@@ -57,6 +56,66 @@ export const increasePlayerTurn = async (id_player: string, id_campaign: string)
             body: JSON.stringify({
                 id_player,
                 id_campaign
+            }),
+        });
+
+        // console.log(response);
+        const result = await response.json();
+        if (response.ok) {
+            console.log(result)
+            return result;
+        } else {
+            throw new Error('Failed to fetch data ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data');
+    }
+}
+
+export const sendItem = async (
+    id_sender: string, 
+    id_receiver: string, 
+    id_item: string, 
+    id_campaign: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/item/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_sender,
+                id_receiver,
+                id_item,
+                id_campaign
+            }),
+        });
+
+        // console.log(response);
+        const result = await response.json();
+        if (response.ok) {
+            console.log(result)
+            return result;
+        } else {
+            throw new Error('Failed to fetch data ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data');
+    }
+}
+
+export const receiveItem = async (
+    id_gift: string, ) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/game/item/send`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_gift,
             }),
         });
 

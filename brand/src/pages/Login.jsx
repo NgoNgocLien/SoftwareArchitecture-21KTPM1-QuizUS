@@ -4,7 +4,7 @@ import { login } from '../api/authenticateApi';
 import Loading from '../components/system-feedback/Loading';
 
 import "../styles/common.css";
-import "../styles/login.css";
+import "../styles/Login.css";
 
 export default function Login(props) {
     const [email, setEmail] = useState('');
@@ -18,12 +18,11 @@ export default function Login(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedAdmin = localStorage.getItem('admin');
-        if (storedAdmin) {
-            navigate("/dashboard");
+        const storedBrand = localStorage.getItem('brand');
+        if (storedBrand) {
+            navigate("/event");
         }
     }, [navigate]);
-
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -59,12 +58,12 @@ export default function Login(props) {
             console.log("result:", result)
             if (result?.status === 200) {
                 setLoading(false);
-                localStorage.setItem('admin', JSON.stringify(result.data));
+                localStorage.setItem('brand', JSON.stringify(result.data));
 
                 setLoginSuccess(true);
                 setTimeout(() => {
                     setLoginSuccess(false); 
-                    navigate("/dashboard");
+                    navigate("/event");
                 }, 3000); 
             } else {
                 setLoading(false);
@@ -80,9 +79,13 @@ export default function Login(props) {
         
     }
       
+    const handleNavigate = () => {
+        navigate("/signup");
+    };
+
     return (
-        <div className="login-container">
-            <div className="login-form">
+        <div className="login-brand-container">
+            <div className="login-brand-form">
                 {loading ? (
                     <Loading/>
                 ):(
@@ -122,6 +125,10 @@ export default function Login(props) {
                             <img src="https://res.cloudinary.com/dklt21uks/image/upload/v1725705052/dldlrna0zoe3qqkdehib.png" alt="google"/>
                             Đăng nhập bằng Google
                         </button>
+
+                        <div className="sign-up">Chưa có tài khoản?
+                            <span onClick={() => handleNavigate()} style={{ color: "var(--scheme-primary)", cursor: "pointer", fontWeight: "600" }}> Tạo tài khoản</span>
+                        </div>
 
                         {loginSuccess && <div style={{ color: "var(--feedback-success)", fontStyle: "italic", fontFamily: "medium-font", marginTop: "10px" }}>Đăng nhập thành công!</div>}
                         {loginFail && <div style={{ color: "var(--feedback-error)", fontStyle: "italic", fontFamily: "medium-font", marginTop: "10px" }}>Email hoặc mật khẩu sai!</div>}

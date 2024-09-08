@@ -13,6 +13,7 @@ import config from '@/constants/config';
 import { useFocusEffect } from 'expo-router';
 import { showToast } from '@/components/ToastBar';
 
+import {retrieveFromSecureStore} from '@/api/SecureStoreService'
 export default function HomePage() {
 
     const tabNames = [
@@ -39,7 +40,7 @@ export default function HomePage() {
         setLoading(true);
 
         getCampaignsInProgess().then((res) => {
-            config.retrieveFromSecureStore('id_player', (id_player: string) => {
+            retrieveFromSecureStore('id_player', (id_player: string) => {
                 getLikedCampaigns(id_player).then((likedCampaigns) => {
                     res.map((campaign: any) => {
                         campaign.isFavorite = likedCampaigns.some((likedCampaign: any) => likedCampaign.campaign_data._id === campaign._id);
@@ -51,7 +52,7 @@ export default function HomePage() {
                     console.log(err);
                     setCampaigns(res);
                     setLoading(false);
-                    showToast('error', 'Lỗi hệ thống');
+                    showToast('error', 'Lỗi hệ thống 11');
                 });
             }).catch((err) => {
                 console.log(err);
@@ -62,7 +63,7 @@ export default function HomePage() {
         }).catch((err) => {
             console.log(err);
             setLoading(false);
-            showToast('error', 'Lỗi hệ thống');
+            showToast('error', 'Lỗi hệ thống 22');
         });
 
         return () => {
