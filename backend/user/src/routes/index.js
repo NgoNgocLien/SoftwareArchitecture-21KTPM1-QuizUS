@@ -49,6 +49,7 @@ rootRoute.post("/loginWeb", async (req, res) => {
         const admin = await model.admin.findOne({ where: { email: email } });
 
         if (!admin) {
+            console.log("brand")
             const brand = await model.brand.findOne({ where: { email: email } });
             if(!brand){
                 return failCode(res, null, "Email không tồn tại");
@@ -63,6 +64,7 @@ rootRoute.post("/loginWeb", async (req, res) => {
                 failCode(res, null, "Mật khẩu brand không chính xác");
             }
         }
+        console.log("admin")
 
         const isMatch = await bcrypt.compare(pwd, admin.pwd);
 
