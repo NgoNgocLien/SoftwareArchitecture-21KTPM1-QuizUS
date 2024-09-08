@@ -23,7 +23,6 @@ export default function Topbar() {
             <div className="d-flex flex-row user-profile align-items-center">
                 <img src="/icons/avatar.svg" alt="user-avatar" />
                 <p>Brand</p>
-                <img src="/icons/chevron-down.svg" alt="chevron-down" />
             </div>
         </div>
     )
