@@ -29,9 +29,17 @@
     font-weight: bold;
 }
 
+.user-table th input, .brand-table th input{
+    margin-right: 10px;
+}
+
 .user-table td, .brand-table td {
     font-size: 14px;
     font-family: regular-font;
+}
+
+.user-table td input, .brand-table td input{
+    margin-right: 10px;
 }
 
 .user-info, .brand-info {
@@ -44,12 +52,14 @@
     height: 30px;
     margin-right: 8px;
     border-radius: 100%;
+    object-fit: cover;
 }
 
 .brand-logo {
     width: 30px;
     height: 30px;
     margin-right: 8px;
+    object-fit: cover;
 }
 
 a {
@@ -92,7 +102,6 @@ a:hover {
 }
 
 /* Search bar */
-/* Search Bar Styling */
 .search-bar {
     position: relative;
     width: 100%;
@@ -112,7 +121,7 @@ a:hover {
 
 .search-input {
     width: 100%;
-    padding: 12px 12px 12px 35px;
+    padding: 12px 12px 12px 35px !important; 
     box-sizing: border-box; 
     font-family: regular-font;
     font-size: 16px;
@@ -162,7 +171,7 @@ a:hover {
     color: #101828; /* Ensures the option text follows the same text style */
 }
 
-.add-brand-container {
+.add-brand-ctn {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 16px;
@@ -193,3 +202,44 @@ a:hover {
     width: 24px; /* Adjust width and height as needed */
     height: 24px;
 }
+
+.add-brand-ctn:hover {
+    text-decoration: none;
+}
+
+.add-brand-btn:hover {
+    background: #007AFF;
+}
+
+/* manageGame */
+.game-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 24px;
+}
+
+.game {
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.235);
+    border: none;
+    outline: none;
+}
+
+.game:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.game-img {
+    width: 232px;
+    height: 236px;
+}
+
+.game-name {
+    font-weight: 500;
+    font-size: 16px;
+}
+/* ------------------------------ */

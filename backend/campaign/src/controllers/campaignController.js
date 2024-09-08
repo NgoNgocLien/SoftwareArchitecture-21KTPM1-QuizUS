@@ -4,6 +4,7 @@ const Voucher = require('../models/voucher');
 const PlayerLikeCampaign = require('../models/playerLikeCampaign');
 const PlayerGame = require('../models/playerGame');
 const PlayerVoucher = require('../models/playerVoucher');
+const Quiz = require('../models/quiz');
 
 // Lấy tất cả các chiến dịch
 const getAll = async (req, res) => {
@@ -142,11 +143,26 @@ const create = async (req, res) => {
             score_award: req.body.score_award
         });
 
-        const savedCampaign = await newCampaign.save();
-        res.status(201).json(savedCampaign);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    try {
+        const { quiz, campaign } = req.body;
+    
+        let newQuiz = null;
+        if (quiz && quiz.description && quiz.questions && quiz.questions.length > 0) {
+          newQuiz = new Quiz(quiz);
+          await newQuiz.save(); 
+        }
+    
+        const newCampaign = new Campaign({
+          ...campaign,
+          id_quiz: newQuiz ? newQuiz._id : null,
+        });
+    
+        await newCampaign.save(); 
+        res.status(201).json({ message: 'Campaign created successfully', campaign: newCampaign });
+      } catch (error) {
+        console.error('Error creating campaign with quiz:', error);
+        res.status(500).json({ message: 'Error creating campaign', error });
+      }
 };
 
 // Cập nhật một chiến dịch

@@ -5,7 +5,7 @@ import { getAllPlayers, searchPlayer } from '../api/playerApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
-export default function ManageUser() {
+export default function ManagePlayer() {
     const [playerData, setPlayerData] = useState([]);
     
     const handleSearch = async (e) => {
@@ -57,13 +57,16 @@ export default function ManageUser() {
                 <table className="user-table">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" />ID</th>
+                            <th>
+                                <input type="checkbox" />
+                                <span>ID</span>
+                            </th>
                             <th>Họ tên</th>
                             <th>Email</th>
                             <th>Điện thoại</th>
                             <th>Giới tính</th>
                             <th>Ngày sinh</th>
-                            <th>Hành động</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,7 +75,8 @@ export default function ManageUser() {
                             playerData.length > 0 ?
                             playerData.map(item => (
                                 <tr key={item.id_player}>
-                                    <td><input type="checkbox" />#{item.id_player}</td>
+                                    <td><input type="checkbox" />
+                                    <span>{item.id_player}</span></td>
 
                                     <td>
                                         <div className="user-info">

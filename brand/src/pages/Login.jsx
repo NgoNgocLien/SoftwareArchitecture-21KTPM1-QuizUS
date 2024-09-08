@@ -20,7 +20,7 @@ export default function Login(props) {
     useEffect(() => {
         const storedBrand = localStorage.getItem('brand');
         if (storedBrand) {
-            navigate("/event");
+            navigate("/dashboard");
         }
     }, [navigate]);
 
@@ -63,7 +63,7 @@ export default function Login(props) {
                 setLoginSuccess(true);
                 setTimeout(() => {
                     setLoginSuccess(false); 
-                    navigate("/event");
+                    navigate("/dashboard");
                 }, 3000); 
             } else {
                 setLoading(false);

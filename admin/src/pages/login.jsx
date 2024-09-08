@@ -47,15 +47,15 @@ export default function Login(props) {
             return;
         }
 
-        const user_login = {
+        const admin_login = {
             email: email,
             pwd: password
         };
-        console.log("user_login: ", user_login);
+        console.log("admin_login: ", admin_login);
 
         setLoading(true);
         try {
-            const result = await login(user_login);
+            const result = await login(admin_login);
             console.log("result:", result)
             if (result?.status === 200) {
                 setLoading(false);
