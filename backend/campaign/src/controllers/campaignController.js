@@ -358,7 +358,7 @@ const getStats = async (req, res) => {
     try {
         const currentDate = new Date();
         const totalCampaigns = await Campaign.countDocuments();
-        const totalVouchers = await PlayerVoucher.countDocuments();
+        const totalVouchers = await Voucher.countDocuments();
         const voucherStats = await PlayerVoucher.aggregate([
             {
             $lookup: {
