@@ -5,7 +5,7 @@ import { getAllPlayers, searchPlayer } from '../api/playerApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
-export default function ManageUser() {
+export default function ManagePlayer() {
     const [playerData, setPlayerData] = useState([]);
     
     const handleSearch = async (e) => {
