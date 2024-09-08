@@ -1,4 +1,5 @@
 import { TextToSpeech } from './TextToSpeech';
+import { Audio } from 'expo-av';
 
 export class TextToSpeechContext {
     private strategy: TextToSpeech;
@@ -11,10 +12,12 @@ export class TextToSpeechContext {
         this.strategy = strategy;
     }
 
-    async convertTextToSpeech(): Promise<void> {
-        while (!this.strategy.isReady()) {
-            await new Promise(resolve => setTimeout(resolve, 100));  // Add a small delay
-        }
-        this.strategy.playAudio();
+    async playAudio(): Promise<void> {
+        // Wait until the audio is ready, then play it
+        await this.strategy.playAudio();
+    }
+
+    async getDuration(): Promise<number> {
+        return await this.strategy.getDuration();
     }
 }

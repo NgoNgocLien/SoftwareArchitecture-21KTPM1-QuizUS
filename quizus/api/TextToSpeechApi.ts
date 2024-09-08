@@ -1,4 +1,5 @@
 import config from '@/constants/config';
+import { Audio } from 'expo-av';
 
 export const getElevenLabsSpeech = async (text: string, voice_id: string) => {
     try {
@@ -14,7 +15,7 @@ export const getElevenLabsSpeech = async (text: string, voice_id: string) => {
                 model_id: "eleven_turbo_v2_5",
                 language_code: "vi",
                 voice_settings: {
-                    stability: 0.1,
+                    stability: 0.2,
                     similarity_boost: 0.3
                 }
             }),
