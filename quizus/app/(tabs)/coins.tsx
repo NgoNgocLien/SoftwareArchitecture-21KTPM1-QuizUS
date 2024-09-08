@@ -110,13 +110,13 @@ export default function Coins() {
                 if(campaign.id_quiz !== "") {
                     const newVoucher = VoucherFactory.createVoucher('coin', voucherData);
                     coinVouchers.push({ voucher: newVoucher, campaign: {...campaign, id_campaign: campaign._id} });
-                    if (campaign.field === 'Nhà hàng') {
+                    if (campaign.brandField === 'Nhà hàng') {
                         nhaHangVouchers.push({ voucher: newVoucher, campaign: campaign });
-                    } else if (campaign.field === 'Cafe & Bánh') {
+                    } else if (campaign.brandField === 'Cafe & Bánh') {
                         cafeBanhVouchers.push({ voucher: newVoucher, campaign: campaign });
-                    } else if (campaign.field === 'Mua sắm') {
+                    } else if (campaign.brandField === 'Mua sắm') {
                         muaSamVouchers.push({ voucher: newVoucher, campaign: campaign });
-                    } else if (campaign.field === 'Giải trí') {
+                    } else if (campaign.brandField === 'Giải trí') {
                         giaiTriVouchers.push({ voucher: newVoucher, campaign: campaign });
                     }
                 }
