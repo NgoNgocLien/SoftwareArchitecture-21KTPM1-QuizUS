@@ -8,7 +8,7 @@ import Topbar from './components/topbar/Topbar';
 // Pages
 import Dashboard from './pages/Dashboard';
 import ManageBrand from './pages/ManageBrand';
-import ManageUser from './pages/ManageUser';
+import ManagePlayer from './pages/ManagePlayer';
 import ManageGame from './pages/ManageGame';
 import Login from './pages/login';
 
@@ -34,7 +34,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/brand" element={<ManageBrand />} />
-          <Route path="/user" element={<ManageUser />} />
+          <Route path="/player" element={<ManagePlayer />} />
           <Route path="/game" element={<ManageGame />} />
         </Route>
       </Routes>

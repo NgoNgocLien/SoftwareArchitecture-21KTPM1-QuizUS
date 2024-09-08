@@ -1,27 +1,16 @@
 import "./Sidebar.css";
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
     const [focus, setFocus] = useState("");
     const location = useLocation();
+    const navigate = useNavigate();
 
-    const handleClick = (tab) => {
-        setFocus(tab);
+    const handleClick = (tab, route) => {
+        setFocus(tab);  
+        navigate(route);
     };
-
-    // useEffect(() => {
-    //     const currentPath = location.pathname;
-    //     if (currentPath.includes("/dashboard")) {
-    //         setFocus("dashboard");
-    //     } else if (currentPath.includes("/user")) {
-    //         setFocus("player");
-    //     } else if (currentPath.includes("/brand")) {
-    //         setFocus("brand");
-    //     } else if (currentPath.includes("/game")) {
-    //         setFocus("game");
-    //     }
-    // }, [location.pathname]);
 
     return (
         <div className="sidebar bg-black col-2">
@@ -31,27 +20,31 @@ export default function Sidebar() {
             <div className="horizontal-line"></div>
             <ul className="sidebar-nav">
                 <li className={focus === "dashboard" || location.pathname.includes("/dashboard") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
-                    onClick={() => handleClick("dashboard")}>
+                    onClick={() => handleClick("dashboard", "/dashboard")}>
                     <img src="/icons/home.svg" alt="dashboard" />
-                    <Link to="/dashboard" className="link-text">Thống kê</Link>
+                    {/* <Link to="/dashboard" className="link-text">Thống kê</Link> */}
+                    <span className="link-text">Thống kê</span>
                 </li>
 
-                <li className={focus === "user" || location.pathname.includes("/user") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
-                    onClick={() => handleClick("event")}>
-                    <img src="/icons/user.svg" alt="user" />
-                    <Link to="/user" className="link-text">Người chơi</Link>
+                <li className={focus === "player" || location.pathname.includes("/player") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
+                    onClick={() => handleClick("player", "/player")}>
+                    <img src="/icons/user.svg" alt="player" />
+                    {/* <Link to="/player" className="link-text">Người chơi</Link> */}
+                    <span className="link-text">Người chơi</span>
                 </li>
                 
                 <li className={focus === "brand" || location.pathname.includes("/brand") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
-                    onClick={() => handleClick("brand")}>
+                    onClick={() => handleClick("brand", "/brand")}>
                     <img src="/icons/brand.svg" alt="brand" />
-                    <Link to="/brand" className="link-text">Nhãn hàng</Link>
+                    {/* <Link to="/brand" className="link-text">Nhãn hàng</Link> */}
+                    <span className="link-text">Nhãn hàng</span>
                 </li>
 
                 <li className={focus === "game" || location.pathname.includes("/game") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
-                    onClick={() => handleClick("game")}>
+                    onClick={() => handleClick("game", "/game")}>
                     <img src="/icons/game.svg" alt="game" />
-                    <Link to="/game" className="link-text">Trò chơi</Link>
+                    {/* <Link to="/game" className="link-text">Trò chơi</Link> */}
+                    <span className="link-text">Trò chơi</span>
                 </li>
             </ul>
         </div>
