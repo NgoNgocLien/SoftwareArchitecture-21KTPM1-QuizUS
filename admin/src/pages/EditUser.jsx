@@ -81,7 +81,7 @@ export default function EditUser() {
     return(
         <div className='ctn'>
             <div className='brand-logo-ctn'>
-                <img src={avatar?.length > 0 ? avatar : '/icons/camera-plus.svg'} alt="brand-logo"  className='user-avatar'/>
+                <img src={avatar?.length > 0 ? avatar : '/icons/camera-plus.svg'} alt="brand-logo"  className='profile-avatar'/>
                 <div className="upload-btn-ctn">
                     <button className="upload-btn"> {/* Button giả */}
                         <img src="/icons/camera-plus.svg" alt="upload-img" />

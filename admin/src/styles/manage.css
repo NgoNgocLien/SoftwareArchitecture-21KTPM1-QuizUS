@@ -243,12 +243,3 @@ a:hover {
     font-size: 16px;
 }
 /* ------------------------------ */
-
-/* editPlayer */
-.user-avatar {
-    width: 168px;
-    height: 168px;
-    border-radius: 10px;
-    background-position: center;
-    object-fit: contain;
-}
