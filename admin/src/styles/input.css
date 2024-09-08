@@ -167,3 +167,12 @@ select {
 .radio-group input[type="radio"] {
     margin-right: 8px; /* Space between radio button and label */
 }
+
+/* editPlayer */
+.profile-avatar {
+    width: 168px;
+    height: 168px;
+    border-radius: 10px;
+    background-position: center;
+    object-fit: contain;
+}

@@ -14,7 +14,7 @@ export default function Topbar() {
             case '/player':
                 return 'Người Chơi';
             case '/brand':
-                return 'Nhãn Hàng';
+                return 'Nhãn Hàng';   
             case '/game':
                 return 'Trò Chơi';
             default:
@@ -31,12 +31,15 @@ export default function Topbar() {
         navigate('/');
     };
 
+    const storedAdmin = localStorage.getItem('admin');
+    const admin = storedAdmin ? JSON.parse(storedAdmin) : null;
+
     return (
         <div className="topbar d-flex flex-row justify-content-between">
             <h6>{getPageName(location.pathname)}</h6>
             <div className="d-flex flex-row user-profile align-items-center">
                 <img src="/icons/avatar.svg" alt="user-avatar" />
-                <p>Admin</p>
+                <p>{admin.fullname}</p>
                 <img src="/icons/chevron-down.svg" alt="chevron-down"
                 style={{ cursor: "pointer"}} onClick={toggleDropdown}/>
 

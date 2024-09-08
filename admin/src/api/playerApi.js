@@ -35,7 +35,41 @@ const searchPlayer = async (keyword) => {
   }
 }
 
+const getPlayerById = async (id) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/player/${id}`;
+    const response = await axios.get(url);
+    
+    if (response?.data)
+      return response.data;
+    else
+      return null;
+  }
+  catch (err) {
+    console.log(err.message);
+    return null;
+  }
+}
+
+const updatePlayer = async (updatedData) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/player`;
+    const response = await axios.put(url, updatedData);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export {
   getAllPlayers,
-  searchPlayer
+  searchPlayer,
+  getPlayerById,
+  updatePlayer
 };
