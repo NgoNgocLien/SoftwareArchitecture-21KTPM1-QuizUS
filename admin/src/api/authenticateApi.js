@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { USER_URL } from "../util/config";
 
-const login = async (user_login) => {
+const login = async (admin_login) => {
   try {
     const url = `${USER_URL}/api/loginWeb`;
-    const response = await axios.post(url, user_login);
+    const response = await axios.post(url, admin_login);
     return response;
   }
   catch (err) {

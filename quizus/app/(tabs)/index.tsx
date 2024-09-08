@@ -52,7 +52,7 @@ export default function HomePage() {
                     console.log(err);
                     setCampaigns(res);
                     setLoading(false);
-                    showToast('error', 'Lỗi hệ thống');
+                    showToast('error', 'Lỗi hệ thống 11');
                 });
             }).catch((err) => {
                 console.log(err);
@@ -63,7 +63,7 @@ export default function HomePage() {
         }).catch((err) => {
             console.log(err);
             setLoading(false);
-            showToast('error', 'Lỗi hệ thống');
+            showToast('error', 'Lỗi hệ thống 22');
         });
 
         return () => {

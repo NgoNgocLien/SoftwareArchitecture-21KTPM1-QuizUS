@@ -80,3 +80,10 @@ li>i {
 .link-text:hover {
     text-decoration: none;
 }
+
+.icon-logout img{
+    height: 22px;
+    width: 22px;
+    margin-right: 5px;
+    margin-left: 3px;
+}

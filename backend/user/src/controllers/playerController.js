@@ -121,16 +121,15 @@ const search = async (req, res) => {
         const players = await model.player.findAll({
             where: {
                 [Op.or]: [
-                    { username: { [Op.iLike]: `%${keyword}%` } },
-                    { email: { [Op.iLike]: `%${keyword}%` } },
-                    { phone: { [Op.iLike]: `%${keyword}%` } },
-                    { facebook: { [Op.iLike]: `%${keyword}%` } }
+                    { id_player: keyword },
+                    { email: keyword },
+                    { phone: keyword },
                 ]
             }
         });
 
         if (players.length > 0) {
-            successCode(res, players, 'Tìm thấy player thành công');
+            successCode(res, players[0], 'Tìm thấy player thành công');
         } else {
             failCode(res, [], 'Không tìm thấy player nào phù hợp');
         }

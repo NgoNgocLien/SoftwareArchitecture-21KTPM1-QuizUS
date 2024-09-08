@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { login } from '../api/authenticateApi';
 import Loading from '../components/system-feedback/Loading';
@@ -16,6 +16,14 @@ export default function Login(props) {
     const [passwordError, setPasswordError] = useState('');
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedAdmin = localStorage.getItem('admin');
+        if (storedAdmin) {
+            navigate("/dashboard");
+        }
+    }, [navigate]);
+
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -39,15 +47,15 @@ export default function Login(props) {
             return;
         }
 
-        const user_login = {
+        const admin_login = {
             email: email,
             pwd: password
         };
-        console.log("user_login: ", user_login);
+        console.log("admin_login: ", admin_login);
 
         setLoading(true);
         try {
-            const result = await login(user_login);
+            const result = await login(admin_login);
             console.log("result:", result)
             if (result?.status === 200) {
                 setLoading(false);

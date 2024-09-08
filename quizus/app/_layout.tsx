@@ -25,13 +25,11 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
 
       retrieveFromSecureStore('id_player', setIdPlayer);
-
-
-    //   if (id_player) {
-    //     router.push('/(tabs)');
-    //   } else {
-    //     router.push('/login'); 
-    //   }
+      if (id_player) {
+        router.push('/(tabs)');
+      } else {
+        router.push('/login'); 
+      }
 
       // router.push('/(tabs)');
     }
@@ -45,7 +43,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="login" />
-          <Stack.Screen name="otp" />
+          {/* <Stack.Screen name="otp" /> */}
           <Stack.Screen name="signup" />
 
           <Stack.Screen name="(tabs)" />

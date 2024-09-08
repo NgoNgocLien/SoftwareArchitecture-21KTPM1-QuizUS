@@ -4,6 +4,8 @@ import "../styles/manage.css";
 import { getAllBrands, searchBrand } from '../api/brandApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
 
 export default function ManageBrand() {
     // const [selectedField, setSelectedField] = useState('');
@@ -44,15 +46,21 @@ export default function ManageBrand() {
         getData();
     }, [])
 
+    const navigate = useNavigate();
+
+    const handleAddBrand = () => {
+        navigate('/add-brand');
+    };
+
     return (
         <div>
             {/* Add brand */}
-            <div className="add-brand-container">
+            <Link to="/add-brand" className='add-brand-ctn'>
                 <button className="add-brand-btn">
                     <img src="/icons/plus.svg" alt="add-brand-icon" className="add-brand-icon" />
                     Thêm nhãn hàng
                 </button>
-            </div>
+            </Link>
             
             {/* Search bar */}
             <div className="search-bar">
@@ -74,7 +82,7 @@ export default function ManageBrand() {
                             <th>Tên</th>
                             <th>Địa chỉ</th>
                             <th>Lĩnh vực</th>
-                            <th>Hành động</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,7 +91,7 @@ export default function ManageBrand() {
                             brandData.length > 0 ?
                             brandData.map((item, index) => (
                                 <tr key={item.id_brand}>
-                                    <td><input type="checkbox" />#{item.id_brand}</td>
+                                    <td><input type="checkbox" />{item.id_brand}</td>
 
                                     <td>
                                         <div className="brand-info">

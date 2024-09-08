@@ -4,6 +4,7 @@ const Voucher = require('../models/voucher');
 const PlayerLikeCampaign = require('../models/playerLikeCampaign');
 const PlayerGame = require('../models/playerGame');
 const PlayerVoucher = require('../models/playerVoucher');
+const Quiz = require('../models/quiz');
 
 // Lấy tất cả các chiến dịch
 const getAll = async (req, res) => {
@@ -123,28 +124,26 @@ const getById = async (req, res) => {
 
 // Tạo một chiến dịch mới
 const create = async (req, res) => {
-    try {
+     try {
+        const { quiz, campaign } = req.body;
+    
+        let newQuiz = null;
+        if (quiz && quiz.description && quiz.questions && quiz.questions.length > 0) {
+          newQuiz = new Quiz(quiz);
+          await newQuiz.save(); 
+        }
+    
         const newCampaign = new Campaign({
-            id_brand1: req.body.id_brand1,
-            id_brand2: req.body.id_brand2,
-            name: req.body.name,
-            photo: req.body.photo,
-            start_datetime: req.body.start_datetime,
-            end_datetime: req.body.end_datetime,
-            id_voucher: req.body.id_voucher,
-            max_amount_voucher: req.body.max_amount_voucher,
-            given_amount_voucher: req.body.given_amount_voucher,
-            id_quiz: req.body.id_quiz,
-            item1_photo: req.body.item1_photo,
-            item2_photo: req.body.item2_photo,
-            score_award: req.body.score_award
+          ...campaign,
+          id_quiz: newQuiz ? newQuiz._id : null,
         });
-
-        const savedCampaign = await newCampaign.save();
-        res.status(201).json(savedCampaign);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    
+        await newCampaign.save(); 
+        res.status(201).json({ message: 'Campaign created successfully', campaign: newCampaign });
+      } catch (error) {
+        console.error('Error creating campaign with quiz:', error);
+        res.status(500).json({ message: 'Error creating campaign', error });
+      }
 };
 
 // Cập nhật một chiến dịch
