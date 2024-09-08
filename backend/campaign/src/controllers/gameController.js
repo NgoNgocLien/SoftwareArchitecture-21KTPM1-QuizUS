@@ -331,16 +331,16 @@ const sendItem = async (req, res) => {
     });
 
     // Nếu người nhận chưa tham gia campaign, tạo một bản ghi mới trong PlayerGame
-    if (!receiverGame) {
-      receiverGame = new PlayerGame({
-        id_player: id_receiver,
-        id_campaign: id_campaign,
-        player_turn: 3,
-        quantity_item1: 0,
-        quantity_item2: 0
-      });
-      await receiverGame.save(); 
-    }
+    // if (!receiverGame) {
+    //   receiverGame = new PlayerGame({
+    //     id_player: id_receiver,
+    //     id_campaign: id_campaign,
+    //     player_turn: 3,
+    //     quantity_item1: 0,
+    //     quantity_item2: 0
+    //   });
+    //   await receiverGame.save(); 
+    // }
 
     // Tạo bản ghi mới trong PlayerGift để lưu thông tin mảnh ghép đã tặng
     const newGift = new PlayerGift({
@@ -394,6 +394,17 @@ const receiveItem = async (req, res) => {
       id_player: id_receiver,
       id_campaign: id_campaign
     });
+
+    if (!receiverGame) {
+      receiverGame = new PlayerGame({
+        id_player: id_receiver,
+        id_campaign: id_campaign,
+        player_turn: 3,
+        quantity_item1: 0,
+        quantity_item2: 0
+      });
+      await receiverGame.save(); 
+    }
 
     // Kiểm tra và cập nhật số lượng item
     if (id_item === 1) {

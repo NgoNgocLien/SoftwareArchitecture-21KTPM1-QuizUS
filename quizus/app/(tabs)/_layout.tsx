@@ -101,6 +101,12 @@ export default function TabLayout() {
                 tabBarButton: () => null,
             }}
         />
+        <Tabs.Screen 
+            name="noti"
+            options={{
+                tabBarButton: () => null,
+            }}
+        />
     </Tabs>
     </RootSiblingParent> 
   );

@@ -16,11 +16,12 @@ import { showToast } from '@/components/ToastBar';
 import { PlayerInfo } from '@/models/game/PlayerInfo';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
+import { sendItem } from '@/api/GameApi';
 
 export default function GiftVoucher() {
     const router = useRouter();
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [keyword, setKeyword] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(-1)
     const [selectedQuantity, setSelectedQuantity] = useState(-1)
@@ -53,6 +54,7 @@ export default function GiftVoucher() {
                 
                 })
                 setPlayerItems([...player_items])
+                setLoading(false)
             }).catch((error) => {
                 console.error('Error fetching player score:', error);
                 showToast('error', 'Lỗi hệ thống');
@@ -67,9 +69,25 @@ export default function GiftVoucher() {
     
     const handleGift = () => {
         setLoading(true);
+
+        if (selectedIndex == -1){
+            showToast('warning', 'Chưa chọn vật phẩm');
+            setLoading(false);
+            return;
+        }
+
         getPlayerByKeyword(keyword)
         .then(player => {
+            console.log('gift-vouchers: ', player.id_player)
+
             retrieveFromSecureStore('id_player', (id_player: string) => {
+
+                if (id_player == player.id_player){
+                    showToast('warning', 'Không thể tự tặng chính mình');
+                    setLoading(false);
+                    return;
+                }
+
                 console.log('gift-vouchers: ',{
                     id_sender: id_player,
                     id_receiver: player.id_player,
@@ -77,22 +95,24 @@ export default function GiftVoucher() {
                     id_item: playerItems[selectedIndex].id_item,
                 })
 
-                // sendItem()
+                sendItem(id_player, player.id_player, playerItems[selectedIndex].id_item, playerItems[selectedIndex].id_campaign)
+                .then(() => {
+                    showToast('success', 'Tặng thành công');
+                    router.replace('/items')
+                })
+
                 setLoading(false);
             })
         })
-        .catch(_ => {
+        .catch(() => {
             setLoading(false);
-            showToast('error', 'Không tìm thấy bạn bè');
+            showToast('error', 'Không tìm thấy người dùng');
         })
     }
 
     return (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <View style={styles.background}>
-                {
-                    loading && <LoadingView/>
-                }
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <View style={styles.background}>
                 <SafeAreaView style={styles.header}>
                     <MaterialCommunityIcons 
                         name={"arrow-left"} 
@@ -139,6 +159,7 @@ export default function GiftVoucher() {
                                                 setSelectedQuantity(quantity);
                                             }}>
                                             <Image
+                                                key={photo}
                                                 source={{ uri: photo}}
                                                 style={[styles.itemImage]}
                                             />
@@ -150,7 +171,10 @@ export default function GiftVoucher() {
                         }
                             </View>
                             </ScrollView> 
-                            <Button onPress={handleGift} style={styles.giftButton} text={'Tặng ngay'}></Button>
+                            {
+                                loading ? <LoadingView/> :
+                                <Button onPress={handleGift} style={styles.giftButton} text={'Tặng ngay'}></Button> 
+                            }
                             </>
                         ) : (
                             <EmptyView texts={['Bạn chưa có mảnh ghép nào.','Chơi trò chơi để thu thập sự kiện ngay']}/>
@@ -158,8 +182,8 @@ export default function GiftVoucher() {
                     }
                     
                 </View>
-            </View>
-        </TouchableWithoutFeedback>
+    </View>
+    </TouchableWithoutFeedback>
     )
 }
 
@@ -249,6 +273,18 @@ const styles = StyleSheet.create({
     },
     giftButton:{
         marginTop: 'auto'
-    }
+    },
+    overlayContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        paddingHorizontal: 20,
+        flex: 1,
+        backgroundColor: Colors.gray._900,
+        opacity: 0.5,
+        zIndex: 100
+      },
 });
 
