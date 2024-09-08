@@ -80,11 +80,6 @@ input[type="text"], input[type="url"], select {
     font-size: 16px;
 }
 
-.form-group {
-    flex: 1;
-    /* gap: 24px; */
-}
-
 #brand-name {
     width: 100%; /* Make the input take up the full width of its container */
 }
@@ -150,4 +145,25 @@ select {
 
 .save-btn:hover {
     background: #007AFF;
+}
+
+.form-group input[type="text"], .form-group input[type="url"] {
+    box-sizing: border-box;
+}
+
+.radio-group {
+    gap: 16px; /* Adjust spacing between radio buttons */
+    box-sizing: border-box;
+    align-items: start;
+    width: 32px;
+}
+
+.radio-group label {
+    display: flex;
+    font-family: regular-font;
+    color: #434657;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 8px; /* Space between radio button and label */
 }

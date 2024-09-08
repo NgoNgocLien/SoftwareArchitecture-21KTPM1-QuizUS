@@ -23,32 +23,48 @@ export default function EditUser() {
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="name">Họ tên</label>
-                        <input type="text" id="name"/>
+                        <input type="text" id="name" placeholder="Họ tên"/>
                     </div>
                 </div>
 
-                {/* Name & Field */}
+                {/* Email & Phone */}
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="brand-name">Tên nhãn hàng</label>
-                        <input type="text" id="brand-name" placeholder="Nhập tên nhãn hàng" />
+                        <label htmlFor="email">Email</label>
+                        <input type="text" id="email" placeholder="Email"/>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="field">Lĩnh vực</label>
-                        <select id="field">
-                            <option value="restaurant">Nhà hàng</option>
-                            <option value="cafe">Cafe & Bánh</option>
-                            <option value="shopping">Mua sắm</option>
-                            <option value="entertainment">Giải trí</option>
-                        </select>
+                        <label htmlFor="email">Số điện thoại</label>
+                        <input type="text" id="phone" placeholder="Số điện thoại" />
                     </div>
                 </div>
 
-                {/* Website */}
+                {/* Birthday & Gender */}
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="website">Trang web</label>
-                        <input type="url" id="website" placeholder="Nhập URL trang web" />
+                        <label htmlFor="birthday">Sinh nhật</label>
+                        <input type="text" id="birthday" placeholder="Sinh nhật" />
+                    </div>
+                    <div className="form-group">
+                        <label>Giới tính</label>
+                        <div className="radio-group">
+                            <label>
+                                <input type="radio" name="gender" value="male" />
+                                Nam
+                            </label>
+                            <label>
+                                <input type="radio" name="gender" value="female" />
+                                Nữ
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Facebook */}
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="website">Facebook</label>
+                        <input type="url" id="website" placeholder="Link Facebook" />
                     </div>
                 </div>
 
