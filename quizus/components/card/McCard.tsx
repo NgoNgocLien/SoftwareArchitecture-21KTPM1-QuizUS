@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { Audio } from 'expo-av';
+import { TextToSpeechContext } from '@/models/text-to-speech/TextToSpeechContext';
+import { ElevenLabsTTS } from '@/models/text-to-speech/ElevenLabsTTS';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface McCardProps {
   question_id?: string;
@@ -9,18 +12,17 @@ interface McCardProps {
   setMillisecondMC: (value: number) => void;
 }
 
-const audioFiles: { [key: string]: any } = {
-  q1: require('@/assets/audio/q1.mp3'),
-  q2: require('@/assets/audio/q2.mp3'),
-  q3: require('@/assets/audio/q3.mp3'),
-  q4: require('@/assets/audio/q4.mp3'),
-  q5: require('@/assets/audio/q5.mp3'),
-  q6: require('@/assets/audio/q6.mp3'),
-  q7: require('@/assets/audio/q7.mp3'),
-  q8: require('@/assets/audio/q8.mp3'),
-  q9: require('@/assets/audio/q9.mp3'),
-  q10: require('@/assets/audio/q10.mp3'),
-};
+const MCs = [
+    require('@/assets/images/gif/MC_01.gif'),
+    require('@/assets/images/gif/MC_02.gif'),
+    require('@/assets/images/gif/MC_03.gif'),
+    require('@/assets/images/gif/MC_04.gif'),
+    require('@/assets/images/gif/MC_05.gif'),
+    require('@/assets/images/gif/MC_06.gif'),
+    require('@/assets/images/gif/MC_07.gif'),
+    require('@/assets/images/gif/MC_08.gif'),
+    require('@/assets/images/gif/MC_09.gif'),
+];
 
 export function McCard({
     question_id = "q1",
@@ -28,38 +30,16 @@ export function McCard({
     setMillisecondMC
 }: McCardProps) {
    
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [TTSContext, setTTSContext] = useState<TextToSpeechContext | null>(null);
   
   // Function to play the sound
   const playSound = async () => {
     try {
-      const pathMp3 = audioFiles[question_id]; // Select the audio file using question_id
-
-      if (pathMp3) {
-        const { sound, status } = await Audio.Sound.createAsync(
-          pathMp3,
-          { shouldPlay: true, isLooping: false }
-        );
-        setSound(sound);
-  
-        console.log('Sound loaded:', status);
-        const currentStatus = await sound.getStatusAsync();
-        console.log('Current Status:', currentStatus);
-  
-        // Play sound
-        await sound.playAsync();
-        console.log('Playing sound...');
-  
-        // Get the duration of the sound
-        if (currentStatus.isLoaded && currentStatus.durationMillis) {
-          setMillisecondMC(currentStatus.durationMillis);
-          console.log("Seconds: ", currentStatus.durationMillis)
-        } else {
-          setMillisecondMC(0); // Set duration to 0 if unavailable
-        }
-      } else {
-        console.error(`Audio file not found for question_id: ${question_id}`);
-      }
+        const context = new TextToSpeechContext(new ElevenLabsTTS(question_text));
+        await context.playAudio();
+        await context.getDuration().then((duration) => {
+            setMillisecondMC(duration + 1000);
+        });
     } catch (error) {
       console.error('Error loading sound:', error);
     }
@@ -75,27 +55,20 @@ export function McCard({
 
   // useEffect to handle playing the sound
   useEffect(() => {
-    requestPermissions();
+        requestPermissions();
 
-    const play = async () => {
-      await playSound();
-    };
+        playSound();
 
-    const timer = setTimeout(() => {
-      play();
-    }, 1000); // 1-second delay
-
-    return () => {
-      clearTimeout(timer);
-      sound?.unloadAsync(); // Clean up the sound object
-    };
-  }, [question_id]);
+        return () => {
+            setTTSContext(null);
+        };
+    }, [question_id]);
 
   return (
     <View style={styles.videoContainer}>
       <Image
-            style={{width: '100%', height: '80%'}}
-            source={require('@/assets/images/MC.gif')}
+            style={{width: '100%', height: '100%'}}
+            source={MCs[Math.floor(Math.random() * MCs.length)]}
         />
     </View>
   );

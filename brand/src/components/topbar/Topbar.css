@@ -21,6 +21,11 @@
     gap: 8px;
 }
 
+.user-profile img{
+    height: 58px;
+    width: 58px;
+}
+
 .user-profile p{
     padding-top: 15px;
 }

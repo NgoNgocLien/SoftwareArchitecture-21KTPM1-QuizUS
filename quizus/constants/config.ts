@@ -12,14 +12,14 @@
 // const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
 
 // the simple cafe L1
-// const USER_BE = 'http://192.168.0.109:8000/user';
-// const GAME_BE = 'http://192.168.0.109:8000/game';
-// const CAMPAIGN_BE = 'http://192.168.0.109:8000/campaign';
+const USER_BE = 'http://192.168.0.109:8000/user';
+const GAME_BE = 'http://192.168.0.109:8000/game';
+const CAMPAIGN_BE = 'http://192.168.0.109:8000/campaign';
 
 // simple
-const USER_BE = 'http://192.168.0.225:8000/user';
-const GAME_BE = 'http://192.168.0.225:8000/game';
-const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
+// const USER_BE = 'http://192.168.0.225:8000/user';
+// const GAME_BE = 'http://192.168.0.225:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
 
 const NOTI_BE = '';
 
@@ -35,6 +35,8 @@ const ITEM_GAME = 'itemgame';
 
 const ELEVENLABS_API_KEY = 'sk_a2a6129948bb65f5b2461b4d8903094ed17aff082441ec5f';
 
+const VOICE_ID = 'onwK4e9ZLuTAKqWW03F9';
+
 export default {
   USER_BE,
   CAMPAIGN_BE,
@@ -49,5 +51,6 @@ export default {
 
   ID_PLAYER,
 
-  ELEVENLABS_API_KEY
+  ELEVENLABS_API_KEY,
+  VOICE_ID,
 };

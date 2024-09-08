@@ -6,10 +6,12 @@ export default function Topbar() {
 
     const getPageName = (pathname) => {
         switch (pathname) {
+            case '/dashboard':
+                return 'Thống kê';
             case '/event':
                 return 'Sự kiện';
             case '/voucher':
-                return 'Người Chơi';
+                return 'Voucher';
             case '/info':
                 return 'Thông tin';
             default:
@@ -17,12 +19,15 @@ export default function Topbar() {
         }
     };
 
+    const storedBrand = localStorage.getItem('brand');
+    const brand = storedBrand ? JSON.parse(storedBrand) : null;
+
     return (
         <div className="topbar d-flex flex-row justify-content-between">
             <h6>{getPageName(location.pathname)}</h6>
             <div className="d-flex flex-row user-profile align-items-center">
-                <img src="/icons/avatar.svg" alt="user-avatar" />
-                <p>Brand</p>
+                <img src={brand.logo ? brand.logo : "/icons/avatar.svg"} alt="user-avatar" />
+                <p>{brand.name}</p>
             </div>
         </div>
     )

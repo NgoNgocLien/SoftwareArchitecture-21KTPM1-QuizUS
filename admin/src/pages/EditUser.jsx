@@ -1,12 +1,87 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
+import { getPlayerById, updatePlayer } from '../api/playerApi';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function EditUser() {
+    const { id } = useParams();
+    const navigate =  useNavigate();
+
+    const [fullname, setFullname] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [dob, setDob] = useState('');
+    const [gender, setGender] = useState('');
+    const [facebook, setFacebook] = useState('');
+    const [avatar, setAvatar] = useState('');
+
+    const onCancel  = () => {
+        navigate(`/player`);
+    }
+
+    useEffect(() => {
+        const getData = async () => {
+            const data = await getPlayerById(id);
+
+            if (data) {
+                setFullname(data.username || '');
+                setEmail(data.email || '');
+                setPhone(data.phone || '');
+                setDob(data.dob || '');
+                setGender(data.gender || '');
+                setFacebook(data.facebook || '');
+                setAvatar(data.avatar);
+            }
+        }
+        getData();
+    }, [id]);
+
+    const onSave = async () => {
+        let updatedData = {
+            id_player: id,
+            username: fullname,
+            score: 0,
+            email,
+            phone,
+            dob,
+            gender,
+            facebook,
+            avatar
+        }
+        let success = await updatePlayer(updatedData);
+        if (success) {
+            confirmAlert({
+                message: 'Chỉnh sửa người dùng thành công!',
+                buttons: [
+                    {
+                        label: 'Xác nhận',
+                        onClick: () => {
+                            navigate(`/player`);
+                        }
+                    }
+                ]
+            });
+        }
+        else {
+            confirmAlert({
+                message: 'Chỉnh sửa người dùng thất bại!',
+                buttons: [
+                    {
+                        label: 'Xác nhận'
+                    }
+                ]
+            });
+        }
+    }
+
     return(
         <div className='ctn'>
             <div className='brand-logo-ctn'>
-                <img src="/images/placeholder-img.jpg" alt="brand-logo" />
+                <img src={avatar?.length > 0 ? avatar : '/icons/camera-plus.svg'} alt="brand-logo"  className='profile-avatar'/>
                 <div className="upload-btn-ctn">
                     <button className="upload-btn"> {/* Button giả */}
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
@@ -23,39 +98,55 @@ export default function EditUser() {
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="name">Họ tên</label>
-                        <input type="text" id="name"/>
+                        <input type="text" id="name" placeholder="Họ tên" value={fullname} onChange={(e) => {setFullname(e.target.value)}}/>
                     </div>
                 </div>
 
-                {/* Name & Field */}
+                {/* Email & Phone */}
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="brand-name">Tên nhãn hàng</label>
-                        <input type="text" id="brand-name" placeholder="Nhập tên nhãn hàng" />
+                        <label htmlFor="email">Email</label>
+                        <input type="text" id="email" placeholder="Email" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="field">Lĩnh vực</label>
-                        <select id="field">
-                            <option value="restaurant">Nhà hàng</option>
-                            <option value="cafe">Cafe & Bánh</option>
-                            <option value="shopping">Mua sắm</option>
-                            <option value="entertainment">Giải trí</option>
-                        </select>
+                        <label htmlFor="email">Số điện thoại</label>
+                        <input type="text" id="phone" placeholder="Số điện thoại" value={phone} onChange={(e) => {setPhone(e.target.value)}}/>
                     </div>
                 </div>
 
-                {/* Website */}
+                {/* Birthday & Gender */}
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="website">Trang web</label>
-                        <input type="url" id="website" placeholder="Nhập URL trang web" />
+                        <label htmlFor="birthday">Sinh nhật</label>
+                        <input type="text" id="birthday" placeholder="Sinh nhật" value={dob} onChange={(e) => {setDob(e.target.value)}}/>
+                    </div>
+                    <div className="form-group">
+                        <label>Giới tính</label>
+                        <div className="radio-group">
+                            <label>
+                                <input type="radio" name="gender" value="Nam" checked={gender === 'Nam'} onChange={(e) => {setGender(e.target.value)}}/>
+                                Nam
+                            </label>
+                            <label>
+                                <input type="radio" name="gender" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => {setGender(e.target.value)}}/>
+                                Nữ
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Facebook */}
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="website">Facebook</label>
+                        <input type="url" id="website" placeholder="Link Facebook" value={facebook} onChange={(e) => {setFacebook(e.target.value)}}/>
                     </div>
                 </div>
 
                 {/* Buttons */}
                 <div className="button-group">
-                    <button className="cancel-btn">Hủy</button>
-                    <button className="save-btn">Lưu</button>
+                    <button className="cancel-btn" onClick={onCancel}>Hủy</button>
+                    <button className="save-btn" onClick={() => {onSave()}}>Lưu</button>
                 </div>
 
             </div>
