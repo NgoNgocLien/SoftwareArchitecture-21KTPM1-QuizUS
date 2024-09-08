@@ -196,13 +196,6 @@ a:hover {
     height: 24px;
 }
 
-.game-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    column-gap: 24px;
-}
-
 .add-brand-ctn:hover {
     text-decoration: none;
 }
@@ -212,11 +205,20 @@ a:hover {
 }
 
 /* manageGame */
+.game-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 24px;
+}
+
 .game {
     padding: 16px;
     background-color: #ffffff;
     border-radius: 20px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.235);
+    border: none;
+    outline: none;
 }
 
 .game:hover {
