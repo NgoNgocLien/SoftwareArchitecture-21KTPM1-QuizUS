@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/input.css";
 
-export default function AddBrand() {
+export default function EditBrand() {
     return(
         <div className='ctn'>
             <div className='brand-logo-ctn'>
