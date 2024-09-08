@@ -51,8 +51,25 @@ const getPlayerById = async (id) => {
   }
 }
 
+const updatePlayer = async (updatedData) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/player`;
+    const response = await axios.put(url, updatedData);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export {
   getAllPlayers,
   searchPlayer,
-  getPlayerById
+  getPlayerById,
+  updatePlayer
 };

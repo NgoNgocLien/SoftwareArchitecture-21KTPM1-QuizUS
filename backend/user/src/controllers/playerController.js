@@ -90,6 +90,7 @@ const update = async (req, res) => {
         })
 
         if (player) {
+            player.username = req.body.username || player.username;
             player.facebook = req.body.facebook || player.facebook;
             player.avatar = req.body.avatar || player.avatar;
             player.dob = req.body.dob || player.dob;
