@@ -33,7 +33,7 @@ export default function Sidebar() {
                     <span className="link-text">Người chơi</span>
                 </li>
                 
-                <li className={focus === "brand" || location.pathname.includes("/brand") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
+                <li className={focus === "brand" || location.pathname.includes("/brand") || location.pathname.includes("/add-brand") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
                     onClick={() => handleClick("brand", "/brand")}>
                     <img src="/icons/brand.svg" alt="brand" />
                     {/* <Link to="/brand" className="link-text">Nhãn hàng</Link> */}

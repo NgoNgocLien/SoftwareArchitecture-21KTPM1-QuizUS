@@ -2,13 +2,23 @@
 @import url("../../styles/common.css");
 
 .back-link {
-    height: 60px;
-    padding-left: 20px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 23px 0px 23px 20px;
     margin-bottom: 5px;
-    color: gray;
-    span{
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
+    a{
         color: #A3A3A3;
-        margin-left: 15px;
-        font-size: 18px;
+        margin-left: 12px;
+        font-size: 20px;
+    }
+    a:hover{
+        color: black;
+        text-decoration: none;
+    }
+    img{
+        height: 16px;
+        width: 16px;
     }
 }
