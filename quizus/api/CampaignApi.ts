@@ -29,8 +29,9 @@ export const getCampaignsInProgess = async () => {
                 'Content-Type': 'application/json',
             },
         });
-
+        console.log("in_progress", response);
         const result = await response.json();
+        
         if (response.ok) {
             return result;
         } else {
@@ -38,7 +39,7 @@ export const getCampaignsInProgess = async () => {
         }
     } catch (error) {
         console.error(error);
-        throw new Error('Failed to fetch data');
+        throw new Error('Failed to fetch data getCampaignsInProgess: ');
     }
 }
 

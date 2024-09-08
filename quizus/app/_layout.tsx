@@ -25,13 +25,11 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
 
       retrieveFromSecureStore('id_player', setIdPlayer);
-
-
-    //   if (id_player) {
-    //     router.push('/(tabs)');
-    //   } else {
-    //     router.push('/login'); 
-    //   }
+      if (id_player) {
+        router.push('/(tabs)');
+      } else {
+        router.push('/login'); 
+      }
 
       // router.push('/(tabs)');
     }
