@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Chart from "chart.js/auto";
+// import Chart from "chart.js/auto";
 import LineChart from '../components/charts/LineChart';
 import VoucherChart from '../components/charts/VoucherChart';
 import PlayerChart from '../components/charts/PlayerChart';

@@ -34,6 +34,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route element={<Layout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/event" element={<ManageEvent />} />
           <Route path="/voucher" element={<ManageVoucher />} />
           {/* <Route path="/info" element={<BrandInfo />} /> */}
