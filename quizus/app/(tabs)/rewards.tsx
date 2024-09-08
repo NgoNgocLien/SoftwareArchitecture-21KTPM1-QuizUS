@@ -58,7 +58,11 @@ export default function Rewards() {
                     }
                 }); 
                 
-                setVouchers([allVouchers, coinVouchers, itemVouchers]);
+                setVouchers([
+                    allVouchers,
+                    coinVouchers.sort((a, b) => a.voucher.getScoreExchange() - b.voucher.getScoreExchange()),
+                    itemVouchers,
+                ]);
                 setLoading(false);
             })
             .catch(error => {
@@ -115,6 +119,17 @@ export default function Rewards() {
             showToast('error', 'Không tìm thấy thông tin người chơi');
         });
     },[]);
+
+    useEffect(() => {() => {
+            if (vouchers && playerInfo) {
+                setVouchers([
+                    vouchers[0],
+                    vouchers[1].sort((a, b) => a.voucher.getScoreExchange() - b.voucher.getScoreExchange()),
+                    vouchers[2].sort((a, b) => playerInfo.getPlayerQuantityItem1(a.campaign.id_campaign, a.voucher.getId()) - playerInfo?.getPlayerQuantityItem1(b.campaign.id_campaign, b.voucher.getId())),
+                ]);
+            }
+        }
+    }, [playerInfo]);
     
     console.log(playerInfo)
     return (

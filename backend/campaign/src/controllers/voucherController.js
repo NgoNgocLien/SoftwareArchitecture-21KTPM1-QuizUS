@@ -16,8 +16,6 @@ const getActive = async (req, res) => {
 
         const vouchers = [...quizCampaignVouchers, ...itemCampaignVouchers];
 
-        // for each voucher, get campaign info
-
         await Promise.all(vouchers.map(async (voucher) => {
             const campaign = await Campaign.findOne({ id_voucher: voucher._id });
             if (!campaign) {
@@ -28,7 +26,6 @@ const getActive = async (req, res) => {
 
         const result = await Promise.all(vouchers.map(async (item) => {
             const id_brand = item.id_brand;
-            console.log(id_brand);
             try {
                 const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand}`);
                 const { campaign, ...rest } = item;
