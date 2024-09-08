@@ -82,7 +82,7 @@ export default function ManageBrand() {
                             <th>Tên</th>
                             <th>Địa chỉ</th>
                             <th>Lĩnh vực</th>
-                            <th>Hành động</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,7 +91,7 @@ export default function ManageBrand() {
                             brandData.length > 0 ?
                             brandData.map((item, index) => (
                                 <tr key={item.id_brand}>
-                                    <td><input type="checkbox" />#{item.id_brand}</td>
+                                    <td><input type="checkbox" />{item.id_brand}</td>
 
                                     <td>
                                         <div className="brand-info">
