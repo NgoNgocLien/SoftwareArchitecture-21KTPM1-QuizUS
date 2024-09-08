@@ -52,7 +52,7 @@ export default function ManagePlayer() {
                 <input
                     type="text"
                     className="search-input"
-                    placeholder="Tìm kiếm theo ID, tên, email người dùng"
+                    placeholder="Tìm kiếm theo ID, tên, email người chơi"
                     onChange={(e) => handleSearch(e)}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
