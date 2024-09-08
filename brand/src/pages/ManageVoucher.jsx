@@ -51,7 +51,7 @@ export default function ManageVoucher() {
                     <tbody>
                     {/* Row */}
                         <tr>
-                            <td><input type="checkbox" />#123456</td>
+                            <td><input type="checkbox" />123456</td>
 
                             <td>
                                 <div className="voucher-info">

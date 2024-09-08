@@ -52,7 +52,7 @@ export default function Manageevent() {
                     <tbody>
                     {/* Row */}
                         <tr>
-                            <td><input type="checkbox" />#123456</td>
+                            <td><input type="checkbox" />123456</td>
 
                             <td>
                                 <div className="event-info">

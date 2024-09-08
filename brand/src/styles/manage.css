@@ -29,9 +29,17 @@
     font-weight: bold;
 }
 
+.voucher-table th input, .event-table th input{
+    margin-right: 10px;
+}
+
 .voucher-table td, .event-table td {
     font-size: 14px;
     font-family: regular-font;
+}
+
+.voucher-table td input, .event-table td input{
+    margin-right: 10px;
 }
 
 .voucher-info, .event-info {
