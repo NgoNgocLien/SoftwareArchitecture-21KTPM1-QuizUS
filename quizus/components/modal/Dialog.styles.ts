@@ -13,6 +13,7 @@ const dialogStyles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
+        paddingBottom: 0,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -21,13 +22,14 @@ const dialogStyles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        gap: 20
+        gap: 20,
     },
 
     topView: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        minWidth: '100%'        
     },
     dangerIconContainer: {
         backgroundColor: Colors.brand._200,
@@ -47,6 +49,7 @@ const dialogStyles = StyleSheet.create({
     buttonView:{
         flexDirection: 'row',
         justifyContent:'space-between',
+        minHeight: '100%'
     },
     button:{
         width: '45%'

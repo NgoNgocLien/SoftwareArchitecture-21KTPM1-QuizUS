@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useRouter } from 'expo-router';
+
 import { Image, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,10 +8,15 @@ import { Colors } from "@/constants/Colors";
 
 export function Header() {
     // state of notification bell
+    const router = useRouter();
+
     const [noti, setNoti] = useState(false);
 
     const handleBellPress = () => {
-        setNoti(!noti);
+        setNoti(false);
+        router.replace({
+            pathname: '/noti',
+        })
     }
 
     return (

@@ -22,6 +22,7 @@ import { showToast } from '@/components/ToastBar';
 import { PlayerInfo } from '@/models/game/PlayerInfo';
 import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
+import config from '@/constants/config';
 
 export default function Rewards() {
 
@@ -37,21 +38,23 @@ export default function Rewards() {
                 let coinVouchers: any[] = [];
                 let itemVouchers: any[] = [];
 
-                voucherList.forEach((item: {campaign: any; voucher: any; }) => {
-                    if (item.campaign.id_quiz !== "") {
-                        const newVoucher = VoucherFactory.createVoucher('coin', item.voucher);
+                voucherList.forEach((item: any) => {
+                    if (item.type === config.QUIZ_GAME) {
+                        const { campaign, ...voucherData } = item;
+                        const newVoucher = VoucherFactory.createVoucher('coin', voucherData);
 
-                        coinVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
-                        allVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
+                        coinVouchers.push({ voucher: newVoucher, campaign: campaign });
+                        allVouchers.push({ voucher: newVoucher, campaign: campaign });
                     } else {
+                        const { campaign, ...voucherData } = item;
                         const newVoucher = VoucherFactory.createVoucher('item', {
-                            ...item.voucher,
+                            ...voucherData,
                             item1_quantity: item.campaign.item1_quantity,
                             item2_quantity: item.campaign.item2_quantity,
                         });
 
-                        itemVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
-                        allVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
+                        itemVouchers.push({ voucher: newVoucher, campaign: campaign });
+                        allVouchers.push({ voucher: newVoucher, campaign: campaign });
                     }
                 }); 
                 
@@ -175,7 +178,7 @@ export default function Rewards() {
                         </View>
    
                         {/* Lấy chỉ 2 mục */}
-                        {/* {vouchers[2]?.slice(0, 2).map((item, index) => (
+                        {vouchers[2]?.slice(0, 2).map((item, index) => (
                             <VoucherCard 
                                 voucher={item.voucher.getVoucher()}
                                 campaign={item.campaign}
@@ -183,7 +186,7 @@ export default function Rewards() {
                                 key={index} 
                                 style={index === 1 ? { marginBottom: 20 } : {}} 
                             />
-                        ))} */}
+                        ))}
                     </ScrollView>
                 )
             }

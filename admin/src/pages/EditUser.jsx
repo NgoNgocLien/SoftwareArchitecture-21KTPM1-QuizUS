@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
-import { getPlayerById } from '../api/playerApi';
+import { getPlayerById, updatePlayer } from '../api/playerApi';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function EditUser() {
     const { id } = useParams();
+    const navigate =  useNavigate();
+
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -13,6 +18,10 @@ export default function EditUser() {
     const [gender, setGender] = useState('');
     const [facebook, setFacebook] = useState('');
     const [avatar, setAvatar] = useState('');
+
+    const onCancel  = () => {
+        navigate(`/player`);
+    }
 
     useEffect(() => {
         const getData = async () => {
@@ -29,12 +38,50 @@ export default function EditUser() {
             }
         }
         getData();
-    }, []);
+    }, [id]);
+
+    const onSave = async () => {
+        let updatedData = {
+            id_player: id,
+            username: fullname,
+            score: 0,
+            email,
+            phone,
+            dob,
+            gender,
+            facebook,
+            avatar
+        }
+        let success = await updatePlayer(updatedData);
+        if (success) {
+            confirmAlert({
+                message: 'Chỉnh sửa người dùng thành công!',
+                buttons: [
+                    {
+                        label: 'Xác nhận',
+                        onClick: () => {
+                            navigate(`/player`);
+                        }
+                    }
+                ]
+            });
+        }
+        else {
+            confirmAlert({
+                message: 'Chỉnh sửa người dùng thất bại!',
+                buttons: [
+                    {
+                        label: 'Xác nhận'
+                    }
+                ]
+            });
+        }
+    }
 
     return(
         <div className='ctn'>
             <div className='brand-logo-ctn'>
-                <img src={avatar?.length > 0 ? avatar : '/icons/camera-plus.svg'} alt="brand-logo"  className='user-avatar'/>
+                <img src={avatar?.length > 0 ? avatar : '/icons/camera-plus.svg'} alt="brand-logo"  className='profile-avatar'/>
                 <div className="upload-btn-ctn">
                     <button className="upload-btn"> {/* Button giả */}
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
@@ -98,8 +145,8 @@ export default function EditUser() {
 
                 {/* Buttons */}
                 <div className="button-group">
-                    <button className="cancel-btn">Hủy</button>
-                    <button className="save-btn">Lưu</button>
+                    <button className="cancel-btn" onClick={onCancel}>Hủy</button>
+                    <button className="save-btn" onClick={() => {onSave()}}>Lưu</button>
                 </div>
 
             </div>

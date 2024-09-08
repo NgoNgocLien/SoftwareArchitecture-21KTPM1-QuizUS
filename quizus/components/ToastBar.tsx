@@ -47,7 +47,8 @@ const ToastBarOptions = {
         shadowOffset: { width: 0, height: 0 }, 
         shadowOpacity: 0.25, 
         shadowRadius: 4, 
-        elevation: 5
+        elevation: 5,
+        zIndex: 1000
     }
 }
 
