@@ -6,10 +6,12 @@ export default function Topbar() {
 
     const getPageName = (pathname) => {
         switch (pathname) {
+            case '/dashboard':
+                return 'Thống kê';
             case '/event':
                 return 'Sự kiện';
             case '/voucher':
-                return 'Người Chơi';
+                return 'Voucher';
             case '/info':
                 return 'Thông tin';
             default:
