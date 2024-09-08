@@ -124,26 +124,7 @@ const getById = async (req, res) => {
 
 // Tạo một chiến dịch mới
 const create = async (req, res) => {
-    try {
-        // tạo quiz trong campaign, nếu ko tạo quiz -> id_quiz = null
-
-        const newCampaign = new Campaign({
-            id_brand1: req.body.id_brand1,
-            id_brand2: req.body.id_brand2,
-            name: req.body.name,
-            photo: req.body.photo,
-            start_datetime: req.body.start_datetime,
-            end_datetime: req.body.end_datetime,
-            id_voucher: req.body.id_voucher,
-            max_amount_voucher: req.body.max_amount_voucher,
-            given_amount_voucher: req.body.given_amount_voucher,
-            id_quiz: req.body.id_quiz,
-            item1_photo: req.body.item1_photo,
-            item2_photo: req.body.item2_photo,
-            score_award: req.body.score_award
-        });
-
-    try {
+     try {
         const { quiz, campaign } = req.body;
     
         let newQuiz = null;
