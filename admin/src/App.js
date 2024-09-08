@@ -39,7 +39,7 @@ function App() {
           <Route path="/player" element={<ManagePlayer />} />
           <Route path="/game" element={<ManageGame />} />
           <Route path="/add-brand" element={<AddBrand />} />
-          <Route path="/edit-user" element={<EditUser />} />
+          <Route path="/edit-user/:id" element={<EditUser />} />
         </Route>
       </Routes>
     </Router>

@@ -35,7 +35,24 @@ const searchPlayer = async (keyword) => {
   }
 }
 
+const getPlayerById = async (id) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/player/${id}`;
+    const response = await axios.get(url);
+    
+    if (response?.data)
+      return response.data;
+    else
+      return null;
+  }
+  catch (err) {
+    console.log(err.message);
+    return null;
+  }
+}
+
 export {
   getAllPlayers,
-  searchPlayer
+  searchPlayer,
+  getPlayerById
 };

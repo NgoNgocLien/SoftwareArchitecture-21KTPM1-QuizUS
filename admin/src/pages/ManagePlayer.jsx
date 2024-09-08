@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/manage.css";
 import { getAllPlayers, searchPlayer } from '../api/playerApi';
@@ -7,6 +8,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function ManagePlayer() {
     const [playerData, setPlayerData] = useState([]);
+    const navigate =  useNavigate();
     
     const handleSearch = async (e) => {
         const result = await searchPlayer(e.target.value);
@@ -28,6 +30,10 @@ export default function ManagePlayer() {
                 }
             ]
         });
+    }
+
+    const onEdit = (id) => {
+        navigate(`/edit-user/${id}`);
     }
 
     useEffect(() => {
@@ -96,7 +102,7 @@ export default function ManagePlayer() {
                                     <td>{user.birthdate}</td>*/}
 
                                     <td className='action-buttons'>
-                                        <button className="edit-btn">
+                                        <button className="edit-btn" onClick={() => {onEdit(item.id_player)}}>
                                             <img src="/icons/edit.svg" alt="edit-btn" />
                                             Sửa
                                         </button>
