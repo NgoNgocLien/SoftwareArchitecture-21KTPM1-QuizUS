@@ -39,6 +39,7 @@ export default function BrandInfo() {
 
     return (
         <div className="ctn">
+            {/* Brand Logo */}
             <div className="brand-logo-ctn">
                 <img src="/images/placeholder-img.jpg" alt="brand-logo" />
                 <div className="upload-btn-ctn">
@@ -49,6 +50,8 @@ export default function BrandInfo() {
                     <input type="file" id="file-upload" /> {/* Code backend cho input này nha */}
                 </div>
             </div>
+
+            {/* Login Info */}
             <div className='input-ctn'>
                 <h6>Thông tin đăng nhập</h6>
                 <div className='form-row'>
@@ -72,6 +75,7 @@ export default function BrandInfo() {
 
             </div>
 
+            {/* Brand Info */}
             <div className='input-ctn'>
                 <h6>Thông tin chung</h6>
 
