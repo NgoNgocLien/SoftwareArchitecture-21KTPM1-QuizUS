@@ -180,7 +180,45 @@ const exchangeVoucherByCoin = async (req, res) => {
     }
 }
 
+// Harshing player password
+const updatePassword = async(req,res) => {
+    let { id_player, new_password } = req.body;
+    
+    try{
+      let player = await model.player.findOne({
+        where: {
+          id_player: id_player
+        }
+      });
+      if(player){
+        let passWordHash = bcrypt.hashSync(new_password, 10);
+        await model.player.update({
+          pwd:passWordHash
+        }, {
+          where: {
+            id_player: id_player
+          }
+        })
+        
+        let data = await model.player.findOne({
+          where: {
+            id_player:id_player
+          }
+        });
+        
+        successCode(res, data, "Update thành công");
+        return;
+      }
+      else{
+        failCode(res, null, "Invalid id")
+      }     
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+  }
+
 module.exports = {
     signup, otp,
-    get, getAll, update, search, getPlayerScore, exchangeVoucherByCoin
+    get, getAll, update, search, getPlayerScore, exchangeVoucherByCoin,
+    updatePassword
 }
