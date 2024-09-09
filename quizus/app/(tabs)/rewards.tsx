@@ -26,8 +26,71 @@ import config from '@/constants/config';
 
 export default function Rewards() {
 
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
     const [vouchers, setVouchers] = useState<any[][] | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const sortVouchers = () => {
+        if (vouchers && playerInfo) {
+            setVouchers([
+                vouchers[0],
+                vouchers[1].sort((a, b) => a.voucher.getScoreExchange() - b.voucher.getScoreExchange()), 
+                // Sort item vouchers by the total quantity of items player has
+                vouchers[2].sort((a, b) => {
+                    const enoughA = (playerInfo.getPlayerQuantityItem1(a.campaign._id, a.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(a.campaign._id, a.voucher._id) >= 1) ? 1 : 0;
+                    const enoughB = (playerInfo.getPlayerQuantityItem1(b.campaign._id, b.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(b.campaign._id, b.voucher._id) >= 1) ? 1 : 0;
+                    return enoughB - enoughA;
+                })
+                    
+            ]);
+            vouchers[2].forEach((item) => {
+                console.log(item.voucher._id, item.campaign._id);
+            });
+        }
+    }
+
+    const fetchPlayerInfo = useCallback(() => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+            getPlayerItem(id_player).then((itemData: any) => {
+                const player_items = itemData.map((d: any) => {
+                    return {
+                        id_campaign: d.id_campaign,
+                        id_voucher: d.vouchers.id_voucher,
+                        quantity_item1: d.quantity_item1,
+                        quantity_item2: d.quantity_item2,
+                        item1_photo: d.item1_photo,
+                        item2_photo: d.item2_photo,
+                    }
+                })
+
+                getPlayerScore(id_player).then((data) => {
+                    setPlayerInfo(new PlayerInfo({
+                        player_score: data.score,
+                        player_items: player_items,
+                    }))
+
+                    if (vouchers) {
+                        sortVouchers();
+                    }
+
+                }).catch((error) => {
+                    console.error('Error fetching player score:', error);
+                    showToast('error', 'Lỗi hệ thống');
+                    setLoading(false);
+                });
+
+            }).catch((error) => {
+                console.error('Error fetching player item:', error);
+                showToast('error', 'Lỗi hệ thống');
+                setLoading(false);
+            });
+
+        }).catch((error) => {
+            console.error('Error retrieving id_player from SecureStore:', error);
+            showToast('error', 'Không tìm thấy thông tin người chơi');
+            setLoading(false);
+        });
+    },[]);
 
     // Fetch vouchers function
     const fetchVouchers = useCallback(() => {
@@ -47,6 +110,7 @@ export default function Rewards() {
                         allVouchers.push({ voucher: newVoucher, campaign: campaign });
                     } else {
                         const { campaign, ...voucherData } = item;
+                        
                         const newVoucher = VoucherFactory.createVoucher('item', {
                             ...voucherData,
                             item1_quantity: item.campaign.item1_quantity,
@@ -63,6 +127,11 @@ export default function Rewards() {
                     coinVouchers.sort((a, b) => a.voucher.getScoreExchange() - b.voucher.getScoreExchange()),
                     itemVouchers,
                 ]);
+
+                if (playerInfo) {
+                    sortVouchers();
+                }
+
                 setLoading(false);
             })
             .catch(error => {
@@ -74,64 +143,9 @@ export default function Rewards() {
 
     // Refetch data when the screen comes into focus
     useFocusEffect(fetchVouchers);
-
-    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
-
-    useEffect(() => {
-        retrieveFromSecureStore('id_player', (id_player: string) => {
-            getPlayerItem(id_player).then((data: any) => {
-                const player_items = data.map((data: { 
-                    vouchers: { id_voucher: any; }; id_campaign: any;
-                    quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
-                }) => {
-                    return {
-                        id_campaign: data.id_campaign,
-                        id_voucher: data.vouchers.id_voucher,
-                        quantity_item1: data.quantity_item1,
-                        quantity_item2: data.quantity_item2,
-                        item1_photo: data.item1_photo,
-                        item2_photo: data.item2_photo,
-                    }
-                })
-
-                getPlayerScore(id_player).then((data) => {
-                    console.log({
-                        player_score: data.score,
-                        player_items: player_items,
-                    })
-                    setPlayerInfo(new PlayerInfo({
-                        player_score: data.score,
-                        player_items: player_items,
-                    }))
-                }).catch((error) => {
-                    console.error('Error fetching player score:', error);
-                    showToast('error', 'Lỗi hệ thống');
-                });
-
-            }).catch((error) => {
-                console.error('Error fetching player item:', error);
-                showToast('error', 'Lỗi hệ thống');
-            });
-
-            
-        }).catch((error) => {
-            console.error('Error retrieving id_player from SecureStore:', error);
-            showToast('error', 'Không tìm thấy thông tin người chơi');
-        });
-    },[]);
-
-    useEffect(() => {() => {
-            if (vouchers && playerInfo) {
-                setVouchers([
-                    vouchers[0],
-                    vouchers[1].sort((a, b) => a.voucher.getScoreExchange() - b.voucher.getScoreExchange()),
-                    vouchers[2].sort((a, b) => playerInfo.getPlayerQuantityItem1(a.campaign.id_campaign, a.voucher.getId()) - playerInfo?.getPlayerQuantityItem1(b.campaign.id_campaign, b.voucher.getId())),
-                ]);
-            }
-        }
-    }, [playerInfo]);
+    useFocusEffect(fetchPlayerInfo);
     
-    console.log(playerInfo)
+    
     return (
         <View style={styles.background}>
             <Header />

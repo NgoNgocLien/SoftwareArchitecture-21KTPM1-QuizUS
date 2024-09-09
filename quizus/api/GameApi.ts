@@ -35,7 +35,7 @@ export const getPlayerTurn = async (id_player: string, id_campaign: string) => {
 
         const result = await response.json();
         if (response.ok) {
-            console.log(result)
+            // console.log(result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);
@@ -62,7 +62,7 @@ export const increasePlayerTurn = async (id_player: string, id_campaign: string)
         // console.log(response);
         const result = await response.json();
         if (response.ok) {
-            console.log(result)
+            // console.log(result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);
@@ -95,7 +95,7 @@ export const sendItem = async (
         // console.log(response);
         const result = await response.json();
         if (response.ok) {
-            console.log(result)
+            // console.log(result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);
@@ -122,7 +122,7 @@ export const receiveItem = async (
         // console.log(response);
         const result = await response.json();
         if (response.ok) {
-            console.log(result)
+            // console.log(result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);
@@ -153,7 +153,7 @@ export const sendTurn = async (
         // console.log(response);
         const result = await response.json();
         if (response.ok) {
-            console.log(result)
+            // console.log(result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);
@@ -180,7 +180,7 @@ export const receiveTurn = async (
         // console.log(response);
         const result = await response.json();
         if (response.ok) {
-            console.log(result)
+            // console.log(result)
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);
