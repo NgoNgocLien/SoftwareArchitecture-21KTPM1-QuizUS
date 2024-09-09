@@ -27,7 +27,7 @@ export default function Topbar() {
             <h6>{getPageName(location.pathname)}</h6>
             <div className="d-flex flex-row user-profile align-items-center">
                 <img src={brand.logo ? brand.logo : "/icons/avatar.svg"} alt="user-avatar" />
-                <p>{brand.name}</p>
+                <p>{brand.name ? brand.name : "brand" }</p>
             </div>
         </div>
     )

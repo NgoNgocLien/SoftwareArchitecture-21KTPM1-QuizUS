@@ -58,8 +58,7 @@ rootRoute.post("/loginWeb", async (req, res) => {
             if (!brand) {
                 return failCode(res, null, "Email không tồn tại");
             }
-
-            if (!brand.is_active) {
+            if (!(brand.is_active)) {
                 return failCode(res, null, "Tài khoản đã bị khóa");
             }
 
@@ -69,13 +68,13 @@ rootRoute.post("/loginWeb", async (req, res) => {
                 const brandData = { ...brand.toJSON() };
                 delete brandData.pwd;
 
-                successCode(res, brandData, "Đăng nhập thành công");
+                return successCode(res, brandData, "Đăng nhập thành công");
             } else {
-                failCode(res, null, "Mật khẩu brand không chính xác");
+                return failCode(res, null, "Mật khẩu brand không chính xác");
             }
         }
-
-        if (!admin.is_active) {
+        
+        if (!(admin.is_active)) {
             return failCode(res, null, "Tài khoản đã bị khóa");
         }
 
