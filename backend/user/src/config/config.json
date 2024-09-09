@@ -2,7 +2,7 @@
     "development": {
       "username": "quizus",
       "password": "TaYik4c7xXml4xyGiGmVMheauyxZv4ch",
-      "database": "quizus",
+      "database": "quizus_pbj0",
       "host": "dpg-crfd65tsvqrc73f77kjg-a.oregon-postgres.render.com",
       "dialect": "postgres",
       "dialectOptions": {
@@ -16,7 +16,7 @@
     "test": {
       "username": "quizus",
       "password": "TaYik4c7xXml4xyGiGmVMheauyxZv4ch",
-      "database": "quizus",
+      "database": "quizus_pbj0",
       "host": "dpg-crfd65tsvqrc73f77kjg-a.oregon-postgres.render.com",
       "dialect": "postgres",
       "dialectOptions": {
@@ -30,7 +30,7 @@
     "production": {
       "username": "quizus",
       "password": "TaYik4c7xXml4xyGiGmVMheauyxZv4ch",
-      "database": "quizus",
+      "database": "quizus_pbj0",
       "host": "dpg-crfd65tsvqrc73f77kjg-a.oregon-postgres.render.com",
       "dialect": "postgres",
       "dialectOptions": {
