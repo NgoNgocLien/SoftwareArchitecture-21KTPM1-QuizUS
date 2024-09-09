@@ -12,10 +12,10 @@ const signup = async (req, res) => {
   try {
     const { name, field, address, lat, long, username, pwd, phone, email, logo } = req.body;
 
-    const existingBrand = await model.brand.findOne({ where: { [Op.or]: [{ username }, { email }] } });
+    const existingBrand = await model.brand.findOne({ where: { [Op.or]: [{ email }] } });
 
     if (existingBrand) {
-      return failCode(res, null, 'Username hoặc email đã tồn tại.');
+      return failCode(res, null, 'Email đã tồn tại.');
     }
     
     let passWordHash = bcrypt.hashSync(pwd, 10);
