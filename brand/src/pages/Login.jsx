@@ -64,7 +64,7 @@ export default function Login(props) {
                 setTimeout(() => {
                     setLoginSuccess(false); 
                     navigate("/dashboard");
-                }, 3000); 
+                }, 2000); 
             } else {
                 setLoading(false);
                 setLoginFail(true);
