@@ -17,6 +17,8 @@ const {
   receiveTurn,
   sendItem,
   receiveItem,
+  getTurnRequest,
+  getItemRequest,
 } = require('../controllers/gameController');
 
 // Tìm kiếm game theo campaign
@@ -27,6 +29,9 @@ router.get('/item/:id_player', getAllItem);
 
 // lưu kết quả chơi game của người chơi
 router.post('/', saveResult);
+
+// lấy các thông báo xin lượt chơi từ bạn bè
+router.get('/player_turn/request/:id_player', getTurnRequest);
 
 // lấy lượt chơi còn lại của người chơi với 1 campaign
 router.get('/player_turn/:id_player/:id_campaign', getPlayerTurnByCampaign);
@@ -45,6 +50,9 @@ router.put('/player_turn/receive', receiveTurn);
 
 // tặng mảnh ghép cho bạn
 router.post('/item/send', sendItem);
+
+// lấy các thông báo tặng mảnh ghép từ bạn bè
+router.get('/item/request/:id_player', getItemRequest);
 
 // nhận mảnh ghép từ bạn
 router.put('/item/receive', receiveItem);

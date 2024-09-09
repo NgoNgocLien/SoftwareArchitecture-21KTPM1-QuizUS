@@ -28,14 +28,14 @@ router.post('/', create);
 // Cập nhật một voucher
 router.put('/', update);
 
-// Lấy tất cả voucher đã đổi của player
-router.get('/exchange/:id_player', getExchanged);
-
 // đổi voucher bằng xu
 router.post('/exchange/coin', exchangeByCoin);
 
 // đổi voucher bằng mảnh ghép
 router.post('/exchange/item', exchangeByItem);
+
+// Lấy tất cả voucher đã đổi của player
+router.get('/exchange/:id_player', getExchanged);
 
 // Sử dụng voucher
 router.put('/used', use);

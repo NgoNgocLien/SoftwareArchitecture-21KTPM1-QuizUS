@@ -3,7 +3,6 @@ import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, TouchableWithoutFeedback, View, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 
-import styles from '@/styles/my-vouchers.styles';
 import { Colors } from '@/constants/Colors';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import { LoadingView } from '@/components/LoadingView';
@@ -24,11 +23,11 @@ export default function Noti() {
     const [loading, setLoading] = useState(true);
 
     const params= useLocalSearchParams();
-    const focusTabIndex = parseInt(params.focusTabIndex as string);
-    const [focusedTab, setFocusedTab] = useState(focusTabIndex);
+    const [focusedTab, setFocusedTab] = useState(0);
 
     const [vouchers, setVouchers] = useState<any[][] | null>(null);
-    const [campaign, setCampaign] = useState(null);
+    const [favCampaign, setFavCampaign] = useState(null);
+    const [friendRequest, setFriendRequest] = useState(null);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
@@ -90,6 +89,23 @@ export default function Noti() {
     // // Refetch data when the screen comes into focus
     // useFocusEffect(fetchMyVouchers);
 
+    useEffect(() => {
+        setLoading(true);
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+
+            if (focusedTab == 0){
+
+            } else if (focusedTab == 1){
+                
+            } else if (focusedTab == 2){
+                
+            }
+
+            setLoading(false);
+        })
+        
+    }, [focusedTab]);
+
     return (
         <View style={styles.background}>
             <SafeAreaView style={styles.header}>
@@ -133,7 +149,7 @@ export default function Noti() {
                 (
                     <>
                         {vouchers === null || vouchers[0].length === 0 ? (
-                            <EmptyView />
+                            <EmptyView texts={['Chưa có thông báo']}/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                                 {/* {vouchers[0].map((item, index) => (
@@ -153,7 +169,7 @@ export default function Noti() {
                 (
                     <>
                         {vouchers === null || vouchers[1].length === 0 ? (
-                            <EmptyView />
+                            <EmptyView texts={['Chưa có thông báo']}/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                                 {/* {vouchers[1].map((item, index) => (
@@ -173,7 +189,7 @@ export default function Noti() {
                 (
                     <>
                         {vouchers === null || vouchers[2].length === 0 ? (
-                            <EmptyView />
+                            <EmptyView texts={['Chưa có thông báo']}/>
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                                  {/* {vouchers[2].map((item, index) => (
@@ -193,3 +209,91 @@ export default function Noti() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    background: {
+      flex: 1,
+      backgroundColor: Colors.light.background,
+    },
+
+    container: {
+        paddingHorizontal: 20,
+    },
+
+    header: {
+        height: 100,
+        backgroundColor: Colors.light.background,
+        justifyContent: 'center',
+        paddingBottom: -10,
+
+        // Shadow for iOS
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 5 }, // Adds shadow below the header
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+
+        // Shadow for Android
+        elevation: 7, // Elevation for the shadow effect
+    },
+
+    backIcon: {
+        position: 'relative',
+        left: 20,
+    },
+
+    titleContainer: {
+        marginVertical: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+
+    emptyTab: {
+        width: 20,
+        height: 40,
+        borderBottomColor: Colors.gray._500,
+        borderBottomWidth: 1,    
+    },
+
+    categoryTab: {
+        height: 40,
+        flexGrow: 1,
+        justifyContent: 'center',
+        
+        borderBottomColor: Colors.gray._500,
+        borderBottomWidth: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5
+    },
+
+    categoryText: {
+        color: Colors.light.subText,
+        fontWeight: '500',
+        fontSize: 16,
+    },
+
+    categoryAmountText:{
+        backgroundColor: Colors.gray._200,
+        borderRadius: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    focusedAmountText: {
+        backgroundColor: Colors.light.secondary,
+    },
+
+    focusedTab: {
+        borderBottomColor: Colors.light.primary,
+        borderBottomWidth: 2,
+    },
+
+    focusedText: {
+        color: Colors.light.primary,
+        fontWeight: '700',
+    }
+});

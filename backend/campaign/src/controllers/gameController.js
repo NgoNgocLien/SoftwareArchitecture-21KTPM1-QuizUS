@@ -3,6 +3,8 @@ const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
 const TurnRequest = require('../models/turnRequest');
 const PlayerGift = require('../models/playerGift');
+const axios = require('axios');
+const turnRequest = require('../models/turnRequest');
 
 // Tìm kiếm game theo campaign
 const searchByCampaign = async (req, res) => {
@@ -457,6 +459,89 @@ const receiveItem = async (req, res) => {
   }
 };
 
+// lấy các thông báo xin lượt chơi từ bạn bè
+const getItemRequest = async (req, res) => {
+  try {
+    const { id_player } = req.params;
+
+    if (!id_player) {
+      return res.status(400).json({ message: 'id_player is required' });
+    }
+
+    const gifts = await PlayerGift.find({
+      id_receiver: id_player
+    }).populate('id_campaign');
+
+    const result = await Promise.all(gifts.map(async (gift) => {
+      try {
+          const playerResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${gift.id_sender}`);
+          const player = playerResponse.data;
+
+          return{
+            id_gift: gift._id,
+            id_sender: gift.id_sender,
+            sender_name: player.username,
+            id_receiver: gift.id_receiver,
+            id_item: gift.id_item,
+            id_campaign: gift.id_campaign._id,
+            id_campaign_name: gift.id_campaign.name,
+            gift_time: gift.gift_time,
+            accept_time: gift.accept_time,
+          }
+      } catch (axiosError) {
+        console.log(axiosError)
+          throw new Error("Failed to fetch player information.");
+      }
+    }))
+
+    return res.json(result);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// lấy các thông báo tặng mảnh ghép từ bạn bè
+const getTurnRequest = async (req, res) => {
+  try {
+    const { id_player } = req.params;
+
+    if (!id_player) {
+      return res.status(400).json({ message: 'id_player is required' });
+    }
+
+    const turns = await TurnRequest.find({
+      id_receiver: id_player
+    }).populate('id_campaign');
+
+    const result = await Promise.all(turns.map(async (turn) => {
+      try {
+          const playerResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${turn.id_sender}`);
+          const player = playerResponse.data;
+
+          return{
+            id_turn: turn._id,
+            id_sender: turn.id_sender,
+            sender_name: player.username,
+            id_receiver: turn.id_receiver,
+            id_campaign: turn.id_campaign._id,
+            id_campaign_name: turn.id_campaign.name,
+            request_time: turn.request_time,
+            accept_time: turn.accept_time,
+          }
+      } catch (axiosError) {
+        console.log(axiosError)
+          throw new Error("Failed to fetch player information.");
+      }
+    }))
+
+    return res.json(result);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 
 module.exports = {
   searchByCampaign,
@@ -469,4 +554,6 @@ module.exports = {
   receiveTurn,
   sendItem,
   receiveItem,
+  getTurnRequest,
+  getItemRequest,
 };
