@@ -29,7 +29,7 @@ rootRoute.post("/login", async (req, res) => {
             return failCode(res, null, "Số điện thoại không tồn tại");
         }
 
-        if(!player.is_active){
+        if (!player.is_active) {
             return failCode(res, null, "Tài khoản đã bị khóa");
         }
 
@@ -54,16 +54,12 @@ rootRoute.post("/loginWeb", async (req, res) => {
 
         if (!admin) {
             const brand = await model.brand.findOne({ where: { email: email } });
-<<<<<<< HEAD
+
             if (!brand) {
-=======
-            
-            if(!brand){
->>>>>>> 68f23984c52d6680fbe998f61daa83a4419bea34
                 return failCode(res, null, "Email không tồn tại");
             }
 
-            if(!brand.is_active){
+            if (!brand.is_active) {
                 return failCode(res, null, "Tài khoản đã bị khóa");
             }
 
@@ -78,8 +74,8 @@ rootRoute.post("/loginWeb", async (req, res) => {
                 failCode(res, null, "Mật khẩu brand không chính xác");
             }
         }
-        
-        if(!admin.is_active){
+
+        if (!admin.is_active) {
             return failCode(res, null, "Tài khoản đã bị khóa");
         }
 
@@ -88,7 +84,7 @@ rootRoute.post("/loginWeb", async (req, res) => {
         if (isMatch) {
             const adminData = { ...admin.toJSON() };
             delete adminData.pwd;
-            
+
             successCode(res, adminData, "Đăng nhập thành công");
         } else {
             failCode(res, null, "Mật khẩu admin không chính xác");
