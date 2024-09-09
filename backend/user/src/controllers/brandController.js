@@ -21,7 +21,7 @@ const signup = async (req, res) => {
     let passWordHash = bcrypt.hashSync(pwd, 10);
     const newBrand = await model.brand.create({
       name, field, address, lat, long, is_active: true, username, pwd:passWordHash, phone, email,
-      logo: logo || 'https://res.cloudinary.com/dklt21uks/image/upload/v1725615538/quizus/bb3igtt4ujtuehytpnfu.svg'
+      logo: logo || 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png'
     });
 
     return successCode(res, newBrand, 'Đăng ký brand thành công');
