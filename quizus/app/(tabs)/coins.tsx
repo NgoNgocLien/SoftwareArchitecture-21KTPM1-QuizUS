@@ -52,11 +52,9 @@ export default function Coins() {
     useEffect(() => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
             getPlayerItem(id_player).then((data: any) => {
-                const player_items = data.map((data: {
-                    id_camapign: any; vouchers: { id_voucher: any; }; quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
-}) => {
+                const player_items = data.map((data: any) => {
                     return {
-                        id_campaign: data.id_camapign,
+                        id_campaign: data.id_campaign,
                         id_voucher: data.vouchers.id_voucher,
                         quantity_item1: data.quantity_item1,
                         quantity_item2: data.quantity_item2,
@@ -106,23 +104,21 @@ export default function Coins() {
             let muaSamVouchers: any[] = [];
             let giaiTriVouchers: any[] = [];
 
-            voucherList.map((item: {campaign: any; voucher: any; }) => {
+            voucherList.map((item: any) => {
+                const { campaign, ...voucherData } = item;
 
-                if(item.campaign.id_quiz !== "") {
-                    const newVoucher = VoucherFactory.createVoucher('coin', item.voucher);
-
-                    coinVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
-
-                    if (item.campaign.brandField === 'Nhà hàng') {
-                        nhaHangVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
-                    } else if (item.campaign.brandField === 'Cafe & Bánh') {
-                        cafeBanhVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
-                    } else if (item.campaign.brandField === 'Mua sắm') {
-                        muaSamVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
-                    } else if (item.campaign.brandField === 'Giải trí') {
-                        giaiTriVouchers.push({ voucher: newVoucher, campaign: {...item.campaign, id_campaign: item.campaign._id} });
+                if(campaign.id_quiz !== "") {
+                    const newVoucher = VoucherFactory.createVoucher('coin', voucherData);
+                    coinVouchers.push({ voucher: newVoucher, campaign: {...campaign, id_campaign: campaign._id} });
+                    if (campaign.brandField === 'Nhà hàng') {
+                        nhaHangVouchers.push({ voucher: newVoucher, campaign: campaign });
+                    } else if (campaign.brandField === 'Cafe & Bánh') {
+                        cafeBanhVouchers.push({ voucher: newVoucher, campaign: campaign });
+                    } else if (campaign.brandField === 'Mua sắm') {
+                        muaSamVouchers.push({ voucher: newVoucher, campaign: campaign });
+                    } else if (campaign.brandField === 'Giải trí') {
+                        giaiTriVouchers.push({ voucher: newVoucher, campaign: campaign });
                     }
-
                 }
             }); 
             

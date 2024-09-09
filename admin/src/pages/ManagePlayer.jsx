@@ -15,22 +15,22 @@ export default function ManagePlayer() {
         setPlayerData(result);
     };
 
-    const onDelete = () => {
-        confirmAlert({
-            message: 'Bạn có chắc chắn muốn xóa người chơi này không?',
-            buttons: [
-                {
-                    label: 'Có',
-                    onClick: () => {
-                        //Trống
-                    }
-                },
-                {
-                    label: 'Không'
-                }
-            ]
-        });
-    }
+    // const onDelete = () => {
+    //     confirmAlert({
+    //         message: 'Bạn có chắc chắn muốn xóa người chơi này không?',
+    //         buttons: [
+    //             {
+    //                 label: 'Có',
+    //                 onClick: () => {
+    //                     //Trống
+    //                 }
+    //             },
+    //             {
+    //                 label: 'Không'
+    //             }
+    //         ]
+    //     });
+    // }
 
     const onEdit = (id) => {
         navigate(`/edit-user/${id}`);
@@ -52,7 +52,7 @@ export default function ManagePlayer() {
                 <input
                     type="text"
                     className="search-input"
-                    placeholder="Tìm kiếm theo ID, tên, email người dùng"
+                    placeholder="Tìm kiếm theo ID, tên, email người chơi"
                     onChange={(e) => handleSearch(e)}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
@@ -106,10 +106,10 @@ export default function ManagePlayer() {
                                             <img src="/icons/edit.svg" alt="edit-btn" />
                                             Sửa
                                         </button>
-                                        <button className="delete-btn" onClick={onDelete}>
+                                        {/* <button className="delete-btn" onClick={onDelete}>
                                             <img src="/icons/delete.svg" alt="delete-btn" />
                                             Xóa
-                                        </button>
+                                        </button> */}
                                     </td>
                                 </tr>
                             ))

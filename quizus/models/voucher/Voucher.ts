@@ -10,6 +10,7 @@ export class Voucher {
     status: boolean;
     name: string;
     id_voucher: string;
+    score_exchange: number;
 
     constructor({
         _id,
@@ -22,7 +23,7 @@ export class Voucher {
         expired_date,
         status,
         name,
-        id_voucher
+        id_voucher,
     }: {
         _id: string;
         id_brand: number;

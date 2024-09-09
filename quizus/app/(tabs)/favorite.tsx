@@ -9,7 +9,7 @@ import { CampaignCard } from '@/components/card/CampaignCard';
 import { Heading } from '@/components/text/Heading';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { getLikedCampaigns } from '@/api/CampaignApi';
-import config from '@/constants/config';
+import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import { useFocusEffect } from 'expo-router';
@@ -21,7 +21,7 @@ export default function Favorite() {
 
     const fetchLikedCampaigns = useCallback(() => {
         setLoading(true);
-        config.retrieveFromSecureStore('id_player', (id_player: string) => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
             getLikedCampaigns(id_player).then((likedCampaigns) => {
                 if (likedCampaigns.length === 0) {
                     setLoading(false);
