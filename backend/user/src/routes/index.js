@@ -29,6 +29,10 @@ rootRoute.post("/login", async (req, res) => {
             return failCode(res, null, "Số điện thoại không tồn tại");
         }
 
+        if(!player.is_active){
+            return failCode(res, null, "Tài khoản đã bị khóa");
+        }
+
         const isMatch = await bcrypt.compare(password, player.pwd);
 
         if (isMatch) {
@@ -49,28 +53,38 @@ rootRoute.post("/loginWeb", async (req, res) => {
         const admin = await model.admin.findOne({ where: { email: email } });
 
         if (!admin) {
-            console.log("brand")
             const brand = await model.brand.findOne({ where: { email: email } });
+            
             if(!brand){
                 return failCode(res, null, "Email không tồn tại");
             }
+
+            if(!brand.is_active){
+                return failCode(res, null, "Tài khoản đã bị khóa");
+            }
+
             const isMatch = await bcrypt.compare(pwd, brand.pwd);
 
             if (isMatch) {
                 const brandData = { ...brand.toJSON() };
                 delete brandData.pwd;
+
                 successCode(res, brandData, "Đăng nhập thành công");
             } else {
                 failCode(res, null, "Mật khẩu brand không chính xác");
             }
         }
-        console.log("admin")
+        
+        if(!admin.is_active){
+            return failCode(res, null, "Tài khoản đã bị khóa");
+        }
 
         const isMatch = await bcrypt.compare(pwd, admin.pwd);
 
         if (isMatch) {
             const adminData = { ...admin.toJSON() };
             delete adminData.pwd;
+            
             successCode(res, adminData, "Đăng nhập thành công");
         } else {
             failCode(res, null, "Mật khẩu admin không chính xác");
