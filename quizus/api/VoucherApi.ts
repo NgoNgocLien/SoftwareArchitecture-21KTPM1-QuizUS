@@ -71,6 +71,7 @@ export const exchangeCoinVoucher = async (id_player: string, id_campaign: string
 
 export const exchangeItemVoucher = async (id_player: string, id_campaign: string, id_voucher: string) => {
     try {
+        console.log('exchangeItemVoucher', id_player, id_campaign, id_voucher)
         const response = await fetch(`${config.CAMPAIGN_BE}/api/voucher/exchange/item`, {
             method: 'POST',
             headers: {
@@ -84,7 +85,7 @@ export const exchangeItemVoucher = async (id_player: string, id_campaign: string
         });
 
         const result = await response.json();
-        if (response.ok) {
+        if (response.status === 201) {
             return result;
         } else {
             throw new Error('Failed to fetch data ', result.message);

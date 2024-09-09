@@ -14,7 +14,7 @@ import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { showToast } from '../ToastBar';
 
 const defaultCampaign = {
-    id_campaign: '1',
+    _id: '1',
     brandName: 'NULL',
     brandLogo: 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png'
 }
@@ -41,9 +41,9 @@ export function VoucherCard({
     is_used,
     ...rest
 }:{ 
-    voucher: Voucher,    
+    voucher: any,    
     campaign?:{
-        id_campaign: string,
+        _id: string,
         brandName: string,
         brandLogo: string
     },
@@ -57,16 +57,16 @@ export function VoucherCard({
         new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + new Date(voucher.expired_date).getFullYear()
     :
         '';
+    
 
-    let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && playerInfo.getPlayerScore() >= voucher.score_exchange;
-    let quantity_item1 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem1(campaign.id_campaign, voucher._id) : 0;
-    let quantity_item2 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem2(campaign.id_campaign, voucher._id) : 0;
+    let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && playerInfo.getPlayerScore() >= (voucher as CoinVoucher).getScoreExchange();
+    let quantity_item1 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem1(campaign._id, voucher._id) : 0;
+    let quantity_item2 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem2(campaign._id, voucher._id) : 0;
     let enoughItem = (voucher instanceof ItemVoucher) && playerInfo && (quantity_item1 >=1 && quantity_item2 >= 1 ? '2/2' : ((quantity_item1 >= 1 || quantity_item2 >= 1) ? '1/2' : '0/2'));
-
 
     const handleCoinVoucherExchange = () => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            exchangeCoinVoucher(id_player, campaign.id_campaign, voucher.score_exchange)
+            exchangeCoinVoucher(id_player, campaign._id, (voucher as CoinVoucher).getScoreExchange())
                 .then((result) => {
                     if (result) {
                         console.log(result);
@@ -87,7 +87,7 @@ export function VoucherCard({
 
     const handleItemVoucherExchange = () => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            exchangeItemVoucher(id_player, campaign.id_campaign, voucher.id_voucher)
+            exchangeItemVoucher(id_player, campaign._id, voucher._id)
                 .then((result) => {
                     if (result) {
                         console.log(result);

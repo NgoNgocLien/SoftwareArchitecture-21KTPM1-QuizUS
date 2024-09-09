@@ -8,21 +8,22 @@ const campaign = require('../models/campaign');
 // Lấy tất cả voucher đang hoạt động
 const getActive = async (req, res) => {
     try {
+
         const campaigns = await Campaign.find().populate('id_voucher');
+        const activeCampaigns = campaigns.filter(campaign => campaign.end_datetime > new Date() && campaign.start_datetime < new Date());
 
-        // for each campaign, get the voucher and add type field
-        const quizCampaignVouchers = campaigns.filter(campaign => campaign.id_quiz !== null).map(campaign => { return { type: 'quizgame', ...campaign.id_voucher._doc } }).filter(voucher => voucher.status && voucher.expired_date > new Date());
-        const itemCampaignVouchers = campaigns.filter(campaign => campaign.id_quiz === null).map(campaign => { return { type: 'itemgame', ...campaign.id_voucher._doc } }).filter(voucher => voucher.status && voucher.expired_date > new Date());
+        if (!activeCampaigns || activeCampaigns.length === 0) {
+            return res.status(200).json([]);
+        }
 
-        const vouchers = [...quizCampaignVouchers, ...itemCampaignVouchers];
-
-        await Promise.all(vouchers.map(async (voucher) => {
-            const campaign = await Campaign.findOne({ id_voucher: voucher._id });
-            if (!campaign) {
-                throw new Error("Campaign not found for voucher.");
+        const vouchers = activeCampaigns.map(campaign => {
+            const { id_voucher, ...rest } = campaign._doc;
+            if (campaign.id_quiz) {
+                return { ...id_voucher._doc, type: "quizgame", campaign: rest };
+            } else {
+                return { ...id_voucher._doc, type: "itemgame", campaign: rest };
             }
-            voucher.campaign = campaign;
-        }));
+        }).filter(voucher => voucher.status && voucher.expired_date > new Date());
 
         const result = await Promise.all(vouchers.map(async (item) => {
             const id_brand = item.id_brand;
@@ -31,7 +32,7 @@ const getActive = async (req, res) => {
                 const { campaign, ...rest } = item;
                 return {
                     campaign: {
-                        ...item.campaign._doc,
+                        ...item.campaign,
                         brandName: brandResponse.data.name,
                         brandLogo: brandResponse.data.logo,
                         brandField: brandResponse.data.field,

@@ -29,7 +29,7 @@ export const getCampaignsInProgess = async () => {
                 'Content-Type': 'application/json',
             },
         });
-        console.log("in_progress", response);
+        // console.log("in_progress", response);
         const result = await response.json();
         
         if (response.ok) {
