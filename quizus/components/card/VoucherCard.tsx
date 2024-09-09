@@ -9,7 +9,7 @@ import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 import { VoucherFactory } from '@/models/voucher/VoucherFactory';
 import { Paragraph } from '../text/Paragraph';
 import { PlayerInfo } from '@/models/game/PlayerInfo';
-import { exchangeCoinVoucher } from '@/api/VoucherApi';
+import { exchangeCoinVoucher, exchangeItemVoucher } from '@/api/VoucherApi';
 import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { showToast } from '../ToastBar';
 
@@ -83,7 +83,27 @@ export function VoucherCard({
             console.error(error);
             showToast('error', 'Không thể lấy thông tin người chơi');
         });
-        
+    }
+
+    const handleItemVoucherExchange = () => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+            exchangeItemVoucher(id_player, campaign.id_campaign, voucher.id_voucher)
+                .then((result) => {
+                    if (result) {
+                        console.log(result);
+                        showToast('success', 'Đổi thành công');
+                    } else {
+                        showToast('error', 'Đổi thất bại');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    showToast('error', 'Đổi thất bại');
+                });
+        }).catch((error) => {
+            console.error(error);
+            showToast('error', 'Không thể lấy thông tin người chơi');
+        });
     }
 
 
@@ -118,7 +138,7 @@ export function VoucherCard({
                             </View>
                         </TouchableOpacity> 
                         : (
-                            <TouchableOpacity style={enoughItem == '2/2' ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {}}>
+                            <TouchableOpacity style={enoughItem == '2/2' ? styles.exchangeButton : [styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} onPress={() => {handleItemVoucherExchange()}}>
                                 <Text style={enoughItem === '2/2' ? styles.exchangeButtonText : [styles.exchangeButtonText, {color: Colors.gray._600}]}>Đổi ngay</Text>
                                 <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                                     <Image source={enoughItem === '2/2' ? require('@/assets/images/puzzle.png') : require('@/assets/images/puzzle-grayscale.png')} style={{width: 20, height: 20}}/>
