@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const PlayerGiftSchema = new Schema({
+const ItemGiftSchema = new Schema({
   id_sender: { 
     type: String, 
     required: true 
@@ -21,11 +21,9 @@ const PlayerGiftSchema = new Schema({
   },
   gift_time: { 
     type: Date, 
-    required: true 
-  },
-  accept_time: { 
-    type: Date
+    required: true,
+    default: Date.now 
   }
 }, { versionKey: false });
 
-module.exports = mongoose.model('PlayerGift', PlayerGiftSchema);
+module.exports = mongoose.model('ItemGift', ItemGiftSchema);

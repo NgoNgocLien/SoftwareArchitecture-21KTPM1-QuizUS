@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'expo-router';
 
 import { Image, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
+import eventEmitter from "@/models/notification/EventEmitter";
 
-export function Header() {
+export function Header({ notification, setNotification }:{
+    notification: boolean,
+    setNotification: (data: boolean) => void,
+}) {
     // state of notification bell
     const router = useRouter();
 
-    const [noti, setNoti] = useState(false);
 
     const handleBellPress = () => {
-        setNoti(false);
+        setNotification(false);
         router.replace({
             pathname: '/noti',
         })
@@ -22,7 +25,9 @@ export function Header() {
     return (
         <SafeAreaView style={styles.header}>
             <Image source={require('@/assets/images/logo.png')} style={styles.logo} />
-            <MaterialCommunityIcons name={noti ? "bell-ring" : "bell-outline"} size={26} color={noti ? Colors['light'].primary : Colors['light'].mainText} style={styles.notiIcon} onPress={handleBellPress} suppressHighlighting={true}/>
+            <MaterialCommunityIcons name={notification ? "bell-ring" : "bell-outline"} size={26} 
+                color={notification ? Colors['light'].primary : Colors['light'].mainText} style={styles.notiIcon} 
+                onPress={handleBellPress} suppressHighlighting={true}/>
         </SafeAreaView>
     );
 }

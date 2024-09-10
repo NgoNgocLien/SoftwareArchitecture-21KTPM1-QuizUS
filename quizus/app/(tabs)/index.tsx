@@ -13,8 +13,36 @@ import config from '@/constants/config';
 import { useFocusEffect } from 'expo-router';
 import { showToast } from '@/components/ToastBar';
 
+import notificationSocket from '@/models/notification/NotificationSocket'; // Import socket manager
+
+
 import {retrieveFromSecureStore} from '@/api/SecureStoreService'
+import eventEmitter from '@/models/notification/EventEmitter';
+
 export default function HomePage() {
+    const [loading, setLoading] = useState(true);
+    const [focusedTab, setFocusedTab] = useState(0);
+    const [campaigns, setCampaigns] = useState<any[]>([]);
+    const [cafeBanh, setCafeBanh] = useState<any[]>([]);
+    const [muaSam, setMuaSam] = useState<any[]>([]);
+    const [giaiTri, setGiaiTri] = useState<any[]>([]);
+    const [nhaHang, setNhaHang] = useState<any[]>([]);
+    const [notification, setNotification] = useState(false);
+
+    useEffect(() => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+            notificationSocket.connect(id_player);
+
+            eventEmitter.on('notification', handleNotification);
+        })
+        return () => {
+            eventEmitter.remove('notification', handleNotification);
+        };
+    }, []);
+
+    const handleNotification = () => {
+        setNotification(true);
+    };
 
     const tabNames = [
         { index: 0, name: 'Tất cả' },
@@ -24,13 +52,6 @@ export default function HomePage() {
         { index: 4, name: 'Giải trí' }
     ];
 
-    const [loading, setLoading] = useState(true);
-    const [focusedTab, setFocusedTab] = useState(0);
-    const [campaigns, setCampaigns] = useState<any[]>([]);
-    const [cafeBanh, setCafeBanh] = useState<any[]>([]);
-    const [muaSam, setMuaSam] = useState<any[]>([]);
-    const [giaiTri, setGiaiTri] = useState<any[]>([]);
-    const [nhaHang, setNhaHang] = useState<any[]>([]);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
@@ -72,7 +93,6 @@ export default function HomePage() {
         }
     }, []);
 
-    // Use useFocusEffect to fetch data when the screen is focused
     useFocusEffect(fetchCampaignsInProgess);
 
     useEffect(() => {
@@ -84,7 +104,9 @@ export default function HomePage() {
 
     return (
         <View style={styles.background} >
-            <Header />
+            <Header 
+                notification={notification}
+                setNotification={setNotification} />
             <View style={[styles.container, { marginTop: 20, marginBottom: 10 }]}>
                 <SearchBar editable={false} onPress={() => router.push('/(tabs)/search')} />
             </View>

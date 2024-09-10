@@ -2,7 +2,7 @@ const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
 const TurnRequest = require('../models/turnRequest');
-const PlayerGift = require('../models/playerGift');
+const ItemGift = require('../models/itemGift');
 const axios = require('axios');
 const turnRequest = require('../models/turnRequest');
 
@@ -344,8 +344,8 @@ const sendItem = async (req, res) => {
     //   await receiverGame.save(); 
     // }
 
-    // Tạo bản ghi mới trong PlayerGift để lưu thông tin mảnh ghép đã tặng
-    const newGift = new PlayerGift({
+    // Tạo bản ghi mới trong ItemGift để lưu thông tin mảnh ghép đã tặng
+    const newGift = new ItemGift({
       id_sender,
       id_receiver,
       id_item,
@@ -375,7 +375,7 @@ const receiveItem = async (req, res) => {
       return res.status(400).json({ message: 'id_gift is required' });
     }
 
-    const gift = await PlayerGift.findById(id_gift);
+    const gift = await ItemGift.findById(id_gift);
 
     if (!gift) {
       return res.status(404).json({ message: 'Gift not found.' });
@@ -468,7 +468,7 @@ const getItemRequest = async (req, res) => {
       return res.status(400).json({ message: 'id_player is required' });
     }
 
-    const gifts = await PlayerGift.find({
+    const gifts = await ItemGift.find({
       id_receiver: id_player
     }).populate('id_campaign');
 
@@ -480,7 +480,7 @@ const getItemRequest = async (req, res) => {
           return{
             id_gift: gift._id,
             id_sender: gift.id_sender,
-            sender_name: player.username,
+            name_sender: player.username,
             id_receiver: gift.id_receiver,
             id_item: gift.id_item,
             id_campaign: gift.id_campaign._id,
@@ -494,7 +494,7 @@ const getItemRequest = async (req, res) => {
       }
     }))
 
-    return res.json(result);
+    return res.json(gifts);
 
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -522,7 +522,7 @@ const getTurnRequest = async (req, res) => {
           return{
             id_turn: turn._id,
             id_sender: turn.id_sender,
-            sender_name: player.username,
+            name_sender: player.username,
             id_receiver: turn.id_receiver,
             id_campaign: turn.id_campaign._id,
             id_campaign_name: turn.id_campaign.name,

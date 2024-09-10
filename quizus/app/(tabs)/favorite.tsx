@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,11 +14,25 @@ import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import { useFocusEffect } from 'expo-router';
 import { showToast } from '@/components/ToastBar';
+import eventEmitter from '@/models/notification/EventEmitter';
 
 export default function Favorite() {
     const [campaigns, setCampaigns] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [notification, setNotification] = useState(false);
 
+    useEffect(() => {
+    const handleNotification = (data: any) => {
+      setNotification(true);
+    };
+
+    eventEmitter.on('notification', handleNotification);
+
+    return () => {
+      eventEmitter.remove('notification', handleNotification);
+    };
+    }, []);
+    
     const fetchLikedCampaigns = useCallback(() => {
         setLoading(true);
         retrieveFromSecureStore('id_player', (id_player: string) => {
@@ -51,7 +65,9 @@ export default function Favorite() {
 
     return (
         <View style={styles.background} >
-            <Header />
+            <Header 
+                notification={notification}
+                setNotification={setNotification}/>
             <View style={[styles.container, styles.titleContainer]}>
                 <Heading type="h4">Yêu thích</Heading>
                 <FontAwesome name={'search'} style={styles.searchIcon} />
