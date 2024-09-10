@@ -43,7 +43,7 @@ export default function MyVouchers() {
                     let itemVouchers: any[] = [];
 
                     playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; is_used?:boolean}) => {
-                        console.log(playerVoucher.campaign.id_quiz);
+                        console.log(playerVoucher.campaign);
                         const { voucher, ...newPlayerVoucher } = playerVoucher;
 
                         if (playerVoucher.campaign.id_quiz !== "" && playerVoucher.campaign.id_quiz !== null && playerVoucher.campaign.id_quiz !== undefined) {

@@ -61,7 +61,6 @@ export function VoucherCard({
     :
         '';
     
-
     let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && playerInfo.getPlayerScore() >= (voucher as CoinVoucher).getScoreExchange();
     let quantity_item1 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem1(campaign._id, voucher._id) : 0;
     let quantity_item2 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem2(campaign._id, voucher._id) : 0;

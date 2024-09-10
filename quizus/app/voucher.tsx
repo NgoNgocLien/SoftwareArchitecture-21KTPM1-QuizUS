@@ -14,6 +14,7 @@ import {
     Clipboard,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
+import QRCode from 'react-native-qrcode-svg';
 
 import { SubHeader } from '@/components/header/SubHeader';
 import { Colors } from '@/constants/Colors';
@@ -219,7 +220,7 @@ export default function VoucherPage() {
                 {loading ? <LoadingView /> : voucher === null  ? <EmptyView /> :
                 (
                 <>
-                <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
+                <ScrollView showsVerticalScrollIndicator={false} bounces={true} >
                     <Image style={styles.banner} source={{uri: voucher.photo}} />
                             
                     <View style={styles.campaignHeaderContainer}>
@@ -244,22 +245,27 @@ export default function VoucherPage() {
 
                     {
                         mine &&
-                        <View>
-                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mã voucher</Heading>
+                        <>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mã thanh toán</Heading>
 
                             <TouchableOpacity style={[styles.codeContainer]} activeOpacity={0.6} 
                                 onPress={() => {
                                     Clipboard.setString(voucher.code); 
-                                    Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
+                                    Alert.alert('Đã sao chép');
                                 }}>
                                 <Paragraph type={'p2'}>{voucher.code}</Paragraph>
                                 <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
                             </TouchableOpacity>
-                        </View>
+
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>QR thanh toán</Heading>
+                            <View style={styles.qrContainer}>
+                                <QRCode value="facebook.com" size={300} backgroundColor='white'/>
+                            </View>
+                        </>
                     }
                         
                     <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Điều khoản áp dụng</Heading>
-                    <Paragraph type='p2' style={{marginHorizontal: 20}}>
+                    <Paragraph type='p2' style={[{marginHorizontal: 20}, mine ? {paddingBottom: 100} : {}]}>
                         {voucher.description}
                     </Paragraph>
 
@@ -453,7 +459,6 @@ const styles = StyleSheet.create({
     },
     exchangeButton: {
         marginBottom: Platform.OS === 'ios' ? 10 : 0,
-        fontWeight: '600',
     },
 
     titleContainer: {
@@ -481,5 +486,17 @@ const styles = StyleSheet.create({
         color: Colors.feedback.warning,
         fontWeight: '600',
         fontSize: 16,
+    },
+
+    qrContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 20,
+        marginBottom: 10,
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        borderWidth: 4,
+        borderColor: Colors.gray._200,
     },
 });
