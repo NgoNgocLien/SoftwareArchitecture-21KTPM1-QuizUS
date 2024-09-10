@@ -135,7 +135,7 @@ export default function EditUser() {
                     </div> */}
 
                     <div className='radio-row'>
-                        <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Trò chơi</label>
+                        <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Giới tính</label>
                         <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'Nam'} onChange={(e) => {setGender(e.target.value)}} />
                         <label for="nam">Nam</label>
                         <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => {setGender(e.target.value)}}/>

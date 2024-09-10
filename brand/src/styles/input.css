@@ -11,6 +11,14 @@
     aspect-ratio: 1/1;
 }
 
+.brand-logo-img {
+    width: 168px;
+    height: 168px;
+    background-position: center;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
 .brand-logo-ctn img {
     object-fit: contain;
 }
