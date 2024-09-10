@@ -120,7 +120,7 @@ export default function EditUser() {
                         <label htmlFor="birthday">Sinh nhật</label>
                         <input type="text" id="birthday" placeholder="Sinh nhật" value={dob} onChange={(e) => {setDob(e.target.value)}}/>
                     </div>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label>Giới tính</label>
                         <div className="radio-group">
                             <label>
@@ -132,6 +132,14 @@ export default function EditUser() {
                                 Nữ
                             </label>
                         </div>
+                    </div> */}
+
+                    <div className='radio-row'>
+                        <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Trò chơi</label>
+                        <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'Nam'} onChange={(e) => {setGender(e.target.value)}} />
+                        <label for="nam">Nam</label>
+                        <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => {setGender(e.target.value)}}/>
+                        <label for="shake">Nữ</label>
                     </div>
                 </div>
 

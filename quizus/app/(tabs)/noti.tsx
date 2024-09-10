@@ -13,6 +13,7 @@ import { EventNotificationFactory, FriendNotificationFactory, VoucherNotificatio
 import { Paragraph } from '@/components/text/Paragraph';
 import { VoucherNotification } from '@/models/notification/VoucherNotification';
 import { CampaignNotification } from '@/models/notification/CampaignNotification';
+import { Button } from '@/components/Button';
 const tabNames = [
     { index: 0, name: 'Voucher' },
     { index: 1, name: 'Sự kiện' },
@@ -22,7 +23,7 @@ const tabNames = [
 const data = [
     { type: 'voucher', isUsed: true, name_voucher: 'Giảm 50%', seen_time: null },
     { type: 'voucher', isUsed: false, name_voucher: 'Giảm 20k', seen_time: '2024-09-08' },
-    { type: 'event', name_campaign: 'Black Friday', id_campaign: '123', start_time: '10:00 AM', seen_time: '2024-09-08' },
+    { type: 'event', name_campaign: 'Black Friday', id_campaign: '123', start_time: '2024-10-15T00:00:00.000Z', seen_time: '2024-09-08' },
     { type: 'friend', subtype: 'item', name_sender: 'My Linh', id_itemgift: '1', id_item: 1, name_campaign: 'Ưu đãi sốc mùa hè', seen_time: null },
     { type: 'friend', subtype: 'voucher', name_sender: 'My Linh',  id_vouchergift: '1', name_voucher: 'Giảm 10%', seen_time: null },
     { type: 'friend', subtype: 'turn', name_sender: 'My Linh', id_turnrequest: '1', name_campaign: 'Ưu đãi sốc mùa đông', seen_time: '2024-09-08' }
@@ -73,6 +74,10 @@ export default function Notification() {
         fetchNoti();
     }, []);
 
+    const handleReadNoti = () => {
+        
+    }
+
     return (
         <View style={styles.background}>
             <SafeAreaView style={styles.header}>
@@ -87,6 +92,7 @@ export default function Notification() {
             </SafeAreaView>
             <View style={[styles.container, styles.titleContainer]}>
                 <Heading type="h4">Thông báo</Heading>
+                <Button text={'Đánh dấu đã đọc'} onPress={handleReadNoti}></Button>
             </View>
 
             {
@@ -163,7 +169,7 @@ const styles = StyleSheet.create({
     },
 
     titleContainer: {
-        marginVertical: 20,
+        marginTop: 20,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',

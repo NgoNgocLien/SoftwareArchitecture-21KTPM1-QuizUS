@@ -1,10 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Campaign = require('../models/campaign');
-const PlayerGame = require('../models/playerGame');
-const Voucher = require('../models/voucher');
-const TurnRequest = require('../models/turnRequest');
-const PlayerGift = require('../models/playerGift');
 
 const {
   searchByCampaign,
