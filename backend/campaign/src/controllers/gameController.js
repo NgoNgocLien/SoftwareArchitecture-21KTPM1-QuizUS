@@ -5,6 +5,7 @@ const TurnRequest = require('../models/turnRequest');
 const ItemGift = require('../models/itemGift');
 const axios = require('axios');
 const turnRequest = require('../models/turnRequest');
+const PlayerNoti = require('../models/playerNoti');
 
 // Tìm kiếm game theo campaign
 const searchByCampaign = async (req, res) => {
@@ -333,16 +334,47 @@ const sendItem = async (req, res) => {
     });
 
     // Nếu người nhận chưa tham gia campaign, tạo một bản ghi mới trong PlayerGame
-    // if (!receiverGame) {
-    //   receiverGame = new PlayerGame({
-    //     id_player: id_receiver,
-    //     id_campaign: id_campaign,
-    //     player_turn: 3,
-    //     quantity_item1: 0,
-    //     quantity_item2: 0
-    //   });
-    //   await receiverGame.save(); 
-    // }
+    if (!receiverGame) {
+      receiverGame = new PlayerGame({
+        id_player: id_receiver,
+        id_campaign: id_campaign,
+        player_turn: 3,
+        quantity_item1: id_item === 1 ? 1 : 0,
+        quantity_item2: id_item === 2 ? 1 : 0
+      });
+
+      if (id_item === 1) {
+        // Giảm 1 quantity_item1 của người gửi
+        senderGame.quantity_item1 -= 1;
+      } else if (id_item === 2) {
+        // Giảm 1 quantity_item2 của người gửi
+        senderGame.quantity_item2 -= 1;
+      } else {
+        return res.status(400).json({ message: 'Invalid item id. Only 1 or 2 are valid.' });
+      }
+
+      await senderGame.save();
+      await receiverGame.save();
+    }
+    else{
+      if (id_item === 1) {
+        // Giảm 1 quantity_item1 của người gửi
+        senderGame.quantity_item1 -= 1;
+  
+        // Tăng 1 quantity_item1 của người nhận
+        receiverGame.quantity_item1 += 1;
+      } else if (id_item === 2) {
+        // Giảm 1 quantity_item2 của người gửi
+        senderGame.quantity_item2 -= 1;
+
+        // Tăng 1 quantity_item2 của người nhận
+        receiverGame.quantity_item2 += 1;
+      } else {
+        return res.status(400).json({ message: 'Invalid item id. Only 1 or 2 are valid.' });
+      }
+      await senderGame.save();
+      await receiverGame.save();
+    }
 
     // Tạo bản ghi mới trong ItemGift để lưu thông tin mảnh ghép đã tặng
     const newGift = new ItemGift({
@@ -350,14 +382,38 @@ const sendItem = async (req, res) => {
       id_receiver,
       id_item,
       id_campaign,
-      gift_time: new Date(),  
-      accept_time: null      
+      gift_time: new Date()     
     });
 
     await newGift.save();
 
+    // lấy thông tin sender
+    const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${id_sender}`);
+    const sender = senderResponse.data;
+
+    // lấy thông tin campaign
+    const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${id_campaign}`);
+    const campaign = campaignResponse.data;
+
+    // Thêm noti
+    const newNoti = new PlayerNoti({
+      type: "friend",
+      subtype: "item",
+      id_receiver,
+      id_sender,
+      name_sender: sender.username, 
+      id_campaign,
+      name_campaign: campaign.name,
+      id_item,
+      id_itemgift: newGift._id,
+      noti_time: new Date(), 
+      seen_time: null
+    });
+
+    await newNoti.save();
+
     return res.status(201).json({
-      message: 'Gift successfully sent, awaiting acceptance.',
+      message: 'Item successfully sent!',
       gift: newGift
     });
 

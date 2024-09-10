@@ -50,7 +50,6 @@ router.post('/item/send', sendItem);
 router.get('/item/request/:id_player', getItemRequest);
 
 // nhận mảnh ghép từ bạn
-router.put('/item/receive', receiveItem);
-
+// router.put('/item/receive', receiveItem);
 
 module.exports = router;

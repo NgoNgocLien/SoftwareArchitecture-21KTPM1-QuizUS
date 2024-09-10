@@ -14,7 +14,7 @@ const {
     getExchanged,
     exchangeByCoin,
     exchangeByItem,
-    use,
+    use, sendVoucher
 } = require('../controllers/voucherController');
 
 // Lấy tất cả voucher đang hoạt động
@@ -43,5 +43,8 @@ router.get('/exchange/:id_player', getExchanged);
 
 // Sử dụng voucher
 router.put('/used', use);
+
+// tặng voucher cho bạn
+router.post('/send', sendVoucher);
 
 module.exports = router;

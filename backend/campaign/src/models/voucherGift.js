@@ -11,7 +11,8 @@ const VoucherGiftSchema = new Schema({
     required: true 
   },
   id_playervoucher: { 
-    type: Number,  
+    type: Schema.Types.ObjectId,
+    ref: 'PlayerVoucher', 
     required: true 
   },
   gift_time: { 
