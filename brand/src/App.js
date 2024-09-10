@@ -14,6 +14,7 @@ import Login from './pages/Login';
 import Signup from './pages/signup';
 import BrandInfo from './pages/BrandInfo';
 import CreateEvent from './pages/CreateEvent';
+import CreateGame from './pages/CreateGame';
 
 function Layout() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="/info" element={<BrandInfo />} />
           <Route path="/edit" element={<UpdatePlayer />} />
           <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/create-game" element={<CreateGame />} />
         </Route>
       </Routes>
     </Router>
