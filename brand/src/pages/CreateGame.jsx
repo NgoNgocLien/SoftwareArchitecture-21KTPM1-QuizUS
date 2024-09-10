@@ -78,16 +78,14 @@ export default function CreateGame() {
                                         onChange={(e) => handleQuestionChange(index, i, e.target.value)}
                                         required
                                     />
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            name={`correct-answer-${index}`}
-                                            value={i}
-                                            checked={q.correctAnswer === i}
-                                            onChange={() => handleCorrectAnswerChange(index, i)}
-                                        />
-                                        Đúng
-                                    </label>
+                                    <input
+                                        type="radio"
+                                        name={`correct-answer-${index}`}
+                                        value={i}
+                                        checked={q.correctAnswer === i}
+                                        onChange={() => handleCorrectAnswerChange(index, i)}
+                                    />
+                                    <label>Đúng</label>
                                 </div>
                             ))}
                         </div>
