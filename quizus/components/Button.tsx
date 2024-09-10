@@ -5,7 +5,7 @@ import { Colors } from '@/constants/Colors';
 import { TabBarIcon } from './navigation/TabBarIcon';
 
 export type ThemedButtonProps = TouchableOpacityProps & {
-  type?: 'primary' | 'secondary' | 'correctAnswer' | 'wrongAnswer' | 'tertiary';
+  type?: 'primary' | 'secondary' | 'correctAnswer' | 'wrongAnswer' | 'tertiary' | 'disabled';
   text: string; 
 };
 
@@ -27,7 +27,9 @@ export function Button({
     buttonStyle.push(styles.wrongAnswer);
   } else if (type === 'tertiary') {
     buttonStyle.push(styles.tertiary);
-  }
+  } else if (type === 'disabled') {
+    buttonStyle.push(styles.disabled);
+}
   
   return (
     <TouchableOpacity style={[...buttonStyle, style]} {...rest} activeOpacity={0.6}>
@@ -82,6 +84,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand._100,
     borderColor: Colors.feedback.error,
     borderWidth: 3,
+  },
+  disabled: {
+    backgroundColor: Colors.gray._200,
   },
   icon:{
     position: 'absolute',

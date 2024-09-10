@@ -109,11 +109,19 @@ export function VoucherCard({
 
 
     return (
-        <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => 
-            router.push({
-                pathname: '/voucher',
-                params: { id_voucher: voucher._id }
-            })}>
+        <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => {
+                if (playerInfo) {
+                    router.push({
+                        pathname: '/voucher',
+                        params: { id_voucher: voucher._id, mine: "false" }
+                    })
+                } else {
+                    router.push({
+                        pathname: '/voucher',
+                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false") }
+                    })
+                }
+            }}>
             <View style={styles.brandContainer}>
                 <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo}/>
             </View>
@@ -157,7 +165,7 @@ export function VoucherCard({
                                 <Paragraph type={'p2'} color={ Colors.gray._500}>Đã sử dụng</Paragraph>
                             </View>
                         )  : (
-                        (Date.now() < voucher.expired_date.getTime()) && <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
+                        (Date.now() < voucher.expired_date.getTime()) && <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._200}]} activeOpacity={0.6} 
                             onPress={() => {
                                 Clipboard.setString(voucher.code); 
                                 Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);

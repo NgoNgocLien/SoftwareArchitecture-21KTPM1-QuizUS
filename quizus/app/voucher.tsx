@@ -9,7 +9,9 @@ import {
     Platform,
     Share,
     Alert,
+    TouchableOpacity,
     Modal,
+    Clipboard,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 
@@ -50,6 +52,13 @@ export default function VoucherPage() {
     const params = useLocalSearchParams();
     const id_voucher = params.id_voucher as string;
 
+    const mine = (params.mine as string) === 'true';
+
+    let is_used = false;
+    if (mine) {
+        is_used = (params.is_used === 'true');
+    }
+
     const [loading, setLoading] = useState<boolean>(true);
     // const [type_game, setTypeGame] = useState<string|null>(null);
     const [voucher, setVoucher] = useState<any|null>(null);
@@ -63,34 +72,38 @@ export default function VoucherPage() {
                 setVoucher(result);
                 setBrand(result.brand);
 
-                getCampaignsOfVoucher(id_voucher).then(res => {
-                    retrieveFromSecureStore('id_player', (id_player: string) => {
-                        getLikedCampaigns(id_player).then((likedCampaigns) => {
-                            res.map((campaign: any) => {
-                                campaign.isFavorite = likedCampaigns.some((likedCampaign: any) => likedCampaign.campaign_data._id === campaign._id);
+                if (!mine) {
+                    getCampaignsOfVoucher(id_voucher).then(res => {
+                        retrieveFromSecureStore('id_player', (id_player: string) => {
+                            getLikedCampaigns(id_player).then((likedCampaigns) => {
+                                res.map((campaign: any) => {
+                                    campaign.isFavorite = likedCampaigns.some((likedCampaign: any) => likedCampaign.campaign_data._id === campaign._id);
+                                });
+                                setCampaigns(res);
+                                setLoading(false);
+            
+                            }).catch((err) => {
+                                setCampaigns(res);
+                                setLoading(false);
+
+                                console.log(err);
+                                showToast('error', 'Lỗi hệ thống');
                             });
-                            setCampaigns(res);
-                            setLoading(false);
-        
-                        }).catch((err) => {
+                        }).catch((err) => {                        
                             setCampaigns(res);
                             setLoading(false);
 
                             console.log(err);
-                            showToast('error', 'Lỗi hệ thống');
+                            showToast('error', 'Không tìm thấy thông tin người dùng');
                         });
-                    }).catch((err) => {                        
-                        setCampaigns(res);
-                        setLoading(false);
 
-                        console.log(err);
-                        showToast('error', 'Không tìm thấy thông tin người dùng');
+                    }).catch(error => {
+                        console.error('Error fetching campaign info:', error);
+                        setLoading(false)
                     });
-
-                }).catch(error => {
-                    console.error('Error fetching campaign info:', error);
-                    setLoading(false)
-                });
+                } else {
+                    setLoading(false);
+                }
             
             }).catch(error => {
                 console.error('Error fetching player score:', error.message);
@@ -150,74 +163,51 @@ export default function VoucherPage() {
         }
     };
 
-    // const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
-    // const [itemInfo, setItemInfo] = useState<Item|null>(null);
-    
-    // useEffect(() => {
-    //     if (type_game ){ 
-    //         getGameInfo(id_campaign)
-    //         .then(gameInfo => {
-    //             if (type_game == config.QUIZ_GAME){
-    //                 // console.log("gameInfo: ", gameInfo)
-    //                 setQuizInfo(gameInfo.id_quiz)
-    //             }
-    //             else if (type_game == config.ITEM_GAME)
-    //                 setItemInfo({
-    //                     item1_photo: gameInfo.item1_photo,
-    //                     item2_photo: gameInfo.item2_photo,
-    //                 })
-    //         })
-    //         .catch(error => {
-    //             console.error('Error fetching quiz info:', error);
-    //         });   
-      
-    //     }
-    // }, [type_game])
-
-    // const [playerTurn, setPlayerTurn] = useState <number|null>(null);
     const [playerInfo, setPlayerInfo] = useState <PlayerInfo | null>(null);
 
-    useEffect(() => {
-        if (id_voucher){
-            retrieveFromSecureStore('id_player', (id_player: string) => {
+    if (!mine) {
+        useEffect(() => {
+            if (id_voucher){
+                retrieveFromSecureStore('id_player', (id_player: string) => {
 
-                getPlayerItem(id_player).then((data) => {
-                    const player_items = data.map((data: {
-                        id_campaign: any; vouchers: { id_voucher: any; }; 
-                        quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
-                    }) => {
-                        return {
-                            id_campaign: data.id_campaign,
-                            id_voucher: data.vouchers.id_voucher,
-                            quantity_item1: data.quantity_item1,
-                            quantity_item2: data.quantity_item2,
-                            item1_photo: data.item1_photo,
-                            item2_photo: data.item2_photo,
-                        }
-                    })
+                    getPlayerItem(id_player).then((data) => {
+                        const player_items = data.map((data: {
+                            id_campaign: any; vouchers: { id_voucher: any; }; 
+                            quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
+                        }) => {
+                            return {
+                                id_campaign: data.id_campaign,
+                                id_voucher: data.vouchers.id_voucher,
+                                quantity_item1: data.quantity_item1,
+                                quantity_item2: data.quantity_item2,
+                                item1_photo: data.item1_photo,
+                                item2_photo: data.item2_photo,
+                            }
+                        })
 
-                    getPlayerScore(id_player).then((data) => {
-                        setPlayerInfo(new PlayerInfo({
-                            player_score: data.score,
-                            player_items: player_items,
-                        }))
+                        getPlayerScore(id_player).then((data) => {
+                            setPlayerInfo(new PlayerInfo({
+                                player_score: data.score,
+                                player_items: player_items,
+                            }))
+                        }).catch((error) => {
+                            console.error('Error fetching player score:', error);
+                            showToast('error', 'Lỗi hệ thống');
+                        });
+
                     }).catch((error) => {
                         console.error('Error fetching player score:', error);
                         showToast('error', 'Lỗi hệ thống');
                     });
 
+                    
                 }).catch((error) => {
-                    console.error('Error fetching player score:', error);
-                    showToast('error', 'Lỗi hệ thống');
+                    console.error('Error retrieving id_player from SecureStore:', error);
+                    showToast('error', 'Không tìm thấy thông tin người chơi');
                 });
-
-                
-            }).catch((error) => {
-                console.error('Error retrieving id_player from SecureStore:', error);
-                showToast('error', 'Không tìm thấy thông tin người chơi');
-            });
-        }
-    },[id_voucher]);
+            }
+        },[id_voucher]);
+    }
 
     const [isModalVisible, setModalVisible] = useState(false);
     
@@ -232,32 +222,50 @@ export default function VoucherPage() {
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
                     <Image style={styles.banner} source={{uri: voucher.photo}} />
                             
-                        <View style={styles.campaignHeaderContainer}>
-                            <Image source={{uri: brand!.logo}} style={styles.brandLogo} />
-                            <View style={{flex: 1, justifyContent: 'space-between'}}>
-                                <View style={styles.campaignHeader_top}>
-                                <View style={Date.now() < Date.parse(voucher.expired_date) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                                    <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(voucher.expired_date) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
-                                    { 
-                                        Date.now() < Date.parse(voucher.expired_date) ? 
-                                            <Text style={styles.time}>{new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getFullYear())}</Text> :
-                                            <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
-                                    }
-                                </View>
-                                    <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare()}} suppressHighlighting={true} />
-                                </View>
-                                <View style={styles.campaignHeader_bottom}>
-                                    <Heading type='h5'>{voucher.name}</Heading>
-                                </View>
+                    <View style={styles.campaignHeaderContainer}>
+                        <Image source={{uri: brand!.logo}} style={styles.brandLogo} />
+                        <View style={{flex: 1, justifyContent: 'space-between'}}>
+                            <View style={styles.campaignHeader_top}>
+                            <View style={Date.now() < Date.parse(voucher.expired_date) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                                <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(voucher.expired_date) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                                { 
+                                    Date.now() < Date.parse(voucher.expired_date) ? 
+                                        <Text style={styles.time}>{new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getFullYear())}</Text> :
+                                        <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
+                                }
+                            </View>
+                                <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare()}} suppressHighlighting={true} />
+                            </View>
+                            <View style={styles.campaignHeader_bottom}>
+                                <Heading type='h5'>{voucher.name}</Heading>
                             </View>
                         </View>
-                        
-                        <View style={styles.voucherDetailContainer}>
-                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Điều khoản áp dụng</Heading>
-                            <Paragraph type='p2' style={{marginHorizontal: 20}}>
-                                {voucher.description}
-                            </Paragraph>
+                    </View>
 
+                    {
+                        mine &&
+                        <View>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mã voucher</Heading>
+
+                            <TouchableOpacity style={[styles.codeContainer]} activeOpacity={0.6} 
+                                onPress={() => {
+                                    Clipboard.setString(voucher.code); 
+                                    Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
+                                }}>
+                                <Paragraph type={'p2'}>{voucher.code}</Paragraph>
+                                <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                        
+                    <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Điều khoản áp dụng</Heading>
+                    <Paragraph type='p2' style={{marginHorizontal: 20}}>
+                        {voucher.description}
+                    </Paragraph>
+
+                    { 
+                        !mine && (
+                        <>
                             <View style={[styles.titleContainer, {marginHorizontal: 20}]}>
                                 <Heading type="h5">Sự kiện đổi voucher</Heading>
                                 <Heading type="h6" color={Colors.light.primary} onPress={() =>{
@@ -267,7 +275,7 @@ export default function VoucherPage() {
                                     })
                                 }} suppressHighlighting={true}>Xem tất cả</Heading>
                             </View>
-                            
+                        
                             {campaigns.length === 0 ? (
                                 <EmptyView />
                             ) : (
@@ -277,11 +285,20 @@ export default function VoucherPage() {
                                     style={{ marginBottom: 32, marginVertical: 20 }} 
                                 />
                             )}
+                        </> )
+                    }
                         
-                        </View>
-                    </ScrollView>
+                </ScrollView>
 
-                </>
+                { mine && 
+                <View style={styles.exchangeButtonContainer} >
+                    { is_used ? 
+                        <Button text='Đã sử dụng' type='disabled' style={styles.exchangeButton} disabled={true}/> :
+                        <Button text='Dùng ngay' type='primary' style={styles.exchangeButton} onPress={() => {}}/> 
+                    }
+                </View> 
+                }
+                </> 
                 )}
             </View>
         </View>
@@ -312,8 +329,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    voucherDetailContainer: {
     },
 
     brandLogo: {
@@ -438,6 +453,7 @@ const styles = StyleSheet.create({
     },
     exchangeButton: {
         marginBottom: Platform.OS === 'ios' ? 10 : 0,
+        fontWeight: '600',
     },
 
     titleContainer: {
@@ -445,5 +461,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-end',
+    },
+
+    
+    codeContainer: {
+        marginHorizontal: 15,
+        marginBottom: 10,
+        borderRadius: 6,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        flexGrow: 1,
+        backgroundColor: Colors.gray._200,
+        color: Colors.light.mainText,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    codeText: {
+        color: Colors.feedback.warning,
+        fontWeight: '600',
+        fontSize: 16,
     },
 });
