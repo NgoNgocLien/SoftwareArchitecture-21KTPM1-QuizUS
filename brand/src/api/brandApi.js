@@ -12,7 +12,7 @@ const signup = async (brand_signup) => {
       return []
     }
   }
-  
-  export{
-    signup
-  }
+
+export{
+  signup
+}
