@@ -60,7 +60,7 @@ export default function ManageBrand() {
         <div>
             {/* Add brand */}
             <Link to="/add-brand" className='add-brand-ctn'>
-                <button className="add-brand-btn">
+                <button className="add-brand-btn" onClick={handleAddBrand}>
                     <img src="/icons/plus.svg" alt="add-brand-icon" className="add-brand-icon" />
                     Thêm nhãn hàng
                 </button>

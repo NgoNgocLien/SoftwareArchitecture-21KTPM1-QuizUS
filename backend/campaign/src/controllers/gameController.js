@@ -213,7 +213,7 @@ const reducePlayerTurn = async (req, res) => {
 };
 
 // xin lượt chơi từ bạn bè cho 1 campaign
-const sendTurn = async (req, res) => {
+const requestTurn = async (req, res) => {
   try {
     const { id_sender, id_receiver, id_campaign } = req.body;
 
@@ -236,10 +236,36 @@ const sendTurn = async (req, res) => {
       id_receiver,
       id_campaign,
       request_time: new Date(),
-      accept_time: null
+      reply_time: null,
+      is_accept: false
     });
 
     const savedTurnRequest = await turnRequest.save();
+
+    // lấy thông tin sender
+    const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${id_sender}`);
+    const sender = senderResponse.data;
+
+    // lấy thông tin campaign
+    const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${id_campaign}`);
+    const campaign = campaignResponse.data;
+
+    // Thêm noti
+    const newNoti = new PlayerNoti({
+      type: "friend",
+      subtype: "request_turn",
+      id_receiver,
+      id_sender,
+      name_sender: sender.username, 
+      id_campaign,
+      name_campaign: campaign.name,
+      id_turnrequest: savedTurnRequest._id,
+      is_accept: false,
+      noti_time: new Date(), 
+      seen_time: null
+    });
+
+    await newNoti.save();
 
     return res.status(201).json({
       message: 'Turn request sent.',
@@ -252,7 +278,7 @@ const sendTurn = async (req, res) => {
 };
 
 // người chơi chấp nhận cho bạn bè lượt chơi
-const receiveTurn = async (req, res) => {
+const acceptTurn = async (req, res) => {
   try {
     const { id_request } = req.body;
 
@@ -606,8 +632,8 @@ module.exports = {
   getPlayerTurnByCampaign,
   addPlayerTurn,
   reducePlayerTurn,
-  sendTurn,
-  receiveTurn,
+  requestTurn,
+  acceptTurn,
   sendItem,
   receiveItem,
   getTurnRequest,
