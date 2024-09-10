@@ -71,8 +71,8 @@ export default function ManageVoucher() {
                             <th><input type="checkbox" />ID</th>
                             <th>Tên voucher</th>
                             <th>Hạn sử dụng</th>
-                            <th>Giá trị</th>
-                            <th>Số xu</th>
+                            <th>Giá trị VND</th>
+                            <th>Giá đổi xu</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -122,8 +122,8 @@ select {
     border-radius: 6px;
     border: 1.5px solid #0063D6;
     display: flex;
-    width: 150px;
-    padding: 14px 16px;
+    width: 120px;
+    padding: 10px 10px;
     background: none;
     justify-content: center;
     align-items: center;
@@ -141,8 +141,8 @@ select {
 
 .save-btn {
     display: flex;
-    width: 180px;
-    padding: 14px 16px;
+    width: 150px;
+    padding: 10px 10px;
     background: #0063D6;
     font-family: medium-font;
     font-size: 16px;
