@@ -41,7 +41,6 @@ export default function BrandInfo() {
     }, [])
 
     useEffect(() => {
-        // Initialize the autocomplete when the component loads
         if (window.google) {
             autocomplete = new window.google.maps.places.Autocomplete(addressInput.current, {
                 types: ["geocode"],
