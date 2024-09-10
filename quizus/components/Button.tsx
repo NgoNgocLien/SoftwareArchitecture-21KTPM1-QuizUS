@@ -5,13 +5,15 @@ import { Colors } from '@/constants/Colors';
 import { TabBarIcon } from './navigation/TabBarIcon';
 
 export type ThemedButtonProps = TouchableOpacityProps & {
-  type?: 'primary' | 'secondary' | 'correctAnswer' | 'wrongAnswer' | 'tertiary';
-  text: string; 
+  type?: 'primary' | 'secondary' | 'correctAnswer' | 'wrongAnswer' | 'tertiary' | 'disabled';
+  text: string;
+  size?: string; 
 };
 
 export function Button({
   type = 'primary',
   text,
+  size,
   style,
   ...rest
 }: ThemedButtonProps) {
@@ -27,6 +29,12 @@ export function Button({
     buttonStyle.push(styles.wrongAnswer);
   } else if (type === 'tertiary') {
     buttonStyle.push(styles.tertiary);
+  } else if (type === 'disabled') {
+    buttonStyle.push(styles.disabled);
+  }
+
+  if (size === 'small'){
+    buttonStyle.push(styles.small);
   }
   
   return (
@@ -62,11 +70,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     textAlign: 'center',
   },
+
+  small: {
+    height: 'auto',
+    width: '80%',
+    paddingVertical: 10,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+
   primary: {
     backgroundColor: Colors.light.primary, 
   },
   tertiary: {
     backgroundColor: Colors.brand._200, 
+  },
+  disabled:{
+    backgroundColor: Colors.gray._500, 
   },
   secondary: {
     backgroundColor: Colors.light.background,
@@ -83,6 +103,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.feedback.error,
     borderWidth: 3,
   },
+
+
   icon:{
     position: 'absolute',
     left: 10

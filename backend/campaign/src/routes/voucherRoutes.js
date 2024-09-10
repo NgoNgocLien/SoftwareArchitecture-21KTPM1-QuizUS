@@ -38,6 +38,6 @@ router.post('/exchange/item', exchangeByItem);
 router.get('/exchange/:id_player', getExchanged);
 
 // Sử dụng voucher
-router.put('/used', use);
+router.put('/used/:id_player/:id_campaign', use);
 
 module.exports = router;

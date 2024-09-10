@@ -31,7 +31,7 @@ export default function HomePage() {
 
     useEffect(() => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            notificationSocket.connect(id_player);
+            // notificationSocket.connect(id_player);
 
             eventEmitter.on('notification', handleNotification);
         })

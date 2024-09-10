@@ -22,15 +22,18 @@ export default function Favorite() {
     const [notification, setNotification] = useState(false);
 
     useEffect(() => {
-    const handleNotification = (data: any) => {
-      setNotification(true);
-    };
+        const handleNotification = (data: any) => {
+        setNotification(true);
+        };
 
-    eventEmitter.on('notification', handleNotification);
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+            // notificationSocket.connect(id_player);
 
-    return () => {
-      eventEmitter.remove('notification', handleNotification);
-    };
+            eventEmitter.on('notification', handleNotification);
+        })
+        return () => {
+            eventEmitter.remove('notification', handleNotification);
+        };
     }, []);
     
     const fetchLikedCampaigns = useCallback(() => {

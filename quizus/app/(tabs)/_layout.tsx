@@ -96,6 +96,12 @@ export default function TabLayout() {
         />
 
         <Tabs.Screen 
+            name="gift-item"
+            options={{
+                tabBarButton: () => null,
+            }}
+        />
+        <Tabs.Screen 
             name="gift-voucher"
             options={{
                 tabBarButton: () => null,

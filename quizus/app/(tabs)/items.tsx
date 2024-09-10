@@ -113,7 +113,7 @@ export default function Items() {
                     </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => router.replace('/gift-voucher')}>
+                <TouchableWithoutFeedback onPress={() => router.replace('/gift-item')}>
                     <View style={styles.tab}>
                         <Image source={require('@/assets/images/icons/donate-coin.png')} style={styles.icon} />
                         <Text style={styles.tabText}>Tặng bạn bè</Text>

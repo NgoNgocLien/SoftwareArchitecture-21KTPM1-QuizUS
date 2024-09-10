@@ -10,6 +10,12 @@ import config from '@/constants/config';
 import {retrieveFromSecureStore} from '@/api/SecureStoreService'
 SplashScreen.preventAutoHideAsync();
 
+import { LogBox } from 'react-native'; // Import LogBox at the top of the file
+
+if (__DEV__) {
+  LogBox.ignoreAllLogs(); // Ignore all logs in development
+}
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({

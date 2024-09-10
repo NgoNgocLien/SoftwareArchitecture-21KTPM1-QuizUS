@@ -25,7 +25,7 @@ export default function MyVouchers() {
 
     const params= useLocalSearchParams();
     const focusTabIndex = parseInt(params.focusTabIndex as string);
-    const [focusedTab, setFocusedTab] = useState(focusTabIndex);
+    const [focusedTab, setFocusedTab] = useState(focusTabIndex || 0);
 
     const [vouchers, setVouchers] = useState<any[][] | null>(null);
 

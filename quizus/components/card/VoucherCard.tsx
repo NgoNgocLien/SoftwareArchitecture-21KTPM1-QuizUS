@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Clipboard, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Colors } from '@/constants/Colors';
@@ -12,6 +12,8 @@ import { PlayerInfo } from '@/models/game/PlayerInfo';
 import { exchangeCoinVoucher, exchangeItemVoucher } from '@/api/VoucherApi';
 import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { showToast } from '../ToastBar';
+import { Button } from '../Button';
+import { useRouter } from 'expo-router';
 
 const defaultCampaign = {
     _id: '1',
@@ -51,7 +53,7 @@ export function VoucherCard({
     is_used?: boolean,
     [key: string]: any;
 }) {
-
+    const router = useRouter();
     let expiredDateFormatted = voucher 
     ?
         new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + new Date(voucher.expired_date).getFullYear()
@@ -152,14 +154,16 @@ export function VoucherCard({
                                 <Paragraph type={'p2'} color={ Colors.gray._500}>Đã sử dụng</Paragraph>
                             </View>
                         )  : (
-                        (Date.now() < voucher.expired_date.getTime()) && <TouchableOpacity style={[styles.exchangeButton, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
-                            onPress={() => {
-                                Clipboard.setString(voucher.code); 
-                                Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
-                            }}>
-                            <Paragraph type={'p2'}>{voucher.code}</Paragraph>
-                            <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
-                        </TouchableOpacity>
+                        (Date.now() < voucher.expired_date.getTime()) && 
+                        <Button text={"Sử dụng/Tặng"} size={'small'}
+                            onPress={() =>{
+                                router.replace({
+                                    pathname: '/gift-voucher',
+                                    params: {
+                                        voucher: JSON.stringify(voucher),
+                                    }
+                                })
+                            }}></Button>
                         )
                         
                     )
