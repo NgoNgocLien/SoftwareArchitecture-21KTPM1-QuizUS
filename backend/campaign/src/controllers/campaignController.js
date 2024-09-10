@@ -47,6 +47,36 @@ const getInProgress = async (req, res) => {
     }
 };
 
+// Lấy tất cả các chiến dịch sắp diễn ra
+const getIncoming = async (req, res) => {
+    try {
+        const now = new Date();
+
+        // Lấy tất cả các chiến dịch có start_datetime > now 
+        // order by start_datetime ASC
+        const campaigns = await Campaign.find({
+            start_datetime: { $gte: now },
+        }).sort({ start_datetime: 1 });
+
+        const result = await Promise.all(campaigns.map(async (item) => {
+            const id_brand1 = item.id_brand1;
+            try {
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand1}`);
+                return {
+                    ...item._doc,
+                    brand: brandResponse.data
+                };
+            } catch (axiosError) {
+                throw new Error("Failed to fetch brand information.");
+            }
+        }));
+
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 // Lấy tất cả các chiến dịch của một brand theo id_brand
 const getBrandCampaign = async (req, res) => {
     try {
@@ -435,6 +465,7 @@ const getStats = async (req, res) => {
 module.exports = {
     getAll,
     getInProgress,
+    getIncoming,
     getBrandCampaign,
     search,
     searchByBrand,

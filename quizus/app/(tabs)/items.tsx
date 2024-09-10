@@ -6,7 +6,6 @@ import { StyleSheet, Keyboard, TouchableWithoutFeedback, View, ScrollView, Text,
 import { Button } from '@/components/Button';
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
-import config from '@/constants/config';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { VoucherCard } from '@/components/card/VoucherCard';
 import { EmptyView } from '@/components/EmptyView';
@@ -15,6 +14,9 @@ import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
 import { showToast } from '@/components/ToastBar';
 import { PlayerInfo } from '@/models/game/PlayerInfo';
+import { getActiveVouchers } from '@/api/VoucherApi';
+import { VoucherFactory } from '@/models/voucher/VoucherFactory';
+import { ItemVoucher } from '@/models/voucher/ItemVoucher';
 
 export default function Items() {
     const router = useRouter();
@@ -29,13 +31,13 @@ export default function Items() {
 
     const [focusedTab, setFocusedTab] = useState(0);
 
-    const [vouchers, setVouchers] = useState<any[] | null>(null);
+    const [vouchers, setVouchers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const [nhaHang, setNhahang] = useState<any[] | null>(null);
-    const [cafeBanh, setCafeBanh] = useState<any[] | null>(null);
-    const [muaSam, setMuaSam] = useState<any[] | null>(null);
-    const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
+    const [nhaHang, setNhahang] = useState<any[]>([]);
+    const [cafeBanh, setCafeBanh] = useState<any[]>([]);
+    const [muaSam, setMuaSam] = useState<any[]>([]);
+    const [giaiTri, setGiaiTri] = useState<any[]>([]);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
@@ -43,12 +45,63 @@ export default function Items() {
 
     const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
 
-    useEffect(() => {
+    const sortVouchers = () => {
+        if (vouchers.length !== 0 && playerInfo) {
+            setVouchers(
+                vouchers.sort((a: any, b: any) => {
+                    const enoughA = (playerInfo.getPlayerQuantityItem1(a.campaign._id, a.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(a.campaign._id, a.voucher._id) >= 1) ? 1 : 0;
+                    const enoughB = (playerInfo.getPlayerQuantityItem1(b.campaign._id, b.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(b.campaign._id, b.voucher._id) >= 1) ? 1 : 0;
+                    return enoughB - enoughA;
+                })      
+            );
+
+            if (nhaHang.length !== 0) {
+                setNhahang(
+                    nhaHang.sort((a: any, b: any) => {
+                        const enoughA = (playerInfo.getPlayerQuantityItem1(a.campaign._id, a.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(a.campaign._id, a.voucher._id) >= 1) ? 1 : 0;
+                        const enoughB = (playerInfo.getPlayerQuantityItem1(b.campaign._id, b.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(b.campaign._id, b.voucher._id) >= 1) ? 1 : 0;
+                        return enoughB - enoughA;
+                    })      
+                );
+            }
+
+            if (cafeBanh.length !== 0) {
+                setCafeBanh(
+                    cafeBanh.sort((a: any, b: any) => {
+                        const enoughA = (playerInfo.getPlayerQuantityItem1(a.campaign._id, a.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(a.campaign._id, a.voucher._id) >= 1) ? 1 : 0;
+                        const enoughB = (playerInfo.getPlayerQuantityItem1(b.campaign._id, b.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(b.campaign._id, b.voucher._id) >= 1) ? 1 : 0;
+                        return enoughB - enoughA;
+                    })      
+                );
+            }
+
+            if (muaSam.length !== 0) {
+                setMuaSam(
+                    muaSam.sort((a: any, b: any) => {
+                        const enoughA = (playerInfo.getPlayerQuantityItem1(a.campaign._id, a.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(a.campaign._id, a.voucher._id) >= 1) ? 1 : 0;
+                        const enoughB = (playerInfo.getPlayerQuantityItem1(b.campaign._id, b.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(b.campaign._id, b.voucher._id) >= 1) ? 1 : 0;
+                        return enoughB - enoughA;
+                    })      
+                );
+            }
+
+            if (giaiTri.length !== 0) {
+                setGiaiTri(
+                    giaiTri.sort((a: any, b: any) => {
+                        const enoughA = (playerInfo.getPlayerQuantityItem1(a.campaign._id, a.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(a.campaign._id, a.voucher._id) >= 1) ? 1 : 0;
+                        const enoughB = (playerInfo.getPlayerQuantityItem1(b.campaign._id, b.voucher._id) >= 1 && playerInfo.getPlayerQuantityItem2(b.campaign._id, b.voucher._id) >= 1) ? 1 : 0;
+                        return enoughB - enoughA;
+                    })      
+                );
+            }
+        }
+    }
+
+    useFocusEffect(useCallback(()=> {
         retrieveFromSecureStore('id_player', (id_player: string) => {
             getPlayerItem(id_player).then((data: any) => {
                 const player_items = data.map((data: {
-                    id_campaign: any; vouchers: { id_voucher: any; }; quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
-}) => {
+                    id_campaign: any; vouchers: { id_voucher: any; }; quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; }) => {
                     return {
                         id_campaign: data.id_campaign,
                         id_voucher: data.vouchers.id_voucher,
@@ -68,6 +121,7 @@ export default function Items() {
                         player_score: data.score,
                         player_items: player_items,
                     }))
+
                 }).catch((error) => {
                     console.error('Error fetching player score:', error);
                     showToast('error', 'Lỗi hệ thống');
@@ -83,7 +137,60 @@ export default function Items() {
             console.error('Error retrieving id_player from SecureStore:', error);
             showToast('error', 'Không tìm thấy thông tin người chơi');
         });
-    },[]);
+    },[]));
+
+    const fetchItemVouchers = useCallback(() => {
+        setLoading(true);
+        getActiveVouchers()
+        .then(voucherList => {
+
+            let itemVouchers: any[] = [];
+            let nhaHangVouchers: any[] = [];
+            let cafeBanhVouchers: any[] = [];
+            let muaSamVouchers: any[] = [];
+            let giaiTriVouchers: any[] = [];
+
+            voucherList.map((item: any) => {
+                const { campaign, ...voucherData } = item;
+
+                if(campaign.id_quiz === null || campaign.id_quiz === undefined || campaign.id_quiz === '') {
+                    const newVoucher = VoucherFactory.createVoucher('item', voucherData);
+                    itemVouchers.push({ voucher: newVoucher, campaign: {...campaign, id_campaign: campaign._id} });
+                    if (campaign.brandField === 'Nhà hàng') {
+                        nhaHangVouchers.push({ voucher: newVoucher, campaign: campaign });
+                    } else if (campaign.brandField === 'Cafe & Bánh') {
+                        cafeBanhVouchers.push({ voucher: newVoucher, campaign: campaign });
+                    } else if (campaign.brandField === 'Mua sắm') {
+                        muaSamVouchers.push({ voucher: newVoucher, campaign: campaign });
+                    } else if (campaign.brandField === 'Giải trí') {
+                        giaiTriVouchers.push({ voucher: newVoucher, campaign: campaign });
+                    }
+                }
+            }); 
+            
+            setVouchers(itemVouchers);
+            setNhahang(nhaHangVouchers);
+            setCafeBanh(cafeBanhVouchers);
+            setMuaSam(muaSamVouchers);
+            setGiaiTri(giaiTriVouchers);
+
+            setLoading(false);
+
+            if (playerInfo) {
+                sortVouchers();
+            }
+
+            // console.log('Coin Vouchers:', coinVouchers);
+        })
+        .catch(error => {
+            console.error('Error fetching player vouchers:', error);
+            setLoading(false);
+            showToast('error', 'Lỗi hệ thống');
+        });
+
+    }, [playerInfo]);
+
+    useFocusEffect(fetchItemVouchers);
     
     return (
         <View style={styles.background}>
@@ -142,16 +249,11 @@ export default function Items() {
                 <View style={styles.emptyTab}></View>
             </ScrollView>
             {
-                !vouchers || loading ? (
-                    <LoadingView />
-                ) : 
-                
+                loading ? <LoadingView /> :
                 focusedTab === 0 ? (
                     <>
                         {vouchers.length === 0 ? (
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Image source={require('@/assets/images/empty-result.png')} style={{width: 250, height: 210}} />
-                            </View>
+                            <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
                             {vouchers.map((item, index) => (
@@ -168,7 +270,7 @@ export default function Items() {
                     </>
                 ) : focusedTab === 1 ? (
                     <>
-                        {!nhaHang || nhaHang.length === 0 ? (
+                        {nhaHang.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
@@ -186,7 +288,7 @@ export default function Items() {
                     </>
                 ) : focusedTab === 2 ? (
                     <>
-                        {!cafeBanh || cafeBanh.length === 0 ? (
+                        {cafeBanh.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
@@ -204,7 +306,7 @@ export default function Items() {
                     </>
                 ) : focusedTab === 3 ? (
                     <>
-                        {!muaSam || muaSam.length === 0 ? (
+                        {muaSam.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
@@ -222,7 +324,7 @@ export default function Items() {
                     </>
                 ) : focusedTab === 4 ? (
                     <>
-                        {!giaiTri || giaiTri.length === 0 ? (
+                        {giaiTri.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
