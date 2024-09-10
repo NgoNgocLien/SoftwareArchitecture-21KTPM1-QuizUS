@@ -1,18 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
 
+import { getAll } from '../api/voucherApi';
+
 export default function ManageVoucher() {
-    const [searchText, setSearchText] = useState('');
-    const [selectedField, setSelectedField] = useState('');
+    const storedBrand = localStorage.getItem('brand');
+    const brand = storedBrand ? JSON.parse(storedBrand) : null;
+    const [data, setData] = useState([]);
+    const [fullData, setFullData] = useState([]);
     
     const handleSearch = (e) => {
-        setSearchText(e.target.value);
+        let searchText = e.target.value.toLowerCase();
+        if (!searchText || searchText.length === 0)
+            setData(fullData);
+        let result = fullData.filter( data => data?.name?.toLowerCase().includes(searchText));
+        setData(result);
     };
 
-    const handleFieldChange = (e) => {
-        setSelectedField(e.target.value);
-    };
+    function formatDate(isoDateString) {
+        const date = new Date(isoDateString);
+    
+        if (isNaN(date.getTime())) {
+            throw new TypeError('Invalid date string');
+        }
+    
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); 
+        const year = date.getUTCFullYear();
+    
+        return `${day}-${month}-${year}`;
+    }
+
+    useEffect(() => {
+        const getData = async () => {
+            const data = await getAll(brand?.id_brand || 1); 
+            if (data?.length > 0) {
+                setData(data);
+                setFullData(data);
+            }
+        }
+        getData();
+    }, [brand?.id_brand]);
 
     return (
         <div>
@@ -29,7 +58,6 @@ export default function ManageVoucher() {
                     type="text"
                     className="search-input"
                     placeholder="Tìm kiếm theo ID, tên sự kiện"
-                    value={searchText}
                     onChange={handleSearch}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
@@ -43,43 +71,42 @@ export default function ManageVoucher() {
                             <th><input type="checkbox" />ID</th>
                             <th>Tên voucher</th>
                             <th>Hạn sử dụng</th>
-                            <th>% Giảm giá</th>
-                            <th>Giảm tối đa</th>
-                            <th>Số xu</th>
+                            <th>Giá trị VND</th>
+                            <th>Giá đổi xu</th>
                         </tr>
                     </thead>
                     <tbody>
                     {/* Row */}
-                        <tr>
-                            <td><input type="checkbox" />123456</td>
+                        {
+                            data.length > 0 ?
+                            data.map(item => (
+                                <tr key={item._id}>
+                                    <td><input type="checkbox" />{item._id.substr(-5, 5)}</td>
 
-                            <td>
-                                <div className="voucher-info">
-                                    <img src="/images/voucher-logo.svg" alt="voucher-logo" className="voucher-logo" />
-                                    <span>Tên voucher</span>
-                                </div>
-                            </td>
+                                    <td>
+                                        <div className="voucher-info">
+                                            <img src={item.photo} alt="" className="voucher-logo" />
+                                            <span>{item.name ||'Voucher chưa đặt tên'}</span>
+                                        </div>
+                                    </td>
 
-                            {/* Expired date */}
-                            <td>22/03/2024</td>
-                            
-                            {/* Tên voucher */}
-                            <td>
-                                <select
-                                    className="field-select"
-                                    value={selectedField}
-                                    onChange={handleFieldChange}
-                                >
-                                    <option value="Nhà hàng">Tên voucher</option>
-                                </select>
-                            </td>
-                            
-                            {/* Số lượng vouchers */}
-                            <td>100</td>
+                                    {/* Expired date */}
+                                    <td>{formatDate(item.expired_date)}</td>
+                                    
+                                    {/* Giá trị voucher */}
+                                    <td>{item.price}</td>
 
-                            {/* Người tham gia */}
-                            <td>1000</td>
-                        </tr>
+                                    {/* Người tham gia */}
+                                    <td>{item.score_exchange}</td>
+                                </tr>
+                            ))
+                            :
+                            <tr>
+                                <td colSpan={7} style={{width: '100%', textAlign: 'center'}}>
+                                    <p style={{width: '100%'}}>Không có dữ liệu</p>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

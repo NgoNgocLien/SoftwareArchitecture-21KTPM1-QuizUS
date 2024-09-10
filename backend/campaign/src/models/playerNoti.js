@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Campaign = require('./campaign');
-const Voucher = require('./coucher');
+const Voucher = require('./voucher');
 const ItemGift = require('./itemGift');
 const VoucherGift = require('./voucherGift');
 const TurnRequest = require('./turnRequest');
@@ -104,6 +104,6 @@ const PlayerNotiSchema = new Schema({
     seen_time: {
         type: Date,
     },
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('PlayerNoti', PlayerNotiSchema);

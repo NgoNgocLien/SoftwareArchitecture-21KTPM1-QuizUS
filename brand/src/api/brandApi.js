@@ -12,7 +12,24 @@ const signup = async (brand_signup) => {
       return []
     }
   }
-  
-  export{
-    signup
+
+const getInfo = async (id) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand/${id}`;
+    const response = await axios.get(url);
+    if (response?.data) {
+      return response.data;
+    }
+    else 
+    return {};
   }
+  catch (err) {
+    console.log(err.message);
+    return [];
+  }
+}
+
+export{
+  signup,
+  getInfo
+}

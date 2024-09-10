@@ -2,14 +2,14 @@
 // rồi mọi ng để config này vô file gitignore
 
 // liên
-// const USER_BE = 'http://192.168.1.25:8000/user';
-// const GAME_BE = 'http://192.168.1.25:8000/game';
-// const CAMPAIGN_BE = 'http://192.168.1.25:8000/campaign';
+const USER_BE = 'http://192.168.1.53:8000/user';
+const GAME_BE = 'http://192.168.1.53:8000/game';
+const CAMPAIGN_BE = 'http://192.168.1.53:8000/campaign';
 
 // ml
-const USER_BE = 'http://192.168.2.177:8000/user';
-const GAME_BE = 'http://192.168.2.177:8000/game';
-const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
+// const USER_BE = 'http://192.168.2.177:8000/user';
+// const GAME_BE = 'http://192.168.2.177:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
 
 // the simple cafe L1
 // const USER_BE = 'http://192.168.0.109:8000/user';

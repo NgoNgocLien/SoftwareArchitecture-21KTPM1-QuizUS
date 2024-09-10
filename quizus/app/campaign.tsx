@@ -207,11 +207,7 @@ export default function Campaign() {
     },[id_campaign, playerTurn]);
 
     const [isModalVisible, setModalVisible] = useState(false);
-    // console.log("itemInfo:", itemInfo);
-
-    // console.log("loading:", loading)
-    // console.log("playerTurn: ", playerTurn)
-    // console.log("quizInfo: ", quizInfo)
+    
     return (
         <View style={styles.container}>
             <SubHeader/>
@@ -284,7 +280,7 @@ export default function Campaign() {
                             <VoucherCard 
                                 style={{marginBottom: 100}}
                                 voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
-                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo, id_campaign: id_campaign}}
+                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo, _id: id_campaign}}
                                 playerInfo={playerInfo}
                             />
                         </View>

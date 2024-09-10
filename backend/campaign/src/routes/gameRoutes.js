@@ -8,12 +8,13 @@ const {
   getPlayerTurnByCampaign,
   addPlayerTurn,
   reducePlayerTurn,
-  sendTurn,
-  receiveTurn,
+  requestTurn,
+  replyTurn,
   sendItem,
   receiveItem,
   getTurnRequest,
   getItemRequest,
+  seenTurnNoti
 } = require('../controllers/gameController');
 
 // Tìm kiếm game theo campaign
@@ -38,10 +39,13 @@ router.put('/player_turn/add', addPlayerTurn);
 router.put('/player_turn/minus', reducePlayerTurn);
 
 // xin lượt chơi từ bạn bè cho 1 campaign
-router.post('/player_turn/send', sendTurn);
+router.post('/player_turn/request', requestTurn);
 
-// người chơi chấp nhận cho bạn bè lượt chơi
-router.put('/player_turn/receive', receiveTurn);
+// người chơi từ chối / chấp nhận cho bạn bè lượt chơi
+router.put('/player_turn/request', replyTurn);
+
+// xem thông báo liên quan đến noti
+router.put('/player_turn/seen', seenTurnNoti);
 
 // tặng mảnh ghép cho bạn
 router.post('/item/send', sendItem);
@@ -51,6 +55,5 @@ router.get('/item/request/:id_player', getItemRequest);
 
 // nhận mảnh ghép từ bạn
 router.put('/item/receive', receiveItem);
-
 
 module.exports = router;

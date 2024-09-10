@@ -34,7 +34,24 @@ const searchBrand = async (keyword) => {
   }
 }
 
+const createBrand = async (brandData) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand/signup`;
+    const response = await axios.post(url, brandData);
+    
+    if (response.status === 200 || response.status === 201) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export {
   getAllBrands,
-  searchBrand
+  searchBrand,
+  createBrand
 };

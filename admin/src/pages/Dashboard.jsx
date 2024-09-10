@@ -15,7 +15,6 @@ export default function Dashboard() {
         const getData = async () => {
             const response = await getStats();
             setData(response);
-            console.log(response)
         }
         getData();
     }, [])

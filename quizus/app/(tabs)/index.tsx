@@ -6,7 +6,7 @@ import { Header } from '@/components/header/Header';
 import { Colors } from '@/constants/Colors';
 import { CampaignCard } from '@/components/card/CampaignCard';
 import { SearchBar } from '@/components/input/SearchBar';
-import { getCampaignsInProgess, getLikedCampaigns } from '@/api/CampaignApi';
+import { getCampaignsInProgess, getLikedCampaigns, getCampaignsIncoming } from '@/api/CampaignApi';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import config from '@/constants/config';
@@ -21,7 +21,9 @@ import eventEmitter from '@/models/notification/EventEmitter';
 
 export default function HomePage() {
     const [loading, setLoading] = useState(true);
+    const [incomingLoading, setIncomingLoading] = useState(true);
     const [focusedTab, setFocusedTab] = useState(0);
+    const [incomingCampaigns, setIncomingCampaigns] = useState<any[]>([]);
     const [campaigns, setCampaigns] = useState<any[]>([]);
     const [cafeBanh, setCafeBanh] = useState<any[]>([]);
     const [muaSam, setMuaSam] = useState<any[]>([]);
@@ -49,7 +51,8 @@ export default function HomePage() {
         { index: 1, name: 'Nhà hàng' },
         { index: 2, name: 'Cafe & Bánh' },
         { index: 3, name: 'Mua sắm' },
-        { index: 4, name: 'Giải trí' }
+        { index: 4, name: 'Giải trí' },
+        { index: 5, name: 'Sắp diễn ra' }
     ];
 
 
@@ -57,7 +60,7 @@ export default function HomePage() {
         setFocusedTab(index);
     };
 
-    const fetchCampaignsInProgess = useCallback(() => {
+    const fetchCampaignsInProgress = useCallback(() => {
         setLoading(true);
 
         getCampaignsInProgess().then((res) => {
@@ -73,7 +76,7 @@ export default function HomePage() {
                     console.log(err);
                     setCampaigns(res);
                     setLoading(false);
-                    showToast('error', 'Lỗi hệ thống 11');
+                    showToast('error', 'Lỗi hệ thống');
                 });
             }).catch((err) => {
                 console.log(err);
@@ -93,7 +96,44 @@ export default function HomePage() {
         }
     }, []);
 
-    useFocusEffect(fetchCampaignsInProgess);
+    const fetchCampaignsIncoming = useCallback(() => {
+        setIncomingLoading(true);
+
+        getCampaignsIncoming().then((res) => {
+            retrieveFromSecureStore('id_player', (id_player: string) => {
+                getLikedCampaigns(id_player).then((likedCampaigns) => {
+                    res.map((campaign: any) => {
+                        campaign.isFavorite = likedCampaigns.some((likedCampaign: any) => likedCampaign.campaign_data._id === campaign._id);
+                    });
+                    setIncomingCampaigns(res);
+                    setIncomingLoading(false);
+
+                }).catch((err) => {
+                    console.log(err);
+                    setIncomingCampaigns(res);
+                    setIncomingLoading(false);
+                    showToast('error', 'Lỗi hệ thống');
+                });
+            }).catch((err) => {
+                console.log(err);
+                setIncomingCampaigns(res);
+                setIncomingLoading(false);
+                showToast('error', 'Không tìm thấy thông tin người dùng');
+            });
+        }).catch((err) => {
+            console.log(err);
+            setIncomingLoading(false);
+            showToast('error', 'Lỗi hệ thống 22');
+        });
+
+        return () => {
+            // Cleanup 
+            setIncomingCampaigns([]);
+        }
+    }, []);
+
+    useFocusEffect(fetchCampaignsInProgress);
+    useFocusEffect(fetchCampaignsIncoming);
 
     useEffect(() => {
         setNhaHang(campaigns.filter((item: any) => item.brand.field === 'Nhà hàng'));
@@ -210,6 +250,24 @@ export default function HomePage() {
                                         isFavorite={campaign.isFavorite}
                                         key={index} 
                                         style={index === giaiTri.length - 1 ? { marginBottom: 32 } : {}} 
+                                    />
+                                ))}
+                            </ScrollView> 
+                        )}
+                    </>
+                ) : focusedTab === 5 ? 
+                loading ? <LoadingView /> : (
+                    <>
+                        {incomingCampaigns.length === 0 ? (
+                            <EmptyView />
+                        ) : (
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                                {incomingCampaigns.map((campaign, index) => (
+                                    <CampaignCard 
+                                        campaign={campaign}
+                                        isFavorite={campaign.isFavorite}
+                                        key={index} 
+                                        style={index === incomingCampaigns.length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}
                             </ScrollView> 

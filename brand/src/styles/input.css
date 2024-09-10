@@ -11,6 +11,14 @@
     aspect-ratio: 1/1;
 }
 
+.brand-logo-img {
+    width: 168px;
+    height: 168px;
+    background-position: center;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
 .brand-logo-ctn img {
     object-fit: contain;
 }
@@ -114,8 +122,8 @@ select {
     border-radius: 6px;
     border: 1.5px solid #0063D6;
     display: flex;
-    width: 150px;
-    padding: 14px 16px;
+    width: 120px;
+    padding: 10px 10px;
     background: none;
     justify-content: center;
     align-items: center;
@@ -133,8 +141,8 @@ select {
 
 .save-btn {
     display: flex;
-    width: 180px;
-    padding: 14px 16px;
+    width: 150px;
+    padding: 10px 10px;
     background: #0063D6;
     font-family: medium-font;
     font-size: 16px;
@@ -155,7 +163,7 @@ select {
 }
 
 .radio-group {
-    gap: 16px; /* Adjust spacing between radio buttons */
+    gap: 16px;
     box-sizing: border-box;
     align-items: start;
     width: 32px;
@@ -168,7 +176,7 @@ select {
 }
 
 .radio-group input[type="radio"] {
-    margin-right: 8px; /* Space between radio button and label */
+    margin-right: 8px;
 }
 
 /* Edit Player */
@@ -260,4 +268,59 @@ input[type="radio"] {
 .radio-row label {
     font-family: regular-font;
     font-size: 16px;
+}
+
+/* CreateGame */
+.question-container {
+    margin-bottom: 24px;
+    width: 100%;
+    display: flex;
+    gap: 16px;
+}
+
+.question-container label {
+    font-family: regular-font;
+    font-size: 14px;
+}
+
+.question-container input[type="text"] {
+    height: 44px;
+    flex: 1 1;
+}
+
+.option-container {
+    display: flex;
+    flex: 1 1;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.option-container input[type="text"] {
+    margin-right: 12px;
+    padding: 8px;
+}
+
+.option-container input[type="radio"] {
+    margin: 0 4px;
+    height: 18px;
+    align-items: center;
+    font-family: regular-font;
+}
+
+.reward-container {
+    margin-bottom: 24px;
+}
+
+.reward-container input[type="number"] {
+    width: 100px;
+    padding: 8px;
+    margin-left: 12px;
+}
+
+form input[type="text"] {
+    padding: 10px 10px;
+}
+
+form {
+    width: 100%;
 }

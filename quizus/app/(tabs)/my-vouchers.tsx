@@ -43,9 +43,10 @@ export default function MyVouchers() {
                     let itemVouchers: any[] = [];
 
                     playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; is_used?:boolean}) => {
+                        console.log(playerVoucher.campaign.id_quiz);
                         const { voucher, ...newPlayerVoucher } = playerVoucher;
 
-                        if (playerVoucher.campaign.id_quiz !== "") {
+                        if (playerVoucher.campaign.id_quiz !== "" && playerVoucher.campaign.id_quiz !== null && playerVoucher.campaign.id_quiz !== undefined) {
                             const newVoucher = VoucherFactory.createVoucher('coin', voucher);
                             
                             if (playerVoucher.is_used || Date.now() >= newVoucher.expired_date.getTime()){

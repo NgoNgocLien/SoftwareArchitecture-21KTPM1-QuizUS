@@ -1,8 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
+
+import { createBrand } from '../api/brandApi';
 
 export default function AddBrand() {
+    const navigate =  useNavigate();
+
+    const [name, setName] = useState('');
+    const [field, setField] = useState('');
+    const [address, setAddress] = useState('');
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    
+    const onCancel  = () => {
+        navigate(`/brand`);
+    }
+
+    const onSave = async () => {
+        let newData = {
+            name,
+            field,
+            address,
+            email,
+            username,
+            pwd: password
+        }
+        let success = await createBrand(newData);
+        if (success) {
+            confirmAlert({
+                message: 'Tạo nhãn hàng thành công!',
+                buttons: [
+                    {
+                        label: 'Xác nhận',
+                        onClick: () => {
+                            navigate(`/brand`);
+                        }
+                    }
+                ]
+            });
+        }
+        else {
+            confirmAlert({
+                message: 'Tạo nhãn hàng thất bại!',
+                buttons: [
+                    {
+                        label: 'Xác nhận'
+                    }
+                ]
+            });
+        }
+    }
+
     return(
         <div className='ctn'>
             <div className='brand-logo-ctn'>
@@ -21,19 +74,19 @@ export default function AddBrand() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label htmlFor="username">Tên đăng nhập</label>
-                        <input type="text" id="username" placeholder="Nhập tên đăng nhập" />
+                        <input type="text" id="username" placeholder="Nhập tên đăng nhập" value={username} onChange={(e) => { setUsername(e.target.value) }}/>
                     </div>
                 </div>
                 <div className='form-row'>
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
-                        <input type="text" id="address" placeholder="Nhập email nhãn hàng" />
+                        <input type="text" id="email" placeholder="Nhập email nhãn hàng" value={email} onChange={(e) => { setEmail(e.target.value) }}/>
                     </div>
                 </div>
                 <div className='form-row'>
                     <div className="form-group">
                         <label htmlFor="email">Mật khẩu</label>
-                        <input type="text" id="pwd" placeholder="••••••••" />
+                        <input type="text" id="pwd" placeholder="••••••••" value={password} onChange={(e) => { setPassword(e.target.value) }}/>
                     </div>
                 </div>
 
@@ -46,11 +99,11 @@ export default function AddBrand() {
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="brand-name">Tên nhãn hàng</label>
-                        <input type="text" id="brand-name" placeholder="Nhập tên nhãn hàng" />
+                        <input type="text" id="brand-name" placeholder="Nhập tên nhãn hàng" value={name} onChange={(e) => { setName(e.target.value) }}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="field">Lĩnh vực</label>
-                        <select id="field">
+                        <select id="field" value={field} onChange={(e) => { setField(e.target.value) }}>
                             <option value="restaurant">Nhà hàng</option>
                             <option value="cafe">Cafe & Bánh</option>
                             <option value="shopping">Mua sắm</option>
@@ -63,7 +116,7 @@ export default function AddBrand() {
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="address">Địa chỉ</label>
-                        <input type="text" id="address" placeholder="Nhập địa chỉ" />
+                        <input type="text" id="address" placeholder="Nhập địa chỉ" value={address} onChange={(e) => { setAddress(e.target.value) }}/>
                     </div>
                 </div>
 
@@ -77,8 +130,8 @@ export default function AddBrand() {
 
                 {/* Buttons */}
                 <div className="button-group">
-                    <button className="cancel-btn">Hủy</button>
-                    <button className="save-btn">Lưu</button>
+                    <button className="cancel-btn" onClick={onCancel}>Hủy</button>
+                    <button className="save-btn" onClick={onSave}>Lưu</button>
                 </div>
 
             </div>

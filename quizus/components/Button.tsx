@@ -103,8 +103,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.feedback.error,
     borderWidth: 3,
   },
-
-
   icon:{
     position: 'absolute',
     left: 10

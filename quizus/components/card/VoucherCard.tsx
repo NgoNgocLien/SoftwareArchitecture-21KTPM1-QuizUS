@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 import { Colors } from '@/constants/Colors';
 import {Voucher} from '@/models/voucher/Voucher'
@@ -110,7 +111,19 @@ export function VoucherCard({
 
 
     return (
-        <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => { }}>
+        <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => {
+                if (playerInfo) {
+                    router.push({
+                        pathname: '/voucher',
+                        params: { id_voucher: voucher._id, mine: "false" }
+                    })
+                } else {
+                    router.push({
+                        pathname: '/voucher',
+                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false") }
+                    })
+                }
+            }}>
             <View style={styles.brandContainer}>
                 <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo}/>
             </View>
