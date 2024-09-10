@@ -39,7 +39,7 @@ export default function Topbar() {
             <h6>{getPageName(location.pathname)}</h6>
             <div className="d-flex flex-row user-profile align-items-center">
                 <img src="/icons/avatar.svg" alt="user-avatar" />
-                <p>{admin.fullname}</p>
+                <p>{admin?.fullname}</p>
                 <img src="/icons/chevron-down.svg" alt="chevron-down"
                 style={{ cursor: "pointer"}} onClick={toggleDropdown}/>
 

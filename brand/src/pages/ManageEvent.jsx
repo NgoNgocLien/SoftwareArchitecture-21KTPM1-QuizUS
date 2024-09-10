@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
 
+import { getAll } from '../api/campaignApi';
+
 export default function Manageevent() {
-    const [searchText, setSearchText] = useState('');
-    const [selectedField, setSelectedField] = useState('');
+    const storedBrand = localStorage.getItem('brand');
+    const brand = storedBrand ? JSON.parse(storedBrand) : null;
+    const [data, setData] = useState([]);
+    const [fullData, setFullData] = useState([]);
+    // const [selectedField, setSelectedField] = useState('');
     
+    function formatDate(isoDateString) {
+        const date = new Date(isoDateString);
+    
+        if (isNaN(date.getTime())) {
+            throw new TypeError('Invalid date string');
+        }
+    
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); 
+        const year = date.getUTCFullYear();
+    
+        return `${day}-${month}-${year}`;
+    }
+
     const handleSearch = (e) => {
-        setSearchText(e.target.value);
+        let searchText = e.target.value.toLowerCase();
+        if (!searchText || searchText.length === 0)
+            setData(fullData);
+        let result = fullData.filter( data => data?.name?.toLowerCase().includes(searchText));
+        setData(result);
     };
 
-    const handleFieldChange = (e) => {
-        setSelectedField(e.target.value);
-    };
+    useEffect(() => {
+        const getData = async () => {
+            const data = await getAll(brand?.id_brand); 
+            if (data?.length > 0) {
+                setData(data);
+                setFullData(data);
+            }
+        }
+        getData();
+    }, [brand?.id_brand]);
 
+    console.log(data);
     return (
         <div>
             <div className="add-event-container">
@@ -29,7 +60,6 @@ export default function Manageevent() {
                     type="text"
                     className="search-input"
                     placeholder="Tìm kiếm theo ID, tên sự kiện"
-                    value={searchText}
                     onChange={handleSearch}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
@@ -44,53 +74,64 @@ export default function Manageevent() {
                             <th>Tên sự kiện</th>
                             <th>Ngày bắt đầu</th>
                             <th>Ngày kết thúc</th>
-                            <th>Voucher</th>
+                            {/* <th>Voucher</th> */}
                             <th>Số lượng voucher</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                     {/* Row */}
-                        <tr>
-                            <td><input type="checkbox" />123456</td>
+                        {
+                            data.length > 0 ?
+                            data.map (item => (
+                                <tr key={item._id}>
+                                    <td><input type="checkbox" />{item._id.substr(-5, 5)}</td>
 
-                            <td>
-                                <div className="event-info">
-                                    <img src="/images/event-logo.svg" alt="event-logo" className="event-logo" />
-                                    <span>Tên sự kiện</span>
-                                </div>
-                            </td>
+                                    <td>
+                                        <div className="event-info">
+                                            <img src={item.photo} alt="event-logo" className="event-logo" />
+                                            <span>{item.name}</span>
+                                        </div>
+                                    </td>
 
-                            {/* Ngày bắt đầu - Ngày kết thúc */}
-                            <td>22/03/2024</td>
-                            <td>22/03/2024</td>
-                            
-                            {/* Tên voucher */}
-                            <td>
-                                <select
-                                    className="field-select"
-                                    value={selectedField}
-                                    onChange={handleFieldChange}
-                                >
-                                    <option value="Nhà hàng">Tên voucher</option>
-                                </select>
-                            </td>
-                            
-                            {/* Số lượng vouchers */}
-                            <td>100</td>
+                                    {/* Ngày bắt đầu - Ngày kết thúc */}
+                                    <td>{formatDate(item.start_datetime)}</td>
+                                    <td>{formatDate(item.end_datetime)}</td>
+                                    
+                                    {/* Tên voucher */}
+                                    {/* <td>
+                                        <select
+                                            className="field-select"
+                                            value={selectedField}
+                                            onChange={handleFieldChange}
+                                        >
+                                            <option value="Nhà hàng">Tên voucher</option>
+                                        </select>
+                                    </td> */}
+                                    
+                                    {/* Số lượng vouchers */}
+                                    <td>{item.max_amount_voucher}</td>
 
-                            {/* Hành động */}
-                            <td className='action-buttons'>
-                                <button className="edit-btn">
-                                    <img src="/icons/edit.svg" alt="edit-btn" />
-                                            Sửa
-                                </button>
-                                {/* <button className="delete-btn">
-                                    <img src="/icons/delete.svg" alt="delete-btn" />
-                                            Xóa
-                                </button> */}
-                            </td>
-                        </tr>
+                                    {/* Hành động */}
+                                    <td className='action-buttons'>
+                                        <button className="edit-btn">
+                                            <img src="/icons/edit.svg" alt="edit-btn" />
+                                                    Sửa
+                                        </button>
+                                        {/* <button className="delete-btn">
+                                            <img src="/icons/delete.svg" alt="delete-btn" />
+                                                    Xóa
+                                        </button> */}
+                                    </td>
+                                </tr>
+                            ))
+                            :
+                            <tr>
+                                <td colSpan={7} style={{width: '100%', textAlign: 'center'}}>
+                                    <p style={{width: '100%'}}>Không có dữ liệu</p>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
