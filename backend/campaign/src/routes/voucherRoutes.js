@@ -5,19 +5,23 @@ const Voucher = require('../models/voucher');
 const PlayerVoucher = require('../models/playerVoucher');
 const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
-const { 
-  getActive,
-  searchByBrand,
-  create,
-  update,
-  getExchanged,
-  exchangeByCoin,
-  exchangeByItem,
-  use,
+const {
+    getActive,
+    getVoucherById,
+    searchByBrand,
+    create,
+    update,
+    getExchanged,
+    exchangeByCoin,
+    exchangeByItem,
+    use,
 } = require('../controllers/voucherController');
 
 // Lấy tất cả voucher đang hoạt động
 router.get('/active', getActive);
+
+// Lấy voucher theo id
+router.get('/:id_voucher', getVoucherById);
 
 // Tìm kiếm voucher theo brand
 router.get('/search/brand/:id_brand', searchByBrand);

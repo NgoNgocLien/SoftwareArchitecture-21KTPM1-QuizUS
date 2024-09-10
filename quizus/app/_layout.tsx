@@ -49,6 +49,9 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
 
           <Stack.Screen name="campaign" />
+          <Stack.Screen name="voucher" />
+          <Stack.Screen name="campaignsOfVoucher" />
+
           <Stack.Screen name="quizgame/detail" />
           <Stack.Screen name="quizgame/result" />
           <Stack.Screen name="+not-found" />

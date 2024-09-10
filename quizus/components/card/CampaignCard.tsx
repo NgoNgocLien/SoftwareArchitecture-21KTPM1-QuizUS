@@ -85,7 +85,7 @@ export function CampaignCard({
 
     const handleJoinCampaign = () => {
         router.push({
-            pathname: '/campaign',
+            pathname: "/campaign",
             params: { id_campaign: campaign._id }
         });
 
@@ -142,7 +142,7 @@ export function CampaignCard({
                     <View style={styles.detail_bottom}>
                         <TouchableOpacity style={styles.joinButton} activeOpacity={0.6} onPress={() => router.push({
                             pathname: '/campaign',
-                            params: { id_campaign: campaign._id, campaign: JSON.stringify(campaign) }
+                            params: { id_campaign: campaign._id }
                         })}> 
                             <Text style={styles.joinButtonText}>Tham gia</Text>
                         </TouchableOpacity>

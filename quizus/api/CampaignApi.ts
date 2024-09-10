@@ -115,3 +115,25 @@ export const getLikedCampaigns = async (id_player: string) => {
         throw new Error('Failed to fetch liked campaigns');
     }
 }
+
+export const getCampaignsOfVoucher = async (id_voucher: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/search/voucher/${id_voucher}`, {
+            method: 'GET', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            return result.data;
+        } else {
+            throw new Error('Failed to fetch campaigns of this voucher', result.message);
+        }
+    } catch(error) {
+        console.error(error);
+        throw new Error('Failed to fetch campaigns of voucher');
+    }
+}

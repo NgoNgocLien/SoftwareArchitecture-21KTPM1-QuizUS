@@ -50,6 +50,34 @@ const getActive = async (req, res) => {
     }
 };
 
+const getVoucherById = async (req, res) => {
+    try {
+        const voucher = await Voucher.findById(req.params.id_voucher);
+
+        if (voucher) {
+            try {
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${voucher.id_brand}`);
+                const brand = brandResponse.data;
+
+                const result = {
+                    ...voucher._doc,
+                    brand: {
+                        ...brand
+                    }
+                }
+
+                res.status(200).json(result);
+            } catch (axiosError) {
+                throw new Error("Failed to fetch brand information.");
+            }
+        } else {
+            res.status(404).json({ message: 'Voucher not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
 // Tìm kiếm voucher theo brand
 const searchByBrand = async (req, res) => {
     try {
@@ -301,6 +329,7 @@ const use = async (req, res) => {
 
 module.exports = {
     getActive,
+    getVoucherById,
     searchByBrand,
     create,
     update,
