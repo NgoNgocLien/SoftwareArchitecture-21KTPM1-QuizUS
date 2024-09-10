@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Campaign = require('./campaign');
+const Voucher = require('./coucher');
 const ItemGift = require('./itemGift');
-const Quiz = require('./quiz');
+const VoucherGift = require('./voucherGift');
+const TurnRequest = require('./turnRequest');
 
 const PlayerNotiSchema = new Schema({
     // type: voucher, campaign, friend
@@ -10,13 +12,16 @@ const PlayerNotiSchema = new Schema({
 
     /*
     1. yêu thích sự kiện -> thêm player like campaign, thêm noti nếu (start_time - 1) > now 
+
     2. đổi voucher -> thêm player voucher, update campaign (given_amount_voucher), player game / score, thêm noti với is_used = false
     3. dùng voucher -> update player voucher, thêm noti với is_used = true
-    4. tặng item -> 
-    5. tặng voucher ->
-    6. xin lượt chơi ->
-    7. từ chối cho lượt chơi ->
-    8. đồng ý cho lượt chơi ->
+
+    4. tặng item -> thêm item gift, update player game, thêm noti
+    5. tặng voucher -> thêm voucher gift, update player voucher, thêm noti
+
+    6. xin lượt chơi -> thêm turn request, thêm noti
+    7. từ chối cho lượt chơi -> update turn request, update noti
+    8. đồng ý cho lượt chơi -> update turn request, thêm noti
      */
     type:{
         type: String,
