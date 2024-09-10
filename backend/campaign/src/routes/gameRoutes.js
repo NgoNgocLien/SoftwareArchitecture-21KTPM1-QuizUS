@@ -14,6 +14,7 @@ const {
   receiveItem,
   getTurnRequest,
   getItemRequest,
+  seenTurnNoti
 } = require('../controllers/gameController');
 
 // Tìm kiếm game theo campaign
@@ -42,6 +43,9 @@ router.post('/player_turn/request', requestTurn);
 
 // người chơi từ chối / chấp nhận cho bạn bè lượt chơi
 router.put('/player_turn/request', replyTurn);
+
+// xem thông báo liên quan đến noti
+router.put('/player_turn/seen', seenTurnNoti);
 
 // tặng mảnh ghép cho bạn
 router.post('/item/send', sendItem);

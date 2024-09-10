@@ -277,7 +277,7 @@ const requestTurn = async (req, res) => {
   }
 };
 
-// người chơi chấp nhận cho bạn bè lượt chơi
+// người chơi từ chối/chấp nhận cho bạn bè lượt chơi
 const replyTurn = async (req, res) => {
   try {
     const { id_request, is_accept } = req.body;
@@ -402,6 +402,33 @@ const replyTurn = async (req, res) => {
         turnRequest
       });
     }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// xem thông báo liên quan đến noti
+const seenTurnNoti = async (req, res) => {
+  try {
+    const { id_noti } = req.body;
+
+    if (!id_noti) {
+      return res.status(400).json({ message: 'id_noti are required' });
+    }
+
+    const turnNoti = await PlayerNoti.findById(id_noti);
+
+    if (!turnNoti) {
+      return res.status(404).json({ message: 'Turn notification not found.' });
+    }
+    turnNoti.seen_time = new Date();
+    await turnNoti.save();
+
+    return res.status(201).json({
+      message: 'Noti successfully seen!',
+      noti: turnNoti
+    });
+
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -713,4 +740,5 @@ module.exports = {
   receiveItem,
   getTurnRequest,
   getItemRequest,
+  seenTurnNoti
 };
