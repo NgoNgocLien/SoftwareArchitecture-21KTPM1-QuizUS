@@ -46,7 +46,7 @@ export function Button({
       <Paragraph 
         style={{textAlign: 'center'}}
         type="p2" 
-        color={type === 'primary' ? Colors.light.background : Colors.light.mainText}>
+        color={type === 'primary' ? Colors.light.background : type === 'tertiary' ? Colors.brand._800 : Colors.light.mainText}>
           {text} 
       </Paragraph>
     </TouchableOpacity>

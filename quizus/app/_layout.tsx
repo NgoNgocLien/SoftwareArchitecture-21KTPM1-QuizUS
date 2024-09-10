@@ -55,6 +55,8 @@ export default function RootLayout() {
           <Stack.Screen name="quizgame/detail" />
           <Stack.Screen name="quizgame/result" />
           <Stack.Screen name="+not-found" />
+
+          <Stack.Screen name="qr" />
         </Stack>
     </ThemeProvider>
   );
