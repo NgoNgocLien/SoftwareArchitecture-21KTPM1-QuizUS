@@ -8,12 +8,12 @@
     padding: 0px 0px 0px 20px;
     margin-bottom: 5px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
-    a{
+    span{
         color: #A3A3A3;
         margin-left: 12px;
         font-size: 20px;
     }
-    a:hover{
+    span:hover{
         color: black;
         text-decoration: none;
     }
@@ -21,4 +21,7 @@
         height: 16px;
         width: 16px;
     }
+}
+.back-link:hover {
+    cursor: pointer;
 }
