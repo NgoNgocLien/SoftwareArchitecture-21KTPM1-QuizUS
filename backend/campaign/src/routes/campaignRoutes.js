@@ -7,6 +7,7 @@ const PlayerGame = require('../models/playerGame');
 const {
     getAll,
     getInProgress,
+    getIncoming,
     getBrandCampaign,
     search,
     searchByBrand,
@@ -27,6 +28,9 @@ router.get('/', getAll);
 
 // Lấy tất cả các chiến dịch đang diễn ra
 router.get('/in_progress', getInProgress);
+
+// Lấy tất cả các chiến dịch sắp diễn ra
+router.get('/incoming', getIncoming);
 
 //Lấy thông số từ database
 router.get('/stats', getStats);

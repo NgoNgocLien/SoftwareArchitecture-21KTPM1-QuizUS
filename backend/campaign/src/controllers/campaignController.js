@@ -30,7 +30,36 @@ const getInProgress = async (req, res) => {
 
         const result = await Promise.all(campaigns.map(async (item) => {
             const id_brand1 = item.id_brand1;
-            console.log(id_brand1);
+            try {
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand1}`);
+                return {
+                    ...item._doc,
+                    brand: brandResponse.data
+                };
+            } catch (axiosError) {
+                throw new Error("Failed to fetch brand information.");
+            }
+        }));
+
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// Lấy tất cả các chiến dịch sắp diễn ra
+const getIncoming = async (req, res) => {
+    try {
+        const now = new Date();
+
+        // Lấy tất cả các chiến dịch có start_datetime > now 
+        // order by start_datetime ASC
+        const campaigns = await Campaign.find({
+            start_datetime: { $gte: now },
+        }).sort({ start_datetime: 1 });
+
+        const result = await Promise.all(campaigns.map(async (item) => {
+            const id_brand1 = item.id_brand1;
             try {
                 const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand1}`);
                 return {
@@ -124,26 +153,26 @@ const getById = async (req, res) => {
 
 // Tạo một chiến dịch mới
 const create = async (req, res) => {
-     try {
+    try {
         const { quiz, campaign } = req.body;
-    
+
         let newQuiz = null;
         if (quiz && quiz.description && quiz.questions && quiz.questions.length > 0) {
-          newQuiz = new Quiz(quiz);
-          await newQuiz.save(); 
+            newQuiz = new Quiz(quiz);
+            await newQuiz.save();
         }
-    
+
         const newCampaign = new Campaign({
-          ...campaign,
-          id_quiz: newQuiz ? newQuiz._id : null,
+            ...campaign,
+            id_quiz: newQuiz ? newQuiz._id : null,
         });
-    
-        await newCampaign.save(); 
+
+        await newCampaign.save();
         res.status(201).json({ message: 'Campaign created successfully', campaign: newCampaign });
-      } catch (error) {
+    } catch (error) {
         console.error('Error creating campaign with quiz:', error);
         res.status(500).json({ message: 'Error creating campaign', error });
-      }
+    }
 };
 
 // Cập nhật một chiến dịch
@@ -344,10 +373,27 @@ const getCampaignsOfVoucher = async (req, res) => {
         const campaigns = await Campaign.find({ id_voucher: id_voucher });
 
         if (campaigns.length === 0) {
-            return res.status(404).json({ message: 'Không tìm thấy campaign nào với id_voucher này.' });
+            return res.status(200).json([]);
         }
 
-        res.status(200).json({ data: campaigns });
+        const result = await Promise.all(campaigns.map(async (campaign) => {
+
+            try {
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${campaign.id_brand1}`);
+                const brand = brandResponse.data;
+
+                return {
+                    ...campaign._doc,
+                    brand: {
+                        ...brand
+                    }
+                }
+            } catch (axiosError) {
+                throw new Error("Failed to fetch brand information.");
+            }
+        }));
+
+        res.status(200).json({ data: result });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Có lỗi xảy ra trong quá trình lấy campaign.' });
@@ -361,46 +407,46 @@ const getStats = async (req, res) => {
         const totalVouchers = await Voucher.countDocuments();
         const voucherStats = await PlayerVoucher.aggregate([
             {
-            $lookup: {
-                from: 'vouchers', 
-                localField: 'id_voucher',
-                foreignField: '_id',
-                as: 'voucherDetails'
-            }
+                $lookup: {
+                    from: 'vouchers',
+                    localField: 'id_voucher',
+                    foreignField: '_id',
+                    as: 'voucherDetails'
+                }
             },
             {
-                $unwind: '$voucherDetails' 
+                $unwind: '$voucherDetails'
             }
         ]);
 
         const validUnusedVouchers = voucherStats.reduce((accumulator, item) => {
-            const expiryDate = new Date(item.voucherDetails.expired_date); 
+            const expiryDate = new Date(item.voucherDetails.expired_date);
             if (!item.is_used && expiryDate >= currentDate) {
-              accumulator++;
+                accumulator++;
             }
-            return accumulator; 
-          }, 0);
+            return accumulator;
+        }, 0);
 
-          const validUsedVouchers = voucherStats.reduce((accumulator, item) => {
-            const expiryDate = new Date(item.voucherDetails.expired_date); 
+        const validUsedVouchers = voucherStats.reduce((accumulator, item) => {
+            const expiryDate = new Date(item.voucherDetails.expired_date);
             if (item.is_used && expiryDate > currentDate) {
-              accumulator++;
+                accumulator++;
             }
-            return accumulator; 
-          }, 0);
+            return accumulator;
+        }, 0);
 
         const expiredVouchers = voucherStats.reduce((accumulator, item) => {
-            const expiryDate = new Date(item.voucherDetails.expired_date); 
+            const expiryDate = new Date(item.voucherDetails.expired_date);
             if (expiryDate <= currentDate) {
-              accumulator++;
+                accumulator++;
             }
-            return accumulator; 
-          }, 0);
+            return accumulator;
+        }, 0);
 
         const totalValue = voucherStats.reduce((accumulator, item) => {
-            accumulator += item.voucherDetails.price; 
-            return accumulator; 
-        }, 0); 
+            accumulator += item.voucherDetails.price;
+            return accumulator;
+        }, 0);
 
         res.status(200).json({
             totalCampaigns,
@@ -417,20 +463,21 @@ const getStats = async (req, res) => {
 };
 
 module.exports = {
-  getAll,
-  getInProgress,
-  getBrandCampaign,
-  search,
-  searchByBrand,
-  getById,
-  create,
-  update,
-  getPlayerFavorite,
-  getRedeemableByCoin,
-  getRedeemableByItem,
-  like,
-  unlike,
-  getCampaignsOfVoucher,
-  getStats,
-  getCampaignsOfVoucher
+    getAll,
+    getInProgress,
+    getIncoming,
+    getBrandCampaign,
+    search,
+    searchByBrand,
+    getById,
+    create,
+    update,
+    getPlayerFavorite,
+    getRedeemableByCoin,
+    getRedeemableByItem,
+    like,
+    unlike,
+    getCampaignsOfVoucher,
+    getStats,
+    getCampaignsOfVoucher
 };

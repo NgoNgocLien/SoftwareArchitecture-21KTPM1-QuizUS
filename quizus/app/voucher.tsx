@@ -22,7 +22,7 @@ import { VoucherCard } from '@/components/card/VoucherCard';
 
 import config from '@/constants/config';
 import { getGameInfo, getPlayerTurn } from '@/api/GameApi';
-import { getCampaignById } from '@/api/CampaignApi';
+import { getCampaignById, getCampaignsOfVoucher } from '@/api/CampaignApi';
 import { showToast } from '@/components/ToastBar';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
@@ -34,6 +34,9 @@ import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
 import { PlayerInfo } from '@/models/game/PlayerInfo';
 import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
+import { getVoucherById } from '@/api/VoucherApi';
+import { getLikedCampaigns } from '@/api/CampaignApi';
+import { CampaignCard } from '@/components/card/CampaignCard';
 
 // Call API
 const defaultPlayerInfo = {
@@ -42,48 +45,67 @@ const defaultPlayerInfo = {
     quantity_item2: 0
 }
 
-export default function Campaign() {
+export default function VoucherPage() {
 
     const params = useLocalSearchParams();
-    const id_campaign = params.id_campaign as string;
+    const id_voucher = params.id_voucher as string;
 
     const [loading, setLoading] = useState<boolean>(true);
-    const [campaign, setCampaign] = useState<any|null>(null);
-    const [type_game, setTypeGame] = useState<string|null>(null);
-    const [voucher, setVoucher] = useState<Voucher|null>(null);
+    // const [type_game, setTypeGame] = useState<string|null>(null);
+    const [voucher, setVoucher] = useState<any|null>(null);
+    const [brand, setBrand] = useState<Brand | null>(null);
+    const [campaigns, setCampaigns] = useState<any[]>([]);
 
     // Fetch campaign info
     useEffect(() => {
-        if (id_campaign){
-            getCampaignById(id_campaign).then(result => {
-                // console.log('Campaign fetched:', result);
-                setCampaign(result)
+        if (id_voucher){
+            getVoucherById(id_voucher).then(result => {
+                setVoucher(result);
+                setBrand(result.brand);
 
-                if(result.id_quiz != null && result.id_quiz != undefined && result.id_quiz != ''){
-                    const newVoucher = VoucherFactory.createVoucher('coin', result.voucher);
-                    setVoucher(newVoucher);
-                    setTypeGame(config.QUIZ_GAME)
-                } else {
-                    const newVoucher = VoucherFactory.createVoucher('item', { ...result.voucher, item1_photo: result.item1_photo, item2_photo: result.item2_photo });
-                    setVoucher(newVoucher);
-                    setTypeGame(config.ITEM_GAME)
-                }
+                getCampaignsOfVoucher(id_voucher).then(res => {
+                    retrieveFromSecureStore('id_player', (id_player: string) => {
+                        getLikedCampaigns(id_player).then((likedCampaigns) => {
+                            res.map((campaign: any) => {
+                                campaign.isFavorite = likedCampaigns.some((likedCampaign: any) => likedCampaign.campaign_data._id === campaign._id);
+                            });
+                            setCampaigns(res);
+                            setLoading(false);
+        
+                        }).catch((err) => {
+                            setCampaigns(res);
+                            setLoading(false);
 
-                setLoading(false)
+                            console.log(err);
+                            showToast('error', 'Lỗi hệ thống');
+                        });
+                    }).catch((err) => {                        
+                        setCampaigns(res);
+                        setLoading(false);
+
+                        console.log(err);
+                        showToast('error', 'Không tìm thấy thông tin người dùng');
+                    });
+
+                }).catch(error => {
+                    console.error('Error fetching campaign info:', error);
+                    setLoading(false)
+                });
+            
             }).catch(error => {
-                console.error('Error fetching campaign info:', error);
-                setLoading(false)
+                console.error('Error fetching player score:', error.message);
+                showToast('error', 'Lỗi hệ thống');
             });
         } else {
             router.back();
             showToast('error', 'Lỗi hệ thống');
         }
-    }, [id_campaign])
+    }, [id_voucher]);
 
     const handleShare = async () => {
         try {
             const result = await Share.share({
-                message: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
+                message: `${ brand ? brand.name : "Chúng tôi"} đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!`,
                 url: 'https://expo.io',
             },{
                 excludedActivityTypes: [
@@ -128,43 +150,36 @@ export default function Campaign() {
         }
     };
 
-    const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
-    const [itemInfo, setItemInfo] = useState<Item|null>(null);
+    // const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
+    // const [itemInfo, setItemInfo] = useState<Item|null>(null);
     
-    useEffect(() => {
-        if (type_game ){ 
-            getGameInfo(id_campaign)
-            .then(gameInfo => {
-                if (type_game == config.QUIZ_GAME){
-                    // console.log("gameInfo: ", gameInfo)
-                    setQuizInfo(gameInfo.id_quiz)
-                }
-                else if (type_game == config.ITEM_GAME)
-                    setItemInfo({
-                        item1_photo: gameInfo.item1_photo,
-                        item2_photo: gameInfo.item2_photo,
-                    })
-            })
-            .catch(error => {
-                console.error('Error fetching quiz info:', error);
-            });   
+    // useEffect(() => {
+    //     if (type_game ){ 
+    //         getGameInfo(id_campaign)
+    //         .then(gameInfo => {
+    //             if (type_game == config.QUIZ_GAME){
+    //                 // console.log("gameInfo: ", gameInfo)
+    //                 setQuizInfo(gameInfo.id_quiz)
+    //             }
+    //             else if (type_game == config.ITEM_GAME)
+    //                 setItemInfo({
+    //                     item1_photo: gameInfo.item1_photo,
+    //                     item2_photo: gameInfo.item2_photo,
+    //                 })
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching quiz info:', error);
+    //         });   
       
-        }
-    }, [type_game])
+    //     }
+    // }, [type_game])
 
-    const [playerTurn, setPlayerTurn] = useState <number|null>(null);
-    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
+    // const [playerTurn, setPlayerTurn] = useState <number|null>(null);
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo | null>(null);
 
     useEffect(() => {
-        if (id_campaign){
+        if (id_voucher){
             retrieveFromSecureStore('id_player', (id_player: string) => {
-                getPlayerTurn(id_player, id_campaign)
-                .then(data => {
-                    setPlayerTurn(data.player_turn)
-                })
-                .catch(error => {
-                    console.error('Error fetching player turn:', error);
-                });
 
                 getPlayerItem(id_player).then((data) => {
                     const player_items = data.map((data: {
@@ -180,8 +195,6 @@ export default function Campaign() {
                             item2_photo: data.item2_photo,
                         }
                     })
-
-                    // console.log("items: ", player_items)
 
                     getPlayerScore(id_player).then((data) => {
                         setPlayerInfo(new PlayerInfo({
@@ -204,7 +217,7 @@ export default function Campaign() {
                 showToast('error', 'Không tìm thấy thông tin người chơi');
             });
         }
-    },[id_campaign, playerTurn]);
+    },[id_voucher]);
 
     const [isModalVisible, setModalVisible] = useState(false);
     
@@ -213,115 +226,61 @@ export default function Campaign() {
             <SubHeader/>
             <View style={styles.background}>
 
-                {(loading || playerTurn == null || (quizInfo == null && itemInfo == null)) ? <LoadingView /> : campaign == null ? <EmptyView /> :
+                {loading ? <LoadingView /> : voucher === null  ? <EmptyView /> :
                 (
                 <>
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
-                    <Image style={styles.banner} source={{uri: campaign.photo}} />
+                    <Image style={styles.banner} source={{uri: voucher.photo}} />
                             
                         <View style={styles.campaignHeaderContainer}>
-                            <Image source={{uri: campaign.brand.logo}} style={styles.brandLogo} />
+                            <Image source={{uri: brand!.logo}} style={styles.brandLogo} />
                             <View style={{flex: 1, justifyContent: 'space-between'}}>
                                 <View style={styles.campaignHeader_top}>
-                                <View style={Date.now() < Date.parse(campaign.end_datetime) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
-                                    <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(campaign.end_datetime) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
+                                <View style={Date.now() < Date.parse(voucher.expired_date) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
+                                    <MaterialCommunityIcons name={'clock-outline'} style={ Date.now() < Date.parse(voucher.expired_date) ? styles.timeIcon : [styles.timeIcon, styles.outDated] }/>
                                     { 
-                                        Date.now() < Date.parse(campaign.end_datetime) ? 
-                                            <Text style={styles.time}>{new Date(campaign.end_datetime).toLocaleDateString()}</Text> :
+                                        Date.now() < Date.parse(voucher.expired_date) ? 
+                                            <Text style={styles.time}>{new Date(voucher.expired_date).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(voucher.expired_date).getFullYear())}</Text> :
                                             <Text style={[styles.time, styles.outDated]}>Hết hạn</Text> 
                                     }
                                 </View>
                                     <MaterialCommunityIcons name={'share-outline'} style={styles.shareIcon} onPress={() => {handleShare()}} suppressHighlighting={true} />
                                 </View>
                                 <View style={styles.campaignHeader_bottom}>
-                                    <Heading type='h5'>{campaign.name}</Heading>
+                                    <Heading type='h5'>{voucher.name}</Heading>
                                 </View>
                             </View>
                         </View>
-                        <View style={styles.gameInfoContainer}>
-
-                            <View style={styles.game__container}>
-                                <Text style={styles.game_info_header}>Thưởng</Text>
-                                <View style={styles.game_info_container}>
-                                    {type_game === config.QUIZ_GAME ? (
-                                        <>
-                                            <Image source={require('@/assets/images/coin.png')} style={{width: 20, height: 20}}/>
-                                            <Text style={styles.game_info_num}>{config.QUIZ_SCORE}</Text>
-                                            <Text style={styles.game_info_text}>xu</Text>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Image source={require('@/assets/images/puzzle.png')} style={{width: 20, height: 20}}/>
-                                            <Text style={styles.game_info_num}>2</Text>
-                                            <Text style={styles.game_info_text}>mảnh</Text>
-                                        </>
-                                    )}
-                                </View>
-                            </View>
-
-                            <View style={styles.vertical_seperator}></View>
-
-                            <View style={styles.game__container}>
-                                <Text style={styles.game_info_header}>Trò chơi</Text>
-                                <Text style={styles.game_info_container}>
-                                    <Text style={styles.game_info_num}>{type_game === config.QUIZ_GAME ? 'Trắc nghiệm' : 'Lắc vật phẩm'}</Text>
-                                </Text>
-                            </View>
-
-                        </View>
-                        <View style={styles.horizontal_seperator}></View>
-                        <View style={styles.campaignDetailContainer}>
-                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mô tả</Heading>
+                        
+                        <View style={styles.voucherDetailContainer}>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Điều khoản áp dụng</Heading>
                             <Paragraph type='p2' style={{marginHorizontal: 20}}>
-                                {campaign.description}
+                                {voucher.description}
                             </Paragraph>
 
-                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Voucher có thể đổi</Heading>
-                            <VoucherCard 
-                                style={{marginBottom: 100}}
-                                voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
-                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo, _id: id_campaign}}
-                                playerInfo={playerInfo}
-                            />
+                            <View style={[styles.titleContainer, {marginHorizontal: 20}]}>
+                                <Heading type="h5">Sự kiện đổi voucher</Heading>
+                                <Heading type="h6" color={Colors.light.primary} onPress={() =>{
+                                    router.push({
+                                        pathname: '/campaignsOfVoucher',
+                                        params: { campaigns: JSON.stringify(campaigns) }
+                                    })
+                                }} suppressHighlighting={true}>Xem tất cả</Heading>
+                            </View>
+                            
+                            {campaigns.length === 0 ? (
+                                <EmptyView />
+                            ) : (
+                                <CampaignCard 
+                                    campaign={campaigns[0]}
+                                    isFavorite={campaigns[0].isFavorite}
+                                    style={{ marginBottom: 32, marginVertical: 20 }} 
+                                />
+                            )}
+                        
                         </View>
-                </ScrollView>
-                
-                <View style={styles.joinButtonContainer} >
-                    {
-                        playerTurn 
-                        ?   <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
-                                onPress={() => {
-                                    if (type_game == config.QUIZ_GAME){
-                                        router.replace({
-                                            pathname: `/quizgame/detail`,
-                                            params: {
-                                                quizInfo: JSON.stringify(quizInfo),
-                                                id_campaign: campaign._id
-                                            }
-                                        })
-                                    } else if (type_game == config.ITEM_GAME){
+                    </ScrollView>
 
-                                        router.replace({
-                                            pathname: `/itemgame/detail`,
-                                            params: {
-                                                itemInfo: JSON.stringify(itemInfo),
-                                                id_campaign: campaign._id
-                                            }
-                                        })
-                                    }
-                            }}/> 
-                        :   <Button text='Thêm lượt chơi' type='tertiary' style={styles.joinButton} 
-                                onPress={() => {setModalVisible(true);}}/> 
-                    }
-                    
-                    <PLayerTurnModal 
-                        isModalVisible={isModalVisible}
-                        setModalVisible={setModalVisible}
-                        id_campaign={campaign._id}
-                        afterShare={() => {setPlayerTurn(1)}}
-                        >
-                    </PLayerTurnModal>
-                </View>
                 </>
                 )}
             </View>
@@ -354,8 +313,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    campaignDetailContainer: {
-        paddingVertical: 10,
+    voucherDetailContainer: {
     },
 
     brandLogo: {
@@ -369,6 +327,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     campaignHeader_bottom: {
+        flex: 1,
+        paddingTop: 10,
     },
     timeContainer: {
         padding: 4,
@@ -467,7 +427,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
 
-    joinButtonContainer: {
+    exchangeButtonContainer: {
         position: 'absolute',
         bottom: 0,
         left: 0,
@@ -476,7 +436,14 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         backgroundColor: Colors.light.background,
     },
-    joinButton: {
+    exchangeButton: {
         marginBottom: Platform.OS === 'ios' ? 10 : 0,
-    }
+    },
+
+    titleContainer: {
+        marginTop: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+    },
 });

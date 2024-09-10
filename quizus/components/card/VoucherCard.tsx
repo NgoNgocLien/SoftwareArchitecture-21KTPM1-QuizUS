@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, Clipboard, StyleSheet, TouchableOpacity, Pressable, Alert, TouchableWithoutFeedback } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 import { Colors } from '@/constants/Colors';
 import {Voucher} from '@/models/voucher/Voucher'
@@ -108,7 +109,11 @@ export function VoucherCard({
 
 
     return (
-        <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => { }}>
+        <Pressable style={[styles.voucherContainer, rest.style]} onPress={() => 
+            router.push({
+                pathname: '/voucher',
+                params: { id_voucher: voucher._id }
+            })}>
             <View style={styles.brandContainer}>
                 <Image source={{uri: campaign.brandLogo}} style={styles.brandLogo}/>
             </View>

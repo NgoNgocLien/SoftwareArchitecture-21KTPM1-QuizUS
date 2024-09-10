@@ -39,13 +39,13 @@ export default function Coins() {
 
     const [focusedTab, setFocusedTab] = useState(0);
 
-    const [vouchers, setVouchers] = useState<any[] | null>(null);
+    const [vouchers, setVouchers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const [nhaHang, setNhahang] = useState<any[] | null>(null);
-    const [cafeBanh, setCafeBanh] = useState<any[] | null>(null);
-    const [muaSam, setMuaSam] = useState<any[] | null>(null);
-    const [giaiTri, setGiaiTri] = useState<any[] | null>(null);
+    const [nhaHang, setNhahang] = useState<any[]>([]);
+    const [cafeBanh, setCafeBanh] = useState<any[]>([]);
+    const [muaSam, setMuaSam] = useState<any[]>([]);
+    const [giaiTri, setGiaiTri] = useState<any[]>([]);
 
     const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
 
@@ -190,10 +190,7 @@ export default function Coins() {
                 <View style={styles.emptyTab}></View>
             </ScrollView>
             {
-                !vouchers || loading ? (
-                    <LoadingView />
-                ) : 
-                
+                loading ? <LoadingView />: 
                 focusedTab === 0 ? (
                     <>
                         {vouchers.length === 0 ? (
@@ -216,7 +213,7 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 1 ? (
                     <>
-                        {!nhaHang || nhaHang.length === 0 ? (
+                        {nhaHang.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
@@ -234,7 +231,7 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 2 ? (
                     <>
-                        {!cafeBanh || cafeBanh.length === 0 ? (
+                        {cafeBanh.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
@@ -252,7 +249,7 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 3 ? (
                     <>
-                        {!muaSam || muaSam.length === 0 ? (
+                        {muaSam.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
@@ -270,7 +267,7 @@ export default function Coins() {
                     </>
                 ) : focusedTab === 4 ? (
                     <>
-                        {!giaiTri || giaiTri.length === 0 ? (
+                        {giaiTri.length === 0 ? (
                             <EmptyView />
                         ) : (
                             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>

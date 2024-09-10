@@ -19,8 +19,11 @@ const TurnRequestSchema = new Schema({
     type: Date,
     default: Date.now 
   },
-  accept_time: { 
+  reply_time: { 
     type: Date
+  },
+  is_accept:{
+    type: Boolean,
   }
 }, { versionKey: false });
 

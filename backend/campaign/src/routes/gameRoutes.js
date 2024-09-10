@@ -1,10 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Campaign = require('../models/campaign');
-const PlayerGame = require('../models/playerGame');
-const Voucher = require('../models/voucher');
-const TurnRequest = require('../models/turnRequest');
-const PlayerGift = require('../models/playerGift');
 
 const {
   searchByCampaign,
@@ -13,8 +8,8 @@ const {
   getPlayerTurnByCampaign,
   addPlayerTurn,
   reducePlayerTurn,
-  sendTurn,
-  receiveTurn,
+  requestTurn,
+  acceptTurn,
   sendItem,
   receiveItem,
   getTurnRequest,
@@ -43,10 +38,10 @@ router.put('/player_turn/add', addPlayerTurn);
 router.put('/player_turn/minus', reducePlayerTurn);
 
 // xin lượt chơi từ bạn bè cho 1 campaign
-router.post('/player_turn/send', sendTurn);
+router.post('/player_turn/request', requestTurn);
 
 // người chơi chấp nhận cho bạn bè lượt chơi
-router.put('/player_turn/receive', receiveTurn);
+router.put('/player_turn/request', acceptTurn);
 
 // tặng mảnh ghép cho bạn
 router.post('/item/send', sendItem);
@@ -56,6 +51,5 @@ router.get('/item/request/:id_player', getItemRequest);
 
 // nhận mảnh ghép từ bạn
 router.put('/item/receive', receiveItem);
-
 
 module.exports = router;

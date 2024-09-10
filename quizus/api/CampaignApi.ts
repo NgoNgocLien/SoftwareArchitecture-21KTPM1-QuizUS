@@ -43,6 +43,28 @@ export const getCampaignsInProgess = async () => {
     }
 }
 
+export const getCampaignsIncoming = async () => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/incoming`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        // console.log("in_progress", response);
+        const result = await response.json();
+        
+        if (response.ok) {
+            return result;
+        } else {
+            throw new Error('Failed to fetch incoming campaigns: ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data incoming campaigns: ');
+    }
+}
+
 export const likeCampaign = async (id_player: string, id_campaign: string) => {
     try {
         let player = "100006";
@@ -113,5 +135,27 @@ export const getLikedCampaigns = async (id_player: string) => {
     } catch (error) {
         console.error(error);
         throw new Error('Failed to fetch liked campaigns');
+    }
+}
+
+export const getCampaignsOfVoucher = async (id_voucher: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/search/voucher/${id_voucher}`, {
+            method: 'GET', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            return result.data;
+        } else {
+            throw new Error('Failed to fetch campaigns of this voucher', result.message);
+        }
+    } catch(error) {
+        console.error(error);
+        throw new Error('Failed to fetch campaigns of voucher');
     }
 }

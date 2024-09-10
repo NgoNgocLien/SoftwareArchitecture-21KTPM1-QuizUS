@@ -2,9 +2,10 @@ const Campaign = require('../models/campaign');
 const PlayerGame = require('../models/playerGame');
 const Voucher = require('../models/voucher');
 const TurnRequest = require('../models/turnRequest');
-const PlayerGift = require('../models/playerGift');
+const ItemGift = require('../models/itemGift');
 const axios = require('axios');
 const turnRequest = require('../models/turnRequest');
+const PlayerNoti = require('../models/playerNoti');
 
 // Tìm kiếm game theo campaign
 const searchByCampaign = async (req, res) => {
@@ -212,7 +213,7 @@ const reducePlayerTurn = async (req, res) => {
 };
 
 // xin lượt chơi từ bạn bè cho 1 campaign
-const sendTurn = async (req, res) => {
+const requestTurn = async (req, res) => {
   try {
     const { id_sender, id_receiver, id_campaign } = req.body;
 
@@ -235,10 +236,36 @@ const sendTurn = async (req, res) => {
       id_receiver,
       id_campaign,
       request_time: new Date(),
-      accept_time: null
+      reply_time: null,
+      is_accept: false
     });
 
     const savedTurnRequest = await turnRequest.save();
+
+    // lấy thông tin sender
+    const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${id_sender}`);
+    const sender = senderResponse.data;
+
+    // lấy thông tin campaign
+    const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${id_campaign}`);
+    const campaign = campaignResponse.data;
+
+    // Thêm noti
+    const newNoti = new PlayerNoti({
+      type: "friend",
+      subtype: "request_turn",
+      id_receiver,
+      id_sender,
+      name_sender: sender.username, 
+      id_campaign,
+      name_campaign: campaign.name,
+      id_turnrequest: savedTurnRequest._id,
+      is_accept: false,
+      noti_time: new Date(), 
+      seen_time: null
+    });
+
+    await newNoti.save();
 
     return res.status(201).json({
       message: 'Turn request sent.',
@@ -251,7 +278,7 @@ const sendTurn = async (req, res) => {
 };
 
 // người chơi chấp nhận cho bạn bè lượt chơi
-const receiveTurn = async (req, res) => {
+const acceptTurn = async (req, res) => {
   try {
     const { id_request } = req.body;
 
@@ -333,31 +360,86 @@ const sendItem = async (req, res) => {
     });
 
     // Nếu người nhận chưa tham gia campaign, tạo một bản ghi mới trong PlayerGame
-    // if (!receiverGame) {
-    //   receiverGame = new PlayerGame({
-    //     id_player: id_receiver,
-    //     id_campaign: id_campaign,
-    //     player_turn: 3,
-    //     quantity_item1: 0,
-    //     quantity_item2: 0
-    //   });
-    //   await receiverGame.save(); 
-    // }
+    if (!receiverGame) {
+      receiverGame = new PlayerGame({
+        id_player: id_receiver,
+        id_campaign: id_campaign,
+        player_turn: 3,
+        quantity_item1: id_item === 1 ? 1 : 0,
+        quantity_item2: id_item === 2 ? 1 : 0
+      });
 
-    // Tạo bản ghi mới trong PlayerGift để lưu thông tin mảnh ghép đã tặng
-    const newGift = new PlayerGift({
+      if (id_item === 1) {
+        // Giảm 1 quantity_item1 của người gửi
+        senderGame.quantity_item1 -= 1;
+      } else if (id_item === 2) {
+        // Giảm 1 quantity_item2 của người gửi
+        senderGame.quantity_item2 -= 1;
+      } else {
+        return res.status(400).json({ message: 'Invalid item id. Only 1 or 2 are valid.' });
+      }
+
+      await senderGame.save();
+      await receiverGame.save();
+    }
+    else{
+      if (id_item === 1) {
+        // Giảm 1 quantity_item1 của người gửi
+        senderGame.quantity_item1 -= 1;
+  
+        // Tăng 1 quantity_item1 của người nhận
+        receiverGame.quantity_item1 += 1;
+      } else if (id_item === 2) {
+        // Giảm 1 quantity_item2 của người gửi
+        senderGame.quantity_item2 -= 1;
+
+        // Tăng 1 quantity_item2 của người nhận
+        receiverGame.quantity_item2 += 1;
+      } else {
+        return res.status(400).json({ message: 'Invalid item id. Only 1 or 2 are valid.' });
+      }
+      await senderGame.save();
+      await receiverGame.save();
+    }
+
+    // Tạo bản ghi mới trong ItemGift để lưu thông tin mảnh ghép đã tặng
+    const newGift = new ItemGift({
       id_sender,
       id_receiver,
       id_item,
       id_campaign,
-      gift_time: new Date(),  
-      accept_time: null      
+      gift_time: new Date()     
     });
 
     await newGift.save();
 
+    // lấy thông tin sender
+    const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${id_sender}`);
+    const sender = senderResponse.data;
+
+    // lấy thông tin campaign
+    const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${id_campaign}`);
+    const campaign = campaignResponse.data;
+
+    // Thêm noti
+    const newNoti = new PlayerNoti({
+      type: "friend",
+      subtype: "item",
+      id_receiver,
+      id_sender,
+      name_sender: sender.username, 
+      id_campaign,
+      name_campaign: campaign.name,
+      id_item,
+      id_itemgift: newGift._id,
+      noti_time: new Date(), 
+      seen_time: null
+    });
+
+    await newNoti.save();
+
     return res.status(201).json({
-      message: 'Gift successfully sent, awaiting acceptance.',
+      message: 'Item successfully sent!',
       gift: newGift
     });
 
@@ -375,7 +457,7 @@ const receiveItem = async (req, res) => {
       return res.status(400).json({ message: 'id_gift is required' });
     }
 
-    const gift = await PlayerGift.findById(id_gift);
+    const gift = await ItemGift.findById(id_gift);
 
     if (!gift) {
       return res.status(404).json({ message: 'Gift not found.' });
@@ -468,7 +550,7 @@ const getItemRequest = async (req, res) => {
       return res.status(400).json({ message: 'id_player is required' });
     }
 
-    const gifts = await PlayerGift.find({
+    const gifts = await ItemGift.find({
       id_receiver: id_player
     }).populate('id_campaign');
 
@@ -480,7 +562,7 @@ const getItemRequest = async (req, res) => {
           return{
             id_gift: gift._id,
             id_sender: gift.id_sender,
-            sender_name: player.username,
+            name_sender: player.username,
             id_receiver: gift.id_receiver,
             id_item: gift.id_item,
             id_campaign: gift.id_campaign._id,
@@ -494,7 +576,7 @@ const getItemRequest = async (req, res) => {
       }
     }))
 
-    return res.json(result);
+    return res.json(gifts);
 
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -522,7 +604,7 @@ const getTurnRequest = async (req, res) => {
           return{
             id_turn: turn._id,
             id_sender: turn.id_sender,
-            sender_name: player.username,
+            name_sender: player.username,
             id_receiver: turn.id_receiver,
             id_campaign: turn.id_campaign._id,
             id_campaign_name: turn.id_campaign.name,
@@ -550,8 +632,8 @@ module.exports = {
   getPlayerTurnByCampaign,
   addPlayerTurn,
   reducePlayerTurn,
-  sendTurn,
-  receiveTurn,
+  requestTurn,
+  acceptTurn,
   sendItem,
   receiveItem,
   getTurnRequest,

@@ -11,13 +11,21 @@ import { ElevenLabsTTS } from '@/models/text-to-speech/ElevenLabsTTS';
 import { Audio } from 'expo-av';
 import { getElevenLabsSpeech } from '@/api/TextToSpeechApi';
 import config from '@/constants/config';
+import notificationSocket from '@/models/notification/NotificationSocket';
 
 export default function Profile() {
   const router = useRouter();
 
   const handleLogout = () => {
+    
+    if (notificationSocket) {
+      console.log("Disconnecting socket before logging out...");
+      notificationSocket.disconnect(); // Disconnect socket
+    }
+
     removeFromSecureStore("id_player");
     router.replace("/login");
+    
   };
 
     const [TTSContext, setTTSContext] = useState<TextToSpeechContext | null>(null);
