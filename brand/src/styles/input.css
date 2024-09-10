@@ -163,7 +163,7 @@ select {
 }
 
 .radio-group {
-    gap: 16px; /* Adjust spacing between radio buttons */
+    gap: 16px;
     box-sizing: border-box;
     align-items: start;
     width: 32px;
@@ -176,7 +176,7 @@ select {
 }
 
 .radio-group input[type="radio"] {
-    margin-right: 8px; /* Space between radio button and label */
+    margin-right: 8px;
 }
 
 /* Edit Player */
@@ -268,4 +268,54 @@ input[type="radio"] {
 .radio-row label {
     font-family: regular-font;
     font-size: 16px;
+}
+
+/* CreateGame */
+.question-container {
+    margin-bottom: 24px;
+    width: 100%;
+    display: flex;
+    gap: 16px;
+}
+
+.question-container input[type="text"] {
+    height: 44px;
+    flex: 1 1;
+}
+
+.option-container {
+    display: flex;
+    flex: 1 1;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.option-container input[type="text"] {
+    margin-right: 12px;
+    padding: 8px;
+}
+
+.option-container input[type="radio"] {
+    margin: 0 4px;
+    height: 16px;
+    align-items: center;
+    font-family: regular-font;
+}
+
+.reward-container {
+    margin-bottom: 24px;
+}
+
+.reward-container input[type="number"] {
+    width: 100px;
+    padding: 8px;
+    margin-left: 12px;
+}
+
+form input[type="text"] {
+    padding: 10px 10px;
+}
+
+form {
+    width: 100%;
 }
