@@ -278,6 +278,11 @@ input[type="radio"] {
     gap: 16px;
 }
 
+.question-container label {
+    font-family: regular-font;
+    font-size: 14px;
+}
+
 .question-container input[type="text"] {
     height: 44px;
     flex: 1 1;
@@ -297,7 +302,7 @@ input[type="radio"] {
 
 .option-container input[type="radio"] {
     margin: 0 4px;
-    height: 16px;
+    height: 18px;
     align-items: center;
     font-family: regular-font;
 }

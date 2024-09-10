@@ -86,7 +86,7 @@ export default function CreateGame() {
                                             checked={q.correctAnswer === i}
                                             onChange={() => handleCorrectAnswerChange(index, i)}
                                         />
-                                        Đáp án đúng
+                                        Đúng
                                     </label>
                                 </div>
                             ))}
