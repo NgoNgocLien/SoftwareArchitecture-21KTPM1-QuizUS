@@ -31,7 +31,7 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label htmlFor="name">Tên sự kiện</label>
-                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" />
+                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" required/>
                     </div>
                 </div>
 
@@ -58,6 +58,7 @@ export default function CreateEvent() {
                 {/* Voucher */}
                 <div className='form-row'>
                     <div className="row-input">
+                        <label htmlFor="id_voucher">Chọn voucher</label>
                         <select className="field-select"
                                 value={selectedOption}
                                 onChange={handleOption}
@@ -67,7 +68,8 @@ export default function CreateEvent() {
                         </select>
                     </div>
                     <div className="row-input">
-                        <input type="range" />
+                        <label htmlFor="max_amount_voucher">Số lượng</label>
+                        <input type="number" />
                     </div>
                 </div>
 
