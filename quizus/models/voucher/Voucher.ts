@@ -1,4 +1,4 @@
-export class Voucher {
+export abstract class Voucher {
     _id: string;
     id_brand: number;
     code: string;
@@ -10,7 +10,7 @@ export class Voucher {
     status: boolean;
     name: string;
     id_voucher: string;
-    score_exchange: number;
+    // score_exchange: number;
 
     constructor({
         _id,

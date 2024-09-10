@@ -122,7 +122,6 @@ const search = async (req, res) => {
         const players = await model.player.findAll({
             where: {
                 [Op.or]: [
-                    { id_player: keyword },
                     { email: keyword },
                     { phone: keyword },
                 ]

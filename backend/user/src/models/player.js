@@ -40,13 +40,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     is_active: {
-      type: DataTypes.BOOLEAN(10),
+      type: DataTypes.BOOLEAN,
       allowNull: true
     },
     score: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: 10
+      defaultValue: 0
     }
   }, {
     sequelize,

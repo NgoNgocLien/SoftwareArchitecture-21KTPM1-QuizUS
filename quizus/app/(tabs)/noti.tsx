@@ -1,110 +1,77 @@
-import { useEffect, useState, useCallback } from 'react';
-import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, TouchableWithoutFeedback, View, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
-import { VoucherCard } from '@/components/card/VoucherCard';
 import { LoadingView } from '@/components/LoadingView';
 import { EmptyView } from '@/components/EmptyView';
 import { Heading } from '@/components/text/Heading';
-import { VoucherFactory } from '@/models/voucher/VoucherFactory';
-import { getExchangedVouchers } from '@/api/VoucherApi';
-import config from '@/constants/config';
-import { showToast } from '@/components/ToastBar';
 import {retrieveFromSecureStore} from '@/api/SecureStoreService'
+import Noti from '@/models/notification/Notification';
+import { EventNotificationFactory, FriendNotificationFactory, VoucherNotificationFactory } from '@/models/notification/NotificationFactory';
+import { Paragraph } from '@/components/text/Paragraph';
+import { VoucherNotification } from '@/models/notification/VoucherNotification';
+import { CampaignNotification } from '@/models/notification/CampaignNotification';
 const tabNames = [
     { index: 0, name: 'Voucher' },
     { index: 1, name: 'Sự kiện' },
     { index: 2, name: 'Bạn bè' },
 ]
 
-export default function Noti() {
-    const [loading, setLoading] = useState(true);
-
+const data = [
+    { type: 'voucher', isUsed: true, name_voucher: 'Giảm 50%', seen_time: null },
+    { type: 'voucher', isUsed: false, name_voucher: 'Giảm 20k', seen_time: '2024-09-08' },
+    { type: 'event', name_campaign: 'Black Friday', id_campaign: '123', start_time: '10:00 AM', seen_time: '2024-09-08' },
+    { type: 'friend', subtype: 'item', name_sender: 'My Linh', id_itemgift: '1', id_item: 1, name_campaign: 'Ưu đãi sốc mùa hè', seen_time: null },
+    { type: 'friend', subtype: 'voucher', name_sender: 'My Linh',  id_vouchergift: '1', name_voucher: 'Giảm 10%', seen_time: null },
+    { type: 'friend', subtype: 'turn', name_sender: 'My Linh', id_turnrequest: '1', name_campaign: 'Ưu đãi sốc mùa đông', seen_time: '2024-09-08' }
+  ];
+  
+export default function Notification() {
     const params= useLocalSearchParams();
+
+    const [loading, setLoading] = useState(true);
     const [focusedTab, setFocusedTab] = useState(0);
 
-    const [vouchers, setVouchers] = useState<any[][] | null>(null);
-    const [favCampaign, setFavCampaign] = useState(null);
-    const [friendRequest, setFriendRequest] = useState(null);
+    const [vouchers, setVouchers] = useState<any[]| null>(null);
+    const [campaigns, setCampaigns] = useState<any[]| null>(null);
+    const [friends, setFriends] = useState<any[]| null>(null);
+
+    const [notifications, setNotifications] = useState<Noti[]>([]);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
     }
 
-    // const fetchMyVouchers = useCallback(() => {
-    //     setLoading(true);
-    //     retrieveFromSecureStore('id_player', (id_player: string) => {
-    //         getExchangedVouchers(id_player)
-    //             .then(playerVouchers => {
-    //                 let allVouchers: any[] = [];
-    //                 let coinVouchers: any[] = [];
-    //                 let itemVouchers: any[] = [];
-
-    //                 playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; is_used?:boolean}) => {
-    //                     const { voucher, ...newPlayerVoucher } = playerVoucher;
-
-    //                     if (playerVoucher.campaign.id_quiz !== "") {
-    //                         const newVoucher = VoucherFactory.createVoucher('coin', voucher);
-                            
-    //                         if (playerVoucher.is_used || Date.now() >= newVoucher.expired_date.getTime()){
-    //                             coinVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-    //                             allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-    //                         } else{
-    //                             coinVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
-    //                             allVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
-    //                         }
-                            
-    //                     } else {
-    //                         const newVoucher = VoucherFactory.createVoucher('item', voucher);
-
-    //                         if (playerVoucher.is_used || Date.now() >= newVoucher.expired_date.getTime()){
-    //                             itemVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-    //                             allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-    //                         } else{
-    //                             itemVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
-    //                             allVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
-    //                         }
-                            
-    //                     }
-    //                 });
-
-    //                 setVouchers([allVouchers, coinVouchers, itemVouchers]);
-    //                 setLoading(false);
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error fetching player vouchers:', error);
-    //                 setLoading(false);
-    //                 showToast('error', 'Lỗi hệ thống');
-    //             });
-    //     }).catch((err) => {
-    //         console.log(err);
-    //         setLoading(false);
-    //         showToast('error', 'Không tìm thấy thông tin người dùng');
-    //     });
-
-    // }, []);
-
-    // // Refetch data when the screen comes into focus
-    // useFocusEffect(fetchMyVouchers);
-
-    useEffect(() => {
+    const fetchNoti = () => {
         setLoading(true);
         retrieveFromSecureStore('id_player', (id_player: string) => {
-
-            if (focusedTab == 0){
-
-            } else if (focusedTab == 1){
-                
-            } else if (focusedTab == 2){
-                
-            }
-
-            setLoading(false);
-        })
+           
+              const voucherFactory = new VoucherNotificationFactory();
+              const eventFactory = new EventNotificationFactory();
+              const friendFactory = new FriendNotificationFactory();
         
-    }, [focusedTab]);
+              // Map through the data and use the correct factory for each type
+              const mappedNotifications = data.map(item => {
+                if (item.type === 'voucher') {
+                  return voucherFactory.createVoucherNotification(item);
+                } else if (item.type === 'event') {
+                  return eventFactory.createEventNotification(item);
+                } else if (item.type === 'friend') {
+                  return friendFactory.createFriendNotification(item);
+                }
+                throw new Error('Unknown notification type');
+              });
+        
+              setNotifications(mappedNotifications);
+              setLoading(false);
+        })
+    };
+
+    useEffect(() => {
+        fetchNoti();
+    }, []);
 
     return (
         <View style={styles.background}>
@@ -122,90 +89,44 @@ export default function Noti() {
                 <Heading type="h4">Thông báo</Heading>
             </View>
 
-            <View style={{ minHeight: 40, maxHeight: 40, flexDirection: 'row', display: 'flex' }}>
-                <View style={styles.emptyTab}></View>
-
-                {tabNames.map((tab, index) => (
-                    <TouchableWithoutFeedback onPress={() => handleTabFocus(index)} key={tab.index}>
-                        <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
-                            <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>
-                                {tab.name}
-                            </Text>
-                            <View style={[styles.categoryAmountText, focusedTab === tab.index ? styles.focusedAmountText : null]}>
-                                <Text style={[styles.categoryText, { fontSize: 12 }, focusedTab === tab.index ? styles.focusedText : null]}>
-                                    {vouchers === null ? 0 : vouchers[index]?.length}
-                                </Text>
-                            </View>
-                        </View>
-                    </TouchableWithoutFeedback>
-                ))}
-
-                <View style={styles.emptyTab}></View>
-            </View>
-
             {
-                focusedTab === 0 ? 
-                loading ? <LoadingView /> :
-                (
-                    <>
-                        {vouchers === null || vouchers[0].length === 0 ? (
-                            <EmptyView texts={['Chưa có thông báo']}/>
-                        ) : (
-                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                                {/* {vouchers[0].map((item, index) => (
-                                    <VoucherCard 
-                                        voucher={item.voucher.getVoucher()}
-                                        campaign={item.campaign}
-                                        key={index} 
-                                        is_used={item.is_used}
-                                        style={index === vouchers[0].length - 1 ? { marginBottom: 32 } : {}} 
-                                    />
-                                ))} */}
-                            </ScrollView> 
-                        )}
-                    </>
-                ) : focusedTab === 1 ? 
-                loading ? <LoadingView /> :
-                (
-                    <>
-                        {vouchers === null || vouchers[1].length === 0 ? (
-                            <EmptyView texts={['Chưa có thông báo']}/>
-                        ) : (
-                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                                {/* {vouchers[1].map((item, index) => (
-                                    <VoucherCard
-                                        voucher={item.voucher.getVoucher()}
-                                        campaign={item.campaign}
-                                        key={index} 
-                                        is_used={item.is_used}
-                                        style={index === vouchers[1].length - 1 ? { marginBottom: 32 } : {}} 
-                                    />
-                                ))} */}
-                            </ScrollView> 
-                        )}
-                    </>
-                ) : focusedTab === 2 ?
-                loading ? <LoadingView /> :
-                (
-                    <>
-                        {vouchers === null || vouchers[2].length === 0 ? (
-                            <EmptyView texts={['Chưa có thông báo']}/>
-                        ) : (
-                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                                 {/* {vouchers[2].map((item, index) => (
-                                    <VoucherCard
-                                        voucher={item.voucher.getVoucher()}
-                                        campaign={item.campaign}
-                                        key={index} 
-                                        is_used={item.is_used}
-                                        style={index === vouchers[2].length - 1 ? { marginBottom: 32 } : {}} 
-                                    />
-                                ))} */}
-                            </ScrollView> 
-                        )}
-                    </>
-                ) : null
+                loading 
+                ? <LoadingView /> 
+                : ( 
+                <>
+                {
+                    notifications.length == 0 
+                    ? <EmptyView texts={['Chưa có thông báo']}/> 
+                    : (
+                        <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                        {
+                            notifications.map((notification, index) => {
+                                const type = 
+                                    (notification instanceof VoucherNotification) ? "Mã giảm giá" : 
+                                    (notification instanceof CampaignNotification) ? "Sự kiện" : "Bạn bè";
+                                
+                                return (
+                                    <View key={index} style={notification.getSeenTime() ? styles.notification : [styles.notification, styles.newNotification]}>
+                                        <View style={styles.notificationBody}>
+                                            <Paragraph type="p1" style={styles.notificationContent}>{notification.getContent()}</Paragraph>
+                                            {
+                                                !notification.getSeenTime() &&
+                                                <View style={styles.notificationStatus}></View>
+                                            }
+                                            
+                                        </View>
+                                        <Paragraph type="p3" color={Colors.gray._500}>{type}</Paragraph>
+                                    </View>
+                                )
+                            })
+                        }
+                        </ScrollView> 
+                    )
+                }
+                </>)
             }
+
+            
         </View>
     )
 }
@@ -249,51 +170,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    emptyTab: {
-        width: 20,
-        height: 40,
-        borderBottomColor: Colors.gray._500,
-        borderBottomWidth: 1,    
+    notification:{
+        padding: 20
     },
-
-    categoryTab: {
-        height: 40,
-        flexGrow: 1,
-        justifyContent: 'center',
-        
-        borderBottomColor: Colors.gray._500,
-        borderBottomWidth: 1,
+    newNotification:{
+        backgroundColor: Colors.light.secondary
+    },
+    notificationBody:{
         flexDirection: 'row',
-        alignItems: 'center',
-        gap: 5
+        justifyContent:'space-between',
     },
-
-    categoryText: {
-        color: Colors.light.subText,
-        fontWeight: '500',
-        fontSize: 16,
+    notificationContent:{
+        maxWidth: '90%',
     },
-
-    categoryAmountText:{
-        backgroundColor: Colors.gray._200,
-        borderRadius: 12,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    focusedAmountText: {
-        backgroundColor: Colors.light.secondary,
-    },
-
-    focusedTab: {
-        borderBottomColor: Colors.light.primary,
-        borderBottomWidth: 2,
-    },
-
-    focusedText: {
-        color: Colors.light.primary,
-        fontWeight: '700',
+    notificationStatus:{
+        width: 10,
+        height: 10,
+        backgroundColor: Colors.light.primary,
+        borderRadius: 50,
+        alignSelf: 'center',
     }
+
 });
