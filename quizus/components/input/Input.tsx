@@ -5,12 +5,16 @@ import { StyleSheet, TextInput, TextInputProps } from 'react-native';
 export type ThemedTextInputProps = TextInputProps & {
   type?: 'default' | 'email' | 'phone' | 'numeric'; // You can expand this with more types if needed
   placeholder?: string;
+  value?: string;
+  onChangeText?: (text: string) => void;
 };
 
 export function Input({
   style,
   type = 'default', // Default type if not specified
   placeholder,
+  value,
+  onChangeText,
   ...rest
 }: ThemedTextInputProps) {
 
@@ -34,6 +38,8 @@ export function Input({
       placeholder={placeholder}
       keyboardType={keyboardType()} // Use the determined keyboard type
       placeholderTextColor={Colors.gray._500}
+      value={value}
+      onChangeText={onChangeText}
       {...rest}
     />
   );

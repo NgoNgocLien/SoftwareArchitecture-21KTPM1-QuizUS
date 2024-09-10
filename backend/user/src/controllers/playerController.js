@@ -97,7 +97,7 @@ const update = async (req, res) => {
             player.email = req.body.email || player.email;
             player.phone = req.body.phone || player.phone;
             player.gender = req.body.gender || player.gender;
-            player.score = player.score += req.body.score
+            player.score = (req.body.score) ? player.score += req.body.score : player.score
 
             if (req.body.password) {
                 const salt = await bcrypt.genSalt(10);

@@ -6,12 +6,14 @@ import { TabBarIcon } from './navigation/TabBarIcon';
 
 export type ThemedButtonProps = TouchableOpacityProps & {
   type?: 'primary' | 'secondary' | 'correctAnswer' | 'wrongAnswer' | 'tertiary' | 'disabled';
-  text: string; 
+  text: string;
+  size?: string; 
 };
 
 export function Button({
   type = 'primary',
   text,
+  size,
   style,
   ...rest
 }: ThemedButtonProps) {
@@ -29,7 +31,11 @@ export function Button({
     buttonStyle.push(styles.tertiary);
   } else if (type === 'disabled') {
     buttonStyle.push(styles.disabled);
-}
+  }
+
+  if (size === 'small'){
+    buttonStyle.push(styles.small);
+  }
   
   return (
     <TouchableOpacity style={[...buttonStyle, style]} {...rest} activeOpacity={0.6}>
@@ -64,11 +70,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     textAlign: 'center',
   },
+
+  small: {
+    height: 'auto',
+    width: '80%',
+    paddingVertical: 10,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+
   primary: {
     backgroundColor: Colors.light.primary, 
   },
   tertiary: {
     backgroundColor: Colors.brand._200, 
+  },
+  disabled:{
+    backgroundColor: Colors.gray._500, 
   },
   secondary: {
     backgroundColor: Colors.light.background,
@@ -84,9 +102,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand._100,
     borderColor: Colors.feedback.error,
     borderWidth: 3,
-  },
-  disabled: {
-    backgroundColor: Colors.gray._200,
   },
   icon:{
     position: 'absolute',
