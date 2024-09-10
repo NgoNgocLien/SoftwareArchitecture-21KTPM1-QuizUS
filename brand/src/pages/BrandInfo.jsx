@@ -47,18 +47,15 @@ export default function BrandInfo() {
                 types: ["geocode"],
             });
     
-            // Listener for when a place is selected
             autocomplete.addListener("place_changed", () => {
                 const place = autocomplete.getPlace();
     
                 if (place.geometry) {
-                // Display map if a valid address is selected
                     const map = new window.google.maps.Map(mapRef.current, {
                         zoom: 15,
                         center: place.geometry.location,
                     });
     
-                    // Place a marker at the selected location
                     new window.google.maps.Marker({
                         map,
                         position: place.geometry.location,
