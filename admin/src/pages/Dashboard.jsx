@@ -6,10 +6,11 @@ import PlayerChart from '../components/charts/PlayerChart';
 import BarChart from '../components/charts/BarChart';
 import "../styles/common.css";
 import "../styles/dashboard.css";
-import { getStats } from '../api/statsApi';
+import { getStats, getVoucherStats } from '../api/statsApi';
 
 export default function Dashboard() {
     const [data, setData] = useState({});
+    const [voucherData, setVoucherData] = useState({});
 
     useEffect(() => {
         const getData = async () => {
@@ -17,6 +18,12 @@ export default function Dashboard() {
             setData(response);
         }
         getData();
+
+        const getVoucherData = async () => {
+            const response = await getVoucherStats();
+            setVoucherData(response);
+        }
+        getVoucherData();
     }, [])
 
     return (
@@ -55,7 +62,7 @@ export default function Dashboard() {
                     <div className='voucher-chart'>
                         <p>Thống kê</p>
                         <h6>Tình trạng voucher</h6>
-                        <VoucherChart chartData={data} />
+                        <VoucherChart chartData={voucherData} />
                     </div>
                     {/* Thống kê người chơi theo loại trò chơi */}
                     <div className='player-chart'>
