@@ -159,3 +159,25 @@ export const getCampaignsOfVoucher = async (id_voucher: string) => {
         throw new Error('Failed to fetch campaigns of voucher');
     }
 }
+
+export const searchCampaigns = async (keyword: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/campaign/search/${keyword}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            return result;
+        } else {
+            throw new Error('Failed to fetch campaigns of this voucher', result.message);
+        }
+    } catch(error) {
+        console.error(error);
+        throw new Error('Failed to fetch campaigns of voucher');
+    }
+}
