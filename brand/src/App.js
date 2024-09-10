@@ -13,6 +13,7 @@ import UpdatePlayer from './pages/UpdatePlayer';
 import Login from './pages/Login';
 import Signup from './pages/signup';
 import BrandInfo from './pages/BrandInfo';
+import CreateEvent from './pages/CreateEvent';
 
 function Layout() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/voucher" element={<ManageVoucher />} />
           <Route path="/info" element={<BrandInfo />} />
           <Route path="/edit" element={<UpdatePlayer />} />
+          <Route path="/create-event" element={<CreateEvent />} />
         </Route>
       </Routes>
     </Router>

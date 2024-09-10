@@ -43,6 +43,7 @@
     opacity: 0;
     width: 12rem;
     overflow: hidden;
+    cursor: pointer;
 }
 
 
@@ -73,7 +74,7 @@ label {
     color: #434657;
 }
 
-input[type="text"], input[type="url"], select {
+input[type="text"], input[type="url"], select, textarea, input[type="datetime-local"] {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -168,11 +169,65 @@ select {
     margin-right: 8px; /* Space between radio button and label */
 }
 
-/* editPlayer */
+/* Edit Player */
 .profile-avatar {
     width: 168px;
     height: 168px;
     border-radius: 10px;
     background-position: center;
     object-fit: contain;
+}
+
+/* Create Event */
+.event-img-ctn {
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+}    
+
+.event-img {
+    width: 360px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.event-btn-ctn {
+    display: flex;
+}
+.event-upload-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid #0063D6;
+    color: #0063D6;
+    width: 360px;
+    background-color: none;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin: 16px 0;
+    cursor: pointer;
+    font-family: semibold-font;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.event-btn-ctn input[type="file"] {
+    font-size: 36px;
+    position: absolute;
+    margin: 16px 0;
+    opacity: 0;
+    width: 360px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.row-input {
+    flex: 1 1;
+}
+
+.row-input input[type="datetime-local"] {
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: regular-font;
 }

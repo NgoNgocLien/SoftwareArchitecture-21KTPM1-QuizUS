@@ -114,6 +114,10 @@ export default function BrandInfo() {
                         <label htmlFor="website">Trang web</label>
                         <input type="url" id="website" placeholder="Nhập URL trang web" />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="phone">Số điện thoại</label>
+                        <input type="tel" id="phone"/>
+                    </div>
                 </div>
 
                 {/* Buttons */}
