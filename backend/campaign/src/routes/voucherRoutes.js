@@ -42,7 +42,7 @@ router.post('/exchange/item', exchangeByItem);
 router.get('/exchange/:id_player', getExchanged);
 
 // Sử dụng voucher
-router.put('/used/:id_player/:id_campaign', use);
+router.put('/used/:id_playerVoucher', use);
 
 // tặng voucher cho bạn
 router.post('/send', sendVoucher);

@@ -52,6 +52,7 @@ export function VoucherCard({
     },
     playerInfo?: PlayerInfo
     is_used?: boolean,
+    id_playerVoucher?: string,
     [key: string]: any;
 }) {
     const router = useRouter();
@@ -119,7 +120,7 @@ export function VoucherCard({
                 } else {
                     router.push({
                         pathname: '/voucher',
-                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false") }
+                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id }
                     })
                 }
             }}>

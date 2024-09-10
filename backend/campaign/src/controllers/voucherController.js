@@ -298,13 +298,13 @@ const exchangeByItem = async (req, res) => {
 // Sử dụng voucher
 const use = async (req, res) => {
     try {
-        const { id_player, id_campaign } = req.params;
+        const { id_playerVoucher } = req.params;
 
-        if (!id_player || !id_campaign) {
-            return res.status(400).json({ message: 'id_player and id_campaign are required' });
+        if (!id_playerVoucher) {
+            return res.status(400).json({ message: 'id_playerVoucher is required' });
         }
 
-        const playerVoucher = await PlayerVoucher.findOne({ id_player, id_campaign });
+        const playerVoucher = await PlayerVoucher.findOne({ _id: id_playerVoucher });
 
         if (!playerVoucher) {
             return res.status(404).json({ message: 'Voucher not found for this player.' });
@@ -330,78 +330,78 @@ const use = async (req, res) => {
 // tặng voucher cho bạn
 const sendVoucher = async (req, res) => {
     try {
-      const { id_sender_voucher, id_receiver } = req.body;
-  
-      if (!id_sender_voucher || !id_receiver) {
-        return res.status(400).json({ message: 'id_sender_voucher and id_receiver are required' });
-      }
-  
-      const senderVoucher = await PlayerVoucher.findById(id_sender_voucher);
-  
-      // Kiểm tra voucher đã sd hay chưa
-      if (senderVoucher.is_used) {
-        return res.status(400).json({ message: 'This voucher has been already used!' });
-      }
-  
-      senderVoucher.is_used = true;
-      await senderVoucher.save();
+        const { id_sender_voucher, id_receiver } = req.body;
 
-      // Tạo bản ghi mới trong PlayerVoucher để lưu thông tin voucher cho người nhận
-      const receiverVoucher = new PlayerVoucher({
-        id_player: id_receiver,
-        id_campaign: senderVoucher.id_campaign,
-        is_used: false     
-      });
-      await receiverVoucher.save();
-      
-      // Tạo bản ghi mới trong VoucherGift để lưu thông tin voucher đã tặng
-      const newVoucherGift = new VoucherGift({
-        id_sender: senderVoucher.id_player,
-        id_receiver,
-        id_playervoucher: receiverVoucher._id,
-        gift_time: new Date()     
-      });
-  
-      await newVoucherGift.save();
-  
-      // lấy thông tin sender
-      const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${senderVoucher.id_player}`);
-      const sender = senderResponse.data;
-  
-      // lấy thông tin campaign
-      const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${senderVoucher.id_campaign}`);
-      const campaign = campaignResponse.data;
+        if (!id_sender_voucher || !id_receiver) {
+            return res.status(400).json({ message: 'id_sender_voucher and id_receiver are required' });
+        }
 
-      // lấy thông tin voucher
-      const voucherResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/voucher/${campaign.id_voucher}`);
-      const voucher = voucherResponse.data;
-  
-      // Thêm noti
-      const newNoti = new PlayerNoti({
-        type: "friend",
-        subtype: "voucher",
-        id_receiver,
-        id_sender: senderVoucher.id_player,
-        name_sender: sender.username, 
-        id_voucher: campaign.id_voucher,
-        name_voucher: voucher.name,
-        id_vouchergift: newVoucherGift._id,
-        noti_time: new Date(), 
-        seen_time: null
-      });
-  
-      await newNoti.save();
-  
-      return res.status(201).json({
-        message: 'Voucher successfully sent!',
-        gift: newVoucherGift
-      });
-  
+        const senderVoucher = await PlayerVoucher.findById(id_sender_voucher);
+
+        // Kiểm tra voucher đã sd hay chưa
+        if (senderVoucher.is_used) {
+            return res.status(400).json({ message: 'This voucher has been already used!' });
+        }
+
+        senderVoucher.is_used = true;
+        await senderVoucher.save();
+
+        // Tạo bản ghi mới trong PlayerVoucher để lưu thông tin voucher cho người nhận
+        const receiverVoucher = new PlayerVoucher({
+            id_player: id_receiver,
+            id_campaign: senderVoucher.id_campaign,
+            is_used: false
+        });
+        await receiverVoucher.save();
+
+        // Tạo bản ghi mới trong VoucherGift để lưu thông tin voucher đã tặng
+        const newVoucherGift = new VoucherGift({
+            id_sender: senderVoucher.id_player,
+            id_receiver,
+            id_playervoucher: receiverVoucher._id,
+            gift_time: new Date()
+        });
+
+        await newVoucherGift.save();
+
+        // lấy thông tin sender
+        const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${senderVoucher.id_player}`);
+        const sender = senderResponse.data;
+
+        // lấy thông tin campaign
+        const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${senderVoucher.id_campaign}`);
+        const campaign = campaignResponse.data;
+
+        // lấy thông tin voucher
+        const voucherResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/voucher/${campaign.id_voucher}`);
+        const voucher = voucherResponse.data;
+
+        // Thêm noti
+        const newNoti = new PlayerNoti({
+            type: "friend",
+            subtype: "voucher",
+            id_receiver,
+            id_sender: senderVoucher.id_player,
+            name_sender: sender.username,
+            id_voucher: campaign.id_voucher,
+            name_voucher: voucher.name,
+            id_vouchergift: newVoucherGift._id,
+            noti_time: new Date(),
+            seen_time: null
+        });
+
+        await newNoti.save();
+
+        return res.status(201).json({
+            message: 'Voucher successfully sent!',
+            gift: newVoucherGift
+        });
+
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
-  };
-  
+};
+
 
 module.exports = {
     getActive,
