@@ -337,7 +337,7 @@ const sendVoucher = async (req, res) => {
         }
 
         const senderVoucher = await PlayerVoucher.findById(id_sender_voucher);
-
+        console.log("senderVoucher: ", sendVoucher)
         // Kiểm tra voucher đã sd hay chưa
         if (senderVoucher.is_used) {
             return res.status(400).json({ message: 'This voucher has been already used!' });
@@ -345,7 +345,7 @@ const sendVoucher = async (req, res) => {
 
         senderVoucher.is_used = true;
         await senderVoucher.save();
-
+        console.log("senderVoucher1: ", sendVoucher)
         // Tạo bản ghi mới trong PlayerVoucher để lưu thông tin voucher cho người nhận
         const receiverVoucher = new PlayerVoucher({
             id_player: id_receiver,
@@ -353,7 +353,7 @@ const sendVoucher = async (req, res) => {
             is_used: false
         });
         await receiverVoucher.save();
-
+        console.log("receiverVoucher: ", receiverVoucher)
         // Tạo bản ghi mới trong VoucherGift để lưu thông tin voucher đã tặng
         const newVoucherGift = new VoucherGift({
             id_sender: senderVoucher.id_player,
@@ -363,6 +363,7 @@ const sendVoucher = async (req, res) => {
         });
 
         await newVoucherGift.save();
+        console.log("newVoucherGift: ", newVoucherGift)
 
         // lấy thông tin sender
         const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${senderVoucher.id_player}`);
@@ -396,12 +397,78 @@ const sendVoucher = async (req, res) => {
             message: 'Voucher successfully sent!',
             gift: newVoucherGift
         });
-
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
+// Thống kê tình trạng voucher (đã sd/ chưa sd/ hết hạn/ tổng gtri)
+const getStats = async (req, res) => {
+    const campaigns = await Campaign.find().populate('id_voucher');
+
+    if (!campaigns || campaigns.length === 0) {
+        return res.status(404).json({ message: 'No campaigns found.' });
+    }
+
+    let totalVoucherCount = 0; // Tổng số lượng voucher thực tế phát hành
+    let usedVoucherCount = 0;
+    let unusedVoucherCount = 0;
+    let expiredVoucherCount = 0;
+    let totalVoucherValue = 0;
+
+    for (const campaign of campaigns) {
+        const voucher = await Voucher.findById(campaign.id_voucher);
+
+        // Nếu không có voucher cho campaign, bỏ qua
+        if (!voucher) {
+            continue;
+        }
+
+        // Số lượng voucher thực tế đã phát hành (given_amount_voucher)
+        const issuedVoucherCount = campaign.given_amount_voucher;
+        totalVoucherCount += issuedVoucherCount;
+
+        totalVoucherValue += campaign.max_amount_voucher * voucher.price;
+
+        // Kiểm tra voucher đã hết hạn chưa
+        if (voucher.expired_date < new Date()) {
+            expiredVoucherCount += issuedVoucherCount;
+        }
+
+        // Tìm số lượng voucher đã sử dụng từ bảng PlayerVoucher
+        const usedPlayerVouchers = await PlayerVoucher.find({
+            id_campaign: campaign._id,
+            is_used: true
+        });
+
+        // Tìm số lượng voucher đã sử dụng từ bảng PlayerVoucher
+        const unusedPlayerVouchers = await PlayerVoucher.find({
+            id_campaign: campaign._id,
+            is_used: false
+        });
+
+        const giftedVouchers = await VoucherGift.find({
+            id_playervoucher: { $in: unusedPlayerVouchers.map(v => v._id) }
+        }).distinct('id_playervoucher');
+
+        // Tính số lượng voucher đã sử dụng thật sự (không bao gồm voucher đã tặng)
+        const actualUsedVouchers = usedPlayerVouchers.length - giftedVouchers.length;
+        usedVoucherCount += actualUsedVouchers;
+
+        // Số lượng voucher chưa sử dụng = đã phát hành - đã sử dụng
+        const notUsedCount = issuedVoucherCount - actualUsedVouchers;
+        unusedVoucherCount += notUsedCount;
+    }
+
+    // Trả về kết quả thống kê
+    return res.status(200).json({
+        total_vouchers: totalVoucherCount,
+        used_vouchers: usedVoucherCount,
+        unused_vouchers: unusedVoucherCount,
+        expired_vouchers: expiredVoucherCount,
+        total_value: totalVoucherValue
+    });
+}
 
 module.exports = {
     getActive,
@@ -412,5 +479,6 @@ module.exports = {
     getExchanged,
     exchangeByCoin,
     exchangeByItem,
-    use, sendVoucher
+    use, sendVoucher,
+    getStats
 };

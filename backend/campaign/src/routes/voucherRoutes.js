@@ -14,11 +14,14 @@ const {
     getExchanged,
     exchangeByCoin,
     exchangeByItem,
-    use, sendVoucher
+    use, sendVoucher, getStats
 } = require('../controllers/voucherController');
 
 // Lấy tất cả voucher đang hoạt động
 router.get('/active', getActive);
+
+// Thống kê tình trạng voucher (đã sd/ chưa sd/ hết hạn/ tổng gtri)
+router.get('/stats', getStats);
 
 // Lấy voucher theo id
 router.get('/:id_voucher', getVoucherById);

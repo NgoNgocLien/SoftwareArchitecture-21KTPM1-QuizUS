@@ -18,7 +18,20 @@ const getStats = async () => {
   }
 }
 
+const getVoucherStats = async () => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/voucher/stats`;
+    const response = await axios.get(url);
+    console.log(response)
+    return response.data;
+  }
+  catch (err) {
+    console.log(err.message);
+    return []
+  }
+}
+
 
 export {
-  getStats
+  getStats, getVoucherStats
 };
