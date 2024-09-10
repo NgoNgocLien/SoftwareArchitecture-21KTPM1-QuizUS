@@ -63,7 +63,10 @@
     display: flex;
     width: 100%;
     gap: 16px !important;
-    margin-bottom: 24px;
+}
+
+.form-group {
+    margin: 0 0 16px 0;
 }
 
 label {
