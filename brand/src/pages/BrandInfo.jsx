@@ -101,7 +101,7 @@ export default function BrandInfo() {
                         <input  type="text"
                                 id="address" 
                                 placeholder="Nhập địa chỉ"
-                                ref={addressInput} 
+                                // ref={addressInput} 
                                 value={address} 
                                 onChange={(e) => {setAddress(e.target.value)}}
                                 />
