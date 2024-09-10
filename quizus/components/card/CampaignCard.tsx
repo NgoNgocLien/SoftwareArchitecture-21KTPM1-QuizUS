@@ -8,7 +8,7 @@ import { showToast } from '@/components/ToastBar';
 import { Heading } from '../text/Heading';
 import { Paragraph } from '../text/Paragraph';
 import { likeCampaign, unlikeCampaign } from '@/api/CampaignApi';
-import config from '@/constants/config';
+import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 
 import dialogStyles from '@/components/modal/Dialog.styles';
 
@@ -32,7 +32,7 @@ export function CampaignCard({
             setModalVisible(true);
         } else {
             // TODO: Add to favorite
-            config.retrieveFromSecureStore('id_player', (id: string) => {
+            retrieveFromSecureStore('id_player', (id: string) => {
                 let id_player = id ? id : "";
 
                 likeCampaign(id_player, campaign._id)
@@ -55,7 +55,7 @@ export function CampaignCard({
 
     const handleRemoveFavourite = () => {
         // call api to remove from favorite
-        config.retrieveFromSecureStore('id_player', (id: string) => {
+        retrieveFromSecureStore('id_player', (id: string) => {
             let id_player = id ? id : "";
 
             unlikeCampaign(id_player, campaign._id)
@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
     brandName: {
         color: Colors.light.subText,
         fontSize: 12,
+        textTransform: 'uppercase',
     },
     timeContainer: {
         padding: 4,

@@ -1,0 +1,241 @@
+.ctn {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.brand-logo-ctn {
+    display: flex;
+    flex-direction: column;
+    width: 12 rem;
+    aspect-ratio: 1/1;
+}
+
+.brand-logo-ctn img {
+    object-fit: contain;
+}
+
+.upload-btn-ctn {
+    display: flex;
+}
+.upload-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid #0063D6;
+    color: #0063D6;
+    width: 12rem;
+    background-color: none;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin: 16px 0;
+    cursor: pointer;
+    font-family: semibold-font;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.upload-btn-ctn input[type="file"] {
+    font-size: 36px;
+    position: absolute;
+    margin: 16px 0;
+    opacity: 0;
+    width: 12rem;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+.input-ctn {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 8px;
+    width: 100%;   
+    padding: 16px 24px;
+}
+
+.input-ctn h6 {
+    margin: 0 0 24px 0;
+}
+
+.form-row {
+    display: flex;
+    width: 100%;
+    gap: 16px !important;
+}
+
+.form-group {
+    margin: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 4px;
+    font-family: semibold-font;
+    color: #434657;
+}
+
+input[type="text"], input[type="url"], input[type="number"], select, textarea, input[type="datetime-local"] {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#brand-name {
+    width: 100%; /* Make the input take up the full width of its container */
+}
+
+.field select {
+    width: 100%;
+}
+
+select {
+    padding: 10px;
+}   
+
+.form-group:first-child {
+    flex: 7;
+}
+
+.form-group:last-child {
+    flex: 3;
+}
+
+.button-group {
+    justify-content: end;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.cancel-btn {
+    border-radius: 6px;
+    border: 1.5px solid #0063D6;
+    display: flex;
+    width: 150px;
+    padding: 14px 16px;
+    background: none;
+    justify-content: center;
+    align-items: center;
+    gap: var(--Sizes-8, 8px);
+    color: #0063D6;
+    font-family: semibold-font;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    border: 1.5px solid #007AFF;
+    color: #007AFF;
+}
+
+.save-btn {
+    display: flex;
+    width: 180px;
+    padding: 14px 16px;
+    background: #0063D6;
+    font-family: medium-font;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #007AFF;
+}
+
+.form-group input[type="text"], .form-group input[type="url"] {
+    box-sizing: border-box;
+}
+
+.radio-group {
+    gap: 16px; /* Adjust spacing between radio buttons */
+    box-sizing: border-box;
+    align-items: start;
+    width: 32px;
+}
+
+.radio-group label {
+    display: flex;
+    font-family: regular-font;
+    color: #434657;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 8px; /* Space between radio button and label */
+}
+
+/* Edit Player */
+.profile-avatar {
+    width: 168px;
+    height: 168px;
+    border-radius: 10px;
+    background-position: center;
+    object-fit: contain;
+}
+
+/* Create Event */
+.event-img-ctn {
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+}    
+
+.event-img {
+    width: 360px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.event-btn-ctn {
+    display: flex;
+}
+.event-upload-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid #0063D6;
+    color: #0063D6;
+    width: 360px;
+    background-color: none;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin: 16px 0;
+    cursor: pointer;
+    font-family: semibold-font;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.event-btn-ctn input[type="file"] {
+    font-size: 36px;
+    position: absolute;
+    margin: 16px 0;
+    opacity: 0;
+    width: 360px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.row-input {
+    flex: 1 1;
+}
+
+.row-input input[type="datetime-local"] {
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: regular-font;
+}
+
+input[type="number"] {
+    padding: 10px;
+    font-family: regular-font;
+}

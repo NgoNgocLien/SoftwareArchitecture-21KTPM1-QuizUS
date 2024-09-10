@@ -10,8 +10,7 @@ export abstract class Voucher {
     status: boolean;
     name: string;
     id_voucher: string;
-    // score_exchange: number;
-
+    
     constructor({
         _id,
         id_brand,
