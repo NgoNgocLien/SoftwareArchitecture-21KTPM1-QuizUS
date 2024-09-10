@@ -237,7 +237,7 @@ const requestTurn = async (req, res) => {
       id_campaign,
       request_time: new Date(),
       reply_time: null,
-      is_accept: false
+      is_accept: null
     });
 
     const savedTurnRequest = await turnRequest.save();
@@ -260,7 +260,7 @@ const requestTurn = async (req, res) => {
       id_campaign,
       name_campaign: campaign.name,
       id_turnrequest: savedTurnRequest._id,
-      is_accept: false,
+      is_accept: null,
       noti_time: new Date(), 
       seen_time: null
     });
@@ -277,10 +277,10 @@ const requestTurn = async (req, res) => {
   }
 };
 
-// người chơi chấp nhận cho bạn bè lượt chơi
-const acceptTurn = async (req, res) => {
+// người chơi từ chối/chấp nhận cho bạn bè lượt chơi
+const replyTurn = async (req, res) => {
   try {
-    const { id_request } = req.body;
+    const { id_request, is_accept } = req.body;
 
     if (!id_request) {
       return res.status(400).json({ message: 'id_request are required' });
@@ -292,39 +292,141 @@ const acceptTurn = async (req, res) => {
       return res.status(404).json({ message: 'Turn request not found.' });
     }
 
-    if (turnRequest.accept_time !== null) {
-      return res.status(400).json({ message: 'This request has already been accepted.' });
-    }
-
     const { id_sender, id_receiver, id_campaign } = turnRequest;
 
-    const receiverGame = await PlayerGame.findOne({
-      id_player: id_receiver,
-      id_campaign: id_campaign
-    });
+    // Từ chối gửi lượt chơi
+    if(!is_accept){
+      // Cập nhật TurnRequest với reply_time và is_accept = false
+      turnRequest.reply_time = new Date();
+      turnRequest.is_accept = false;
+      await turnRequest.save();
 
-    if (!receiverGame || receiverGame.player_turn < 1) {
-      return res.status(400).json({ message: 'Receiver has insufficient player turns.' });
+      const playerNoti = await PlayerNoti.findOne({
+        id_turnrequest: turnRequest._id
+      });
+      if(!playerNoti){
+        return res.status(404).json({ message: 'Player notification not found.' });
+      }
+      else{
+        // Cập nhật PlayerNoti với is_accept = false và seen_time (nếu null)
+        playerNoti.is_accept = false;
+        if(playerNoti.seen_time === null){
+          playerNoti.seen_time = new Date();
+        }
+        await playerNoti.save();
+      }
+      return res.status(200).json({
+        message: 'Reject successfully!',
+        turnRequest
+      });
+    }
+    else{ // Chấp nhận gửi lượt chơi
+      const receiverGame = await PlayerGame.findOne({
+        id_player: id_receiver,
+        id_campaign: id_campaign
+      });
+
+      if(!receiverGame){
+        receiverGame = new PlayerGame({
+          id_player: id_receiver,
+          id_campaign: id_campaign,
+          player_turn: 2,
+          quantity_item1: 0,
+          quantity_item2: 0
+        });
+        await receiverGame.save();
+      }
+      else{
+        if(receiverGame.player_turn < 1){
+          return res.status(400).json({ message: 'Receiver does not have enough turn to send.' });
+        }
+        receiverGame.player_turn -= 1;
+        await receiverGame.save();
+      }
+
+      let senderGame = await PlayerGame.findOne({
+        id_player: id_sender,
+        id_campaign: id_campaign
+      });
+      senderGame.player_turn += 1;
+      await senderGame.save();
+
+      // Cập nhật TurnRequest với reply_time và is_accept = true
+      turnRequest.reply_time = new Date();
+      turnRequest.is_accept = true;
+      await turnRequest.save();
+
+      const requestNoti = await PlayerNoti.findOne({
+        id_turnrequest: turnRequest._id
+      });
+      if(!requestNoti){
+        return res.status(404).json({ message: 'Player request notification not found.' });
+      }
+      else{
+        // Cập nhật requestNoti với is_accept = true và seen_time (nếu null)
+        requestNoti.is_accept = true;
+        if(requestNoti.seen_time === null){
+          requestNoti.seen_time = new Date();
+        }
+        await requestNoti.save();
+      }
+
+      // lấy thông tin sender
+      const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${id_sender}`);
+      const sender = senderResponse.data;
+
+      // lấy thông tin campaign
+      const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${id_campaign}`);
+      const campaign = campaignResponse.data;
+
+      // Thêm noti receive
+      const newNoti = new PlayerNoti({
+        type: "friend",
+        subtype: "receive_turn",
+        id_receiver,
+        id_sender,
+        name_sender: sender.username, 
+        id_campaign,
+        name_campaign: campaign.name,
+        id_turnrequest: turnRequest._id,
+        noti_time: new Date(), 
+        seen_time: null
+      });
+
+      await newNoti.save();
+
+      return res.status(200).json({
+        message: 'Player turn successfully transferred.',
+        sender: { id_sender, player_turn: senderGame.player_turn },
+        receiver: { id_receiver, player_turn: receiverGame.player_turn },
+        turnRequest
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// xem thông báo liên quan đến noti
+const seenTurnNoti = async (req, res) => {
+  try {
+    const { id_noti } = req.body;
+
+    if (!id_noti) {
+      return res.status(400).json({ message: 'id_noti are required' });
     }
 
-    let senderGame = await PlayerGame.findOne({
-      id_player: id_sender,
-      id_campaign: id_campaign
-    });
+    const turnNoti = await PlayerNoti.findById(id_noti);
 
-    senderGame.player_turn += 1;
-    receiverGame.player_turn -= 1;
-    turnRequest.accept_time = new Date();
+    if (!turnNoti) {
+      return res.status(404).json({ message: 'Turn notification not found.' });
+    }
+    turnNoti.seen_time = new Date();
+    await turnNoti.save();
 
-    await receiverGame.save();
-    await senderGame.save();
-    await turnRequest.save();
-
-    return res.status(200).json({
-      message: 'Player turn successfully transferred.',
-      sender: { id_sender, player_turn: senderGame.player_turn },
-      receiver: { id_receiver, player_turn: receiverGame.player_turn },
-      turnRequest
+    return res.status(201).json({
+      message: 'Noti successfully seen!',
+      noti: turnNoti
     });
 
   } catch (error) {
@@ -633,9 +735,10 @@ module.exports = {
   addPlayerTurn,
   reducePlayerTurn,
   requestTurn,
-  acceptTurn,
+  replyTurn,
   sendItem,
   receiveItem,
   getTurnRequest,
   getItemRequest,
+  seenTurnNoti
 };

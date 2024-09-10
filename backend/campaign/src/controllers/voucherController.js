@@ -298,7 +298,7 @@ const exchangeByItem = async (req, res) => {
 // Sử dụng voucher
 const use = async (req, res) => {
     try {
-        const { id_player, id_campaign } = req.body;
+        const { id_player, id_campaign } = req.params;
 
         if (!id_player || !id_campaign) {
             return res.status(400).json({ message: 'id_player and id_campaign are required' });

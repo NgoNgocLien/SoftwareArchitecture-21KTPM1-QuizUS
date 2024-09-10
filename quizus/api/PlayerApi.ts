@@ -84,3 +84,26 @@ export const getPlayerItem = async (id_player: string) => {
         throw new Error('Failed to fetch player item');
     }
 }
+
+export const updatePlayer = async (userInfo: any) => {
+    try {
+        // console.log(userInfo)
+        const response = await fetch(`${config.USER_BE}/api/player/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userInfo)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            return result;
+        } else {
+            throw new Error('Failed to update player ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to update player');
+    }
+}

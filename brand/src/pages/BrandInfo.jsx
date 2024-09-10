@@ -1,47 +1,45 @@
 import React from "react";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../styles/common.css";
 import "../styles/input.css";
 
+import { getInfo } from "../api/brandApi";
+
 export default function BrandInfo() {
-    // Google Map
-    const addressInput = useRef(null);
-    const mapRef = useRef(null);
-    let autocomplete;
+    const storedBrand = localStorage.getItem('brand');
+    const brand = storedBrand ? JSON.parse(storedBrand) : null;
+
+    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [website, setWebsite] = useState('');
+    const [field, setField] = useState('');
+    const [address, setAddress] = useState('');
+    const [email, setEmail] = useState('');
+    const [logo, setLogo] = useState('');
 
     useEffect(() => {
-        // Initialize the autocomplete when the component loads
-        if (window.google) {
-            autocomplete = new window.google.maps.places.Autocomplete(addressInput.current, {
-                types: ["geocode"],
-            });
-    
-            // Listener for when a place is selected
-            autocomplete.addListener("place_changed", () => {
-                const place = autocomplete.getPlace();
-    
-                if (place.geometry) {
-                // Display map if a valid address is selected
-                    const map = new window.google.maps.Map(mapRef.current, {
-                        zoom: 15,
-                        center: place.geometry.location,
-                    });
-    
-                    // Place a marker at the selected location
-                    new window.google.maps.Marker({
-                        map,
-                        position: place.geometry.location,
-                    });
-                }
-            });
+        const getData = async () => {
+            const data = await getInfo(brand?.id_brand || 1);
+            if (data) {
+                setName(data?.name);
+                setUsername(data?.username);
+                setWebsite(data?.website);
+                setField(data?.field);
+                setAddress(data?.address);
+                setEmail(data?.email);
+                setLogo(data?.logo);
+                console.log(data);
+            }
         }
-    }, []);
+        getData();
+    }, [])
 
     return (
         <div className="ctn">
             {/* Brand Logo */}
             <div className="brand-logo-ctn">
-                <img src="/images/placeholder-img.jpg" alt="brand-logo" />
+                <img className="brand-logo-img" src={logo || "/images/placeholder-img.jpg"} alt="brand-logo" />
                 <div className="upload-btn-ctn">
                     <button className="upload-btn"> {/* Button giả */}
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
@@ -57,19 +55,19 @@ export default function BrandInfo() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label htmlFor="username">Tên đăng nhập</label>
-                        <input type="text" id="username" placeholder="Nhập tên đăng nhập" />
+                        <input type="text" id="username" placeholder="Nhập tên đăng nhập" value={username} onChange={(e) => {setUsername(e.target.value)}}/>
                     </div>
                 </div>
                 <div className='form-row'>
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
-                        <input type="text" id="address" placeholder="Nhập email nhãn hàng" />
+                        <input type="text" id="address" placeholder="Nhập email nhãn hàng" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
                     </div>
                 </div>
                 <div className='form-row'>
                     <div className="form-group">
                         <label htmlFor="email">Mật khẩu</label>
-                        <input type="text" id="pwd" placeholder="••••••••" />
+                        <input type="text" id="pwd" placeholder="••••••••" value={password} onChange={(e) => {setPassword(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -83,11 +81,11 @@ export default function BrandInfo() {
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="brand-name">Tên nhãn hàng</label>
-                        <input type="text" id="brand-name" placeholder="Nhập tên nhãn hàng" />
+                        <input type="text" id="brand-name" placeholder="Nhập tên nhãn hàng" value={name} onChange={(e) => {setName(e.target.value)}}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="field">Lĩnh vực</label>
-                        <select id="field">
+                        <select id="field" value={field} onChange={(e) => {setField(e.target.value)}}>
                             <option value="restaurant">Nhà hàng</option>
                             <option value="cafe">Cafe & Bánh</option>
                             <option value="shopping">Mua sắm</option>
@@ -103,16 +101,20 @@ export default function BrandInfo() {
                         <input  type="text"
                                 id="address" 
                                 placeholder="Nhập địa chỉ"
-                                ref={addressInput} />
+                                // ref={addressInput} 
+                                value={address} 
+                                onChange={(e) => {setAddress(e.target.value)}}
+                                />
                     </div>
                 </div>
-                <div ref={mapRef} style={{ width: "100%", height: "400px", marginTop: "10px" }}></div>
+                {/* Map */}
+                {/* <div ref={} style={{ width: "100%", height: "400px", marginTop: "10px" }}></div> */}
 
                 {/* Website */}
                 <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="website">Trang web</label>
-                        <input type="url" id="website" placeholder="Nhập URL trang web" />
+                        <input type="url" id="website" placeholder="Nhập URL trang web" value={website} onChange={(e) => {setWebsite(e.target.value)}}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="phone">Số điện thoại</label>

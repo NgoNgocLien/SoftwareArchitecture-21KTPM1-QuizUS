@@ -23,6 +23,8 @@ import { PlayerInfo } from '@/models/game/PlayerInfo';
 import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
 import config from '@/constants/config';
+import notificationSocket from '@/models/notification/NotificationSocket';
+import eventEmitter from '@/models/notification/EventEmitter';
 
 export default function Rewards() {
 
@@ -145,10 +147,27 @@ export default function Rewards() {
     useFocusEffect(fetchVouchers);
     useFocusEffect(fetchPlayerInfo);
     
+    const [notification, setNotification] = useState(false);
+
+    useEffect(() => {
+        retrieveFromSecureStore('id_player', (id_player: string) => {
+            // notificationSocket.connect(id_player);
+
+            eventEmitter.on('notification', handleNotification);
+        })
+        return () => {
+            eventEmitter.remove('notification', handleNotification);
+        };
+    }, []);
+
+    const handleNotification = () => {
+        setNotification(true);
+    };
     
     return (
         <View style={styles.background}>
-            <Header />
+            <Header notification={notification}
+                setNotification={setNotification} />
             <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
             <View style={styles.tabContainer}>
                 <TouchableWithoutFeedback onPress={() => router.push('/coins')}>

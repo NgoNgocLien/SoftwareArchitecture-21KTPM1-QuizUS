@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Image, TouchableWithoutFeedback, View, ScrollView, Text, Platform, KeyboardAvoidingView, TouchableOpacity, Keyboard } from 'react-native';
+import { StyleSheet, Image, TouchableWithoutFeedback, View, Clipboard, Text, Platform, KeyboardAvoidingView, TouchableOpacity, Keyboard, Alert, ScrollView } from 'react-native';
+// import Clipboard from '@react-native-clipboard/clipboard';
 
 import { Button } from '@/components/Button';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 
 import { retrieveFromSecureStore} from '@/api/SecureStoreService'
@@ -17,50 +18,22 @@ import { PlayerInfo } from '@/models/game/PlayerInfo';
 import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import { sendItem } from '@/api/GameApi';
+import { Paragraph } from '@/components/text/Paragraph';
 
 export default function GiftVoucher() {
     const router = useRouter();
+    const params = useLocalSearchParams();
+    
+    const voucher = JSON.parse(params.voucher as string)
+    const [iaUsed, setIsUsed] = useState(false);
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [keyword, setKeyword] = useState('')
-    const [selectedIndex, setSelectedIndex] = useState(-1)
-    const [selectedQuantity, setSelectedQuantity] = useState(-1)
-    const [playerItems, setPlayerItems] = useState<any>([])
+
+
     useEffect(() => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            getPlayerItem(id_player).then((data: any) => {
-                let player_items: any[] = []
-                data.forEach((data: {
-                    id_campaign: any; vouchers: { id_voucher: any; }; quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
-                }) => {
-
-                    if (data.quantity_item1 > 0)
-                        player_items.push({
-                            id_campaign: data.id_campaign,
-                            id_voucher: data.vouchers.id_voucher,
-                            quantity_item1: data.quantity_item1,
-                            item1_photo: data.item1_photo,
-                            id_item: 1
-                        })
-
-                    if (data.quantity_item1 > 0)
-                        player_items.push({
-                            id_campaign: data.id_campaign,
-                            id_voucher: data.vouchers.id_voucher,
-                            quantity_item2: data.quantity_item2,
-                            item2_photo: data.item2_photo,
-                            id_item: 2
-                        })
-                
-                })
-                setPlayerItems([...player_items])
-                setLoading(false)
-            }).catch((error) => {
-                console.error('Error fetching player score:', error);
-                showToast('error', 'Lỗi hệ thống');
-            });
-
-            
+                        
         }).catch((error) => {
             console.error('Error retrieving id_player from SecureStore:', error);
             showToast('error', 'Không tìm thấy thông tin người chơi');
@@ -70,15 +43,10 @@ export default function GiftVoucher() {
     const handleGift = () => {
         setLoading(true);
 
-        if (selectedIndex == -1){
-            showToast('warning', 'Chưa chọn vật phẩm');
-            setLoading(false);
-            return;
-        }
 
         getPlayerByKeyword(keyword)
         .then(player => {
-            console.log('gift-vouchers: ', player.id_player)
+            console.log('gift-item: ', player.id_player)
 
             retrieveFromSecureStore('id_player', (id_player: string) => {
 
@@ -88,19 +56,12 @@ export default function GiftVoucher() {
                     return;
                 }
 
-                console.log('gift-vouchers: ',{
+                console.log('gift-item: ',{
                     id_sender: id_player,
                     id_receiver: player.id_player,
-                    id_campaign: playerItems[selectedIndex].id_campaign,
-                    id_item: playerItems[selectedIndex].id_item,
                 })
 
-                sendItem(id_player, player.id_player, playerItems[selectedIndex].id_item, playerItems[selectedIndex].id_campaign)
-                .then(() => {
-                    showToast('success', 'Tặng thành công');
-                    router.replace('/items')
-                })
-
+            
                 setLoading(false);
             })
         })
@@ -113,76 +74,43 @@ export default function GiftVoucher() {
     return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <View style={styles.background}>
-                <SafeAreaView style={styles.header}>
-                    <MaterialCommunityIcons 
-                        name={"arrow-left"} 
-                        size={28} 
-                        color={Colors.light.mainText} 
-                        style={styles.backIcon} 
-                        onPress={() => { router.replace('/items') }} 
-                        suppressHighlighting={true} 
-                    />
-                </SafeAreaView>
-                <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
-                <View style={[styles.container, styles.titleContainer]}>
-                    <Heading type="h4">Tặng bạn bè</Heading>
-                </View>
-                <View style={[styles.container, styles.background]}>
-                    {
-                        playerItems.length > 0 ? (
-                            <>
-                            <Label>Tặng cho</Label>
-                            <Input type={"default"} placeholder={"Nhập số điện thoại, email, mã định danh"}
-                                onChangeText={setKeyword}/>
-
-                            <View style={{justifyContent: 'space-between', flexDirection:'row'}}>
-                                <Label>Vật phẩm</Label>
-                                {
-                                    selectedQuantity != -1 && <Label>Số lượng: {selectedQuantity}</Label>
-                                }
-                            </View>
-                            <ScrollView 
-                                horizontal={true} 
-                                showsHorizontalScrollIndicator={false} 
-                                alwaysBounceHorizontal={false} bounces={false}
-                                style={[styles.itemsScrollContainer]}>
-                            <View style={[styles.itemsContainer]}>
-                            {
-                                playerItems.map((item: any, index: number) => 
-                                {
-                                    const photo = item.item1_photo != undefined ? item.item1_photo : item.item2_photo;
-                                    const quantity = item.quantity_item1!= undefined? item.quantity_item1 : item.quantity_item2;
-                                    return (
-                                        <TouchableOpacity key={photo} style={selectedIndex == index ? styles.focusedItemImage : styles.notFocusedItemImage}
-                                            onPress={() => {
-                                                setSelectedIndex(index);
-                                                setSelectedQuantity(quantity);
-                                            }}>
-                                            <Image
-                                                key={photo}
-                                                source={{ uri: photo}}
-                                                style={[styles.itemImage]}
-                                            />
-                                        </TouchableOpacity>
-                                    )
-                                }
-
-                            )
-                        }
-                            </View>
-                            </ScrollView> 
-                            {
-                                loading ? <LoadingView/> :
-                                <Button onPress={handleGift} style={styles.giftButton} text={'Tặng ngay'}></Button> 
-                            }
-                            </>
-                        ) : (
-                            <EmptyView texts={['Bạn chưa có mảnh ghép nào.','Chơi trò chơi để thu thập sự kiện ngay']}/>
-                        )
-                    }
-                    
-                </View>
-    </View>
+        <SafeAreaView style={styles.header}>
+            <MaterialCommunityIcons 
+                name={"arrow-left"} 
+                size={28} 
+                color={Colors.light.mainText} 
+                style={styles.backIcon} 
+                onPress={() => { router.replace('/my-vouchers') }} 
+                suppressHighlighting={true} 
+            />
+        </SafeAreaView>
+        <View style={[styles.container, styles.titleContainer]}>
+            <Heading type="h4">Tặng mã giảm giá</Heading>
+        </View>
+            <View style={[styles.container]}>
+                <Label>Tặng cho</Label>
+                <Input type={"default"} placeholder={"Nhập số điện thoại, email"}
+                    onChangeText={setKeyword}/>
+                {
+                    loading ? <LoadingView/> :
+                    <Button onPress={handleGift} style={styles.giftButton} text={'Tặng ngay'}></Button> 
+                }
+            </View>
+            <View style={[styles.container, styles.titleContainer]}>
+                <Heading type="h4">Sử dụng mã giảm giá</Heading>
+            </View>
+            <Paragraph>Online</Paragraph>
+            <TouchableOpacity style={[styles.codeButton, styles.container, {backgroundColor: Colors.gray._100}]} activeOpacity={0.6} 
+                onPress={() => {
+                    Clipboard.setString(voucher.code); 
+                    Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
+                }}>
+                <Paragraph type={'p2'}>{voucher.code}</Paragraph>
+                <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
+            </TouchableOpacity>
+            <Image source={{uri: voucher.qr_code || 'https://res.cloudinary.com/dklt21uks/image/upload/v1725617785/quizus/w6z4afxecugisynvpiwy.png'}} style={styles.banner} />
+            <Button text={'Đổi quà online'}></Button>
+        </View>
     </TouchableWithoutFeedback>
     )
 }
@@ -204,75 +132,22 @@ const styles = StyleSheet.create({
         paddingBottom: -10,
     },
     banner: {
-        width: '100%',
-        height: 140,
-        position: 'relative',
-        top: Platform.OS === 'android' ? 50 : 0,
-        zIndex: -1,
+        width: 100,
+        height: 100,
     },
     backIcon: {
         position: 'relative',
         left: 20,
     },
     titleContainer: {
-        marginVertical: 20,
+        marginBottom: 20,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    itemsScrollContainer:{
-        borderColor: Colors.light.subText,
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 10,
-        width: '100%',
-        maxHeight: 100,
-        minHeight: 80,
-    },
-    itemsContainer: {
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        flexDirection: 'row',
-        gap: 10,
-        width: '100%',
-        flexWrap: 'wrap',
-        // backgroundColor: 'green'
-    },
-    itemImage: {
-        width: 70,
-        height: 70,
-        borderRadius: 8,
-    },
-    itemName: {
-        fontSize: 16,
-        color: Colors.light.mainText,
-    },
-    focusedItemImage:{
-        width: 80,
-        height: 80,
-        backgroundColor: Colors.light.secondary,
-        borderColor: Colors.light.primary,
-        borderWidth: 1,
-        flexDirection:'row',
-        justifyContent: 'center',
-        alignContent: 'center',
-        paddingTop: 4,
-        borderRadius: 8,
-    },
-    notFocusedItemImage:{
-        width: 80,
-        height: 80,
-        borderColor: Colors.light.background,
-        borderWidth: 1,
-        flexDirection:'row',
-        justifyContent: 'center',
-        alignContent: 'center',
-        paddingTop: 4,
-        borderRadius: 8,
-    },
     giftButton:{
-        marginTop: 'auto'
+        // marginBottom: 50
     },
     overlayContainer: {
         position: 'absolute',
@@ -286,5 +161,18 @@ const styles = StyleSheet.create({
         opacity: 0.5,
         zIndex: 100
       },
+    codeButton: {
+        marginHorizontal: 15,
+        marginBottom: 10,
+        borderRadius: 6,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        height: 50,
+        backgroundColor: Colors.yellow,
+        color: Colors.light.mainText,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
 });
 
