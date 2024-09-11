@@ -1,6 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import eventEmitter from './EventEmitter'; // Đảm bảo EventEmitter đã được cài đặt và import đúng cách
 import config from './../../constants/config'
+import { showToast } from '@/components/ToastBar';
 class NotificationSocket {
   private socket: Socket | null = null;
 
@@ -20,6 +21,7 @@ class NotificationSocket {
     // Lắng nghe sự kiện từ socket khi có thông báo mới
     this.socket?.on('notification', (data) => {
       console.log('Received notification from server:', data); // Debug thông báo
+      showToast('info', "Bạn có thông báo mới"); // Show toast with the notification message
       eventEmitter.emit('notification', data); // Phát sự kiện 'notification' cho tất cả listener
     });
 

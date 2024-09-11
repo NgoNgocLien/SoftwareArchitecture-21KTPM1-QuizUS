@@ -10,7 +10,7 @@ app.use(express.json());
 
 const io = new Server(server, {
     cors: {
-        origin: "http://172.16.100.127:3000",
+        origin: "http://10.0.1.35:3000",
         methods: ["GET", "POST"],
     },
 });
@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
 
 app.post('/emit-notification', (req, res) => {
     const { noti } = req.body;
-    // console.log(noti)
+    console.log(noti)
     const user = getUser(noti.id_receiver);
     if (user) {
         io.to(user.socketId).emit('notification', { noti });
