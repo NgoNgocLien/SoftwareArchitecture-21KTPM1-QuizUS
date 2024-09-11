@@ -4,16 +4,21 @@ import config from './../constants/config';
 class GameSocket {
   private socket: Socket | null = null;
 
-  public connect(id_player: string) {
+  public connect(id_player: string, name_player: string) {
     if (!this.socket) {
       console.log("Connecting to Game server...");
       this.socket = io(config.GAME_BE, {
         transports: ['websocket'],
+        query: { 
+          id_player: id_player,
+          name_player: name_player
+        },
         reconnection: true,
         reconnectionAttempts: Infinity,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
         timeout: 20000,
+        path: '/game'
       });
     }
 

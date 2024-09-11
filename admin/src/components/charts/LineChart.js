@@ -16,9 +16,13 @@ function LineChart() {
   useEffect(() => {
       const getPlayerData = async () => {
         const response = await getPlayerStats();
-        const reversedPlayerCount = response?.recentPlayerCount?.reverse();
-        const reversedPlayerGames = response?.recentPlayerGames?.reverse();
-        const reversedItemGifts = response?.recentItemGifts?.reverse();
+        // const reversedPlayerCount = response?.recentPlayerCount?.reverse();
+        // const reversedPlayerGames = response?.recentPlayerGames?.reverse();
+        // const reversedItemGifts = response?.recentItemGifts?.reverse();
+
+        const reversedPlayerCount = response?.recentPlayerCount ? response.recentPlayerCount : [];
+        const reversedPlayerGames = response?.recentPlayerGames ? response.recentPlayerGames : [];
+        const reversedItemGifts = response?.recentItemGifts ? response.recentItemGifts : [];
 
         setPlayerData({
           recentPlayerCount: reversedPlayerCount,
@@ -60,10 +64,15 @@ function LineChart() {
     ],
   };
 
+  // const maxDataValue = Math.max(
+  //   ...playerData?.recentPlayerCount,
+  //   ...playerData?.recentPlayerGames,
+  //   ...playerData?.recentItemGifts
+  // );
   const maxDataValue = Math.max(
-    ...playerData?.recentPlayerCount,
-    ...playerData?.recentPlayerGames,
-    ...playerData?.recentItemGifts
+    ...(playerData?.recentPlayerCount.length ? playerData.recentPlayerCount : [0]),
+    ...(playerData?.recentPlayerGames.length ? playerData.recentPlayerGames : [0]),
+    ...(playerData?.recentItemGifts.length ? playerData.recentItemGifts : [0])
   );
   const suggestedMax = maxDataValue + 10;
 

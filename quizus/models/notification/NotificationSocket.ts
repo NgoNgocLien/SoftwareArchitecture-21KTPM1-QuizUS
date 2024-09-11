@@ -1,22 +1,22 @@
 import { io, Socket } from 'socket.io-client';
-import eventEmitter from './EventEmitter'; // Đảm bảo EventEmitter đã được cài đặt và import đúng cách
+import eventEmitter from './EventEmitter'; 
 import config from './../../constants/config'
 import { showToast } from '@/components/ToastBar';
 class NotificationSocket {
   private socket: Socket | null = null;
 
-  // Kết nối tới socket chỉ khi chưa có kết nối
+
   public connect(id_player: string) {
     if (!this.socket) {
       console.log("Connecting to Socket.IO server...");
       this.socket = io(config.NOTIFICATION_BE, { 
-        transports: ['websocket'], // Ensure websocket is used for transport
+        transports: ['websocket'],
         query: { id_player: id_player },
-        reconnection: true, // Enable automatic reconnection
-        reconnectionAttempts: Infinity, // Unlimited reconnection attempts
-        reconnectionDelay: 1000, // Delay in ms before attempting to reconnect
-        reconnectionDelayMax: 5000, // Maximum delay between reconnection attempts
-        timeout: 20000, // 20 seconds timeout for connection before failing
+        reconnection: true, 
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000, 
+        reconnectionDelayMax: 5000, 
+        timeout: 20000,
         path: '/notification',
       });
       

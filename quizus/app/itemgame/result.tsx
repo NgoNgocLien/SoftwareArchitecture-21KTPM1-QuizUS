@@ -71,7 +71,7 @@ export default function ItemGameResult() {
 
         <View style={styles.headingContainer}>
             <Paragraph type={'p2'} color={Colors.feedback.warning}>Chúc mừng bạn đã nhận được</Paragraph>
-            <Heading type={"h1"} color={Colors.feedback.warning}>Mảnh ghép {isItem1 ? 1 : 2}/2</Heading>
+            <Heading type={"h1"} color={Colors.feedback.warning}>Mảnh ghép {isItem1 ? 1 : 2}</Heading>
         </View>
         <Paragraph type={'p2'} color={Colors.light.background} style={{textAlign: 'center'}}>Đây là 1 trong 2 mảnh ghép để đổi voucher Grab. Thu thập đủ 2 mảnh ghép để đổi voucher ngay nhé!</Paragraph>
 

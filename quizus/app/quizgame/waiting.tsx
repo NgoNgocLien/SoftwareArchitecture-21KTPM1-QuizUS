@@ -25,21 +25,20 @@ export default function QuizGameDetail() {
 
   useEffect(() => {
     retrieveFromSecureStore("id_player", (id_player: string) =>{
-      console.log(id_player)
-      gameSocket.connect(id_player);
+      retrieveFromSecureStore("name_player", (name_player: string) =>{
 
-      gameSocket.on('player-added', (playerName) => {
-        setPlayerList((prevList) => [...prevList, playerName]);
+       gameSocket.connect(id_player, name_player);
+
+       gameSocket.on('connect', () => {
+        console.log(`${name_player} has connected to the socket server`);
+        setPlayerList((prevList) => [...prevList, { id_player, name_player }]);
       });
-  
-      gameSocket.on('player-removed', (playerId) => {
-        setPlayerList((prevList) => prevList.filter(player => player.id !== playerId));
-      });
+
+      })
     })
     
     return () => {
-      gameSocket.off('player-added');
-      gameSocket.off('player-removed');
+
     };
   }, []);
 
@@ -50,6 +49,8 @@ export default function QuizGameDetail() {
       <Heading type={"h3"} style={{textAlign: 'center'}}>Đang có {playerList?.length} người chơi</Heading>
       <Paragraph>{playerList.map(item => item.name).join(', ')}</Paragraph>
       <Button text="Quay trở lại" onPress={() => {
+          gameSocket.disconnect();
+
             router.replace({
               pathname: '/campaign',
               params: {

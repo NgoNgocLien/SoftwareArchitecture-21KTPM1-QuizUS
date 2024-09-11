@@ -16,6 +16,22 @@ const getGameById = async (id) => {
     }
 }
 
+const updateGame = async (updatedData) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/game`;
+    const response = await axios.put(url, updatedData);
+    
+    if (response?.data)
+      return response.data;
+    else
+      return null;
+  }
+  catch (err) {
+    console.log(err.message);
+    return null;
+  }
+}
+
 export {
-    getGameById
+    getGameById, updateGame
 };

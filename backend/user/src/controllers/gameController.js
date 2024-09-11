@@ -26,6 +26,26 @@ const get = async (req, res) => {
         console.error('Error:', error);
         errorCode(res);
     }
-  };
+};
 
-module.exports = { get }
+const update = async (req, res) => {
+    try {
+        const game = await model.game.findOne({
+            where: {
+                id_game: req.body.id_game,
+            }
+        })
+
+        if (game) {
+            game.name = req.body.name || game.name;
+            const updatedgame = await game.save();
+            successCode(res, updatedgame, "Cập nhật thành công")
+        } else
+            failCode(res, null, "id_game không hợp lệ")
+    } catch (err) {
+        console.log(err)
+        errorCode(res)
+    }
+}
+
+module.exports = { get, update }

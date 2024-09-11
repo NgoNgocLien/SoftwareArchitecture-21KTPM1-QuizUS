@@ -17,10 +17,15 @@ function BarChart() {
   useEffect(() => {
     const getBudgetData = async () => {
       const response = await getBudgetStats();
-      const reversedRestaurant = response?.restaurant?.reverse();
-      const reversedCafe = response?.cafe?.reverse();
-      const reversedShopping = response?.shopping?.reverse();
-      const reversedEntertainment = response?.entertainment?.reverse();
+      // const reversedRestaurant = response?.restaurant?.reverse();
+      // const reversedCafe = response?.cafe?.reverse();
+      // const reversedShopping = response?.shopping?.reverse();
+      // const reversedEntertainment = response?.entertainment?.reverse();
+
+      const reversedRestaurant = response?.restaurant ? response.restaurant.reverse() : [];
+      const reversedCafe = response?.cafe ? response.cafe.reverse() : [];
+      const reversedShopping = response?.shopping ? response.shopping.reverse() : [];
+      const reversedEntertainment = response?.entertainment ? response.entertainment.reverse() : [];
 
       setBudgetData({
         restaurant: reversedRestaurant,
@@ -41,7 +46,8 @@ function BarChart() {
     ...budgetData?.shopping,
     ...budgetData?.entertainment
   ];
-  const maxBudget = Math.max(...allBudgets);
+  //const maxBudget = Math.max(...allBudgets);
+  const maxBudget = Math.max(...allBudgets, 0);
   const stepSize = 1000000;
   const suggestedMax = Math.ceil(maxBudget / stepSize) * stepSize + stepSize;
 
