@@ -164,22 +164,24 @@ export function VoucherCard({
                         )
                     ) : (
                         is_used ? (
-                            <View style={[styles.exchangeButton, {backgroundColor: Colors.gray._200}]}>
+                            <View style={[styles.exchangeButton, {backgroundColor: Colors.gray._200, justifyContent: 'center'}]}>
                                 <Paragraph type={'p2'} color={ Colors.gray._500}>Đã sử dụng</Paragraph>
                             </View>
                         )  : (
-                        (Date.now() < voucher.expired_date.getTime()) && 
-                        <Button text={"Sử dụng/Tặng"} size={'small'}
-                            onPress={() =>{
-                                console.log(id_playerVoucher);
-                                router.replace({
-                                    pathname: '/gift-voucher',
-                                    params: {
-                                        voucher: JSON.stringify(voucher),
-                                        id_playerVoucher: id_playerVoucher
-                                    }
-                                })
-                            }}></Button>
+                        (Date.now() < voucher.expired_date.getTime()) ? 
+                        <View style={{marginHorizontal: 15}}>
+                            <Button text={"Sử dụng"} size={'small'}
+                                onPress={() =>{
+                                    console.log(id_playerVoucher);
+                                    router.push({
+                                        pathname: '/voucher',
+                                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id }
+                                    })
+                                }} />
+                        </View> :
+                        <View style={[styles.exchangeButton, {backgroundColor: Colors.gray._200, justifyContent: 'center'}]}>
+                            <Paragraph type={'p2'} color={ Colors.gray._500}>Hết hạn</Paragraph>
+                        </View>
                         )
                         
                     )

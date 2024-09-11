@@ -32,9 +32,9 @@ export default function RootLayout() {
 
       retrieveFromSecureStore('id_player', setIdPlayer);
       if (id_player) {
-        router.push('/(tabs)');
+        router.replace('/(tabs)');
       } else {
-        router.push('/login'); 
+        router.replace('/login'); 
       }
 
       // router.push('/(tabs)');
