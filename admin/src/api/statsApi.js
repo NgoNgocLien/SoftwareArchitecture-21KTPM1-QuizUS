@@ -44,7 +44,33 @@ const getPlayerByGameStats = async () => {
   }
 }
 
+const getPlayerStats = async () => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/player`;
+    const response = await axios.get(url);
+    console.log(response)
+    return response.data;
+  }
+  catch (err) {
+    console.log(err.message);
+    return []
+  }
+}
+
+const getBudgetStats = async () => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/budget`;
+    const response = await axios.get(url);
+    console.log(response)
+    return response.data;
+  }
+  catch (err) {
+    console.log(err.message);
+    return []
+  }
+}
+
 
 export {
-  getStats, getVoucherStats, getPlayerByGameStats
+  getStats, getVoucherStats, getPlayerByGameStats, getPlayerStats, getBudgetStats
 };

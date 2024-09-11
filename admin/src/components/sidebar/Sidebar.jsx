@@ -26,7 +26,7 @@ export default function Sidebar() {
                     <span className="link-text">Thống kê</span>
                 </li>
 
-                <li className={focus === "player" || location.pathname.includes("/player") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
+                <li className={focus === "player" || location.pathname.includes("/player") || location.pathname.includes("/edit-user") ? "sidebar-nav-item focused" : "sidebar-nav-item"}
                     onClick={() => handleClick("player", "/player")}>
                     <img src="/icons/user.svg" alt="player" />
                     {/* <Link to="/player" className="link-text">Người chơi</Link> */}

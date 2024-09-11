@@ -12,7 +12,7 @@ export default function ManageGame() {
 
         <button className='game'>
           <img className='game-img' src='/images/lacxu.png' alt='Trắc nghiệm' />
-          <h6 className='game-name'>Trắc nghiệm</h6>
+          <h6 className='game-name'>Lắc vật phẩm</h6>
         </button>
       </div>
     )

@@ -1,32 +1,8 @@
 import React, { useState } from 'react';
 import "../styles/common.css";
 import "../styles/input.css";
-import { useNavigate } from 'react-router-dom';
 
-export default function CreateEvent() {
-    const navigate = useNavigate();
-    const [selectedOption, setSelectedOption] = useState('');
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [start, setStart] = useState('');
-    const [end, setEnd] = useState('');
-    const [amount, setAmount] = useState('');
-    const [gameType, setGameType] = useState('Trắc nghiệm');
-
-    const onNext = () => {
-        const prefix = gameType === 'Trắc nghiệm' ? '/create-game' : '/create-shake';
-        const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
-        navigate(url);
-    }
-    console.log(gameType)
-
-    const onTypeChanged = (e) => {
-        setGameType(e.currentTarget.value);
-    }
-
-    const handleOption = (e) => {
-        setSelectedOption(e.target.value);
-    };
+export default function EditEvent() {
 
     return (
         <div className="ctn">
@@ -136,5 +112,5 @@ export default function CreateEvent() {
             </div>
 
         </div>
-    );
+    )
 }

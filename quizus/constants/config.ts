@@ -7,9 +7,21 @@ const GAME_BE = 'http://10.0.0.212:8000/game';
 const CAMPAIGN_BE = 'http://10.0.0.212:8000/campaign';
 
 // ml
+<<<<<<< HEAD
 // const USER_BE = 'http://192.168.2.177:8000/user';
 // const GAME_BE = 'http://192.168.2.177:8000/game';
 // const CAMPAIGN_BE = 'http://192.168.2.177:8000/campaign';
+=======
+const USER_BE = 'http://10.0.1.35:8000/user';
+const GAME_BE = 'http://10.0.1.35:8000/game';
+const CAMPAIGN_BE = 'http://10.0.1.35:8000/campaign';
+const NOTIFICATION_BE = 'http://10.0.1.35:8004/'
+
+// simple
+// const USER_BE = 'http://192.168.0.225:8000/user';
+// const GAME_BE = 'http://192.168.0.225:8000/game';
+// const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
+>>>>>>> 75e9483ce5402c45b23b97a62ffa3379e9d5e91f
 
 const NOTI_BE = '';
 
@@ -31,7 +43,7 @@ export default {
   USER_BE,
   CAMPAIGN_BE,
   GAME_BE,
-  NOTI_BE,
+  NOTIFICATION_BE,
 
   DURATION,
   QUIZ_SCORE,

@@ -11,7 +11,7 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <RootSiblingParent>
+    // <RootSiblingParent>
     <Tabs
         screenOptions={{
             tabBarActiveTintColor: Colors['light'].primary,
@@ -101,7 +101,7 @@ export default function TabLayout() {
             }}
         />
     </Tabs>
-    </RootSiblingParent> 
+    // </RootSiblingParent> 
   );
 }
 

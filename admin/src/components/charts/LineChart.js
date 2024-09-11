@@ -1,38 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { getPlayerStats } from '../../api/statsApi';
 
 // Register necessary components for chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function LineChart() {
+  const [playerData, setPlayerData] = useState({
+    recentPlayerCount: [],
+    recentPlayerGames: [],
+    recentItemGifts: [],
+  });
+
+  useEffect(() => {
+      const getPlayerData = async () => {
+        const response = await getPlayerStats();
+        const reversedPlayerCount = response.recentPlayerCount.reverse();
+        const reversedPlayerGames = response.recentPlayerGames.reverse();
+        const reversedItemGifts = response.recentItemGifts.reverse();
+
+        setPlayerData({
+          recentPlayerCount: reversedPlayerCount,
+          recentPlayerGames: reversedPlayerGames,
+          recentItemGifts: reversedItemGifts
+        });
+      }
+      getPlayerData();
+  }, [])
+
+  const currentMonth = new Date().getMonth() + 1;
+  const labels = Array.from({ length: currentMonth }, (_, i) => `Tháng ${i + 1}`);
+
   // Data for the chart
   const data = {
-    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8'], // Most recent 8 months
+    labels: labels, 
     datasets: [
       {
         label: 'Đăng ký',
-        data: [10, 15, 20, 25, 30, 35, 30, 25], // Amount of money in millions for "Đăng ký"
+        data: playerData.recentPlayerCount, 
         borderColor: '#007AFF', // Blue color
         backgroundColor: 'rgba(0, 122, 255, 0.2)',
         tension: 0.4,
       },
       {
         label: 'Tham gia sự kiện',
-        data: [5, 10, 15, 20, 25, 30, 20, 15], // Amount of money in millions for "Tham gia sự kiện"
+        data: playerData.recentPlayerGames, 
         borderColor: '#34C759', // Green color
         backgroundColor: 'rgba(52, 199, 89, 0.2)',
         tension: 0.4,
       },
       {
         label: 'Trao đổi vật phẩm',
-        data: [8, 12, 18, 22, 28, 32, 25, 18], // Amount of money in millions for "Trao đổi vật phẩm"
+        data: playerData.recentItemGifts,
         borderColor: '#FF3B30', // Red color
         backgroundColor: 'rgba(255, 59, 48, 0.2)',
         tension: 0.4,
       },
     ],
   };
+
+  const maxDataValue = Math.max(
+    ...playerData.recentPlayerCount,
+    ...playerData.recentPlayerGames,
+    ...playerData.recentItemGifts
+  );
+  const suggestedMax = maxDataValue + 10;
 
   // Chart options
   const options = {
@@ -44,7 +77,7 @@ function LineChart() {
       },
       title: {
         display: true,
-        text: 'Biểu đồ theo dõi số lượng người chơi theo tháng (triệu đồng)', // Chart title
+        text: 'Biểu đồ theo dõi số lượng người chơi theo tháng', // Chart title
       },
     },
     scales: {
@@ -52,10 +85,10 @@ function LineChart() {
         beginAtZero: true,
         ticks: {
           callback: function (value) {
-            return value + ' triệu'; // Show Y-axis as "triệu đồng"
+            return value; // Show Y-axis
           },
         },
-        suggestedMax: 40, // Set the max value to 40 million
+        suggestedMax: suggestedMax,
       },
     },
   };

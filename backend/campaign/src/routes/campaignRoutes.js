@@ -21,7 +21,8 @@ const {
     unlike,
     getCampaignsOfVoucher,
     getStats,
-    getPlayerStats
+    getPlayerStats, 
+    getBudgetStatsByField
 } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -48,8 +49,11 @@ router.get('/search/voucher/:id_voucher', getCampaignsOfVoucher);
 // Tìm kiếm chiến dịch của một brand
 router.get('/search/:id_brand/:keyword', searchByBrand);
 
-// Thống kê số lượng người chơi đăng ký/ tham gia sự kiện/ trao đổi vật phẩm trong 8 tháng gần nhất
+// Thống kê số lượng người chơi đăng ký/ tham gia sự kiện/ trao đổi vật phẩm từ đầu năm đến tháng gần nhất
 router.get('/player', getPlayerStats);
+
+// Thống kê ngân sách đã sử dụng theo lĩnh vực từ đầu năm đến tháng hiện tại
+router.get('/budget', getBudgetStatsByField);
 
 // Lấy thông tin của một chiến dịch
 router.get('/:id_campaign', getById);
@@ -74,5 +78,8 @@ router.post('/like', like);
 
 // Bỏ yêu thích campaign
 router.post('/unlike', unlike);
+
+// Thống kê ngân sách đã sử dụng theo lĩnh vực từ đầu năm đến tháng hiện tại
+router.get('/budget')
 
 module.exports = router;
