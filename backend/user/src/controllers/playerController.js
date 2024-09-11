@@ -36,6 +36,7 @@ const otp = async (req, res) => {
         const player = await model.player.create({
             phone: phoneNumber,
             pwd: hashedPassword,
+            creation_time: new Date()
         })
 
         console.log(player)

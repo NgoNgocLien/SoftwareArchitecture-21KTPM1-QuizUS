@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
-
+import { useNavigate } from 'react-router-dom';
 import { getAll } from '../api/campaignApi';
 
 export default function Manageevent() {
+    const navigate = useNavigate();
     const storedBrand = localStorage.getItem('brand');
     const brand = storedBrand ? JSON.parse(storedBrand) : null;
     const [data, setData] = useState([]);
@@ -48,7 +49,7 @@ export default function Manageevent() {
     return (
         <div>
             <div className="add-event-container">
-                <button className="add-event-btn">
+                <button className="add-event-btn" onClick={() => {navigate('/create-event')}}>
                     <img src="/icons/plus.svg" alt="add-event-icon" className="add-event-icon" />
                     Thêm sự kiện
                 </button>

@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
 import "../styles/common.css";
 import "../styles/input.css";
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateEvent() {
-    // Dropdown voucher
+    const navigate = useNavigate();
     const [selectedOption, setSelectedOption] = useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
+    const [amount, setAmount] = useState('');
+    const [gameType, setGameType] = useState('Trắc nghiệm');
+
+    const onNext = () => {
+        const prefix = gameType === 'Trắc nghiệm' ? '/create-game' : '/create-shake';
+        const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
+        navigate(url);
+    }
+    console.log(gameType)
+
+    const onTypeChanged = (e) => {
+        setGameType(e.currentTarget.value);
+    }
 
     const handleOption = (e) => {
         setSelectedOption(e.target.value);
@@ -31,7 +49,7 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label id="name">Tên sự kiện</label>
-                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" required/>
+                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" required value={name} onChange={(e) => {setName(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -39,19 +57,19 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label id="description">Mô tả</label>
-                        <textarea id="description" placeholder="Mô tả sự kiện" maxLength="500"></textarea>
+                        <textarea id="description" placeholder="Mô tả sự kiện" maxLength="500"required value={description} onChange={(e) => {setDescription(e.target.value)}}></textarea>
                     </div>
                 </div>
 
                 {/* Date time */}
                 <div className='form-row'>
                     <div className="row-input">
-                        <label id="start_datetime">Ngày bắt đầu</label>
-                        <input type="datetime-local" id="start_datetime" placeholder="Chọn ngày bắt đầu" />
+                        <label id="start_datetime" >Ngày bắt đầu</label>
+                        <input type="datetime-local" id="start_datetime" placeholder="Chọn ngày bắt đầu" required value={start} onChange={(e) => {setStart(e.target.value)}}/>
                     </div>
                     <div className="row-input">
                         <label id="end_datetime">Ngày kết thúc</label>
-                        <input type="datetime-local" id="end_datetime" placeholder="Chọn ngày bắt đầu" />
+                        <input type="datetime-local" id="end_datetime" placeholder="Chọn ngày bắt đầu" required value={end} onChange={(e) => {setEnd(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -73,7 +91,7 @@ export default function CreateEvent() {
 
                     <div className="row-input">
                         <label id="max_amount_voucher">Số lượng</label>
-                        <input type="number" />
+                        <input type="number" required value={amount} onChange={(e) => {setAmount(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -84,20 +102,25 @@ export default function CreateEvent() {
                         <input type="number" /> {/* Lấy số lượng x price voucher */}
                     </div>
                 </div>
-
+                
                 {/* Game */}
-                <div className='radio-row'>
-                    <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Trò chơi</label>
-                    <input type="radio" value="Trắc nghiệm" id="quiz" />
-                    <label for="quiz">Trắc nghiệm</label>
-                    <input type="radio" value="Lắc vật phẩm" id="shake" />
-                    <label for="shake">Lắc vật phẩm</label>
-                </div>
+                <div className='form-row'>
+                    <div className='form-group'>
+                        <label>Trò chơi</label>
+                        <div className='radio-group'>
+                            <input type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                            <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Trắc nghiệm</label>
 
+                            <input type="radio" value="Lắc vật phẩm" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                            <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Lắc vật phẩm</label>
+                        </div>
+                    </div>
+                </div>
+                
                 {/* Buttons */}
                 <div className="button-group">
-                    <button className="cancel-btn">Hủy</button>
-                    <button className="save-btn">Tiếp theo</button>
+                    <button className="cancel-btn" onClick={() => {navigate('/event')}}>Hủy</button>
+                    <button className="save-btn" onClick={onNext}>Tiếp theo</button>
                 </div>
 
             </div>

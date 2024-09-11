@@ -20,7 +20,8 @@ const {
     like,
     unlike,
     getCampaignsOfVoucher,
-    getStats
+    getStats,
+    getPlayerStats
 } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -46,6 +47,9 @@ router.get('/search/voucher/:id_voucher', getCampaignsOfVoucher);
 
 // Tìm kiếm chiến dịch của một brand
 router.get('/search/:id_brand/:keyword', searchByBrand);
+
+// Thống kê số lượng người chơi đăng ký/ tham gia sự kiện/ trao đổi vật phẩm trong 8 tháng gần nhất
+router.get('/player', getPlayerStats);
 
 // Lấy thông tin của một chiến dịch
 router.get('/:id_campaign', getById);
