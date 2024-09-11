@@ -5,6 +5,7 @@ const PlayerLikeCampaign = require('../models/playerLikeCampaign');
 const PlayerGame = require('../models/playerGame');
 const PlayerVoucher = require('../models/playerVoucher');
 const Quiz = require('../models/quiz');
+const ItemGift = require('../models/itemGift');
 
 // Lấy tất cả các chiến dịch
 const getAll = async (req, res) => {
@@ -476,6 +477,57 @@ const getStats = async (req, res) => {
     }
 };
 
+const getEightMonthsAgo = () => {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 8);
+    return currentDate;
+};
+
+// Thống kê số lượng người chơi đăng ký/ tham gia sự kiện/ trao đổi vật phẩm trong 8 tháng gần nhất
+const getPlayerStats = async (req, res) => {
+    try {
+        const eightMonthsAgo = getEightMonthsAgo();
+        
+        // 1. Số lượng người chơi đăng ký trong 8 tháng gần nhất
+        const playersResponse = await axios.get('http://gateway_proxy:8000/user/api/player');
+        const players = playersResponse.data;
+
+        const recentPlayers = players.filter(player => {
+            const creationTime = new Date(player.creation_time);
+            return creationTime >= eightMonthsAgo;
+        });
+        const recentPlayerCount = recentPlayers.length;
+
+        // 2. Số lượng người chơi tham gia sự kiện trong 8 tháng gần nhất 
+        const campaigns = await Campaign.find({
+            start_datetime: { $gte: eightMonthsAgo }
+        }).select('_id'); 
+
+        const campaignIds = campaigns.map(campaign => campaign._id);
+
+        const recentPlayerGames = await PlayerGame.countDocuments({
+            id_campaign: { $in: campaignIds }
+        });
+
+        // 3. Số lượng người chơi tặng item trong 8 tháng gần nhất (ItemGift)
+        const recentItemGifts = await ItemGift.countDocuments({
+            gift_time: { $gte: eightMonthsAgo }
+        });
+
+        res.status(200).json({
+            recentPlayerCount,         
+            recentPlayerGames,         
+            recentItemGifts            
+        });
+    } catch (error) {
+        console.error('Error fetching statistics:', error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAll,
     getInProgress,
@@ -493,5 +545,6 @@ module.exports = {
     unlike,
     getCampaignsOfVoucher,
     getStats,
-    getCampaignsOfVoucher
+    getCampaignsOfVoucher,
+    getPlayerStats
 };
