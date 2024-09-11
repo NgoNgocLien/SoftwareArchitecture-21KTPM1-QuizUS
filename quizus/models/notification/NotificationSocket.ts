@@ -8,9 +8,15 @@ class NotificationSocket {
   // Kết nối tới socket chỉ khi chưa có kết nối
   public connect(id_player: string) {
     if (!this.socket) {
-      console.log("abc")
+      console.log("Connecting to Socket.IO server...");
       this.socket = io(config.NOTIFICATION_BE, { 
-        transports: ['websocket'],
+        transports: ['websocket'], // Ensure websocket is used for transport
+        query: { id_player: id_player },
+        reconnection: true, // Enable automatic reconnection
+        reconnectionAttempts: Infinity, // Unlimited reconnection attempts
+        reconnectionDelay: 1000, // Delay in ms before attempting to reconnect
+        reconnectionDelayMax: 5000, // Maximum delay between reconnection attempts
+        timeout: 20000, // 20 seconds timeout for connection before failing
       });
       
     }
@@ -34,7 +40,7 @@ class NotificationSocket {
     });
 
     this.socket?.on('connect_error', (err) => {
-      console.error('Connection error:', err.message);
+      console.error('Connection error:', err);
     });
   }
 

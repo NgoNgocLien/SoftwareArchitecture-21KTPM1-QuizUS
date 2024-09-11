@@ -70,21 +70,15 @@ cron.schedule('*/1 * * * *', async () => {
 
     try {
         // get all noti from PlayerNoti that noti_time = now (just compare day month year)
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-
-        // Fetch notifications from the database that are scheduled for today
         const notifications = await playerNoti.find({
-            type:'campaign',
-            noti_time: {
-                $gte: now,
-                $lt: new Date(now.getTime() + 24 * 60 * 60 * 1000) // Up to midnight the next day
-            }
+            type: 'campaign'
         });
 
-        console.log(notifications)
+        const result = notifications.filter(noti => isSameDay(new Date(noti.noti_time), new Date(Date.now())))
 
-        for (const noti of notifications) {
+        console.log(result)
+
+        for (const noti of result) {
             await notify({
                 id_receiver: noti.id_receiver,
                 content: noti.content,

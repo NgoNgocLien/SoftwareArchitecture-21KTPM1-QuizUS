@@ -37,7 +37,14 @@ const getUser = (id_player) => {
 io.on("connection", (socket) => {
     console.log('A user connected:', socket.id);
     console.log('Current online users:', onlineUsers);
-    
+
+    // const id_player = socket.handshake.query.id_player;
+    // if (id_player) {
+    //     addNewUser(id_player, socket.id); // Automatically add user if id_player is available on connect
+    //     console.log('User added from connection:', { id_player, socketId: socket.id });
+    //     console.log('Current online users:', onlineUsers);
+    // }
+
     // Lắng nghe khi người dùng mới kết nối
     socket.on("newUser", (id_player) => {
         addNewUser(id_player, socket.id);

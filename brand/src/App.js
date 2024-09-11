@@ -18,6 +18,7 @@ import CreateEvent from './pages/CreateEvent';
 import CreateGame from './pages/CreateGame';
 import CreateShake from './pages/CreateShake';
 import EditEvent from './pages/EditEvent';
+import CreateVoucher from './pages/CreateVoucher';
 
 function Layout() {
   return (
@@ -66,6 +67,7 @@ function App() {
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/create-game" element={<CreateGame />} />
           <Route path="/create-shake" element={<CreateShake />} />
+          <Route path="/create-voucher" element={<CreateVoucher />} />
         </Route>
       </Routes>
     </Router>
