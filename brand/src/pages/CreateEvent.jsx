@@ -18,7 +18,6 @@ export default function CreateEvent() {
     const [selectedVoucher, setSelectedVoucher] = useState(null);
     const [budget, setBudget] = useState(0);
     const [avatar, setAvatar] = useState('');
-    const [photo, setPhoto] = useState('');
     const [avatarFile, setAvatarFile] = useState(null);
 
 
@@ -30,7 +29,6 @@ export default function CreateEvent() {
 
                 if (imageUrl) {
                     console.log('imageUrl:', imageUrl);
-                    setPhoto(imageUrl);
                 } else {
                     console.error('Failed to upload image');
                 }
