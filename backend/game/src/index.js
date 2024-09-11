@@ -1,27 +1,33 @@
+const { Server } = require("socket.io");
 const express = require('express');
-const mongoose = require('mongoose');
-const os = require('os');
-require('dotenv').config();
-
-const port = 8002;
-const dbURI = process.env.MONGODB_ATLAS_URI
-
+const http = require('http');
 const app = express();
+
+const server = http.createServer(app);
+
 app.use(express.json());
 
-mongoose.connect(dbURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
-    console.log('Connected to database');
-}).catch(err => {
-    console.error('Failed to connect to database:', err);
+const io = new Server(server, {
+    cors: {
+        origin: "http://192.168.1.5:3000",
+        methods: ["GET", "POST"],
+    },
 });
 
-app.listen(port, () => {
-    console.log(`App running on port ${port}`);
+io.on('connection', (socket) => {
+    console.log(`Player connected: ${socket.id}`);
+
+    socket.on('join-game', (playerName) => {
+        console.log(`${playerName} joined the game`);
+        io.emit('player-added', playerName);
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`Player disconnected: ${socket.id}`);
+        io.emit('player-removed', socket.id);
+    });
 });
 
-app.use('/', (req, res) => {
-    res.send(`Hello from ${os.hostname()}!`);
+server.listen(8005, () => {
+    console.log('Socket.IO Game server with API is listening on port 8005');
 });

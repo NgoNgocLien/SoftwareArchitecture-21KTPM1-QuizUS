@@ -8,10 +8,11 @@
 // const NOTIFICATION_BE = 'http://10.0.0.212:8004';
 
 // ml
-const USER_BE = 'http://10.0.1.35:8000/user';
-const GAME_BE = 'http://10.0.1.35:8000/game';
-const CAMPAIGN_BE = 'http://10.0.1.35:8000/campaign';
-const NOTIFICATION_BE = 'http://10.0.1.35:8004/';
+const USER_BE = 'http://192.168.1.5:8000/user';
+// const GAME_BE = 'http://192.168.1.5:8000/game';
+const CAMPAIGN_BE = 'http://192.168.1.5:8000/campaign';
+const NOTIFICATION_BE = 'http://192.168.1.5:8000';
+const GAME_BE = 'http://192.168.1.5:8000';
 
 // simple
 // const USER_BE = 'http://192.168.0.225:8000/user';
@@ -20,7 +21,7 @@ const NOTIFICATION_BE = 'http://10.0.1.35:8004/';
 
 const NOTI_BE = '';
 
-const DURATION = 60000;
+const DURATION = 20000;
 
 const QUIZ_SCORE = 100;
 

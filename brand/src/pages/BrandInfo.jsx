@@ -1,9 +1,11 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "../styles/common.css";
 import "../styles/input.css";
-
-import { getInfo } from "../api/brandApi";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { getInfo, update } from "../api/brandApi";
+import { uploadImgToCloudinary } from '../api/cloudinary';
 
 export default function BrandInfo() {
     const storedBrand = localStorage.getItem('brand');
@@ -12,11 +14,14 @@ export default function BrandInfo() {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    // const [website, setWebsite] = useState('');
     const [field, setField] = useState('');
     const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
     const [logo, setLogo] = useState('');
+    const [phone, setPhone] = useState('');
+
+    const [avatar, setAvatar] = useState('');
+    const [avatarFile, setAvatarFile] = useState(null);
 
     useEffect(() => {
         const getData = async () => {
@@ -29,23 +34,90 @@ export default function BrandInfo() {
                 setAddress(data?.address);
                 setEmail(data?.email);
                 setLogo(data?.logo);
+                setPhone(data?.phone);
                 console.log(data);
             }
         }
         getData();
-    }, [])
+    }, [brand?.id_brand]);
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+
+        setAvatarFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatar(reader.result); 
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSubmit = async () => {
+        // e.preventDefault();
+        var imageUrl;
+        if (avatarFile) {
+            try {
+                imageUrl = await uploadImgToCloudinary(avatarFile);
+
+                if (imageUrl) {
+                    console.log('imageUrl:', imageUrl);
+                } else {
+                    console.error('Failed to upload image');
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+
+        const data = {
+            id_brand: brand?.id_brand,
+            name,
+            username,
+            password,
+            field,
+            address,
+            email,
+            logo: imageUrl || logo,
+            phone
+        }
+        const success = await update(data);
+
+        if (success) {
+            confirmAlert({
+                message: 'Cập nhật thành công!',
+                buttons: [
+                    {
+                        label: 'Xác nhận',
+                    }
+                ]
+            });
+        }
+        else {
+            confirmAlert({
+                message: 'Cập nhật thất bại!',
+                buttons: [
+                    {
+                        label: 'Xác nhận'
+                    }
+                ]
+            });
+        }
+    };
 
     return (
         <div className="ctn">
             {/* Brand Logo */}
             <div className="brand-logo-ctn">
-                <img className="brand-logo-img" src={logo || "/images/placeholder-img.jpg"} alt="brand-logo" />
+                <img className="brand-logo-img" src={avatar || logo || "/images/placeholder-img.jpg"} alt="brand-logo" />
                 <div className="upload-btn-ctn">
                     <button className="upload-btn"> {/* Button giả */}
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
                         Chọn ảnh
                     </button> 
-                    <input type="file" id="file-upload" /> {/* Code backend cho input này nha */}
+                    <input type="file" id="file-upload" accept="image/*" onChange={handleAvatarChange}/> 
                 </div>
             </div>
 
@@ -118,14 +190,14 @@ export default function BrandInfo() {
                     </div> */}
                     <div className="form-group">
                         <label htmlFor="phone">Số điện thoại</label>
-                        <input type="tel" id="phone"/>
+                        <input type="tel" id="phone" value={phone} onChange={(e) => {setPhone(e.target.value)}}/>
                     </div>
                 </div>
 
                 {/* Buttons */}
                 <div className="button-group">
                     <button className="cancel-btn">Hủy</button>
-                    <button className="save-btn">Lưu</button>
+                    <button className="save-btn" onClick={() => handleSubmit()}>Lưu</button>
                 </div>
             </div>
         </div>

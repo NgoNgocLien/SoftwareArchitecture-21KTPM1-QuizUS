@@ -72,19 +72,6 @@ export default function CreateEvent() {
         }
     }, [selectedVoucher, amount]);
 
-    const onSave = async () => {
-        const Event = {
-            name,
-            description,
-            start,
-            end,
-            amount,
-            gameType,
-            selectedVoucher: selectedVoucher?._id || null,
-            budget
-        };
-    };
-
     const onCancel = () => navigate('/event');
 
     const handleAvatarChange = (e) => {
