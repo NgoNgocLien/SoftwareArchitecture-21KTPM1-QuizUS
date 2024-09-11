@@ -6,9 +6,10 @@ import { getCampaignById, updateCampaign } from '../api/campaignApi';
 import { getAll } from '../api/voucherApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import { getVoucherById } from '../api/voucherApi';
+import { uploadImgToCloudinary } from '../api/cloudinary';
 
 export default function EditEvent() {
-    let event = null;
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -21,25 +22,23 @@ export default function EditEvent() {
     const [vouchers, setVouchers] = useState([]);
     const [selectedVoucher, setSelectedVoucher] = useState(null);
     const [budget, setBudget] = useState(0);
+    const [avatar, setAvatar] = useState('');
+    const [avatarFile, setAvatarFile] = useState(null);
+    const [photo, setPhoto] = useState('');
+    const [selectedOption, setSelectedOption] = useState('');
 
     // Fetch event
     useEffect(() => {
         const fetchEvent = async () => {
-            event = await getCampaignById(id);
-            console.log(event);
-            setName(event.name);
-            setDescription(event.description);
-            setStart(event.start_datetime);
-            setEnd(event.end_datetime);
-            setAmount(event.max_amount_voucher);
-            setGameType(event.gameType);
-            setSelectedVoucher(event.voucher.name);
-            // console.log(event.voucher.name);
-            // if (event.selectedVoucher) {
-            //     const voucher = await getVoucherById(event.selectedVoucher);
-            //     setSelectedVoucher(voucher);
-            //     setAmount(event.amount);
-            // }
+            const  event = await getCampaignById(id);
+            setName(event?.name);
+            setDescription(event?.description);
+            setStart(event?.start_datetime);
+            setEnd(event?.end_datetime);
+            setAmount(event?.max_amount_voucher);
+            setPhoto(event?.photo);
+            setGameType(event?.gameType);
+            setSelectedOption(event?.id_voucher);
         };
 
         fetchEvent();
@@ -50,20 +49,19 @@ export default function EditEvent() {
         const storeBrand = localStorage.getItem('brand');
         const brand = storeBrand ? JSON.parse(storeBrand) : null;
         const fetchVouchers = async () => {
-            const voucherData = await getAll(brand.id_brand);
+            const voucherData = await getAll(brand?.id_brand || 1);
             setVouchers(voucherData); 
         };
 
         fetchVouchers();
     }, []);
 
-    const handleVoucherChange = async (e) => {
+    const handleOption = (e) => {
         const selectedVoucherId = e.target.value;
-        setSelectedVoucher(null);
-        // if (selectedVoucherId) {
-        //     const voucher = await getVoucherById(selectedVoucherId);
-        //     setSelectedVoucher(voucher);
-        // }
+        setSelectedOption(selectedVoucherId);
+        
+        const voucher = vouchers.find(voucher => voucher._id === selectedVoucherId);
+        setSelectedVoucher(voucher);
     };
 
     // Calculate budget
@@ -73,23 +71,57 @@ export default function EditEvent() {
         }
     }, [selectedVoucher, amount]);
 
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+
+        setAvatarFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatar(reader.result); 
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
+        
     // Save the updated event
     const onSave = async () => {
+        var imageUrl;
+        if (avatarFile) {
+            try {
+                imageUrl = await uploadImgToCloudinary(avatarFile);
+
+                if (imageUrl) {
+                    console.log('imageUrl:', imageUrl);
+                } else {
+                    console.error('Failed to upload image');
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+
         const updatedEvent = {
+            _id: id,
             name,
             description,
-            start,
-            end,
-            amount,
-            gameType,
-            selectedVoucher: selectedVoucher?._id || null
+            start_datetime: start,
+            end_datetime: end,
+            photo: imageUrl || photo, 
+            max_amount_voucher: amount,
+            selectedVoucher: selectedVoucher?._id || null,
+            budget,
+            id_voucher: selectedOption
         };
 
-        const success = await updateCampaign(id, updatedEvent);
+        const success = await updateCampaign(updatedEvent);
         if (success) {
             confirmAlert({
                 message: 'Sự kiện đã được cập nhật thành công!',
-                buttons: [{ label: 'Xác nhận', onClick: () => navigate('/event') }]
+                buttons: [{ label: 'Xác nhận', 
+                    onClick: () => navigate('/event') 
+                }]
             });
         } else {
             confirmAlert({
@@ -105,13 +137,13 @@ export default function EditEvent() {
         <div className="ctn">
             {/* Event Image */}
             <div className="event-img-ctn">
-                <img src="/images/image 41.png" alt="event-img" className="event-img" />
+                <img src={avatar || photo || "/images/image 41.png"} alt="event-img" className="event-img" />
                 <div className="event-btn-ctn">
                     <button className="event-upload-btn">
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
                         Chọn ảnh
                     </button>
-                    <input type="file" id="file-upload" />
+                    <input type="file" id="file-upload"  accept="image/*" onChange={handleAvatarChange}/>
                 </div>
             </div>
 
@@ -138,11 +170,11 @@ export default function EditEvent() {
                 <div className="form-row">
                     <div className="row-input">
                         <label htmlFor="start_datetime">Ngày bắt đầu</label>
-                        <input type="datetime-local" id="start_datetime" value={start} onChange={(e) => setStart(e.target.value)} />
+                        <input type="datetime-local" id="start_datetime" value={start.slice(0, 16)} onChange={(e) => setStart(e.target.value)} />
                     </div>
                     <div className="row-input">
                         <label htmlFor="end_datetime">Ngày kết thúc</label>
-                        <input type="datetime-local" id="end_datetime" value={end} onChange={(e) => setEnd(e.target.value)} />
+                        <input type="datetime-local" id="end_datetime" value={end.slice(0, 16)} onChange={(e) => setEnd(e.target.value)} />
                     </div>
                 </div>
 
@@ -150,10 +182,15 @@ export default function EditEvent() {
                 <div className="form-row">
                     <div className="row-input">
                         <label htmlFor="id_voucher">Chọn voucher</label>
-                        <select value={selectedVoucher || ''} onChange={handleVoucherChange}>
-                            <option value={selectedVoucher}>{selectedVoucher}</option>
-                            {vouchers.map(voucher => (
-                                <option key={voucher._id} value={voucher._id}>{voucher.name}</option>
+                        <select className="field-select"
+                                value={selectedOption}
+                                onChange={handleOption}
+                                label="Chọn voucher">
+                            <option value="">Chọn voucher</option>
+                            {vouchers.map((voucher) => (
+                                <option key={voucher._id} value={voucher._id}>
+                                    {voucher.name}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -172,7 +209,7 @@ export default function EditEvent() {
                 </div>
 
                 {/* Game Type */}
-                <div className="form-row">
+                {/* <div className="form-row">
                     <div className="form-group">
                         <label>Trò chơi</label>
                         <div className="radio-group">
@@ -183,7 +220,7 @@ export default function EditEvent() {
                             <label htmlFor="shake">Lắc vật phẩm</label>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Buttons */}
                 <div className="button-group">

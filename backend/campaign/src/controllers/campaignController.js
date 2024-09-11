@@ -218,7 +218,8 @@ const update = async (req, res) => {
                 // item1_photo: req.body.item1_photo,
                 // item2_photo: req.body.item2_photo,
                 // score_award: req.body.score_award
-                ...req.body
+                ...req.body,
+                id_voucher: new ObjectId(req.body.id_voucher)
             },
             { new: true, runValidators: true }
         );
