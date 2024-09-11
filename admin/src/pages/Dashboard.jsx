@@ -3,6 +3,7 @@ import Chart from "chart.js/auto";
 import LineChart from '../components/charts/LineChart';
 import VoucherChart from '../components/charts/VoucherChart';
 import PlayerChart from '../components/charts/PlayerChart';
+import EventChart from '../components/charts/EventChart';
 import BarChart from '../components/charts/BarChart';
 import "../styles/common.css";
 import "../styles/dashboard.css";
@@ -82,7 +83,7 @@ export default function Dashboard() {
                     <div className='voucher-chart'>
                         <p>Thống kê</p>
                         <h6>Tình trạng sự kiện</h6>
-                        <VoucherChart chartData={voucherData} />
+                        <EventChart />
                     </div>
                 </div>
                 
