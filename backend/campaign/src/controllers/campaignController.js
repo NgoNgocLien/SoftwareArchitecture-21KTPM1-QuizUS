@@ -477,47 +477,69 @@ const getStats = async (req, res) => {
     }
 };
 
-const getEightMonthsAgo = () => {
-    const currentDate = new Date();
-    currentDate.setMonth(currentDate.getMonth() - 8);
-    return currentDate;
-};
-
 // Thống kê số lượng người chơi đăng ký/ tham gia sự kiện/ trao đổi vật phẩm trong 8 tháng gần nhất
 const getPlayerStats = async (req, res) => {
     try {
-        const eightMonthsAgo = getEightMonthsAgo();
-        
-        // 1. Số lượng người chơi đăng ký trong 8 tháng gần nhất
+        const startOfYear = getStartOfYear(); // Lấy thời gian đầu năm
+        const currentMonth = new Date();
+
+        // Khởi tạo một mảng với số tháng tính từ đầu năm tới hiện tại
+        let months = currentMonth.getMonth() + 1; // Lấy số tháng từ đầu năm đến hiện tại
+        let recentPlayerCount = new Array(months).fill(0);
+        let recentPlayerGames = new Array(months).fill(0);
+        let recentItemGifts = new Array(months).fill(0);
+
+        // 1. Số lượng người chơi đăng ký từ đầu năm đến tháng hiện tại
         const playersResponse = await axios.get('http://gateway_proxy:8000/user/api/player');
         const players = playersResponse.data;
 
-        const recentPlayers = players.filter(player => {
+        players.forEach(player => {
             const creationTime = new Date(player.creation_time);
-            return creationTime >= eightMonthsAgo;
+            if (creationTime >= startOfYear) {
+                const monthDiff = currentMonth.getMonth() - creationTime.getMonth();
+                if (monthDiff < months) {
+                    recentPlayerCount[monthDiff]++; // Cộng dồn số liệu cho đúng tháng
+                }
+            }
         });
-        const recentPlayerCount = recentPlayers.length;
 
-        // 2. Số lượng người chơi tham gia sự kiện trong 8 tháng gần nhất 
+        // 2. Số lượng người chơi tham gia sự kiện từ đầu năm đến tháng hiện tại
         const campaigns = await Campaign.find({
-            start_datetime: { $gte: eightMonthsAgo }
-        }).select('_id'); 
+            start_datetime: { $gte: startOfYear }
+        }).select('_id start_datetime'); 
 
         const campaignIds = campaigns.map(campaign => campaign._id);
 
-        const recentPlayerGames = await PlayerGame.countDocuments({
+        const playerGames = await PlayerGame.find({
             id_campaign: { $in: campaignIds }
+        }).populate('id_campaign');
+
+        playerGames.forEach(game => {
+            const campaignStart = new Date(game.id_campaign.start_datetime);
+            const monthDiff = currentMonth.getMonth() - campaignStart.getMonth();
+            if (monthDiff < months) {
+                recentPlayerGames[monthDiff]++;
+            }
         });
 
-        // 3. Số lượng người chơi tặng item trong 8 tháng gần nhất (ItemGift)
-        const recentItemGifts = await ItemGift.countDocuments({
-            gift_time: { $gte: eightMonthsAgo }
+        // 3. Số lượng người chơi tặng item từ đầu năm đến tháng hiện tại (ItemGift)
+        const itemGifts = await ItemGift.find({
+            gift_time: { $gte: startOfYear }
         });
 
+        itemGifts.forEach(gift => {
+            const giftTime = new Date(gift.gift_time);
+            const monthDiff = currentMonth.getMonth() - giftTime.getMonth();
+            if (monthDiff < months) {
+                recentItemGifts[monthDiff]++;
+            }
+        });
+
+        // Trả về kết quả cho chart
         res.status(200).json({
-            recentPlayerCount,         
-            recentPlayerGames,         
-            recentItemGifts            
+            recentPlayerCount,         // Số lượng người chơi đăng ký theo tháng
+            recentPlayerGames,         // Số lượng người chơi tham gia sự kiện theo tháng
+            recentItemGifts            // Số lượng người chơi tặng item theo tháng
         });
     } catch (error) {
         console.error('Error fetching statistics:', error);
@@ -527,6 +549,14 @@ const getPlayerStats = async (req, res) => {
         });
     }
 };
+
+const getStartOfYear = () => {
+    const date = new Date();
+    date.setMonth(0, 1); 
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
+
 
 module.exports = {
     getAll,
