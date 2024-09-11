@@ -540,9 +540,10 @@ const getPlayerStats = async (req, res) => {
         players.forEach(player => {
             const creationTime = new Date(player.creation_time);
             if (creationTime >= startOfYear) {
-                const monthDiff = currentMonth.getMonth() - creationTime.getMonth();
-                if (monthDiff < months) {
-                    recentPlayerCount[monthDiff]++; 
+                const month = creationTime.getMonth(); // Lấy tháng người chơi đăng ký
+                // Tăng số lượng người chơi cho các tháng từ tháng hiện tại trở đi
+                for (let i = month; i < months; i++) {
+                    recentPlayerCount[i]++;
                 }
             }
         });
@@ -553,29 +554,53 @@ const getPlayerStats = async (req, res) => {
         }).select('_id start_datetime'); 
 
         const campaignIds = campaigns.map(campaign => campaign._id);
+        //console.log("campaignIds: ", campaignIds);
 
         const playerGames = await PlayerGame.find({
             id_campaign: { $in: campaignIds }
         }).populate('id_campaign');
 
+        //console.log("playerGames: ", playerGames);
+
+        // Mảng để lưu danh sách người chơi duy nhất cho mỗi tháng
+        let uniquePlayersPerMonth = Array.from({ length: months }, () => new Set());
+
         playerGames.forEach(game => {
             const campaignStart = new Date(game.id_campaign.start_datetime);
-            const monthDiff = currentMonth.getMonth() - campaignStart.getMonth();
-            if (monthDiff < months) {
-                recentPlayerGames[monthDiff]++;
+            const playerId = game.id_player; 
+            const month = campaignStart.getMonth(); 
+
+            // Thêm người chơi vào danh sách duy nhất cho các tháng từ sự kiện bắt đầu trở đi
+            for (let i = month; i < months; i++) {
+                uniquePlayersPerMonth[i].add(playerId);
             }
         });
 
+        // Đếm số lượng người chơi duy nhất cho mỗi tháng
+        uniquePlayersPerMonth.forEach((playerSet, index) => {
+            recentPlayerGames[index] = playerSet.size; 
+        });
+
         // 3. Số lượng người chơi trao đổi vật phẩm (tặng item, tặng voucher, tặng lượt chơi) từ đầu năm đến tháng hiện tại
+        // Mảng để lưu danh sách người chơi duy nhất cho mỗi tháng
+        let uniqueItemGiversAndReceiversPerMonth = Array.from({ length: months }, () => new Set());
+
+        // Lấy dữ liệu từ ItemGift
         const itemGifts = await ItemGift.find({
             gift_time: { $gte: startOfYear }
         });
 
         itemGifts.forEach(gift => {
             const giftTime = new Date(gift.gift_time);
-            const monthDiff = currentMonth.getMonth() - giftTime.getMonth();
-            if (monthDiff < months) {
-                recentItemGifts[monthDiff]++;
+            const senderId = gift.id_sender; 
+            const receiverId = gift.id_receiver; 
+
+            const month = giftTime.getMonth(); 
+
+            // Thêm người chơi (gửi và nhận) vào danh sách duy nhất cho các tháng
+            for (let i = month; i < months; i++) {
+                uniqueItemGiversAndReceiversPerMonth[i].add(senderId); 
+                uniqueItemGiversAndReceiversPerMonth[i].add(receiverId); 
             }
         });
 
@@ -586,9 +611,15 @@ const getPlayerStats = async (req, res) => {
 
         voucherGifts.forEach(gift => {
             const giftTime = new Date(gift.gift_time);
-            const monthDiff = currentMonth.getMonth() - giftTime.getMonth();
-            if (monthDiff < months) {
-                recentItemGifts[monthDiff]++;
+            const senderId = gift.id_sender; 
+            const receiverId = gift.id_receiver; 
+
+            const month = giftTime.getMonth(); 
+
+            // Thêm người chơi (gửi và nhận) vào danh sách duy nhất cho các tháng
+            for (let i = month; i < months; i++) {
+                uniqueItemGiversAndReceiversPerMonth[i].add(senderId); 
+                uniqueItemGiversAndReceiversPerMonth[i].add(receiverId); 
             }
         });
 
@@ -600,10 +631,20 @@ const getPlayerStats = async (req, res) => {
 
         turnRequests.forEach(turn => {
             const replyTime = new Date(turn.reply_time);
-            const monthDiff = currentMonth.getMonth() - replyTime.getMonth();
-            if (monthDiff < months) {
-                recentItemGifts[monthDiff]++;
+            const senderId = turn.id_sender; 
+            const receiverId = turn.id_receiver; 
+            const month = replyTime.getMonth(); 
+
+            // Thêm người chơi (gửi và nhận) vào danh sách duy nhất cho các tháng
+            for (let i = month; i < months; i++) {
+                uniqueItemGiversAndReceiversPerMonth[i].add(senderId);
+                uniqueItemGiversAndReceiversPerMonth[i].add(receiverId); 
             }
+        });
+
+        // Đếm số lượng người chơi duy nhất cho mỗi tháng
+        uniqueItemGiversAndReceiversPerMonth.forEach((playerSet, index) => {
+            recentItemGifts[index] = playerSet.size; 
         });
 
         // Trả về kết quả cho chart
