@@ -205,19 +205,21 @@ const update = async (req, res) => {
         const updatedCampaign = await Campaign.findByIdAndUpdate(
             _id,
             {
-                id_brand1: req.body.id_brand1,
-                id_brand2: req.body.id_brand2,
-                name: req.body.name,
-                photo: req.body.photo,
-                start_datetime: req.body.start_datetime,
-                end_datetime: req.body.end_datetime,
-                id_voucher: req.body.id_voucher,
-                max_amount_voucher: req.body.max_amount_voucher,
-                given_amount_voucher: req.body.given_amount_voucher,
-                id_quiz: req.body.id_quiz,
-                item1_photo: req.body.item1_photo,
-                item2_photo: req.body.item2_photo,
-                score_award: req.body.score_award
+                // id_brand1: req.body.id_brand1,
+                // id_brand2: req.body.id_brand2,
+                // name: req.body.name,
+                // photo: req.body.photo,
+                // start_datetime: req.body.start_datetime,
+                // end_datetime: req.body.end_datetime,
+                // id_voucher: req.body.id_voucher,
+                // max_amount_voucher: req.body.max_amount_voucher,
+                // given_amount_voucher: req.body.given_amount_voucher,
+                // id_quiz: req.body.id_quiz,
+                // item1_photo: req.body.item1_photo,
+                // item2_photo: req.body.item2_photo,
+                // score_award: req.body.score_award
+                ...req.body,
+                id_voucher: new ObjectId(req.body.id_voucher)
             },
             { new: true, runValidators: true }
         );
@@ -692,6 +694,42 @@ const getBudgetStatsByField = async (req, res) => {
     }
 };
 
+// Thống kê tình trạng các sự kiện (đang diễn ra/ sắp diễn ra/ đã kết thúc)
+const getEventStatsByField = async (req, res) => {
+    try {
+        const currentDate = new Date();
+
+        // Ongoing campaigns
+        const ongoingCampaigns = await Campaign.countDocuments({
+            start_datetime: { $lte: currentDate },
+            end_datetime: { $gte: currentDate }
+        });
+
+        // Upcoming campaigns
+        const upcomingCampaigns = await Campaign.countDocuments({
+            start_datetime: { $gt: currentDate }
+        });
+
+        // Finished campaigns
+        const finishedCampaigns = await Campaign.countDocuments({
+            end_datetime: { $lt: currentDate }
+        });
+
+        // Return statistics
+        return res.status(200).json({
+            ongoing: ongoingCampaigns,
+            upcoming: upcomingCampaigns,
+            finished: finishedCampaigns
+        });
+    } catch (error) {
+        console.error('Error fetching event stats:', error);
+        return res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAll,
     getInProgress,
@@ -711,5 +749,6 @@ module.exports = {
     getStats,
     getCampaignsOfVoucher,
     getPlayerStats,
-    getBudgetStatsByField
+    getBudgetStatsByField,
+    getEventStatsByField
 };

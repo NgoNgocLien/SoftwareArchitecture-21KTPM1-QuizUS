@@ -6,6 +6,10 @@ const app = express();
 // Create HTTP server and bind socket.io to it
 const server = http.createServer(app);
 
+app.use('/', (req, res) => {
+    res.send('Notification service is running');
+});
+
 app.use(express.json());
 
 const io = new Server(server, {
@@ -29,7 +33,7 @@ const removeUser = (socketId) => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
-// Lấy thông tin người dùng theo id_player
+// Lấy thông tin người dùng theo id_player 
 const getUser = (id_player) => {
     return onlineUsers.find((user) => user.id_player === id_player);
 };

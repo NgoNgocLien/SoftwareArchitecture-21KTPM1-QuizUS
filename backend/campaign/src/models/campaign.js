@@ -10,6 +10,9 @@ const CampaignSchema = new Schema({
     id_brand2: {
         type: Number,
     },
+    budget: {
+        type: Number
+    },
     name: {
         type: String,
         maxlength: 255,

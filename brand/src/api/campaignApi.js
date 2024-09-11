@@ -37,7 +37,6 @@ const getCampaignById = async (id) => {
     try {
       const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/${id}`;
       const response = await axios.get(url);
-      
       if (response?.data)
         return response.data;
       else
@@ -52,8 +51,10 @@ const getCampaignById = async (id) => {
 const updateCampaign = async (updatedData) => {
   try {
     const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign`;
-    const response = await axios.put(url, updatedData);
-    
+    console.log(updatedData)
+    const response = await axios.put(url, {
+      ...updatedData
+    });
     if (response.status === 200) 
       return true;
     else 
@@ -64,10 +65,6 @@ const updateCampaign = async (updatedData) => {
     return false;
   }
 }
-
-// const createCampaign = async () => {
-  
-// }
 
 const createEvent = async (campaign, quiz) => {
   try {
@@ -94,5 +91,4 @@ export{
   createEvent,
   getCampaignById,
   updateCampaign,
-  // createCampaign
 }

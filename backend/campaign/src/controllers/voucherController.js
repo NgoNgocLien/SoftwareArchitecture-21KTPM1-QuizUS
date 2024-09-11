@@ -95,6 +95,7 @@ const searchByBrand = async (req, res) => {
 // Tạo voucher
 const create = async (req, res) => {
     const voucher = new Voucher({
+        name: req.body.name,
         id_brand: req.body.id_brand,
         code: req.body.code,
         qr_code: req.body.qr_code,

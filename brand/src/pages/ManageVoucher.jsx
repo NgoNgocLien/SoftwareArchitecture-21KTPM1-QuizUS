@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/manage.css";
+import { useNavigate } from 'react-router-dom';
 
 import { getAll } from '../api/voucherApi';
 
 export default function ManageVoucher() {
+    const navigate = useNavigate();
     const storedBrand = localStorage.getItem('brand');
     const brand = storedBrand ? JSON.parse(storedBrand) : null;
     const [data, setData] = useState([]);
@@ -46,7 +48,7 @@ export default function ManageVoucher() {
     return (
         <div>
             <div className="add-voucher-container">
-                <button className="add-voucher-btn">
+                <button className="add-voucher-btn" onClick={() => navigate('/create-voucher')}>
                     <img src="/icons/plus.svg" alt="add-voucher-icon" className="add-voucher-icon" />
                     Thêm voucher
                 </button>

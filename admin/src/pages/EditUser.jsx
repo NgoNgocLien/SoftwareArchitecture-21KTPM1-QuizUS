@@ -194,9 +194,9 @@ export default function EditUser() {
                     <div className='form-group' style={{ flex: '1'}}>
                         <label>Giới tính</label>
                         <div className='radio-group'>
-                            <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'nam'} onChange={(e) => setGender(e.target.value)} />
+                            <input type="radio" name="gender" id="nam" value="nam" checked={gender === 'nam'} onChange={(e) => setGender(e.target.value)} />
                             <label htmlFor="nam">Nam</label>
-                            <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'nữ'} onChange={(e) => setGender(e.target.value)} />
+                            <input type="radio" name="gender" id="nữ" value="nữ" checked={gender === 'nữ'} onChange={(e) => setGender(e.target.value)} />
                             <label htmlFor="nữ">Nữ</label>
                         </div>
                     </div>

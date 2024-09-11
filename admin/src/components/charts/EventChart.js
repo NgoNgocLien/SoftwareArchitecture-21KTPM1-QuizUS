@@ -1,16 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { getEventStats } from '../../api/statsApi';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const EventChart = ({ chartData }) => {
-    console.log("chartData: ", chartData);
+    const [eventData, setEventData] = useState({});
+
+    useEffect(() => {
+        const getEventData = async () => {
+            const response = await getEventStats();
+            setEventData(response);
+        }
+        getEventData();
+    }, [])
+
     const data = {
         labels: ['Đang diễn ra', 'Sắp diễn ra', 'Đã kết thúc'],
         datasets: [
         {
-            data: [chartData?.used_vouchers || 0, chartData?.unused_vouchers || 0, chartData?.expired_vouchers || 0],
+            data: [eventData?.ongoing || 0, eventData?.upcoming || 0, eventData?.finished || 0],
             backgroundColor: ['#34C759', '#007AFF', '#D5D5D5'],
             hoverBackgroundColor: ['#34C759', '#007AFF', '#D5D5D5'],
             borderWidth: 1,
@@ -29,9 +39,9 @@ const EventChart = ({ chartData }) => {
     };
 
     return (
-        <div>
+        <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
         <Doughnut data={data} options={options} />
-        <p>Tổng số sự kiện: {chartData?.total_value?.toLocaleString('vi-VN') || 0} VNĐ</p>
+        <p>Tổng số sự kiện: {(eventData.ongoing + eventData.upcoming + eventData.finished) || 0}</p>
         </div>
     );
 };

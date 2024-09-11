@@ -68,6 +68,7 @@ export default function CreateGame() {
            id_brand1: brand?.id_brand || 1,
            budget: searchParams.get('budget'),
            id_voucher: searchParams.get('id_voucher'),
+           photo: searchParams.get('photo'),
         }
         const quiz = {
             questions,
