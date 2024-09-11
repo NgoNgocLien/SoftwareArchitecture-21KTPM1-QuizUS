@@ -8,7 +8,10 @@ const cors = require('cors');
 app.use(cors());
 
 const port = 8001;
-app.listen(port);
+
+app.listen(port, () => {
+    console.log(`App running on port ${port}`);
+});
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));

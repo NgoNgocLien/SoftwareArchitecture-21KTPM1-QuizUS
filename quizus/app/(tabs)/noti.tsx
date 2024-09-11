@@ -110,7 +110,7 @@ export default function Notification() {
         })
     }
 
-    console.log("unseen notifications: ", unseen)
+    // console.log("unseen notifications: ", unseen)
     return (
         <View style={styles.background}>
             <SafeAreaView style={styles.header}>

@@ -566,7 +566,7 @@ const sendItem = async (req, res) => {
             seen_time: newNoti.seen_time
         })
 
-        await axios.post('http://172.16.100.127:8004/emit-notification', {
+        await axios.post('http://10.0.1.35:8004/emit-notification', {
             noti: {
                 type: newNoti.type,
                 subtype: newNoti.subtype,

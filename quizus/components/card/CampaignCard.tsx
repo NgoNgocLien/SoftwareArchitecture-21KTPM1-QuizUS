@@ -83,15 +83,6 @@ export function CampaignCard({
         });
     }
 
-    const handleJoinCampaign = () => {
-        router.push({
-            pathname: "/campaign",
-            params: { id_campaign: campaign._id }
-        });
-
-
-    }
-
     // dd/MM
     let startDateFormatted = new Date(campaign.start_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.start_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});
     let endDateFormatted = new Date(campaign.end_datetime).getDate().toLocaleString('vi-VN', {minimumIntegerDigits: 2}) + '/' + (new Date(campaign.end_datetime).getMonth() + 1).toLocaleString('vi-VN', {minimumIntegerDigits: 2});

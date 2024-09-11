@@ -89,7 +89,7 @@ export default function Campaign() {
     
     useEffect(() => {
         setGameLoading(true)
-        if (type_game ){ 
+        if (type_game ){                
             getGameInfo(id_campaign)
             .then(gameInfo => {
                 if (type_game == config.QUIZ_GAME){
@@ -208,16 +208,15 @@ export default function Campaign() {
 
             if (result.action === Share.sharedAction) {
                 if (result.activityType ) {
-                    // On iOS: Shared with specific activity type (e.g., mail, social media)
-                    // increasePlayerTurn(config.ID_PLAYER, id_campaign)
-                    // .then(data => {
-                    //     setPlayerTurn(1)
-                    // })
+                    showToast('success',"Chia sẻ thành công")
+                    // console.log("aa")
                 } else {
-                    // On Android: Shared, but no confirmation of activity type
+                    showToast('success',"Chia sẻ thành công")
+                    // console.log("bb")
                 }
             } else if (result.action === Share.dismissedAction) {
-                // dismissed
+                showToast('warning',"Không chia sẻ")
+                // console.log("cc")
             }
         } catch (error: any) {
             Alert.alert(error.message);
