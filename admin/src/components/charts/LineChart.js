@@ -94,7 +94,7 @@ function LineChart() {
   };
 
   return (
-    <div style={{ height: '600px' }}>
+    <div style={{ height: '500px' }}>
       <Line data={data} options={options} />
     </div>
   );

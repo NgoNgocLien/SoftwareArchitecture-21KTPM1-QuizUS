@@ -28,11 +28,19 @@ export default function Dashboard() {
 
             {/* Thống kê */}
             <div className='statistics-ctn gap-2'>
-                {/* Thống kê người chơi */}
-                <div className='user-chart'>
-                    <p>Thống kê</p>
-                    <h6>Người chơi</h6>
-                    <LineChart />
+                <div className='vertical-ctn'>
+                    {/* Thống kê người chơi */}
+                    <div className='user-chart'>
+                        <p>Thống kê</p>
+                        <h6>Người chơi</h6>
+                        <LineChart />
+                    </div>
+                    {/* Thống kê ngân sách */}
+                    <div className='budget-chart'>
+                        <p>Thống kê</p>
+                        <h6>Ngân sách đã sử dụng theo lĩnh vực</h6>
+                        <BarChart />
+                    </div>
                 </div>
                 
                 <div className='piechart d-flex flex-column'>
@@ -48,16 +56,16 @@ export default function Dashboard() {
                         <h6>Người chơi theo loại trò chơi</h6>
                         <PlayerChart />
                     </div>
+                    {/* Thống kê tình trạng sự kiện */}
+                    <div className='voucher-chart'>
+                        <p>Thống kê</p>
+                        <h6>Tình trạng sự kiện</h6>
+                        {/* <EventChart /> */}
+                        <PlayerChart /> {/* Để tạm */}
+                    </div>
                 </div>
                 
                 
-            </div>
-            
-            {/* Thống kê ngân sách */}
-            <div className='budget-chart'>
-                <p>Thống kê</p>
-                <h6>Ngân sách đã sử dụng theo lĩnh vực</h6>
-                <BarChart />
             </div>
         </div>
     );
