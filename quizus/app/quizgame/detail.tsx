@@ -19,7 +19,7 @@ export default function QuizGameDetail() {
   const score = config.QUIZ_SCORE;
   const quizInfoString = Array.isArray(params.quizInfo) ? params.quizInfo[0] : params.quizInfo;
   const quizInfo = JSON.parse(quizInfoString);
-  const questions = quizInfo.questions.splice(1,3);
+  const questions = quizInfo.questions;
   const quizLength = questions.length;
 
   const [count, setCount] = useState(0);

@@ -40,7 +40,7 @@ class NotificationSocket {
     });
 
     this.socket?.on('connect_error', (err) => {
-      console.error('Connection error:', err);
+      console.error('Connection error noti:', err);
     });
   }
 
