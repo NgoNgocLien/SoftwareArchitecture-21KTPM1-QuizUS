@@ -95,17 +95,19 @@ export default function Notification() {
         })
     }
 
-    const handleAccept = (notification: FriendTurnRequestNotification) => {
-        console.log(notification.getSeenTime())
-        
-        // notification.replyTurn(true)
+    const handleAccept = (notification: FriendTurnRequestNotification) => {      
+        notification.replyTurn(true).then(() =>{
+            setUnseen(false);
+            fetchNoti();
+        })
     }
-
-    // console.log(notifications.length)
 
     const handleRefuse = (notification: FriendTurnRequestNotification) => {
         console.log(notification)
-        // notification.replyTurn(false)
+        notification.replyTurn(false).then(() =>{
+            setUnseen(false);
+            fetchNoti();
+        })
     }
 
     console.log("unseen notifications: ", unseen)

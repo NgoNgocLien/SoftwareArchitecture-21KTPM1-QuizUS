@@ -40,7 +40,7 @@ export class EventNotificationFactory implements NotificationAbstractFactory {
   }
 
   createEventNotification(data: any): Noti {
-    return new CampaignNotification(data._id, data.seen_time, data.noti_time, data.name_campaign, data.id_campaign, data.start_time);
+    return new CampaignNotification(data._id, data.seen_time, data.noti_time, data.id_campaign, data.name_campaign, data.start_time);
   }
 
   createFriendNotification(data: any): Noti {
