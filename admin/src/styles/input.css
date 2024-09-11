@@ -150,6 +150,11 @@ select {
     background: #007AFF;
 }
 
+.button-row{
+    display: flex;
+    justify-content: space-between;
+}
+
 .form-group input[type="text"], .form-group input[type="url"] {
     box-sizing: border-box;
 }
@@ -176,6 +181,44 @@ select {
     margin-right: 0px;
     height: 20px;
     width: 20px;
+}
+
+.lock-user {
+    display: flex;
+    width: 180px;
+    padding: 14px 16px;
+    background: var(--feedback-error);
+    font-family: medium-font;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.lock-user:hover {
+    background: #ed5055;
+}
+
+.activate-user {
+    display: flex;
+    width: 180px;
+    padding: 14px 16px;
+    background: var(--feedback-error);
+    font-family: medium-font;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.activate-user:hover {
+    background: #ed5055;
 }
 
 /* editPlayer */

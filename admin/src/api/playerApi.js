@@ -67,9 +67,43 @@ const updatePlayer = async (updatedData) => {
   }
 }
 
+const deactivatePlayer = async (id_player) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/player/deactivate/${id_player}`;
+    const response = await axios.put(url);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
+const activatePlayer = async (id_player) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/player/activate/${id_player}`;
+    const response = await axios.put(url);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export {
   getAllPlayers,
   searchPlayer,
   getPlayerById,
-  updatePlayer
+  updatePlayer,
+  deactivatePlayer,
+  activatePlayer
 };
