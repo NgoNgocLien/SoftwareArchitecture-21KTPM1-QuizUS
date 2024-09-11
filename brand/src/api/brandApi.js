@@ -29,7 +29,26 @@ const getInfo = async (id) => {
   }
 }
 
+const update = async (data) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand`;
+    const response = await axios.put(url, {
+      ...data
+    });
+    
+    if (response.status === 200 || response.status === 201) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export{
   signup,
-  getInfo
+  getInfo,
+  update
 }
