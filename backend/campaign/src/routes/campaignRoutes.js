@@ -23,7 +23,8 @@ const {
     getStats,
     getPlayerStats, 
     getBudgetStatsByField,
-    getEventStatsByField
+    getEventStatsByField,
+    getBrandStats
 } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -37,6 +38,9 @@ router.get('/incoming', getIncoming);
 
 //Lấy thông số từ database
 router.get('/stats', getStats);
+
+//Lấy thống kê của brand dashboard
+router.get('/brandStats/:id_brand', getBrandStats);
 
 // Lấy tất cả các chiến dịch của một brand theo id_brand
 router.get('/brand/:id_brand', getBrandCampaign);

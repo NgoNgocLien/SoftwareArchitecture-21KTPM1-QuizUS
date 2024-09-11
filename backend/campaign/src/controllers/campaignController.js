@@ -771,6 +771,60 @@ const getEventStatsByField = async (req, res) => {
     }
 };
 
+//Lấy thống kê của brand dashboard
+const getBrandStats = async (req, res) => {
+    try {
+        const { id_brand } = req.params;
+
+        if (!id_brand) {
+            return res.status(400).json({ message: 'id_brand is required' });
+        }
+
+        // 1. Đếm số lượng campaign thuộc brand (kiểm tra ở cả id_brand1 và id_brand2)
+        const campaignCount = await Campaign.countDocuments({ 
+            $or: [
+                { id_brand1: id_brand },
+                { id_brand2: id_brand }
+            ]
+        });
+
+        // 2. Đếm số lượng người chơi tham gia các campaign của brand
+        const campaignIds = await Campaign.find({
+            $or: [
+                { id_brand1: id_brand },
+                { id_brand2: id_brand }
+            ]
+        }).select('_id');
+
+        const campaignIdArray = campaignIds.map(campaign => campaign._id);
+
+        // Tìm người chơi từ PlayerGame dựa trên các campaign của brand
+        const uniquePlayers = await PlayerGame.distinct('id_player', {
+            id_campaign: { $in: campaignIdArray }
+        });
+        const playerCount = uniquePlayers.length;
+
+        // 3. Đếm số lượng mã giảm giá (distinct `id_voucher`) thuộc các campaign của brand
+        const uniqueVouchers = await Campaign.distinct('id_voucher', {
+            _id: { $in: campaignIdArray }
+        });
+        const voucherCount = uniqueVouchers.length;
+
+        // Trả về kết quả
+        res.status(200).json({
+            campaignCount,   // Số lượng campaign
+            playerCount,     // Số lượng người chơi tham gia
+            voucherCount     // Số lượng mã giảm giá
+        });
+    } catch (error) {
+        console.error('Error fetching brand stats:', error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAll,
     getInProgress,
@@ -791,5 +845,6 @@ module.exports = {
     getCampaignsOfVoucher,
     getPlayerStats,
     getBudgetStatsByField,
-    getEventStatsByField
+    getEventStatsByField,
+    getBrandStats
 };
