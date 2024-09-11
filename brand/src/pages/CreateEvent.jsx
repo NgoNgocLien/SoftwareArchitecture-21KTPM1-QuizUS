@@ -102,16 +102,21 @@ export default function CreateEvent() {
                         <input type="number" /> {/* Lấy số lượng x price voucher */}
                     </div>
                 </div>
-
+                
                 {/* Game */}
-                <div className='radio-row'>
-                    <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Trò chơi</label>
-                    <input name="game_type" type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
-                    <label htmlFor="quiz">Trắc nghiệm</label>
-                    <input name="game_type" type="radio" value="Lắc vật phẩm" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
-                    <label htmlFor="shake">Lắc vật phẩm</label>
-                </div>
+                <div className='form-row'>
+                    <div className='form-group'>
+                        <label>Trò chơi</label>
+                        <div className='radio-group'>
+                            <input type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                            <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Trắc nghiệm</label>
 
+                            <input type="radio" value="Lắc vật phẩm" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                            <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Lắc vật phẩm</label>
+                        </div>
+                    </div>
+                </div>
+                
                 {/* Buttons */}
                 <div className="button-group">
                     <button className="cancel-btn" onClick={() => {navigate('/event')}}>Hủy</button>

@@ -116,31 +116,21 @@ export default function EditUser() {
 
                 {/* Birthday & Gender */}
                 <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="birthday">Sinh nhật</label>
+                    <div className="form-group" style={{ flex: '1'}}>
+                        <label >Sinh nhật</label>
                         <input type="text" id="birthday" placeholder="Sinh nhật" value={dob} onChange={(e) => {setDob(e.target.value)}}/>
                     </div>
-                    {/* <div className="form-group">
+                    
+                    <div className='form-group' style={{ flex: '1'}}>
                         <label>Giới tính</label>
-                        <div className="radio-group">
-                            <label>
-                                <input type="radio" name="gender" value="Nam" checked={gender === 'Nam'} onChange={(e) => {setGender(e.target.value)}}/>
-                                Nam
-                            </label>
-                            <label>
-                                <input type="radio" name="gender" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => {setGender(e.target.value)}}/>
-                                Nữ
-                            </label>
+                        <div className='radio-group'>
+                            <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'Nam'} onChange={(e) => setGender(e.target.value)} />
+                            <label htmlFor="nam">Nam</label>
+                            <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => setGender(e.target.value)} />
+                            <label htmlFor="nữ">Nữ</label>
                         </div>
-                    </div> */}
-
-                    <div className='radio-row'>
-                        <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Giới tính</label>
-                        <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'Nam'} onChange={(e) => {setGender(e.target.value)}} />
-                        <label for="nam">Nam</label>
-                        <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => {setGender(e.target.value)}}/>
-                        <label for="shake">Nữ</label>
                     </div>
+                    
                 </div>
 
                 {/* Facebook */}
@@ -150,12 +140,17 @@ export default function EditUser() {
                         <input type="url" id="website" placeholder="Link Facebook" value={facebook} onChange={(e) => {setFacebook(e.target.value)}}/>
                     </div>
                 </div>
-
+                
+                
                 {/* Buttons */}
-                <div className="button-group">
-                    <button className="cancel-btn" onClick={onCancel}>Hủy</button>
-                    <button className="save-btn" onClick={() => {onSave()}}>Lưu</button>
+                <div className="button-row">
+                    <button className="lock-user">Khóa tài khoản</button>
+                    <div className="button-group">
+                        <button className="cancel-btn" onClick={onCancel}>Hủy</button>
+                        <button className="save-btn" onClick={() => {onSave()}}>Lưu</button>
+                    </div>
                 </div>
+                
 
             </div>
         </div>
