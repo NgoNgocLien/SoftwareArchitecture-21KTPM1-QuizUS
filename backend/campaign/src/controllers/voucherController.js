@@ -6,7 +6,6 @@ const PlayerGame = require('../models/playerGame');
 const campaign = require('../models/campaign');
 const VoucherGift = require('../models/voucherGift');
 const PlayerNoti = require('../models/playerNoti');
-const playerNoti = require('../models/playerNoti');
 
 const {notify} = require('../controllers/notiController')
 
