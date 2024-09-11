@@ -61,7 +61,7 @@ function App() {
         <Route element={<Layout1 />}>
           <Route path="/add-brand" element={<AddBrand />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
-          <Route path="/edit-brand/:id" element={<EditBrand />} />
+          <Route path="/edit-brand/:id_brand" element={<EditBrand />} />
         </Route>
       </Routes>
     </Router>

@@ -18,10 +18,11 @@ export default function CreateEvent() {
     const [vouchers, setVouchers] = useState([]);
     const [selectedVoucher, setSelectedVoucher] = useState(null);
     const [budget, setBudget] = useState(0);
+    // console.log(selectedVoucher);
 
     const onNext = () => {
         const prefix = gameType === 'Trắc nghiệm' ? '/create-game' : '/create-shake';
-        const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
+        const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}&budget=${budget}&id_voucher=${selectedVoucher?._id || ""}`
         navigate(url);
     }
 
@@ -42,7 +43,7 @@ export default function CreateEvent() {
         const storeBrand = localStorage.getItem('brand');
         const brand = storeBrand ? JSON.parse(storeBrand) : null;
         const fetchVouchers = async () => {
-            const voucherData = await getAll(brand.id_brand);
+            const voucherData = await getAll(brand?.id_brand || 1);
             setVouchers(voucherData); 
         };
 
@@ -177,10 +178,10 @@ export default function CreateEvent() {
                     <div className='form-group'>
                         <label>Trò chơi</label>
                         <div className='radio-group'>
-                            <input type="radio" value={gameType} id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                            <input name="game_type" type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Trắc nghiệm</label>
 
-                            <input type="radio" value={gameType} id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                            <input name="game_type" type="radio" value="Lắc" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Lắc vật phẩm</label>
                         </div>
                     </div>

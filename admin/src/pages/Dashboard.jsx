@@ -83,7 +83,7 @@ export default function Dashboard() {
                     <div className='voucher-chart'>
                         <p>Thống kê</p>
                         <h6>Tình trạng sự kiện</h6>
-                        <EventChart />
+                        {/* <EventChart /> */}
                     </div>
                 </div>
                 
