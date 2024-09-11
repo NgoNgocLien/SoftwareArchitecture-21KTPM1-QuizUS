@@ -37,8 +37,13 @@ export function Button({
     buttonStyle.push(styles.small);
   }
 
-  
-  const textColor = (type === 'primary' || type === 'disabled') ? Colors.light.background : Colors.light.mainText
+  let textColor;
+  if (type === 'primary' || type === 'disabled')
+    textColor = Colors.light.background
+  else if (type === 'tertiary')
+    textColor = Colors.brand._800
+  else 
+    textColor = Colors.light.mainText
   
   return (
     <TouchableOpacity style={[...buttonStyle, style]} {...rest} activeOpacity={0.6}>

@@ -143,3 +143,23 @@ export const giftVoucher = async (id_playerVoucher: string, id_receiver: string)
         throw new Error('Failed to gift voucher');
     }
 }
+export const useVoucher = async (id_playerVoucher: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/voucher/used/66da72bca72515620596efca`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            return result;
+        } else {
+            throw new Error('Failed to fetch data ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data');
+    }
+}

@@ -18,6 +18,7 @@ const tabNames = [
     { index: 0, name: 'Tất cả' },
     { index: 1, name: 'Đổi xu' },
     { index: 2, name: 'Mảnh ghép' },
+    { index: 3, name: 'Đã sử dụng' }
 ]
 
 export default function MyVouchers() {
@@ -41,37 +42,40 @@ export default function MyVouchers() {
                     let allVouchers: any[] = [];
                     let coinVouchers: any[] = [];
                     let itemVouchers: any[] = [];
+                    let usedVouchers: any[] = [];
 
-                    playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; is_used?:boolean}) => {
-                        // console.log(playerVoucher.campaign.id_quiz);
+                    playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; is_used?:boolean, id_playerVoucher: string}) => {
                         const { voucher, ...newPlayerVoucher } = playerVoucher;
 
                         if (playerVoucher.campaign.id_quiz !== "" && playerVoucher.campaign.id_quiz !== null && playerVoucher.campaign.id_quiz !== undefined) {
                             const newVoucher = VoucherFactory.createVoucher('coin', voucher);
                             
                             if (playerVoucher.is_used || Date.now() >= newVoucher.expired_date.getTime()){
-                                coinVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-                                allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+                                usedVouchers.push({ ...newPlayerVoucher, voucher: newVoucher, id_playervoucher: playerVoucher.id_playerVoucher });
                             } else{
-                                coinVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
-                                allVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
+                                coinVouchers.push({ ...newPlayerVoucher, voucher: newVoucher, id_playervoucher: playerVoucher.id_playerVoucher });
+                                allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher, id_playervoucher: playerVoucher.id_playerVoucher });
                             }
                             
                         } else {
                             const newVoucher = VoucherFactory.createVoucher('item', voucher);
 
                             if (playerVoucher.is_used || Date.now() >= newVoucher.expired_date.getTime()){
-                                itemVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
-                                allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher });
+                                usedVouchers.push({ ...newPlayerVoucher, voucher: newVoucher, id_playervoucher: playerVoucher.id_playerVoucher });
                             } else{
-                                itemVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
-                                allVouchers.unshift({ ...newPlayerVoucher, voucher: newVoucher });
+                                itemVouchers.push({ ...newPlayerVoucher, voucher: newVoucher, id_playervoucher: playerVoucher.id_playerVoucher });
+                                allVouchers.push({ ...newPlayerVoucher, voucher: newVoucher, id_playervoucher: playerVoucher.id_playerVoucher });
                             }
                             
                         }
                     });
 
-                    setVouchers([allVouchers, coinVouchers, itemVouchers]);
+                    allVouchers.sort((a, b) => a.voucher.expired_date.getTime() - b.voucher.expired_date.getTime());
+                    coinVouchers.sort((a, b) => a.voucher.expired_date.getTime() - b.voucher.expired_date.getTime());
+                    itemVouchers.sort((a, b) => a.voucher.expired_date.getTime() - b.voucher.expired_date.getTime());
+                    usedVouchers.sort((a, b) => a.voucher.expired_date.getTime() - b.voucher.expired_date.getTime());
+
+                    setVouchers([allVouchers, coinVouchers, itemVouchers, usedVouchers]);
                     setLoading(false);
                 })
                 .catch(error => {
@@ -107,11 +111,12 @@ export default function MyVouchers() {
                 <FontAwesome name={'search'} style={styles.searchIcon} />
             </View>
 
-            <View style={{ minHeight: 40, maxHeight: 40, flexDirection: 'row', display: 'flex' }}>
+            <ScrollView style={{ minHeight: 40, maxHeight: 40, flexDirection: 'row', display: 'flex' }} horizontal={true} showsHorizontalScrollIndicator={false} bounces={false}>
                 <View style={styles.emptyTab}></View>
 
                 {tabNames.map((tab, index) => (
                     <TouchableWithoutFeedback onPress={() => handleTabFocus(index)} key={tab.index}>
+                        
                         <View style={[styles.categoryTab, focusedTab === tab.index ? styles.focusedTab : null]}>
                             <Text style={[styles.categoryText, focusedTab === tab.index ? styles.focusedText : null]}>
                                 {tab.name}
@@ -126,7 +131,7 @@ export default function MyVouchers() {
                 ))}
 
                 <View style={styles.emptyTab}></View>
-            </View>
+            </ScrollView>
 
             {
                 focusedTab === 0 ? 
@@ -187,6 +192,26 @@ export default function MyVouchers() {
                                         is_used={item.is_used}
                                         id_playerVoucher={item.id_playerVoucher}
                                         style={index === vouchers[2].length - 1 ? { marginBottom: 32 } : {}} 
+                                    />
+                                ))}
+                            </ScrollView> 
+                        )}
+                    </>
+                ) : focusedTab === 3 ?
+                loading ? <LoadingView /> :
+                (
+                    <>
+                        {vouchers === null || vouchers[3].length === 0 ? (
+                            <EmptyView />
+                        ) : (
+                            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                                {vouchers[3].map((item, index) => (
+                                    <VoucherCard
+                                        voucher={item.voucher.getVoucher()}
+                                        campaign={item.campaign}
+                                        key={index} 
+                                        is_used={item.is_used}
+                                        style={index === vouchers[3].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}
                             </ScrollView> 

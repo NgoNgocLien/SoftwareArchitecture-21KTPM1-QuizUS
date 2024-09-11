@@ -14,6 +14,8 @@ import {
     Clipboard,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import QRCode from 'react-native-qrcode-svg';
 
 import { SubHeader } from '@/components/header/SubHeader';
 import { Colors } from '@/constants/Colors';
@@ -36,7 +38,7 @@ import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
 import { PlayerInfo } from '@/models/game/PlayerInfo';
 import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
-import { getVoucherById } from '@/api/VoucherApi';
+import { getVoucherById, useVoucher } from '@/api/VoucherApi';
 import { getLikedCampaigns } from '@/api/CampaignApi';
 import { CampaignCard } from '@/components/card/CampaignCard';
 
@@ -51,18 +53,20 @@ export default function VoucherPage() {
 
     const params = useLocalSearchParams();
     const id_voucher = params.id_voucher as string;
-
     const mine = (params.mine as string) === 'true';
 
-    let is_used = false;
-    if (mine) {
-        is_used = (params.is_used === 'true');
-    }
+    const [is_used, setIsUsed] = useState<boolean>(false);
+    const [id_playerVoucher, setIdPlayerVoucher] = useState<string>('');
+
+    useEffect(() => {
+        if (mine) {
+            setIsUsed(params.is_used === 'true');
+            setIdPlayerVoucher(params.id_playerVoucher as string);
+        }
+    }, [mine, params.is_used, params.id_playerVoucher]);
 
     const [loading, setLoading] = useState<boolean>(true);
-    // const [type_game, setTypeGame] = useState<string|null>(null);
     const [voucher, setVoucher] = useState<any|null>(null);
-    const [brand, setBrand] = useState<Brand | null>(null);
     const [campaigns, setCampaigns] = useState<any[]>([]);
 
     // Fetch campaign info
@@ -70,7 +74,6 @@ export default function VoucherPage() {
         if (id_voucher){
             getVoucherById(id_voucher).then(result => {
                 setVoucher(result);
-                setBrand(result.brand);
 
                 if (!mine) {
                     getCampaignsOfVoucher(id_voucher).then(res => {
@@ -118,7 +121,7 @@ export default function VoucherPage() {
     const handleShare = async () => {
         try {
             const result = await Share.share({
-                message: `${ brand ? brand.name : "Chúng tôi"} đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!`,
+                message: `${ voucher ? voucher.brand.name : "Chúng tôi" } đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!`,
                 url: 'https://expo.io',
             },{
                 excludedActivityTypes: [
@@ -147,11 +150,7 @@ export default function VoucherPage() {
 
             if (result.action === Share.sharedAction) {
                 if (result.activityType ) {
-                    // On iOS: Shared with specific activity type (e.g., mail, social media)
-                    // increasePlayerTurn(config.ID_PLAYER, id_campaign)
-                    // .then(data => {
-                    //     setPlayerTurn(1)
-                    // })
+                    // On iOS: Shared with activity type
                 } else {
                     // On Android: Shared, but no confirmation of activity type
                 }
@@ -163,55 +162,25 @@ export default function VoucherPage() {
         }
     };
 
-    const [playerInfo, setPlayerInfo] = useState <PlayerInfo | null>(null);
+    const handleUseVoucher = () => {
+        try {
+            useVoucher(id_playerVoucher)
+            .then(data => {
+                showToast('success', 'Sử dụng voucher thành công');
+                setIsUsed(true);
+            })
+            .catch((error) => {
+                console.error('Error using voucher:', error);
+                showToast('error', 'Lỗi hệ thống');
+            });
+        } catch (error) {
+            console.error(error);
+            showToast('error', 'Lỗi hệ thống');
+        }
+    };
 
-    if (!mine) {
-        useEffect(() => {
-            if (id_voucher){
-                retrieveFromSecureStore('id_player', (id_player: string) => {
-
-                    getPlayerItem(id_player).then((data) => {
-                        const player_items = data.map((data: {
-                            id_campaign: any; vouchers: { id_voucher: any; }; 
-                            quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
-                        }) => {
-                            return {
-                                id_campaign: data.id_campaign,
-                                id_voucher: data.vouchers.id_voucher,
-                                quantity_item1: data.quantity_item1,
-                                quantity_item2: data.quantity_item2,
-                                item1_photo: data.item1_photo,
-                                item2_photo: data.item2_photo,
-                            }
-                        })
-
-                        getPlayerScore(id_player).then((data) => {
-                            setPlayerInfo(new PlayerInfo({
-                                player_score: data.score,
-                                player_items: player_items,
-                            }))
-                        }).catch((error) => {
-                            console.error('Error fetching player score:', error);
-                            showToast('error', 'Lỗi hệ thống');
-                        });
-
-                    }).catch((error) => {
-                        console.error('Error fetching player score:', error);
-                        showToast('error', 'Lỗi hệ thống');
-                    });
-
-                    
-                }).catch((error) => {
-                    console.error('Error retrieving id_player from SecureStore:', error);
-                    showToast('error', 'Không tìm thấy thông tin người chơi');
-                });
-            }
-        },[id_voucher]);
-    }
-
-    const [isModalVisible, setModalVisible] = useState(false);
-    
     return (
+        <RootSiblingParent>
         <View style={styles.container}>
             <SubHeader/>
             <View style={styles.background}>
@@ -219,11 +188,11 @@ export default function VoucherPage() {
                 {loading ? <LoadingView /> : voucher === null  ? <EmptyView /> :
                 (
                 <>
-                <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
+                <ScrollView showsVerticalScrollIndicator={false} bounces={true} >
                     <Image style={styles.banner} source={{uri: voucher.photo}} />
                             
                     <View style={styles.campaignHeaderContainer}>
-                        <Image source={{uri: brand!.logo}} style={styles.brandLogo} />
+                        <Image source={{uri: voucher.brand.logo}} style={styles.brandLogo} />
                         <View style={{flex: 1, justifyContent: 'space-between'}}>
                             <View style={styles.campaignHeader_top}>
                             <View style={Date.now() < Date.parse(voucher.expired_date) ? styles.timeContainer : [styles.timeContainer, styles.outDatedContainer]}>
@@ -244,22 +213,27 @@ export default function VoucherPage() {
 
                     {
                         mine &&
-                        <View>
-                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mã voucher</Heading>
+                        <>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mã thanh toán</Heading>
 
                             <TouchableOpacity style={[styles.codeContainer]} activeOpacity={0.6} 
                                 onPress={() => {
                                     Clipboard.setString(voucher.code); 
-                                    Alert.alert('Đã sao chép', `Mã giảm giá ${voucher.code} vừa được sao chép`);
+                                    Alert.alert('Đã sao chép');
                                 }}>
                                 <Paragraph type={'p2'}>{voucher.code}</Paragraph>
                                 <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
                             </TouchableOpacity>
-                        </View>
+
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>QR thanh toán</Heading>
+                            <View style={styles.qrContainer}>
+                                <QRCode value="facebook.com" size={300} backgroundColor='white'/>
+                            </View>
+                        </>
                     }
                         
                     <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Điều khoản áp dụng</Heading>
-                    <Paragraph type='p2' style={{marginHorizontal: 20}}>
+                    <Paragraph type='p2' style={[{marginHorizontal: 20}, mine ? {paddingBottom: 100} : {}]}>
                         {voucher.description}
                     </Paragraph>
 
@@ -294,7 +268,7 @@ export default function VoucherPage() {
                 <View style={styles.exchangeButtonContainer} >
                     { is_used ? 
                         <Button text='Đã sử dụng' type='disabled' style={styles.exchangeButton} disabled={true}/> :
-                        <Button text='Dùng ngay' type='primary' style={styles.exchangeButton} onPress={() => {}}/> 
+                        <Button text='Dùng ngay' type='primary' style={styles.exchangeButton} onPress={() => {handleUseVoucher()}}/> 
                     }
                 </View> 
                 }
@@ -302,6 +276,7 @@ export default function VoucherPage() {
                 )}
             </View>
         </View>
+        </RootSiblingParent>
     )
 }
 
@@ -453,7 +428,6 @@ const styles = StyleSheet.create({
     },
     exchangeButton: {
         marginBottom: Platform.OS === 'ios' ? 10 : 0,
-        fontWeight: '600',
     },
 
     titleContainer: {
@@ -481,5 +455,17 @@ const styles = StyleSheet.create({
         color: Colors.feedback.warning,
         fontWeight: '600',
         fontSize: 16,
+    },
+
+    qrContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 20,
+        marginBottom: 10,
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        borderWidth: 4,
+        borderColor: Colors.gray._200,
     },
 });
