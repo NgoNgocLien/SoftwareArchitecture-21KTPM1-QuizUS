@@ -178,10 +178,10 @@ export default function CreateEvent() {
                     <div className='form-group'>
                         <label>Trò chơi</label>
                         <div className='radio-group'>
-                            <input type="radio" value={gameType} id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                            <input name="game_type" type="radio" value={gameType} id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Trắc nghiệm</label>
 
-                            <input type="radio" value={gameType} id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                            <input name="game_type" type="radio" value={gameType} id="shake" onChange={((e) => { onTypeChanged(e) })}/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Lắc vật phẩm</label>
                         </div>
                     </div>
