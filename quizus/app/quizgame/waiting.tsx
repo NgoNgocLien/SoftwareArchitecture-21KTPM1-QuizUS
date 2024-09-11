@@ -44,8 +44,8 @@ export default function QuizGameDetail() {
   return (
   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
   <SafeAreaView style={styles.background}>
-    <View style={styles.container}>
-      <Heading type={"h3"}>Đang có {playerList?.length} người chơi</Heading>
+    <View style={[styles.container, {justifyContent: 'center'}]}>
+      <Heading type={"h3"} style={{textAlign: 'center'}}>Đang có {playerList?.length} người chơi</Heading>
       <Paragraph>{playerList.map(item => item.name).join(', ')}</Paragraph>
       <Button text="Quay trở lại" onPress={() => {
             router.replace({

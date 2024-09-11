@@ -314,7 +314,7 @@ export default function Campaign() {
                                     onPress={() => {
                                         if (type_game == config.QUIZ_GAME){
                                             router.replace({
-                                                pathname: `/quizgame/detail`,
+                                                pathname: `/quizgame/waiting`,
                                                 params: {
                                                     quizInfo: JSON.stringify(quizInfo),
                                                     id_campaign: campaign._id

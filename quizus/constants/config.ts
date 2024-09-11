@@ -12,7 +12,7 @@ const USER_BE = 'http://192.168.1.5:8000/user';
 // const GAME_BE = 'http://192.168.1.5:8000/game';
 const CAMPAIGN_BE = 'http://192.168.1.5:8000/campaign';
 const NOTIFICATION_BE = 'http://192.168.1.5:8000';
-const GAME_BE = 'http://192.168.1.5:8000';
+const GAME_BE = 'http://192.168.1.5:8000/game';
 
 // simple
 // const USER_BE = 'http://192.168.0.225:8000/user';
