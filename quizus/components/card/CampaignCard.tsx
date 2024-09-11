@@ -91,7 +91,7 @@ export function CampaignCard({
         <>
             <Modal animationType="fade" transparent={true} visible={modalVisible} >
                 <View style={dialogStyles.centeredView}>
-                    <View style={dialogStyles.modalView}>
+                    <View style={[dialogStyles.modalView, {paddingBottom: 20}]}>
 
                         <View style={dialogStyles.topView}>
                             <View style={dialogStyles.dangerIconContainer}>
