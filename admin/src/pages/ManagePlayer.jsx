@@ -12,25 +12,12 @@ export default function ManagePlayer() {
     
     const handleSearch = async (e) => {
         const result = await searchPlayer(e.target.value);
-        setPlayerData(result);
+        if (typeof result === 'object' && !Array.isArray(result)) {
+            setPlayerData([result]);
+        } else {
+            setPlayerData(result);
+        }
     };
-
-    // const onDelete = () => {
-    //     confirmAlert({
-    //         message: 'Bạn có chắc chắn muốn xóa người chơi này không?',
-    //         buttons: [
-    //             {
-    //                 label: 'Có',
-    //                 onClick: () => {
-    //                     //Trống
-    //                 }
-    //             },
-    //             {
-    //                 label: 'Không'
-    //             }
-    //         ]
-    //     });
-    // }
 
     const onEdit = (id) => {
         navigate(`/edit-user/${id}`);
@@ -44,7 +31,7 @@ export default function ManagePlayer() {
         }
         getData();
     }, [])
-
+    
     return (
         <div>
             {/* Search bar */}
@@ -52,7 +39,7 @@ export default function ManagePlayer() {
                 <input
                     type="text"
                     className="search-input"
-                    placeholder="Tìm kiếm theo ID, tên, email người chơi"
+                    placeholder="Tìm kiếm theo email, số điện thoại người chơi"
                     onChange={(e) => handleSearch(e)}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
