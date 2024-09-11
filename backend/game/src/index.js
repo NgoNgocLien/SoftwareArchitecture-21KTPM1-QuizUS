@@ -18,10 +18,13 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     console.log(`Player connected: ${socket.id}`);
 
-    // socket.on('join-game', (playerName) => {
-    //     console.log(`${playerName} joined the game`);
-    //     io.emit('player-added', playerName);
-    // });
+    socket.on('player-details', (playerName, id_player) => {
+        players[socket.id] = { id: id_player, name: playerName };
+        console.log(`${playerName} connected`);
+
+        // Emit 'player-added' event to all clients
+        io.emit('player-added', { id: id_player, name: playerName });
+    });
 
     socket.on('disconnect', () => {
         console.log(`Player disconnected: ${socket.id}`);
@@ -29,6 +32,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(8005, () => {
+server.listen(8002, () => {
     console.log('Socket.IO Game server with API is listening on port 8005');
 });

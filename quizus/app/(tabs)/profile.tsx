@@ -65,6 +65,7 @@ export default function Profile() {
     }
 
     removeFromSecureStore("id_player");
+    removeFromSecureStore("name_player");
     router.replace("/login");
     
   };

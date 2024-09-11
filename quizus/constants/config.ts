@@ -22,7 +22,7 @@ const QR_SCANNER = 'http://192.168.1.5:4000';
 
 const NOTI_BE = '';
 
-const DURATION = 20000;
+const DURATION = 40000;
 
 const QUIZ_SCORE = 100;
 
