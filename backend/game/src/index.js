@@ -12,6 +12,7 @@ const io = new Server(server, {
         origin: "http://192.168.1.5:3000",
         methods: ["GET", "POST"],
     },
+    path: '/game',
 });
 
 io.on('connection', (socket) => {

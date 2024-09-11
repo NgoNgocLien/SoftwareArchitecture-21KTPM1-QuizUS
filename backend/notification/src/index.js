@@ -17,6 +17,7 @@ const io = new Server(server, {
         origin: "http://10.0.1.35:3000",
         methods: ["GET", "POST"],
     },
+    path: '/notification',
 });
 
 let onlineUsers = [];

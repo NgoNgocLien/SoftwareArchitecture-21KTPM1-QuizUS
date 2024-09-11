@@ -17,6 +17,7 @@ class NotificationSocket {
         reconnectionDelay: 1000, // Delay in ms before attempting to reconnect
         reconnectionDelayMax: 5000, // Maximum delay between reconnection attempts
         timeout: 20000, // 20 seconds timeout for connection before failing
+        path: '/notification',
       });
       
     }
