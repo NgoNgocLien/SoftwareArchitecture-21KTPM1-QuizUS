@@ -84,22 +84,22 @@ const search = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { id_brand } = req.params; 
   const {
+    id_brand,
     name,
     field,
     address,
     lat,
     long,
-    is_active,
     username,
     pwd,
     phone,
-    email
+    email,
+    logo
   } = req.body; 
 
   try {
-    const brandToUpdate = await brand.findOne({
+    const brandToUpdate = await model.brand.findOne({
       where: { id_brand }
     });
 
@@ -112,7 +112,7 @@ const update = async (req, res) => {
     brandToUpdate.address = address || brandToUpdate.address;
     brandToUpdate.lat = lat || brandToUpdate.lat;
     brandToUpdate.long = long || brandToUpdate.long;
-    brandToUpdate.is_active = is_active !== undefined ? is_active : brandToUpdate.is_active;
+    brandToUpdate.logo = logo || brandToUpdate.logo;
     brandToUpdate.username = username || brandToUpdate.username;
     
     if (pwd) {
@@ -172,4 +172,46 @@ const updatePassword = async(req,res) => {
   }
 }
 
-module.exports = { signup, getAll, get, search, update, updatePassword }
+const deactivate = async (req, res) => {
+  try {
+      const brand = await model.brand.findOne({
+          where: {
+              id_brand: req.params.id_brand,
+          }
+      })
+
+      if (brand) {
+          brand.is_active = false;
+          const updatedBrand = await brand.save();
+          successCode(res, updatedBrand, "Khóa thành công")
+      } else
+          failCode(res, null, "id_brand không hợp lệ")
+  } catch (err) {
+      console.log(err)
+      errorCode(res)
+  }
+}
+
+const activate = async (req, res) => {
+  try {
+      const brand = await model.brand.findOne({
+          where: {
+              id_brand: req.params.id_brand,
+          }
+      })
+
+      if (brand) {
+          brand.is_active = true;   
+          const updatedbrand = await brand.save();
+          successCode(res, updatedbrand, "Kích hoạt thành công")
+      } else
+          failCode(res, null, "id_brand không hợp lệ")
+  } catch (err) {
+      console.log(err)
+      errorCode(res)
+  }
+}
+
+module.exports = { signup, getAll, get, search, update, updatePassword,
+  deactivate, activate
+ }

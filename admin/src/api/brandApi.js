@@ -102,10 +102,61 @@ const uploadImgToCloudinary = async (image) => {
   return null
 }
 
+const updateBrand = async (updatedData) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand`;
+    const response = await axios.put(url, updatedData);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
+const deactivateBrand = async (id_brand) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand/deactivate/${id_brand}`;
+    const response = await axios.put(url);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
+const activateBrand = async (id_brand) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand/activate/${id_brand}`;
+    const response = await axios.put(url);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export {
   getAllBrands,
   searchBrand,
   createBrand,
   getBrandByID,
-  uploadImgToCloudinary
+  uploadImgToCloudinary,
+  updateBrand,
+  deactivateBrand,
+  activateBrand
 };

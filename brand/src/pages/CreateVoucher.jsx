@@ -42,7 +42,7 @@ export default function CreateVoucher() {
                 <div className='form-row'>
                     <div className="row-input">
                         <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Ngày bắt đầu</label>
-                        <input type="datetime-local" placeholder="Chọn ngày hết hạn" required value={start} onChange={(e) => {setStart(e.target.value)}}/>
+                        <input type="datetime-local" placeholder="Chọn ngày hết hạn" required/>
                     </div>
                 </div>
 
@@ -58,6 +58,8 @@ export default function CreateVoucher() {
                         <input type="number" />
                     </div>
                 </div>
+
+
             </div>
         </div>
     )
