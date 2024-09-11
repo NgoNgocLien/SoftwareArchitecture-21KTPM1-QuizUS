@@ -66,7 +66,7 @@ export default function CreateVoucher() {
 
         if (success) {
             confirmAlert({
-                message: 'Tạo sự kiện thành công!',
+                message: 'Tạo voucher thành công!',
                 buttons: [
                     {
                         label: 'Xác nhận',
@@ -79,7 +79,7 @@ export default function CreateVoucher() {
         }
         else {
             confirmAlert({
-                message: 'Tạo sự kiện thất bại!',
+                message: 'Tạo voucher thất bại!',
                 buttons: [
                     {
                         label: 'Xác nhận'
