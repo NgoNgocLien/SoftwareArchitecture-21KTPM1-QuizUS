@@ -9,7 +9,6 @@ class GameSocket {
       console.log("Connecting to Game server...");
       this.socket = io(config.GAME_BE, {
         transports: ['websocket'],
-        query: { id_player: id_player },
         reconnection: true,
         reconnectionAttempts: Infinity,
         reconnectionDelay: 1000,

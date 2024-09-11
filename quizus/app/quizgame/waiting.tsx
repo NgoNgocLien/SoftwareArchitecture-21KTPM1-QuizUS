@@ -11,6 +11,7 @@ import styles from '@/styles/quiz-game-detail.styles';
 import config from '@/constants/config';
 import { McCard } from '@/components/card/McCard';
 import gameSocket from '@/service/GameSocket';
+import { retrieveFromSecureStore } from '@/api/SecureStoreService';
 
 export default function QuizGameDetail() {
   const router = useRouter();
@@ -23,18 +24,19 @@ export default function QuizGameDetail() {
   const [playerList, setPlayerList] = useState<any[]>([]);
 
   useEffect(() => {
-    gameSocket.on('connect', () => {
-      console.log('Connected to server');
-    });
+    retrieveFromSecureStore("id_player", (id_player: string) =>{
+      console.log(id_player)
+      gameSocket.connect(id_player);
 
-    gameSocket.on('player-added', (playerName) => {
-      setPlayerList((prevList) => [...prevList, playerName]);
-    });
-
-    gameSocket.on('player-removed', (playerId) => {
-      setPlayerList((prevList) => prevList.filter(player => player.id !== playerId));
-    });
-
+      gameSocket.on('player-added', (playerName) => {
+        setPlayerList((prevList) => [...prevList, playerName]);
+      });
+  
+      gameSocket.on('player-removed', (playerId) => {
+        setPlayerList((prevList) => prevList.filter(player => player.id !== playerId));
+      });
+    })
+    
     return () => {
       gameSocket.off('player-added');
       gameSocket.off('player-removed');

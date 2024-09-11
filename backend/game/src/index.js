@@ -9,7 +9,7 @@ app.use(express.json());
 
 const io = new Server(server, {
     cors: {
-        origin: "http://192.168.1.14:3000",
+        origin: "http://192.168.1.5:3000",
         methods: ["GET", "POST"],
     },
     path: '/game',
@@ -18,10 +18,10 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     console.log(`Player connected: ${socket.id}`);
 
-    socket.on('join-game', (playerName) => {
-        console.log(`${playerName} joined the game`);
-        io.emit('player-added', playerName);
-    });
+    // socket.on('join-game', (playerName) => {
+    //     console.log(`${playerName} joined the game`);
+    //     io.emit('player-added', playerName);
+    // });
 
     socket.on('disconnect', () => {
         console.log(`Player disconnected: ${socket.id}`);
