@@ -31,7 +31,20 @@ const getVoucherStats = async () => {
   }
 }
 
+const getPlayerByGameStats = async () => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/game/playerByGame`;
+    const response = await axios.get(url);
+    console.log(response)
+    return response.data;
+  }
+  catch (err) {
+    console.log(err.message);
+    return []
+  }
+}
+
 
 export {
-  getStats, getVoucherStats
+  getStats, getVoucherStats, getPlayerByGameStats
 };
