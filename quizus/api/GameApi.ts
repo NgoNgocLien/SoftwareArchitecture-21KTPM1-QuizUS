@@ -174,7 +174,7 @@ export const replyTurn = async (
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id_request,
+                id_request: id_request,
                 is_accept: is_accept
             }),
         });
@@ -185,11 +185,11 @@ export const replyTurn = async (
             // console.log(result)
             return result;
         } else {
-            throw new Error('Failed to fetch data ', result.message);
+            throw new Error('Failed to reply turn ', result.message);
         }
     } catch (error) {
         console.error(error);
-        throw new Error('Failed to fetch data');
+        throw new Error('Failed to reply turn');
     }
 }
 
@@ -213,10 +213,10 @@ export const seenTurnNoti = async (
             // console.log(result)
             return result;
         } else {
-            throw new Error('Failed to fetch data ', result.message);
+            throw new Error('Failed to seen turn noti ', result.message);
         }
     } catch (error) {
         console.error(error);
-        throw new Error('Failed to fetch data');
+        throw new Error('Failed to seen turn noti');
     }
 }

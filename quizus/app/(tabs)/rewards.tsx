@@ -151,7 +151,7 @@ export default function Rewards() {
 
     useEffect(() => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            // notificationSocket.connect(id_player);
+            notificationSocket.connect(id_player);
 
             eventEmitter.on('notification', handleNotification);
         })
@@ -167,7 +167,8 @@ export default function Rewards() {
     return (
         <View style={styles.background}>
             <Header notification={notification}
-                setNotification={setNotification} />
+                setNotification={setNotification}
+                previousRoute={"rewards"} />
             <Image source={require('@/assets/images/banner-reward.png')} style={styles.banner} />
             <View style={styles.tabContainer}>
                 <TouchableWithoutFeedback onPress={() => router.push('/coins')}>

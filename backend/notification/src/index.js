@@ -36,7 +36,8 @@ const getUser = (id_player) => {
 
 io.on("connection", (socket) => {
     console.log('A user connected:', socket.id);
-
+    console.log('Current online users:', onlineUsers);
+    
     // Lắng nghe khi người dùng mới kết nối
     socket.on("newUser", (id_player) => {
         addNewUser(id_player, socket.id);

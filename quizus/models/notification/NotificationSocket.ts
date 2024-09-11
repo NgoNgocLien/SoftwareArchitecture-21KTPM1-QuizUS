@@ -9,9 +9,12 @@ class NotificationSocket {
   public connect(id_player: string) {
     if (!this.socket) {
       console.log("abc")
-      this.socket = io(config.NOTIFICATION_BE, { transports: ['websocket'] }); // Đảm bảo URL server đúng
-      this.init(id_player);
+      this.socket = io(config.NOTIFICATION_BE, { 
+        transports: ['websocket'],
+      });
+      
     }
+    this.init(id_player);
   }
 
   private init(id_player: string) {
