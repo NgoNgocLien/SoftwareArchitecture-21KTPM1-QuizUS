@@ -3,6 +3,7 @@ import "../styles/common.css";
 import "../styles/input.css";
 
 export default function CreateVoucher() {
+
     return (
         <div className="ctn">
             {/* Voucher img */}
@@ -40,7 +41,7 @@ export default function CreateVoucher() {
                 <div className='form-row'>
                     <div className="row-input">
                         <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Ngày bắt đầu</label>
-                        <input type="datetime-local" placeholder="Chọn ngày hết hạn" required value={start} onChange={(e) => {setStart(e.target.value)}}/>
+                        <input type="datetime-local" placeholder="Chọn ngày hết hạn" required/>
                     </div>
                 </div>
 
@@ -55,6 +56,12 @@ export default function CreateVoucher() {
                         <label>Giá trị</label>
                         <input type="number" />
                     </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="button-group">
+                    <button className="cancel-btn">Hủy</button>
+                    <button className="save-btn">Lưu voucher</button>
                 </div>
             </div>
         </div>
