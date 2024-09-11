@@ -25,7 +25,6 @@ export default function CreateShake() {
         const file = e.target.files[0];
 
         setItem1File(file);
-        console.log(item1File)
 
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -40,7 +39,6 @@ export default function CreateShake() {
         const file = e.target.files[0];
 
         setItem2File(file);
-        console.log(item2File)
 
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -107,7 +105,7 @@ export default function CreateShake() {
                     {
                         label: 'Xác nhận',
                         onClick: () => {
-                            // navigate(`/event`);
+                            navigate(`/event`);
                         }
                     }
                 ]

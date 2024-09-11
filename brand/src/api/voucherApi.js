@@ -49,7 +49,26 @@ const getVoucherById = async (id) => {
   }
 }
 
+const createVoucher = async (data) => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/voucher`;
+    const response = await axios.post(url, {
+      ...data
+    });
+    
+    if (response.status === 200 || response.status === 201) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export{
   getAll,
-  getVoucherById
+  getVoucherById,
+  createVoucher 
 }
