@@ -68,6 +68,7 @@ export default function CreateGame() {
            id_brand1: brand?.id_brand || 1,
            budget: searchParams.get('budget'),
            id_voucher: searchParams.get('id_voucher'),
+           photo: searchParams.get('photo'),
         }
         const quiz = {
             questions,
@@ -115,7 +116,7 @@ export default function CreateGame() {
                             type="number"
                             value={reward}
                             onChange={handleRewardChange}
-                            required
+                            // required
                             min="0"
                         />
                     </div>
@@ -143,7 +144,7 @@ export default function CreateGame() {
                                 placeholder={`Nhập câu hỏi ${index + 1}`}
                                 value={q.question_text}
                                 onChange={(e) => handleQuestionChange(index, e.target.value)}
-                                required
+                                // required
                             />
 
                             <div className="options-container">
@@ -154,7 +155,7 @@ export default function CreateGame() {
                                             placeholder={`Đáp án ${i + 1}`}
                                             value={option.answer_text}
                                             onChange={(e) => handleAnswerChange(index, i, e.target.value)}
-                                            required
+                                            // required
                                         />
                                         <input
                                             type="radio"

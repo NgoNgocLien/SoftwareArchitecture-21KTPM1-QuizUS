@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const getAll = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/voucher/search/brand/${id}`;
       const response = await axios.get(url);
       if (response?.data) {
