@@ -3,6 +3,8 @@ import "../styles/common.css";
 import "../styles/input.css";
 import { useNavigate } from 'react-router-dom';
 import { getAll } from '../api/voucherApi';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function CreateEvent() {
     const navigate = useNavigate();
@@ -22,7 +24,6 @@ export default function CreateEvent() {
         const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
         navigate(url);
     }
-    console.log(gameType)
 
     const onTypeChanged = (e) => {
         setGameType(e.currentTarget.value);
@@ -54,6 +55,34 @@ export default function CreateEvent() {
             setBudget(selectedVoucher.price * amount);
         }
     }, [selectedVoucher, amount]);
+
+    const onSave = async () => {
+        const Event = {
+            name,
+            description,
+            start,
+            end,
+            amount,
+            gameType,
+            selectedVoucher: selectedVoucher?._id || null,
+            budget
+        };
+
+        // const success = await updateCampaign(id, Event);
+        // if (success) {
+        //     confirmAlert({
+        //         message: 'Sự kiện đã được cập nhật thành công!',
+        //         buttons: [{ label: 'Xác nhận', onClick: () => navigate('/event') }]
+        //     });
+        // } else {
+        //     confirmAlert({
+        //         message: 'Cập nhật sự kiện thất bại!',
+        //         buttons: [{ label: 'Xác nhận' }]
+        //     });
+        // }
+    };
+
+    const onCancel = () => navigate('/event');
 
     return (
         <div className="ctn">
@@ -148,10 +177,10 @@ export default function CreateEvent() {
                     <div className='form-group'>
                         <label>Trò chơi</label>
                         <div className='radio-group'>
-                            <input type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                            <input type="radio" value={gameType} id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Trắc nghiệm</label>
 
-                            <input type="radio" value="Lắc vật phẩm" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                            <input type="radio" value={gameType} id="shake" onChange={((e) => { onTypeChanged(e) })}/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Lắc vật phẩm</label>
                         </div>
                     </div>

@@ -14,7 +14,7 @@ const QuestionSchema = new Schema({
 });
 
 const QuizSchema = new Schema({
-    quiz_id: { type: String },
+    // quiz_id: { type: String },
     description: { type: String },
     questions: [QuestionSchema]
 }, { versionKey: false });

@@ -1,53 +1,71 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
-import { useNavigate, useParams } from 'react-router-dom';
 import { getCampaignById, updateCampaign } from '../api/campaignApi';
 import { getAll } from '../api/voucherApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function EditEvent() {
+    let event = null;
     const { id } = useParams();
     const navigate = useNavigate();
-    
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
-    const [amount, setAmount] = useState('0');
+    const [amount, setAmount] = useState('');
     const [gameType, setGameType] = useState('Trắc nghiệm');
     const [vouchers, setVouchers] = useState([]);
     const [selectedVoucher, setSelectedVoucher] = useState(null);
     const [budget, setBudget] = useState(0);
 
-    // Fetch events
+    // Fetch event
     useEffect(() => {
         const fetchEvent = async () => {
-            const data = await getCampaignById(id);
-            console.log(data);
-            if (data) {
-                setName(data.name);
-                setDescription(data.description);
-                setStart(data.start);
-                setEnd(data.end); 
-                setAmount(data.amount);
-                setGameType(data.gameType);
-                setSelectedVoucher(data.selectedVoucher);
-            }
-        };
-
-        const fetchVouchers = async () => {
-            const brand = JSON.parse(localStorage.getItem('brand'));
-            const voucherData = await getAll(brand?.id_brand);
-            setVouchers(voucherData);
-            console.log(voucherData);
+            event = await getCampaignById(id);
+            console.log(event);
+            setName(event.name);
+            setDescription(event.description);
+            setStart(event.start_datetime);
+            setEnd(event.end_datetime);
+            setAmount(event.max_amount_voucher);
+            setGameType(event.gameType);
+            setSelectedVoucher(event.voucher.name);
+            // console.log(event.voucher.name);
+            // if (event.selectedVoucher) {
+            //     const voucher = await getVoucherById(event.selectedVoucher);
+            //     setSelectedVoucher(voucher);
+            //     setAmount(event.amount);
+            // }
         };
 
         fetchEvent();
-        fetchVouchers();
     }, [id]);
-    
+
+    // Fetch all vouchers
+    useEffect(() => {
+        const storeBrand = localStorage.getItem('brand');
+        const brand = storeBrand ? JSON.parse(storeBrand) : null;
+        const fetchVouchers = async () => {
+            const voucherData = await getAll(brand.id_brand);
+            setVouchers(voucherData); 
+        };
+
+        fetchVouchers();
+    }, []);
+
+    const handleVoucherChange = async (e) => {
+        const selectedVoucherId = e.target.value;
+        setSelectedVoucher(null);
+        // if (selectedVoucherId) {
+        //     const voucher = await getVoucherById(selectedVoucherId);
+        //     setSelectedVoucher(voucher);
+        // }
+    };
+
     // Calculate budget
     useEffect(() => {
         if (selectedVoucher && amount) {
@@ -55,20 +73,16 @@ export default function EditEvent() {
         }
     }, [selectedVoucher, amount]);
 
-    const handleVoucherChange = (e) => {
-        const selectedId = e.target.value;
-        setSelectedVoucher(vouchers.find(voucher => voucher._id === selectedId));
-    };
-
+    // Save the updated event
     const onSave = async () => {
         const updatedEvent = {
             name,
             description,
-            start, 
+            start,
             end,
             amount,
             gameType,
-            selectedVoucher
+            selectedVoucher: selectedVoucher?._id || null
         };
 
         const success = await updateCampaign(id, updatedEvent);
@@ -136,8 +150,8 @@ export default function EditEvent() {
                 <div className="form-row">
                     <div className="row-input">
                         <label htmlFor="id_voucher">Chọn voucher</label>
-                        <select value={selectedVoucher?._id} onChange={handleVoucherChange}>
-                            <option value="">Chọn voucher</option>
+                        <select value={selectedVoucher || ''} onChange={handleVoucherChange}>
+                            <option value={selectedVoucher}>{selectedVoucher}</option>
                             {vouchers.map(voucher => (
                                 <option key={voucher._id} value={voucher._id}>{voucher.name}</option>
                             ))}
@@ -162,10 +176,10 @@ export default function EditEvent() {
                     <div className="form-group">
                         <label>Trò chơi</label>
                         <div className="radio-group">
-                            <input type="radio" value="Trắc nghiệm" id="quiz" onChange={() => setGameType('Trắc nghiệm')} checked={gameType === 'Trắc nghiệm'} />
+                            <input type="radio" value={gameType} id="quiz" onChange={(e) => setGameType(e.target.value)} checked={gameType === 'Trắc nghiệm'} />
                             <label htmlFor="quiz">Trắc nghiệm</label>
 
-                            <input type="radio" value="Lắc vật phẩm" id="shake" onChange={() => setGameType('Lắc vật phẩm')} checked={gameType === 'Lắc vật phẩm'} />
+                            <input type="radio" value={gameType} id="shake" onChange={(e) => setGameType(e.target.value)} checked={gameType === 'Lắc vật phẩm'} />
                             <label htmlFor="shake">Lắc vật phẩm</label>
                         </div>
                     </div>

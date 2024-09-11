@@ -67,6 +67,8 @@ export const getActiveVouchers = async () => {
 
 export const exchangeCoinVoucher = async (id_player: string, id_campaign: string, score_exchange: number) => {
     try {
+        console.log('exchangeCoinVoucher', id_player, id_campaign)
+
         const response = await fetch(`${config.CAMPAIGN_BE}/api/voucher/exchange/coin`, {
             method: 'POST',
             headers: {
@@ -106,6 +108,7 @@ export const exchangeItemVoucher = async (id_player: string, id_campaign: string
             })
         });
 
+        console.log(response)
         const result = await response.json();
         if (response.status === 201) {
             return result;

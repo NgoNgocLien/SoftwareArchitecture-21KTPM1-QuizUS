@@ -91,7 +91,10 @@ export class FriendTurnRequestNotification extends FriendNotification {
           this.is_accept = updatedNoti.is_accept;
           console.log(this)
         })
-      });
+      })
+      .catch((err) =>{
+        console.log("friend notification: ", err)
+      })
   }
 
   display(): void {
@@ -110,7 +113,7 @@ export class FriendTurnReceiveNotification extends FriendNotification {
   }
 
   getContent(): string{
-    return `${this.name_sender} tặng bạn 1 lượt chơi cho sự kiện "${this.name_campaign}"`;
+    return `${this.name_sender} đồng ý tặng bạn 1 lượt chơi cho sự kiện "${this.name_campaign}"`;
   };
 
   display(): void {

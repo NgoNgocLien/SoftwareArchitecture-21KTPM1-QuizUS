@@ -347,6 +347,29 @@ const like = async (req, res) => {
 
         playerLike.campaigns.push({ id_campaign: campaignId });
         await playerLike.save();
+
+        // Thêm thông báo
+        const campaign = await Campaign.findById(campaignId);
+
+        const now = new Date();
+        const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+        const startTimeMinusOneDay = new Date(campaign.start_time.getTime() - oneDayInMilliseconds);
+
+        if (startTimeMinusOneDay > now) {
+            const newNotification = new Notification({
+                id_receiver: playerId,
+                type: 'campaign',
+                name_campaign: campaign.name, // Storing the campaign name
+                id_campaign: campaignId,      // Storing the campaign ID
+                start_time: campaign.start_time,
+                noti_time: startTimeMinusOneDay,               
+                seen_time: null,   
+            });
+
+            await newNotification.save();
+            console.log(`Notification created for player ${playerId}`);
+        }
+
         res.status(200).json(playerLike);
     } catch (error) {
         res.status(500).json({ message: error.message });

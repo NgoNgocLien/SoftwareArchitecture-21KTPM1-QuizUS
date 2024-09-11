@@ -15,6 +15,7 @@ import { LogBox } from 'react-native'; // Import LogBox at the top of the file
 import Toast from 'react-native-root-toast';
 import { showToast } from '@/components/ToastBar';
 import notificationSocket from '@/models/notification/NotificationSocket';
+import eventEmitter from '@/models/notification/EventEmitter';
 
 if (__DEV__) {
   LogBox.ignoreAllLogs(); // Ignore all logs in development
@@ -37,6 +38,7 @@ export default function RootLayout() {
       retrieveFromSecureStore('id_player', setIdPlayer);
       if (id_player) {
         notificationSocket.connect(id_player);
+
         router.replace('/(tabs)');
       } else {
         router.replace('/login'); 

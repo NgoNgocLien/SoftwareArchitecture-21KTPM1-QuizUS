@@ -31,7 +31,7 @@
 .user-chart {
     display: flex;
     flex-direction: column;
-    width: 70.5%;
+    /* width: 100%; */
     margin-top: 24px;
     padding: 24px;
     background: white;
@@ -97,4 +97,10 @@
 
 .budget-chart h6 {
     margin-bottom: 48px;
+}
+
+.vertical-ctn {
+    display: flex;
+    flex-direction: column;
+    width: 74.5%;
 }

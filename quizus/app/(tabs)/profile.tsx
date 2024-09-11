@@ -33,7 +33,7 @@ export default function Profile() {
     retrieveFromSecureStore('id_player', (id_player: string) => {
       getPlayerById(id_player)
       .then((data: any) => {
-        console.log(data.username)
+        console.log(data.avatar)
         setUserInfo({
           ...userInfo,
           id_player: data.id_player,
@@ -97,8 +97,6 @@ export default function Profile() {
       style={styles.background}
     >
       <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-
         <View style={[styles.titleContainer]}>
             <Heading type="h4">Thông tin cá nhân</Heading>
         </View>
@@ -106,39 +104,48 @@ export default function Profile() {
         <Image source={{uri: userInfo.avatar}} style={styles.avatar} />
         <Label>Username</Label>
         <Input type={"default"} value={userInfo.username} onChangeText={(value) => changeUserInfo("username", value)}/>
-        <Label>Ngày tháng năm sinh</Label>
-        <TextInputMask
-        type={'datetime'}
-        options={{
-          format: 'DD-MM-YYYY',
-        }}
-        value={userInfo.dob}
-        onChangeText={text => changeUserInfo("dob", text)}
-        style={styles.input}
-        placeholder="DD-MM-YYYY"
-        keyboardType="numeric"
-      />
-        <Label>Giới tính</Label>
-        <View style={styles.radioContainer}>
-          <TouchableOpacity
-            style={styles.radioButton}
-            onPress={() => changeUserInfo("gender",'nam')}
-          >
-            <View style={styles.circle}>
-              {userInfo.gender === 'nam' && <View style={styles.checkedCircle} />}
-            </View>
-            <Text style={styles.radioText}>Nam</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.radioButton}
-            onPress={() => changeUserInfo("gender",'nữ')}
-          >
-            <View style={styles.circle}>
-              {userInfo.gender === 'nữ' && <View style={styles.checkedCircle} />}
-            </View>
-            <Text style={styles.radioText}>Nữ</Text>
-          </TouchableOpacity>
+        
+        <View style={{flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between'}}>
+          <View>
+            <Label>Ngày tháng năm sinh</Label>
+            <TextInputMask
+            type={'datetime'}
+            options={{
+              format: 'DD-MM-YYYY',
+            }}
+            value={userInfo.dob}
+            onChangeText={text => changeUserInfo("dob", text)}
+            style={[styles.input]}
+            placeholder="DD-MM-YYYY"
+            keyboardType="numeric"
+          />
+          </View>
+          
+          <View>
+          <Label>Giới tính</Label>
+          <View style={styles.radioContainer}>
+            <TouchableOpacity
+              style={styles.radioButton}
+              onPress={() => changeUserInfo("gender",'nam')}
+            >
+              <View style={styles.circle}>
+                {userInfo.gender === 'nam' && <View style={styles.checkedCircle} />}
+              </View>
+              <Text style={styles.radioText}>Nam</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.radioButton}
+              onPress={() => changeUserInfo("gender",'nữ')}
+            >
+              <View style={styles.circle}>
+                {userInfo.gender === 'nữ' && <View style={styles.checkedCircle} />}
+              </View>
+              <Text style={styles.radioText}>Nữ</Text>
+            </TouchableOpacity>
+          </View>
+          </View>
         </View>
+         
         <Label>Email</Label>
         <Input type={"default"} value={userInfo.email} onChangeText={(value) => changeUserInfo("email", value)}/>
         <Label>Facebook</Label>
@@ -159,7 +166,6 @@ export default function Profile() {
           type="primary"
           onPress={handleLogout}
         />
-       </ScrollView>
       </SafeAreaView>
     </LinearGradient>
     </TouchableWithoutFeedback>
@@ -181,19 +187,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: Colors.light.background,
   },
+  halfInput: {
+    width: '40%'
+  },
   avatar:{
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#2c3e50',
-    marginBottom: 20,
+    marginBottom: 0,
     alignSelf: 'center'
   },
   titleContainer: {
+    marginTop: 10,
     marginBottom: 20,
     display: 'flex',
     flexDirection: 'row',
