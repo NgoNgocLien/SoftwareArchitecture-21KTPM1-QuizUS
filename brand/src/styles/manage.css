@@ -201,3 +201,10 @@ a:hover {
     width: 24px; /* Adjust width and height as needed */
     height: 24px;
 }
+
+.voucher-info img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 10px;
+}

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/input.css";
 import { useNavigate } from 'react-router-dom';
+import { getAll } from '../api/voucherApi';
 
 export default function CreateEvent() {
     const navigate = useNavigate();
@@ -10,8 +11,11 @@ export default function CreateEvent() {
     const [description, setDescription] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
-    const [amount, setAmount] = useState('');
+    const [amount, setAmount] = useState('0');
     const [gameType, setGameType] = useState('Trắc nghiệm');
+    const [vouchers, setVouchers] = useState([]);
+    const [selectedVoucher, setSelectedVoucher] = useState(null);
+    const [budget, setBudget] = useState(0);
 
     const onNext = () => {
         const prefix = gameType === 'Trắc nghiệm' ? '/create-game' : '/create-shake';
@@ -25,8 +29,31 @@ export default function CreateEvent() {
     }
 
     const handleOption = (e) => {
-        setSelectedOption(e.target.value);
+        const selectedVoucherId = e.target.value;
+        setSelectedOption(selectedVoucherId);
+        
+        const voucher = vouchers.find(voucher => voucher._id === selectedVoucherId);
+        setSelectedVoucher(voucher);
     };
+
+    // Get voucher name
+    useEffect(() => {
+        const storeBrand = localStorage.getItem('brand');
+        const brand = storeBrand ? JSON.parse(storeBrand) : null;
+        const fetchVouchers = async () => {
+            const voucherData = await getAll(brand.id_brand);
+            setVouchers(voucherData); 
+        };
+
+        fetchVouchers();
+    }, []);
+
+    // Calculate budget
+    useEffect(() => {
+        if (selectedVoucher && amount) {
+            setBudget(selectedVoucher.price * amount);
+        }
+    }, [selectedVoucher, amount]);
 
     return (
         <div className="ctn">
@@ -49,7 +76,7 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label id="name">Tên sự kiện</label>
-                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" required value={name} onChange={(e) => {setName(e.target.value)}}/>
+                        <input type="text" id="name" placeholder="Nhập tên sự kiện" required value={name} onChange={(e) => {setName(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -82,10 +109,11 @@ export default function CreateEvent() {
                                 onChange={handleOption}
                                 label="Chọn voucher">
                             <option value="">Chọn voucher</option>
-                            <option value="voucher">
-                                <img src="/images/image 41.png" className="voucher-thumb"/>
-                                Tên voucher
-                            </option>
+                            {vouchers.map((voucher) => (
+                                <option key={voucher._id} value={voucher._id}>
+                                    {voucher.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -99,7 +127,10 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label>Ngân sách</label>
-                        <input type="number" /> {/* Lấy số lượng x price voucher */}
+                        <input  type="number"
+                                value={budget}
+                                readOnly
+                        />
                     </div>
                 </div>
 

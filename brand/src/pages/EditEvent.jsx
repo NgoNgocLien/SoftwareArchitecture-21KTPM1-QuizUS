@@ -3,7 +3,7 @@ import "../styles/common.css";
 import "../styles/input.css";
 
 export default function EditEvent() {
-
+    
     return (
         <div className="ctn">
             {/* Event img */}
