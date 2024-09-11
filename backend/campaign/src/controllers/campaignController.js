@@ -6,6 +6,8 @@ const PlayerGame = require('../models/playerGame');
 const PlayerVoucher = require('../models/playerVoucher');
 const Quiz = require('../models/quiz');
 const ItemGift = require('../models/itemGift');
+const TurnRequest = require('../models/turnRequest');
+const VoucherGift = require('../models/voucherGift');
 
 // Lấy tất cả các chiến dịch
 const getAll = async (req, res) => {
@@ -498,7 +500,7 @@ const getPlayerStats = async (req, res) => {
             if (creationTime >= startOfYear) {
                 const monthDiff = currentMonth.getMonth() - creationTime.getMonth();
                 if (monthDiff < months) {
-                    recentPlayerCount[monthDiff]++; // Cộng dồn số liệu cho đúng tháng
+                    recentPlayerCount[monthDiff]++; 
                 }
             }
         });
@@ -522,7 +524,7 @@ const getPlayerStats = async (req, res) => {
             }
         });
 
-        // 3. Số lượng người chơi tặng item từ đầu năm đến tháng hiện tại (ItemGift)
+        // 3. Số lượng người chơi trao đổi vật phẩm (tặng item, tặng voucher, tặng lượt chơi) từ đầu năm đến tháng hiện tại
         const itemGifts = await ItemGift.find({
             gift_time: { $gte: startOfYear }
         });
@@ -535,11 +537,38 @@ const getPlayerStats = async (req, res) => {
             }
         });
 
+        // Lấy dữ liệu từ VoucherGift
+        const voucherGifts = await VoucherGift.find({
+            gift_time: { $gte: startOfYear }
+        });
+
+        voucherGifts.forEach(gift => {
+            const giftTime = new Date(gift.gift_time);
+            const monthDiff = currentMonth.getMonth() - giftTime.getMonth();
+            if (monthDiff < months) {
+                recentItemGifts[monthDiff]++;
+            }
+        });
+
+        // Lấy dữ liệu từ TurnRequest (những yêu cầu tặng lượt chơi được chấp nhận)
+        const turnRequests = await TurnRequest.find({
+            reply_time: { $gte: startOfYear },
+            is_accept: true // Chỉ tính những yêu cầu đã được chấp nhận
+        });
+
+        turnRequests.forEach(turn => {
+            const replyTime = new Date(turn.reply_time);
+            const monthDiff = currentMonth.getMonth() - replyTime.getMonth();
+            if (monthDiff < months) {
+                recentItemGifts[monthDiff]++;
+            }
+        });
+
         // Trả về kết quả cho chart
         res.status(200).json({
             recentPlayerCount,         // Số lượng người chơi đăng ký theo tháng
             recentPlayerGames,         // Số lượng người chơi tham gia sự kiện theo tháng
-            recentItemGifts            // Số lượng người chơi tặng item theo tháng
+            recentItemGifts            // Số lượng người chơi tặng item, tặng voucher, tặng lượt chơi theo tháng
         });
     } catch (error) {
         console.error('Error fetching statistics:', error);
