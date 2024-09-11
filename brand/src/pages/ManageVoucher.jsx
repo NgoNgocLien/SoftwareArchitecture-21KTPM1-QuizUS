@@ -85,7 +85,7 @@ export default function ManageVoucher() {
 
                                     <td>
                                         <div className="voucher-info">
-                                            <img src={item.photo} alt="" className="voucher-logo" />
+                                            <img src={item.photo} alt="" />
                                             <span>{item.name ||'Voucher chưa đặt tên'}</span>
                                         </div>
                                     </td>

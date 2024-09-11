@@ -4,7 +4,7 @@ import "../styles/manage.css";
 import { useNavigate } from 'react-router-dom';
 import { getAll } from '../api/campaignApi';
 
-export default function Manageevent() {
+export default function ManageEvent() {
     const navigate = useNavigate();
     const storedBrand = localStorage.getItem('brand');
     const brand = storedBrand ? JSON.parse(storedBrand) : null;
@@ -45,7 +45,10 @@ export default function Manageevent() {
         getData();
     }, [brand?.id_brand]);
 
-    console.log(data);
+    const handleEdit = (id_campaign) => {
+        navigate(`/edit-event/${id_campaign}`);
+    };
+
     return (
         <div>
             <div className="add-event-container">
@@ -114,15 +117,11 @@ export default function Manageevent() {
                                     <td>{item.max_amount_voucher}</td>
 
                                     {/* Hành động */}
-                                    <td className='action-buttons'>
-                                        <button className="edit-btn">
+                                    <td>
+                                        <button className="edit-btn" onClick={() => handleEdit(item._id)}>
                                             <img src="/icons/edit.svg" alt="edit-btn" />
-                                                    Sửa
+                                            Sửa
                                         </button>
-                                        {/* <button className="delete-btn">
-                                            <img src="/icons/delete.svg" alt="delete-btn" />
-                                                    Xóa
-                                        </button> */}
                                     </td>
                                 </tr>
                             ))

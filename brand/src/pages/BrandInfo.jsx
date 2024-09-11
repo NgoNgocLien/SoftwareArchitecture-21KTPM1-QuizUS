@@ -12,7 +12,7 @@ export default function BrandInfo() {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [website, setWebsite] = useState('');
+    // const [website, setWebsite] = useState('');
     const [field, setField] = useState('');
     const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
@@ -24,7 +24,7 @@ export default function BrandInfo() {
             if (data) {
                 setName(data?.name);
                 setUsername(data?.username);
-                setWebsite(data?.website);
+                // setWebsite(data?.website);
                 setField(data?.field);
                 setAddress(data?.address);
                 setEmail(data?.email);
@@ -112,10 +112,10 @@ export default function BrandInfo() {
 
                 {/* Website */}
                 <div className="form-row">
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label htmlFor="website">Trang web</label>
                         <input type="url" id="website" placeholder="Nhập URL trang web" value={website} onChange={(e) => {setWebsite(e.target.value)}}/>
-                    </div>
+                    </div> */}
                     <div className="form-group">
                         <label htmlFor="phone">Số điện thoại</label>
                         <input type="tel" id="phone"/>

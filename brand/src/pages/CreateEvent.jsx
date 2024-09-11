@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/common.css";
 import "../styles/input.css";
 import { useNavigate } from 'react-router-dom';
+import { getAll } from '../api/voucherApi';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function CreateEvent() {
     const navigate = useNavigate();
@@ -10,23 +13,76 @@ export default function CreateEvent() {
     const [description, setDescription] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
-    const [amount, setAmount] = useState('');
+    const [amount, setAmount] = useState('0');
     const [gameType, setGameType] = useState('Trắc nghiệm');
+    const [vouchers, setVouchers] = useState([]);
+    const [selectedVoucher, setSelectedVoucher] = useState(null);
+    const [budget, setBudget] = useState(0);
 
     const onNext = () => {
         const prefix = gameType === 'Trắc nghiệm' ? '/create-game' : '/create-shake';
         const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
         navigate(url);
     }
-    console.log(gameType)
 
     const onTypeChanged = (e) => {
         setGameType(e.currentTarget.value);
     }
 
     const handleOption = (e) => {
-        setSelectedOption(e.target.value);
+        const selectedVoucherId = e.target.value;
+        setSelectedOption(selectedVoucherId);
+        
+        const voucher = vouchers.find(voucher => voucher._id === selectedVoucherId);
+        setSelectedVoucher(voucher);
     };
+
+    // Get voucher name
+    useEffect(() => {
+        const storeBrand = localStorage.getItem('brand');
+        const brand = storeBrand ? JSON.parse(storeBrand) : null;
+        const fetchVouchers = async () => {
+            const voucherData = await getAll(brand.id_brand);
+            setVouchers(voucherData); 
+        };
+
+        fetchVouchers();
+    }, []);
+
+    // Calculate budget
+    useEffect(() => {
+        if (selectedVoucher && amount) {
+            setBudget(selectedVoucher.price * amount);
+        }
+    }, [selectedVoucher, amount]);
+
+    const onSave = async () => {
+        const Event = {
+            name,
+            description,
+            start,
+            end,
+            amount,
+            gameType,
+            selectedVoucher: selectedVoucher?._id || null,
+            budget
+        };
+
+        // const success = await updateCampaign(id, Event);
+        // if (success) {
+        //     confirmAlert({
+        //         message: 'Sự kiện đã được cập nhật thành công!',
+        //         buttons: [{ label: 'Xác nhận', onClick: () => navigate('/event') }]
+        //     });
+        // } else {
+        //     confirmAlert({
+        //         message: 'Cập nhật sự kiện thất bại!',
+        //         buttons: [{ label: 'Xác nhận' }]
+        //     });
+        // }
+    };
+
+    const onCancel = () => navigate('/event');
 
     return (
         <div className="ctn">
@@ -49,7 +105,7 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label id="name">Tên sự kiện</label>
-                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" required value={name} onChange={(e) => {setName(e.target.value)}}/>
+                        <input type="text" id="name" placeholder="Nhập tên sự kiện" required value={name} onChange={(e) => {setName(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -82,10 +138,11 @@ export default function CreateEvent() {
                                 onChange={handleOption}
                                 label="Chọn voucher">
                             <option value="">Chọn voucher</option>
-                            <option value="voucher">
-                                <img src="/images/image 41.png" className="voucher-thumb"/>
-                                Tên voucher
-                            </option>
+                            {vouchers.map((voucher) => (
+                                <option key={voucher._id} value={voucher._id}>
+                                    {voucher.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -99,7 +156,10 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label>Ngân sách</label>
-                        <input type="number" /> {/* Lấy số lượng x price voucher */}
+                        <input  type="number"
+                                value={budget}
+                                readOnly
+                        />
                     </div>
                 </div>
 
@@ -107,8 +167,7 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className='form-group'>
                         <label>Voucher đã phát</label>
-                        <input  type="number" 
-                                value="Số lượng voucher đã phát sẽ được thống kê khi sự kiện diễn ra" 
+                        <input  type="number"  
                                 readOnly/> 
                     </div>
                 </div>
@@ -118,10 +177,10 @@ export default function CreateEvent() {
                     <div className='form-group'>
                         <label>Trò chơi</label>
                         <div className='radio-group'>
-                            <input type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                            <input type="radio" value={gameType} id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Trắc nghiệm</label>
 
-                            <input type="radio" value="Lắc vật phẩm" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                            <input type="radio" value={gameType} id="shake" onChange={((e) => { onTypeChanged(e) })}/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Lắc vật phẩm</label>
                         </div>
                     </div>

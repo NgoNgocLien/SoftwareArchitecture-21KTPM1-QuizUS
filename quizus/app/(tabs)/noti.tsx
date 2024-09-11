@@ -131,8 +131,8 @@ export default function Notification() {
                 />
             </SafeAreaView>
             <View style={[styles.container, styles.titleContainer]}>
-                <Heading type="h4">Thông báo</Heading>
-                <View>
+                <Heading type="h4" style={{flexGrow: 2}}>Thông báo</Heading>
+                <View style={{flexGrow: 1}} >
                     <Button text={'Đánh dấu đã đọc'} size={'small'} 
                         type={ unseen ? 'primary' : 'disabled' }
                         onPress={handleReadNoti}></Button>

@@ -41,7 +41,7 @@ export default function RootLayout() {
 
         router.replace('/(tabs)');
       } else {
-        router.push('/login'); 
+        router.replace('/login'); 
       }
 
       // router.push('/(tabs)');

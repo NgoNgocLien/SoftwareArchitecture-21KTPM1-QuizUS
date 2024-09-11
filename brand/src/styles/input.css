@@ -251,6 +251,12 @@ select {
     font-family: regular-font;
 }
 
+.row-input label {
+    font-family: semibold-font;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
 input[type="number"] {
     padding: 10px;
     font-family: regular-font;

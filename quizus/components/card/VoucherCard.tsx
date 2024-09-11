@@ -43,6 +43,7 @@ export function VoucherCard({
     playerInfo,
     is_used,
     id_playerVoucher,
+    updateCoins,
     ...rest
 }:{ 
     voucher: any,    
@@ -55,6 +56,7 @@ export function VoucherCard({
     is_used?: boolean,
     id_playerVoucher?: string,
     [key: string]: any;
+    updateCoins?: () => void;
 }) {
     const router = useRouter();
     let expiredDateFormatted = voucher 
@@ -75,6 +77,11 @@ export function VoucherCard({
                     if (result) {
                         console.log(result);
                         showToast('success', 'Đổi thành công');
+
+                        // Update coins
+                        if (updateCoins) {
+                            updateCoins();
+                        }
                     } else {
                         showToast('error', 'Đổi thất bại');
                     }
@@ -96,6 +103,11 @@ export function VoucherCard({
                     if (result) {
                         console.log(result);
                         showToast('success', 'Đổi thành công');
+
+                        // Update coins
+                        if (updateCoins) {
+                            updateCoins();
+                        }
                     } else {
                         showToast('error', 'Đổi thất bại');
                     }
@@ -164,22 +176,23 @@ export function VoucherCard({
                         )
                     ) : (
                         is_used ? (
-                            <View style={[styles.exchangeButton, {backgroundColor: Colors.gray._200}]}>
-                                <Paragraph type={'p2'} color={ Colors.gray._500}>Đã sử dụng</Paragraph>
+                            <View style={[styles.useButton, {backgroundColor: Colors.gray._200}]} >
+                                <Text style={[styles.useButtonText, { color: Colors.gray._500 }]}>Đã sử dụng</Text>
                             </View>
                         )  : (
-                        (Date.now() < voucher.expired_date.getTime()) && 
-                        <Button text={"Sử dụng/Tặng"} size={'small'}
-                            onPress={() =>{
-                                console.log(id_playerVoucher);
-                                router.replace({
-                                    pathname: '/gift-voucher',
-                                    params: {
-                                        voucher: JSON.stringify(voucher),
-                                        id_playerVoucher: id_playerVoucher
-                                    }
+                        (Date.now() < voucher.expired_date.getTime()) ? 
+                            <TouchableOpacity style={styles.useButton} activeOpacity={0.6} onPress={() => {
+                                router.push({
+                                    pathname: '/voucher',
+                                    params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id }
                                 })
-                            }}></Button>
+                            }}>
+                                <Text style={styles.useButtonText}>Đổi ngay</Text>
+                            </TouchableOpacity> 
+                        :
+                            <View style={[styles.useButton, {backgroundColor: Colors.gray._200}]} >
+                                <Text style={[styles.useButtonText, { color: Colors.gray._500 }]}>Hết hạn</Text>
+                            </View>
                         )
                         
                     )
@@ -287,6 +300,21 @@ const styles = StyleSheet.create({
     },
     exchangeButtonText: {
         color: Colors.feedback.warning,
+        fontWeight: '600',
+        fontSize: 16,
+    },
+
+    useButton: {
+        marginHorizontal: 15,
+        marginBottom: 10,
+        borderRadius: 6,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        backgroundColor: Colors.light.secondary,
+    },
+    useButtonText: {
+        textAlign: 'center',
+        color: Colors.light.primary,
         fontWeight: '600',
         fontSize: 16,
     },
