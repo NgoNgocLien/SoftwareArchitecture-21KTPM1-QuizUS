@@ -15,6 +15,7 @@ import Login from './pages/login';
 import AddBrand from './pages/AddBrand';
 import EditUser from './pages/EditUser';
 import EditBrand from './pages/EditBrand';
+import GameSettings from './pages/GameSettings';
 
 function Layout() {
   return (
