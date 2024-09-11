@@ -33,7 +33,7 @@ export default function HomePage() {
 
     useEffect(() => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            // notificationSocket.connect(id_player);
+            notificationSocket.connect(id_player);
 
             eventEmitter.on('notification', handleNotification);
         })
@@ -146,7 +146,8 @@ export default function HomePage() {
         <View style={styles.background} >
             <Header 
                 notification={notification}
-                setNotification={setNotification} />
+                setNotification={setNotification} 
+                previousRoute={""}/>
             <View style={[styles.container, { marginTop: 20, marginBottom: 10 }]}>
                 <SearchBar editable={false} onPress={() => router.push('/(tabs)/search')} />
             </View>

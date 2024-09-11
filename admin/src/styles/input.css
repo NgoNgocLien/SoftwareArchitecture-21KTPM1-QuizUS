@@ -150,31 +150,81 @@ select {
     background: #007AFF;
 }
 
+.button-row{
+    display: flex;
+    justify-content: space-between;
+}
+
 .form-group input[type="text"], .form-group input[type="url"] {
     box-sizing: border-box;
 }
 
 .radio-group {
-    gap: 16px; /* Adjust spacing between radio buttons */
-    box-sizing: border-box;
-    align-items: start;
-    width: 32px;
+    display: flex;
+    height: 50%;
+    flex: 1;
+    width: 200px;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
 }
 
 .radio-group label {
     display: flex;
+    align-items: center;
     font-family: regular-font;
-    color: #434657;
+    font-size: 16px;
+    margin: 0;
 }
 
 .radio-group input[type="radio"] {
-    margin-right: 8px; /* Space between radio button and label */
+    margin-right: 0px;
+    height: 20px;
+    width: 20px;
+}
+
+.lock-user {
+    display: flex;
+    width: 180px;
+    padding: 14px 16px;
+    background: var(--feedback-error);
+    font-family: medium-font;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.lock-user:hover {
+    background: #ed5055;
+}
+
+.activate-user {
+    display: flex;
+    width: 180px;
+    padding: 14px 16px;
+    background: var(--feedback-error);
+    font-family: medium-font;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.activate-user:hover {
+    background: #ed5055;
 }
 
 /* editPlayer */
 .profile-avatar {
-    width: 168px;
-    height: 168px;
+    width: 12rem;
+    height: 12rem;
     border-radius: 10px;
     background-position: center;
     object-fit: contain;

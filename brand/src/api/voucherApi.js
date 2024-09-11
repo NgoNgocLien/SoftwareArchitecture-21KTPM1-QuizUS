@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const getAll = async (id) => {
     try {
+      console.log(id);
       const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/voucher/search/brand/${id}`;
       const response = await axios.get(url);
       if (response?.data) {
@@ -14,7 +15,7 @@ const getAll = async (id) => {
       console.log(err.message);
       return []
     }
-  }
+}
 
 const searchCampaign = async (id , keyword) => {
   try {
@@ -33,6 +34,22 @@ const searchCampaign = async (id , keyword) => {
   }
 }
 
+const getVoucherById = async (id) => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/voucher/${id}`;
+    const response = await axios.get(url);
+    
+    if (response?.data)
+      return response.data;
+    else
+      return null;
+  } catch (err) {
+    console.log(err.message);
+    return null;
+  }
+}
+
 export{
-  getAll
+  getAll,
+  getVoucherById
 }

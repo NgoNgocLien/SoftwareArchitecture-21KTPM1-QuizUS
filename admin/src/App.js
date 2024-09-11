@@ -14,6 +14,7 @@ import ManageGame from './pages/ManageGame';
 import Login from './pages/login';
 import AddBrand from './pages/AddBrand';
 import EditUser from './pages/EditUser';
+import EditBrand from './pages/EditBrand';
 
 function Layout() {
   return (
@@ -60,6 +61,7 @@ function App() {
         <Route element={<Layout1 />}>
           <Route path="/add-brand" element={<AddBrand />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
+          <Route path="/edit-brand/:id" element={<EditBrand />} />
         </Route>
       </Routes>
     </Router>

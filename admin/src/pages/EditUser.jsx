@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
-import { getPlayerById, updatePlayer } from '../api/playerApi';
+import { getPlayerById, updatePlayer, deactivatePlayer, activatePlayer, uploadImgToCloudinary } from '../api/playerApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
@@ -18,6 +18,10 @@ export default function EditUser() {
     const [gender, setGender] = useState('');
     const [facebook, setFacebook] = useState('');
     const [avatar, setAvatar] = useState('');
+
+    const [isActive, setIsActive] = useState(false);
+
+    const [avatarFile, setAvatarFile] = useState(null);
 
     const onCancel  = () => {
         navigate(`/player`);
@@ -35,12 +39,28 @@ export default function EditUser() {
                 setGender(data.gender || '');
                 setFacebook(data.facebook || '');
                 setAvatar(data.avatar);
+                setIsActive(data.is_active || false);
             }
         }
         getData();
     }, [id]);
 
     const onSave = async () => {
+        var imageUrl;
+        if (avatarFile) {
+            try {
+                imageUrl = await uploadImgToCloudinary(avatarFile);
+
+                if (imageUrl) {
+                    console.log('imageUrl:', imageUrl);
+                } else {
+                    console.error('Failed to upload image');
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+
         let updatedData = {
             id_player: id,
             username: fullname,
@@ -50,7 +70,7 @@ export default function EditUser() {
             dob,
             gender,
             facebook,
-            avatar
+            avatar: imageUrl
         }
         let success = await updatePlayer(updatedData);
         if (success) {
@@ -78,16 +98,65 @@ export default function EditUser() {
         }
     }
 
+    const handleToggleActivation = async () => {
+        if (isActive) {
+            // Khóa tài khoản
+            let success = await deactivatePlayer(id);
+            if (success) {
+                setIsActive(false); 
+                confirmAlert({
+                    message: 'Tài khoản đã bị khóa!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            } else {
+                confirmAlert({
+                    message: 'Khóa tài khoản thất bại!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            }
+        } else {
+            // Kích hoạt tài khoản
+            let success = await activatePlayer(id);
+            if (success) {
+                setIsActive(true); 
+                confirmAlert({
+                    message: 'Tài khoản đã được kích hoạt!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            } else {
+                confirmAlert({
+                    message: 'Kích hoạt tài khoản thất bại!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            }
+        }
+    }
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+        console.log("file: ", file)
+
+        setAvatarFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatar(reader.result); 
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
+
     return(
         <div className='ctn'>
             <div className='brand-logo-ctn'>
                 <img src={avatar?.length > 0 ? avatar : '/icons/camera-plus.svg'} alt="brand-logo"  className='profile-avatar'/>
                 <div className="upload-btn-ctn">
-                    <button className="upload-btn"> {/* Button giả */}
+                    <button className="upload-btn">
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
                         Chọn ảnh
                     </button> 
-                    <input type="file" id="file-upload" /> {/* Code backend cho input này nha */}
+                    <input type="file" id="file-upload" accept="image/*" onChange={handleAvatarChange}/> 
                 </div>
             </div>
             
@@ -116,31 +185,21 @@ export default function EditUser() {
 
                 {/* Birthday & Gender */}
                 <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="birthday">Sinh nhật</label>
+                    <div className="form-group" style={{ flex: '1'}}>
+                        <label >Sinh nhật</label>
                         <input type="text" id="birthday" placeholder="Sinh nhật" value={dob} onChange={(e) => {setDob(e.target.value)}}/>
                     </div>
-                    {/* <div className="form-group">
+                    
+                    <div className='form-group' style={{ flex: '1'}}>
                         <label>Giới tính</label>
-                        <div className="radio-group">
-                            <label>
-                                <input type="radio" name="gender" value="Nam" checked={gender === 'Nam'} onChange={(e) => {setGender(e.target.value)}}/>
-                                Nam
-                            </label>
-                            <label>
-                                <input type="radio" name="gender" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => {setGender(e.target.value)}}/>
-                                Nữ
-                            </label>
+                        <div className='radio-group'>
+                            <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'nam'} onChange={(e) => setGender(e.target.value)} />
+                            <label htmlFor="nam">Nam</label>
+                            <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'nữ'} onChange={(e) => setGender(e.target.value)} />
+                            <label htmlFor="nữ">Nữ</label>
                         </div>
-                    </div> */}
-
-                    <div className='radio-row'>
-                        <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Giới tính</label>
-                        <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'Nam'} onChange={(e) => {setGender(e.target.value)}} />
-                        <label for="nam">Nam</label>
-                        <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => {setGender(e.target.value)}}/>
-                        <label for="shake">Nữ</label>
                     </div>
+                    
                 </div>
 
                 {/* Facebook */}
@@ -150,12 +209,19 @@ export default function EditUser() {
                         <input type="url" id="website" placeholder="Link Facebook" value={facebook} onChange={(e) => {setFacebook(e.target.value)}}/>
                     </div>
                 </div>
-
+                
+                
                 {/* Buttons */}
-                <div className="button-group">
-                    <button className="cancel-btn" onClick={onCancel}>Hủy</button>
-                    <button className="save-btn" onClick={() => {onSave()}}>Lưu</button>
+                <div className="button-row">
+                    <button className={isActive ? "lock-user" : "activate-user"} onClick={handleToggleActivation}>
+                        {isActive ? 'Khóa tài khoản' : 'Kích hoạt tài khoản'}
+                    </button>
+                    <div className="button-group">
+                        <button className="cancel-btn" onClick={onCancel}>Hủy</button>
+                        <button className="save-btn" onClick={() => {onSave()}}>Lưu</button>
+                    </div>
                 </div>
+                
 
             </div>
         </div>

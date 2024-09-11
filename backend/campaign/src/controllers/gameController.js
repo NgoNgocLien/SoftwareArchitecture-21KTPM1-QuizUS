@@ -7,6 +7,8 @@ const axios = require('axios');
 const turnRequest = require('../models/turnRequest');
 const PlayerNoti = require('../models/playerNoti');
 
+const {notify} = require('../controllers/notiController')
+
 // Tìm kiếm game theo campaign
 const searchByCampaign = async (req, res) => {
     try {
@@ -267,6 +269,22 @@ const requestTurn = async (req, res) => {
 
         await newNoti.save();
 
+        const noti = {
+            type: newNoti.type,
+            subtype: newNoti.subtype,
+            id_receiver: newNoti.id_receiver,
+            id_sender: newNoti.id_sender,
+            name_sender: newNoti.name_sender,
+            id_campaign: newNoti.id_campaign,
+            name_campaign: newNoti.name_campaign,
+            id_turnrequest: newNoti.id_turnrequest,
+            is_accept: newNoti.is_accept,
+            noti_time: newNoti.noti_time,
+            seen_time: newNoti.seen_time
+        }
+
+        await notify(noti);
+
         return res.status(201).json({
             message: 'Turn request sent.',
             turnRequest: savedTurnRequest,
@@ -293,7 +311,7 @@ const replyTurn = async (req, res) => {
         }
 
         const { id_sender, id_receiver, id_campaign } = turnRequest;
-
+        // console.log({ id_sender, id_receiver, id_campaign })
         // Từ chối gửi lượt chơi
         if (!is_accept) {
             // Cập nhật TurnRequest với reply_time và is_accept = false
@@ -321,7 +339,7 @@ const replyTurn = async (req, res) => {
             });
         }
         else { // Chấp nhận gửi lượt chơi
-            const receiverGame = await PlayerGame.findOne({
+            let receiverGame = await PlayerGame.findOne({
                 id_player: id_receiver,
                 id_campaign: id_campaign
             });
@@ -372,8 +390,9 @@ const replyTurn = async (req, res) => {
             }
 
             // lấy thông tin sender
-            const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${id_sender}`);
-            const sender = senderResponse.data;
+            // console.log(id_se)
+            const receiverResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${id_receiver}`);
+            const receiver = receiverResponse.data;
 
             // lấy thông tin campaign
             const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${id_campaign}`);
@@ -383,9 +402,9 @@ const replyTurn = async (req, res) => {
             const newNoti = new PlayerNoti({
                 type: "friend",
                 subtype: "receive_turn",
-                id_receiver,
-                id_sender,
-                name_sender: sender.username,
+                id_receiver: id_sender,
+                id_sender: id_receiver,
+                name_sender: receiver.username,
                 id_campaign,
                 name_campaign: campaign.name,
                 id_turnrequest: turnRequest._id,
@@ -394,6 +413,21 @@ const replyTurn = async (req, res) => {
             });
 
             await newNoti.save();
+        
+            const noti = {
+                type: newNoti.type,
+                subtype: newNoti.subtype,
+                id_receiver: newNoti.id_receiver,
+                id_sender: newNoti.id_sender,
+                name_sender: newNoti.name_sender,
+                id_campaign: newNoti.id_campaign,
+                name_campaign: newNoti.name_campaign,
+                id_turnrequest: newNoti.id_turnrequest,
+                noti_time: newNoti.noti_time,
+                seen_time: newNoti.seen_time
+            }
+
+            await notify(noti);
 
             return res.status(200).json({
                 message: 'Player turn successfully transferred.',
@@ -403,6 +437,7 @@ const replyTurn = async (req, res) => {
             });
         }
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
@@ -538,7 +573,35 @@ const sendItem = async (req, res) => {
             seen_time: null
         });
 
-        await newNoti.save();
+        await newNoti.save({
+                type: newNoti.type,
+                subtype: newNoti.subtype,
+                id_receiver: newNoti.id_receiver,
+                id_sender: newNoti.id_sender,
+                name_sender: newNoti.name_sender,
+                id_campaign: newNoti.id_campaign,
+                name_campaign: newNoti.name_campaign,
+                id_item: newNoti.id_item,
+                id_itemgift: newNoti.id_itemgift,
+                noti_time: newNoti.noti_time,
+                seen_time: newNoti.seen_time
+            });
+
+        const noti = {
+            type: newNoti.type,
+            subtype: newNoti.subtype,
+            id_receiver: newNoti.id_receiver,
+            id_sender: newNoti.id_sender,
+            name_sender: newNoti.name_sender,
+            id_campaign: newNoti.id_campaign,
+            name_campaign: newNoti.name_campaign,
+            id_item: newNoti.id_item,
+            id_itemgift: newNoti.id_itemgift,
+            noti_time: newNoti.noti_time,
+            seen_time: newNoti.seen_time
+        }
+
+        await notify(noti);
 
         return res.status(201).json({
             message: 'Item successfully sent!',

@@ -11,7 +11,7 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <RootSiblingParent>
+    // <RootSiblingParent>
     <Tabs
         screenOptions={{
             tabBarActiveTintColor: Colors['light'].primary,
@@ -95,19 +95,13 @@ export default function TabLayout() {
             }}
         />
         <Tabs.Screen 
-            name="gift-voucher"
-            options={{
-                tabBarButton: () => null,
-            }}
-        />
-        <Tabs.Screen 
             name="noti"
             options={{
                 tabBarButton: () => null,
             }}
         />
     </Tabs>
-    </RootSiblingParent> 
+    // </RootSiblingParent> 
   );
 }
 

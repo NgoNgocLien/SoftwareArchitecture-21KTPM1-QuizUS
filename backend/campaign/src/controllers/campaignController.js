@@ -5,6 +5,9 @@ const PlayerLikeCampaign = require('../models/playerLikeCampaign');
 const PlayerGame = require('../models/playerGame');
 const PlayerVoucher = require('../models/playerVoucher');
 const Quiz = require('../models/quiz');
+const ItemGift = require('../models/itemGift');
+const TurnRequest = require('../models/turnRequest');
+const VoucherGift = require('../models/voucherGift');
 
 // Lấy tất cả các chiến dịch
 const getAll = async (req, res) => {
@@ -344,6 +347,29 @@ const like = async (req, res) => {
 
         playerLike.campaigns.push({ id_campaign: campaignId });
         await playerLike.save();
+
+        // Thêm thông báo
+        const campaign = await Campaign.findById(campaignId);
+
+        const now = new Date();
+        const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+        const startTimeMinusOneDay = new Date(campaign.start_time.getTime() - oneDayInMilliseconds);
+
+        if (startTimeMinusOneDay > now) {
+            const newNotification = new Notification({
+                id_receiver: playerId,
+                type: 'campaign',
+                name_campaign: campaign.name, // Storing the campaign name
+                id_campaign: campaignId,      // Storing the campaign ID
+                start_time: campaign.start_time,
+                noti_time: startTimeMinusOneDay,               
+                seen_time: null,   
+            });
+
+            await newNotification.save();
+            console.log(`Notification created for player ${playerId}`);
+        }
+
         res.status(200).json(playerLike);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -476,6 +502,179 @@ const getStats = async (req, res) => {
     }
 };
 
+// Thống kê số lượng người chơi đăng ký/ tham gia sự kiện/ trao đổi vật phẩm từ đầu năm đến tháng gần nhất
+const getPlayerStats = async (req, res) => {
+    try {
+        const startOfYear = getStartOfYear(); // Lấy thời gian đầu năm
+        const currentMonth = new Date();
+
+        // Khởi tạo một mảng với số tháng tính từ đầu năm tới hiện tại
+        let months = currentMonth.getMonth() + 1; // Lấy số tháng từ đầu năm đến hiện tại
+        let recentPlayerCount = new Array(months).fill(0);
+        let recentPlayerGames = new Array(months).fill(0);
+        let recentItemGifts = new Array(months).fill(0);
+
+        // 1. Số lượng người chơi đăng ký từ đầu năm đến tháng hiện tại
+        const playersResponse = await axios.get('http://gateway_proxy:8000/user/api/player');
+        const players = playersResponse.data;
+
+        players.forEach(player => {
+            const creationTime = new Date(player.creation_time);
+            if (creationTime >= startOfYear) {
+                const monthDiff = currentMonth.getMonth() - creationTime.getMonth();
+                if (monthDiff < months) {
+                    recentPlayerCount[monthDiff]++; 
+                }
+            }
+        });
+
+        // 2. Số lượng người chơi tham gia sự kiện từ đầu năm đến tháng hiện tại
+        const campaigns = await Campaign.find({
+            start_datetime: { $gte: startOfYear }
+        }).select('_id start_datetime'); 
+
+        const campaignIds = campaigns.map(campaign => campaign._id);
+
+        const playerGames = await PlayerGame.find({
+            id_campaign: { $in: campaignIds }
+        }).populate('id_campaign');
+
+        playerGames.forEach(game => {
+            const campaignStart = new Date(game.id_campaign.start_datetime);
+            const monthDiff = currentMonth.getMonth() - campaignStart.getMonth();
+            if (monthDiff < months) {
+                recentPlayerGames[monthDiff]++;
+            }
+        });
+
+        // 3. Số lượng người chơi trao đổi vật phẩm (tặng item, tặng voucher, tặng lượt chơi) từ đầu năm đến tháng hiện tại
+        const itemGifts = await ItemGift.find({
+            gift_time: { $gte: startOfYear }
+        });
+
+        itemGifts.forEach(gift => {
+            const giftTime = new Date(gift.gift_time);
+            const monthDiff = currentMonth.getMonth() - giftTime.getMonth();
+            if (monthDiff < months) {
+                recentItemGifts[monthDiff]++;
+            }
+        });
+
+        // Lấy dữ liệu từ VoucherGift
+        const voucherGifts = await VoucherGift.find({
+            gift_time: { $gte: startOfYear }
+        });
+
+        voucherGifts.forEach(gift => {
+            const giftTime = new Date(gift.gift_time);
+            const monthDiff = currentMonth.getMonth() - giftTime.getMonth();
+            if (monthDiff < months) {
+                recentItemGifts[monthDiff]++;
+            }
+        });
+
+        // Lấy dữ liệu từ TurnRequest (những yêu cầu tặng lượt chơi được chấp nhận)
+        const turnRequests = await TurnRequest.find({
+            reply_time: { $gte: startOfYear },
+            is_accept: true // Chỉ tính những yêu cầu đã được chấp nhận
+        });
+
+        turnRequests.forEach(turn => {
+            const replyTime = new Date(turn.reply_time);
+            const monthDiff = currentMonth.getMonth() - replyTime.getMonth();
+            if (monthDiff < months) {
+                recentItemGifts[monthDiff]++;
+            }
+        });
+
+        // Trả về kết quả cho chart
+        res.status(200).json({
+            recentPlayerCount,         // Số lượng người chơi đăng ký theo tháng
+            recentPlayerGames,         // Số lượng người chơi tham gia sự kiện theo tháng
+            recentItemGifts            // Số lượng người chơi tặng item, tặng voucher, tặng lượt chơi theo tháng
+        });
+    } catch (error) {
+        console.error('Error fetching statistics:', error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
+const getStartOfYear = () => {
+    const date = new Date();
+    date.setMonth(0, 1); 
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
+
+// Thống kê ngân sách đã sử dụng theo lĩnh vực từ đầu năm đến tháng hiện tại
+const getBudgetStatsByField = async (req, res) => {
+    try {
+        const startOfYear = getStartOfYear();
+        const currentMonth = new Date();
+
+        let budgetStats = {
+            restaurant: new Array(currentMonth.getMonth() + 1).fill(0), // Nhà hàng
+            cafe: new Array(currentMonth.getMonth() + 1).fill(0),       // Cafe & Bánh
+            shopping: new Array(currentMonth.getMonth() + 1).fill(0),   // Mua sắm
+            entertainment: new Array(currentMonth.getMonth() + 1).fill(0) // Giải trí
+        };
+
+        const brandResponse = await axios.get('http://gateway_proxy:8000/user/api/brand');
+        const brands = brandResponse.data;
+
+        // Lọc các thương hiệu theo lĩnh vực
+        const brandGroups = {
+            restaurant: brands.filter(brand => brand.field === "Nhà hàng"),
+            cafe: brands.filter(brand => brand.field === "Cafe & Bánh"),
+            shopping: brands.filter(brand => brand.field === "Mua sắm"),
+            entertainment: brands.filter(brand => brand.field === "Giải trí")
+        };
+
+        const calculateBudgetForField = async (brandsInField, fieldKey) => {
+            for (const brand of brandsInField) {
+                const campaigns = await Campaign.find({
+                    id_brand1: brand.id_brand, 
+                    start_datetime: { $gte: startOfYear }
+                }).populate('id_voucher');
+
+                // Tính toán ngân sách đã sử dụng cho mỗi chiến dịch
+                campaigns.forEach(campaign => {
+                    const voucher = campaign.id_voucher;
+                    if (voucher) {
+                        const voucherPrice = voucher.price || 0;
+                        const campaignMaxVoucher = campaign.max_amount_voucher || 0;
+                        const budgetForCampaign = campaignMaxVoucher * voucherPrice;
+
+                        const campaignStartMonth = new Date(campaign.start_datetime).getMonth();
+                        const monthDiff = currentMonth.getMonth() - campaignStartMonth;
+                        if (monthDiff >= 0 && monthDiff < budgetStats[fieldKey].length) {
+                            budgetStats[fieldKey][monthDiff] += budgetForCampaign;
+                        }
+                    }
+                });
+            }
+        };
+
+        // Tính toán ngân sách cho từng lĩnh vực
+        await calculateBudgetForField(brandGroups.restaurant, 'restaurant');
+        await calculateBudgetForField(brandGroups.cafe, 'cafe');
+        await calculateBudgetForField(brandGroups.shopping, 'shopping');
+        await calculateBudgetForField(brandGroups.entertainment, 'entertainment');
+
+        // Trả về kết quả
+        res.status(200).json(budgetStats);
+    } catch (error) {
+        console.error('Error fetching budget statistics:', error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAll,
     getInProgress,
@@ -493,5 +692,7 @@ module.exports = {
     unlike,
     getCampaignsOfVoucher,
     getStats,
-    getCampaignsOfVoucher
+    getCampaignsOfVoucher,
+    getPlayerStats,
+    getBudgetStatsByField
 };

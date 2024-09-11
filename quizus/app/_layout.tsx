@@ -8,9 +8,14 @@ import 'react-native-reanimated';
 import * as SecureStore from 'expo-secure-store';
 import config from '@/constants/config';
 import {retrieveFromSecureStore} from '@/api/SecureStoreService'
+import { RootSiblingParent } from 'react-native-root-siblings';
 SplashScreen.preventAutoHideAsync();
 
 import { LogBox } from 'react-native'; // Import LogBox at the top of the file
+import Toast from 'react-native-root-toast';
+import { showToast } from '@/components/ToastBar';
+import notificationSocket from '@/models/notification/NotificationSocket';
+import eventEmitter from '@/models/notification/EventEmitter';
 
 if (__DEV__) {
   LogBox.ignoreAllLogs(); // Ignore all logs in development
@@ -32,13 +37,19 @@ export default function RootLayout() {
 
       retrieveFromSecureStore('id_player', setIdPlayer);
       if (id_player) {
-        router.push('/(tabs)');
+        notificationSocket.connect(id_player);
+
+        router.replace('/(tabs)');
       } else {
-        router.push('/login'); 
+        router.replace('/login'); 
       }
 
       // router.push('/(tabs)');
     }
+
+    return () => {
+      notificationSocket.disconnect();
+    };
   }, [loaded, id_player]);
 
   if (!loaded) {
@@ -46,6 +57,7 @@ export default function RootLayout() {
   }
 
   return (
+    <RootSiblingParent>
     <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="login" />
@@ -65,5 +77,6 @@ export default function RootLayout() {
           <Stack.Screen name="qr" />
         </Stack>
     </ThemeProvider>
+    </RootSiblingParent>
   );
 }

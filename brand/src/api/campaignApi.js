@@ -1,36 +1,72 @@
 import axios from 'axios';
 
 const getAll = async (id) => {
-  try {
-    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/brand/${id}`;
-    const response = await axios.get(url);
-    if (response?.data) {
-      return response.data
+    try {
+      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/brand/${id}`;
+      const response = await axios.get(url);
+      if (response?.data) {
+        return response.data
+      }
+      else 
+      return []
     }
-    else 
-    return []
-  }
-  catch (err) {
-    console.log(err.message);
-    return []
-  }
+    catch (err) {
+      console.log(err.message);
+      return []
+    }
 }
 
 const searchCampaign = async (id , keyword) => {
-  try {
-    let url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/search/${keyword}`;
-    if (!keyword || keyword.length === 0)
-      url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/brand/${id}`;
-    const result = await axios.get(url);
+    try {
+      let url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/search/${keyword}`;
+      if (!keyword || keyword.length === 0)
+        url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/brand/${id}`;
+      const result = await axios.get(url);
 
-    if (result.status === 200) 
-      return result.data;
-    else 
+      if (result.status === 200) 
+        return result.data;
+      else 
+        return [];
+    } catch (err) {
+      console.log(err.message);
       return [];
-  } catch (err) {
-    console.log(err.message);
-    return [];
+    }
+}
+
+const getCampaignById = async (id) => {
+    try {
+      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/${id}`;
+      const response = await axios.get(url);
+      
+      if (response?.data)
+        return response.data;
+      else
+        return null;
+    }
+    catch (err) {
+      console.log(err.message);
+      return null;
+    }
+}
+
+const updateCampaign = async (updatedData) => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign`;
+    const response = await axios.put(url, updatedData);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
   }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
+const createCampaign = async () => {
+  
 }
 
 const createEvent = async (campaign, quiz) => {
@@ -55,5 +91,8 @@ const createEvent = async (campaign, quiz) => {
 export{
   getAll,
   searchCampaign,
-  createEvent
+  createEvent,
+  getCampaignById,
+  updateCampaign,
+  createCampaign
 }

@@ -31,7 +31,7 @@ const VoucherChart = ({ chartData }) => {
   return (
     <div>
       <Doughnut data={data} options={options} />
-      <p>Tổng giá trị voucher: {chartData?.total_value || 0} VNĐ</p>
+      <p>Tổng giá trị voucher: {chartData?.total_value?.toLocaleString('vi-VN') || 0} VNĐ</p>
     </div>
   );
 };

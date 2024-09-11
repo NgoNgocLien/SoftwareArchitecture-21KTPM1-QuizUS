@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, TouchableWithoutFeedback, View, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 
@@ -23,18 +23,9 @@ const tabNames = [
     { index: 2, name: 'Bạn bè' },
 ]
 
-const data = [
-    { type: 'voucher', isUsed: true, name_voucher: 'Giảm 50%', seen_time: null },
-    { type: 'voucher', isUsed: false, name_voucher: 'Giảm 20k', seen_time: '2024-09-08' },
-    { type: 'event', name_campaign: 'Black Friday', id_campaign: '123', start_time: '2024-10-15T00:00:00.000Z', seen_time: '2024-09-08' },
-    { type: 'friend', subtype: 'item', name_sender: 'My Linh', id_itemgift: '1', id_item: 1, name_campaign: 'Ưu đãi sốc mùa hè', seen_time: null },
-    { type: 'friend', subtype: 'voucher', name_sender: 'My Linh',  id_vouchergift: '1', name_voucher: 'Giảm 10%', seen_time: null },
-    { type: 'friend', subtype: 'turn', name_sender: 'My Linh', id_turnrequest: '1', name_campaign: 'Ưu đãi sốc mùa đông', seen_time: '2024-09-08' }
-  ];
-  
 export default function Notification() {
     const params= useLocalSearchParams();
-
+    const previousRoute: '' | 'rewards' | 'favorite' = params.previousRoute as '' | 'rewards' | 'favorite';
     const [loading, setLoading] = useState(true);
 
     const [notifications, setNotifications] = useState<Noti[]>([]);
@@ -45,7 +36,7 @@ export default function Notification() {
         retrieveFromSecureStore('id_player', (id_player: string) => {
            
             getAll(id_player).then((players) =>{
-
+                console.log("noti.tsx: fetch noti")
                 const voucherFactory = new VoucherNotificationFactory();
                 const eventFactory = new EventNotificationFactory();
                 const friendFactory = new FriendNotificationFactory();
@@ -75,9 +66,11 @@ export default function Notification() {
         })
     };
 
-    useEffect(() => {
-        fetchNoti();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchNoti();
+        }, [])
+    );
 
     const handleReadNoti = () => {
         if (!unseen)
@@ -95,7 +88,8 @@ export default function Notification() {
         })
     }
 
-    const handleAccept = (notification: FriendTurnRequestNotification) => {      
+    const handleAccept = (notification: FriendTurnRequestNotification) => {     
+        setLoading(true);
         notification.replyTurn(true).then(() =>{
             setUnseen(false);
             fetchNoti();
@@ -103,83 +97,88 @@ export default function Notification() {
     }
 
     const handleRefuse = (notification: FriendTurnRequestNotification) => {
-        console.log(notification)
+        setLoading(true);
         notification.replyTurn(false).then(() =>{
             setUnseen(false);
             fetchNoti();
         })
     }
 
-    console.log("unseen notifications: ", unseen)
+    // console.log("unseen notifications: ", unseen)
     return (
-        <View style={styles.background}>
+        <>
+            <View style={styles.background}>
+            {
+                loading &&
+                <View style={styles.loadingContainer}>
+                    <LoadingView />
+                </View> 
+            }
             <SafeAreaView style={styles.header}>
                 <MaterialCommunityIcons 
                     name={"arrow-left"} 
                     size={28} 
                     color={Colors.light.mainText} 
                     style={styles.backIcon} 
-                    onPress={() => { router.replace('/(tabs)') }} 
+                    onPress={() => { 
+                        const backRoute = `/(tabs)/${previousRoute}`;  // Correct way to concatenate the route
+                        router.replace({
+                            pathname: backRoute
+                        }); 
+                    }}
+                    
                     suppressHighlighting={true} 
                 />
             </SafeAreaView>
             <View style={[styles.container, styles.titleContainer]}>
-                <Heading type="h4">Thông báo</Heading>
-                <View>
+                <Heading type="h4" style={{flexGrow: 2}}>Thông báo</Heading>
+                <View style={{flexGrow: 1}} >
                     <Button text={'Đánh dấu đã đọc'} size={'small'} 
                         type={ unseen ? 'primary' : 'disabled' }
                         onPress={handleReadNoti}></Button>
                 </View>
             </View>
-
             {
-                loading 
-                ? <LoadingView /> 
-                : ( 
-                <>
-                {
-                    notifications.length == 0 
-                    ? <EmptyView texts={['Chưa có thông báo']}/> 
-                    : (
-                        <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
-                        {
-                            notifications.map((notification, index) => {
-                                const type = 
-                                    (notification instanceof VoucherNotification) ? "Mã giảm giá" : 
-                                    (notification instanceof CampaignNotification) ? "Sự kiện" : "Bạn bè";
-                                
-                                return (
-                                    <View key={notification.getId()} style={notification.getSeenTime() ? styles.notification : [styles.notification, styles.newNotification]}>
-                                        <View style={styles.notificationBody}>
-                                            <Paragraph type="p1" style={styles.notificationContent}>{notification.getContent()}</Paragraph>
-                                            {
-                                                !notification.getSeenTime() &&
-                                                <View style={styles.notificationStatus}></View>
-                                            }
-                                            
-                                        </View>
+                notifications.length == 0 
+                ? <EmptyView texts={['Chưa có thông báo']}/> 
+                : (
+                    <ScrollView showsVerticalScrollIndicator={false} style={{ paddingVertical: 12 }}>
+                    {
+                        notifications.map((notification, index) => {
+                            const type = 
+                                (notification instanceof VoucherNotification) ? "Mã giảm giá" : 
+                                (notification instanceof CampaignNotification) ? "Sự kiện" : "Bạn bè";
+                            
+                            return (
+                                <View key={notification.getId()} style={notification.getSeenTime() ? styles.notification : [styles.notification, styles.newNotification]}>
+                                    <View style={styles.notificationBody}>
+                                        <Paragraph type="p1" style={styles.notificationContent}>{notification.getContent()}</Paragraph>
                                         {
-                                            (notification instanceof FriendTurnRequestNotification) && notification.getIsAccept() == null && (
-                                                <View style={styles.buttonView}>
-                                                    <Button text={'Từ chối'} type={'tertiary'} style={styles.button} onPress={() => {handleRefuse(notification)}}></Button>
-                                                    <Button text={'Đồng ý'} style={styles.button} onPress={() => {handleAccept(notification)}}></Button>
-                                                </View>
-                                            )
+                                            !notification.getSeenTime() &&
+                                            <View style={styles.notificationStatus}></View>
                                         }
                                         
-                                        <Paragraph type="p3" color={Colors.gray._500}>{type}</Paragraph>
                                     </View>
-                                )
-                            })
-                        }
-                        </ScrollView> 
-                    )
-                }
-                </>)
+                                    {
+                                        (notification instanceof FriendTurnRequestNotification) && notification.getIsAccept() == null && (
+                                            <View style={styles.buttonView}>
+                                                <Button text={'Từ chối'} type={'tertiary'} style={styles.button} onPress={() => {handleRefuse(notification)}}></Button>
+                                                <Button text={'Đồng ý'} style={styles.button} onPress={() => {handleAccept(notification)}}></Button>
+                                            </View>
+                                        )
+                                    }
+                                    
+                                    <Paragraph type="p3" color={Colors.gray._500}>{type}</Paragraph>
+                                </View>
+                            )
+                        })
+                    }
+                    </ScrollView> 
+                )
             }
-
-            
         </View>
+        </>
+
     )
 }
 
@@ -188,13 +187,23 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: Colors.light.background,
     },
-
     container: {
         paddingHorizontal: 20,
     },
-
+    loadingContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000, // Ensure the overlay appears above other components
+    },
     header: {
         height: 100,
+        top: 0,
         backgroundColor: Colors.light.background,
         justifyContent: 'center',
         paddingBottom: -10,
@@ -208,7 +217,6 @@ const styles = StyleSheet.create({
         // Shadow for Android
         elevation: 7, // Elevation for the shadow effect
     },
-
     backIcon: {
         position: 'relative',
         left: 20,

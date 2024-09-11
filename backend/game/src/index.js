@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const os = require('os');
 require('dotenv').config();
 
 const port = 8002;
@@ -19,4 +20,8 @@ mongoose.connect(dbURI, {
 
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
+});
+
+app.use('/', (req, res) => {
+    res.send(`Hello from ${os.hostname()}!`);
 });

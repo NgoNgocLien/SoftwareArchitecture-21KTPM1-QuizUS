@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
     View,
     Text,
@@ -10,44 +10,29 @@ import {
     Share,
     Alert,
     TouchableOpacity,
-    Modal,
     Clipboard,
+    KeyboardAvoidingView,
 } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import QRCode from 'react-native-qrcode-svg';
 
+import { getCampaignsOfVoucher, getLikedCampaigns } from '@/api/CampaignApi';
+import { getVoucherById, useVoucher, giftVoucher } from '@/api/VoucherApi';
+import { getPlayerByKeyword } from '@/api/PlayerApi';
+import { retrieveFromSecureStore } from '@/api/SecureStoreService';
+
+import { showToast } from '@/components/ToastBar';
+import { EmptyView } from '@/components/EmptyView';
+import { LoadingView } from '@/components/LoadingView';
+import { CampaignCard } from '@/components/card/CampaignCard';
+import { Input } from '@/components/input/Input';
+import { Label } from '@/components/text/Label';
 import { SubHeader } from '@/components/header/SubHeader';
 import { Colors } from '@/constants/Colors';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
-import { VoucherCard } from '@/components/card/VoucherCard';
-
-import config from '@/constants/config';
-import { getGameInfo, getPlayerTurn } from '@/api/GameApi';
-import { getCampaignById, getCampaignsOfVoucher } from '@/api/CampaignApi';
-import { showToast } from '@/components/ToastBar';
-import { EmptyView } from '@/components/EmptyView';
-import { LoadingView } from '@/components/LoadingView';
-import { VoucherFactory } from '@/models/voucher/VoucherFactory';
-import { Voucher } from '@/models/voucher/Voucher';
-import { CoinVoucher } from '@/models/voucher/CoinVoucher';
-import { ItemVoucher } from '@/models/voucher/ItemVoucher';
-import PLayerTurnModal from '@/components/modal/PlayerTurnModal';
-import { PlayerInfo } from '@/models/game/PlayerInfo';
-import { retrieveFromSecureStore } from '@/api/SecureStoreService';
-import { getPlayerItem, getPlayerScore } from '@/api/PlayerApi';
-import { getVoucherById, useVoucher } from '@/api/VoucherApi';
-import { getLikedCampaigns } from '@/api/CampaignApi';
-import { CampaignCard } from '@/components/card/CampaignCard';
-
-// Call API
-const defaultPlayerInfo = {
-    score: 100,
-    quantity_item1: 0,
-    quantity_item2: 0
-}
 
 export default function VoucherPage() {
 
@@ -121,7 +106,7 @@ export default function VoucherPage() {
     const handleShare = async () => {
         try {
             const result = await Share.share({
-                message: `${ voucher ? voucher.brand.name : "Chúng tôi" } đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!`,
+                message: `Tham gia ngay sự kiện ${ voucher ? "của " + voucher.brand.name : "" } tại QuizUS, nhận ngay voucher ưu đãi hấp dẫn!`,
                 url: 'https://expo.io',
             },{
                 excludedActivityTypes: [
@@ -179,6 +164,39 @@ export default function VoucherPage() {
         }
     };
 
+    const [keyword, setKeyword] = useState('');
+    const handleGift = () => {
+        console.log("keyword: ", keyword);
+        getPlayerByKeyword(keyword)
+        .then(player => {
+            // console.log('gift-voucher: ', player.id_player)
+
+            retrieveFromSecureStore('id_player', (id_player: string) => {
+
+                if (id_player == player.id_player){
+                    showToast('warning', 'Không thể tự tặng chính mình');
+                    setLoading(false);
+                    return;
+                }
+
+                console.log('gift-voucher: ',{
+                    id_playervoucher: id_playerVoucher,
+                    id_receiver: player.id_player,
+                })
+
+                giftVoucher(id_playerVoucher, player.id_player)              
+                showToast('success','Tặng voucher thành công')
+                setIsUsed(true);
+                router.replace({
+                    pathname: '/my-vouchers'
+                })
+            })
+        })
+        .catch(() => {
+            showToast('error', 'Không tìm thấy người dùng');
+        })
+    }
+
     return (
         <RootSiblingParent>
         <View style={styles.container}>
@@ -188,6 +206,7 @@ export default function VoucherPage() {
                 {loading ? <LoadingView /> : voucher === null  ? <EmptyView /> :
                 (
                 <>
+                <KeyboardAvoidingView behavior='position' >
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true} >
                     <Image style={styles.banner} source={{uri: voucher.photo}} />
                             
@@ -214,7 +233,7 @@ export default function VoucherPage() {
                     {
                         mine &&
                         <>
-                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mã thanh toán</Heading>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mã giảm giá</Heading>
 
                             <TouchableOpacity style={[styles.codeContainer]} activeOpacity={0.6} 
                                 onPress={() => {
@@ -225,9 +244,21 @@ export default function VoucherPage() {
                                 <MaterialCommunityIcons name={'content-copy'} size={18} color={Colors.light.subText} suppressHighlighting={true}/>
                             </TouchableOpacity>
 
-                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>QR thanh toán</Heading>
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>QR mã giảm giá</Heading>
                             <View style={styles.qrContainer}>
                                 <QRCode value="facebook.com" size={300} backgroundColor='white'/>
+                            </View>
+
+                            <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Tặng mã giảm giá</Heading>
+                            <View style={[styles.giftContainer, { marginHorizontal: 20 }]}>
+                                <Input type={"default"} placeholder={"Nhập số điện thoại / email người nhận"}
+                                    onChangeText={text => setKeyword(text)} value={keyword} style={{width: 'auto', flexGrow: 1}}/>
+                                {
+                                    is_used && Date.now() < Date.parse(voucher.expired_date) ?
+                                    <Button text={'Tặng'} type='disabled' style={{width: 'auto', padding: 10 }} disabled={true}/> : 
+                                    <Button onPress={handleGift} text={'Tặng'} style={{width: 'auto', padding: 10 }} />
+                                }
+                                
                             </View>
                         </>
                     }
@@ -263,11 +294,15 @@ export default function VoucherPage() {
                     }
                         
                 </ScrollView>
+                </KeyboardAvoidingView>
 
                 { mine && 
                 <View style={styles.exchangeButtonContainer} >
                     { is_used ? 
                         <Button text='Đã sử dụng' type='disabled' style={styles.exchangeButton} disabled={true}/> :
+                    Date.now() < Date.parse(voucher.expired_date) ?
+                        <Button text='Hết hạn' type='disabled' style={styles.exchangeButton} disabled={true}/> :
+
                         <Button text='Dùng ngay' type='primary' style={styles.exchangeButton} onPress={() => {handleUseVoucher()}}/> 
                     }
                 </View> 
@@ -467,5 +502,15 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 4,
         borderColor: Colors.gray._200,
+    },
+    
+    giftContainer: {
+        marginTop: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flex: 1,
+        columnGap: 10,
     },
 });

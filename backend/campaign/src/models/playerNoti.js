@@ -24,7 +24,7 @@ const PlayerNotiSchema = new Schema({
     8. đồng ý cho lượt chơi -> update turn request, thêm noti
 
     1
-    233458
+    8
      */
     type:{
         type: String,

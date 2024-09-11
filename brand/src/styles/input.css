@@ -163,21 +163,29 @@ select {
     box-sizing: border-box;
 }
 
+
 .radio-group {
+    display: flex;
+    height: 50%;
+    flex: 1;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
     gap: 16px;
-    box-sizing: border-box;
-    align-items: start;
-    width: 32px;
 }
 
 .radio-group label {
     display: flex;
+    align-items: center;
     font-family: regular-font;
-    color: #434657;
+    font-size: 16px;
+    margin: 0;
 }
 
 .radio-group input[type="radio"] {
-    margin-right: 8px;
+    margin-right: 0px;
+    height: 20px;
+    width: 20px;
 }
 
 /* Edit Player */
@@ -243,6 +251,12 @@ select {
     font-family: regular-font;
 }
 
+.row-input label {
+    font-family: semibold-font;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
 input[type="number"] {
     padding: 10px;
     font-family: regular-font;
@@ -258,17 +272,7 @@ input[type="number"] {
 input[type="radio"] {
     color: #000;
     font-family: regular-font;
-    width: 18px;
-}
-
-.radio-row {
-    display: flex;
-    gap: 10px !important;
-}
-
-.radio-row label {
-    font-family: regular-font;
-    font-size: 16px;
+    height: 18px;
 }
 
 /* Create quiz */
