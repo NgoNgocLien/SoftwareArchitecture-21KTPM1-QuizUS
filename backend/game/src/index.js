@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const express = require('express');
 const http = require('http');
+const path = require("path");
 const app = express();
 
 const server = http.createServer(app);
@@ -9,10 +10,9 @@ app.use(express.json());
 
 const io = new Server(server, {
     cors: {
-        origin: "http://192.168.1.5:3000",
+        origin: "http://192.168.1.14:3000",
         methods: ["GET", "POST"],
     },
-    path: '/game',
 });
 
 io.on('connection', (socket) => {
@@ -33,5 +33,6 @@ io.on('connection', (socket) => {
 });
 
 server.listen(8002, () => {
-    console.log('Socket.IO Game server with API is listening on port 8005');
+    // console.log('Socket.IO Game server with API is listening on port 8005');
+    console.log('Socket.IO Game server with API is listening on port 8002');
 });

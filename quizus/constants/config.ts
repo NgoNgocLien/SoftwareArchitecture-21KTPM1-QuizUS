@@ -2,23 +2,18 @@
 // rồi mọi ng để config này vô file gitignore
 
 // liên
-// const USER_BE = 'http://192.168.1.14:8000/user';
-// const GAME_BE = 'http://192.168.1.14:8000';
-// const CAMPAIGN_BE = 'http://192.168.1.14:8000/campaign';
-// const NOTIFICATION_BE = 'http://192.168.1.14:8000';
-// const QR_SCANNER = 'http://192.168.1.14:4000';
+const USER_BE = 'http://192.168.1.14:8000/user';
+const GAME_BE = 'http://192.168.1.14:8000';
+const CAMPAIGN_BE = 'http://192.168.1.14:8000/campaign';
+const NOTIFICATION_BE = 'http://192.168.1.14:8000';
+const QR_SCANNER = 'http://192.168.1.14:4000';
 
 // ml
-const USER_BE = 'http://192.168.1.5:8000/user';
-const GAME_BE = 'http://192.168.1.5:8000';
-const CAMPAIGN_BE = 'http://192.168.1.5:8000/campaign';
-const NOTIFICATION_BE = 'http://192.168.1.5:8000';
-const QR_SCANNER = 'http://192.168.1.5:4000';
-
-// simple
-// const USER_BE = 'http://192.168.0.225:8000/user';
-// const GAME_BE = 'http://192.168.0.225:8000/game';
-// const CAMPAIGN_BE = 'http://192.168.0.225:8000/campaign';
+// const USER_BE = 'http://192.168.1.5:8000/user';
+// const GAME_BE = 'http://192.168.1.5:8000';
+// const CAMPAIGN_BE = 'http://192.168.1.5:8000/campaign';
+// const NOTIFICATION_BE = 'http://192.168.1.5:8000';
+// const QR_SCANNER = 'http://192.168.1.5:4000';
 
 const NOTI_BE = '';
 

@@ -80,7 +80,7 @@ export default function ItemGameResult() {
                 marginBottom: -10,
                 backgroundColor: (quantity_item1 >= 1 && quantity_item2 >= 1) ? Colors.feedback.warning : Colors.gray._500
             }} 
-            onPress={() => {router.replace("/")}}>
+            onPress={() => {router.back()}}>
         </Button>
         <Paragraph type={'p3'} color={Colors.light.background} style={{alignSelf: 'flex-start'}}>Đang có: {quantity_item1 + quantity_item2} mảnh Grab</Paragraph>
 
