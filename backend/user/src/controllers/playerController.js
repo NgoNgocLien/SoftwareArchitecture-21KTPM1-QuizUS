@@ -116,6 +116,46 @@ const update = async (req, res) => {
     }
 }
 
+const deactivate = async (req, res) => {
+    try {
+        const player = await model.player.findOne({
+            where: {
+                id_player: req.params.id_player,
+            }
+        })
+
+        if (player) {
+            player.is_active = false;
+            const updatedPlayer = await player.save();
+            successCode(res, updatedPlayer, "Khóa thành công")
+        } else
+            failCode(res, null, "id_player không hợp lệ")
+    } catch (err) {
+        console.log(err)
+        errorCode(res)
+    }
+}
+
+const activate = async (req, res) => {
+    try {
+        const player = await model.player.findOne({
+            where: {
+                id_player: req.params.id_player,
+            }
+        })
+
+        if (player) {
+            player.is_active = true;   
+            const updatedPlayer = await player.save();
+            successCode(res, updatedPlayer, "Kích hoạt thành công")
+        } else
+            failCode(res, null, "id_player không hợp lệ")
+    } catch (err) {
+        console.log(err)
+        errorCode(res)
+    }
+}
+
 const search = async (req, res) => {
     const { keyword } = req.params;
 
@@ -218,7 +258,7 @@ const updatePassword = async(req,res) => {
   }
 
 module.exports = {
-    signup, otp,
+    signup, otp, deactivate, activate,
     get, getAll, update, search, getPlayerScore, exchangeVoucherByCoin,
     updatePassword
 }

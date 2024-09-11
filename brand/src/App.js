@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Outlet  } from 'react-router-do
 // Components
 import Sidebar from './components/sidebar/Sidebar';
 import Topbar from './components/topbar/Topbar';
+import Backbar from './components/topbar/Backbar';
 
 // Pages
 import Dashboard from './pages/Dashboard';
@@ -16,6 +17,7 @@ import BrandInfo from './pages/BrandInfo';
 import CreateEvent from './pages/CreateEvent';
 import CreateGame from './pages/CreateGame';
 import CreateShake from './pages/CreateShake';
+import EditEvent from './pages/EditEvent';
 
 function Layout() {
   return (
@@ -23,6 +25,20 @@ function Layout() {
       <Sidebar />
       <div className="content">
         <Topbar />
+        <div className="page-content">
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Layout1() {
+  return (
+    <div className="layout">
+      <Sidebar />
+      <div className="content">
+        <Backbar />
         <div className="page-content">
           <Outlet />
         </div>
@@ -46,6 +62,10 @@ function App() {
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/create-game" element={<CreateGame />} />
           <Route path="/create-shake" element={<CreateShake />} />
+        </Route>
+
+        <Route element={<Layout1 />}>
+          <Route path="/edit-event/:id" element={<EditEvent />} />
         </Route>
       </Routes>
     </Router>

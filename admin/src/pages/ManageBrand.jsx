@@ -13,7 +13,11 @@ export default function ManageBrand() {
     
     const handleSearch = async (e) => {
         const result = await searchBrand(e.target.value);
-        setBrandData(result);
+        if (typeof result === 'object' && !Array.isArray(result)) {
+            setBrandData([result]);
+        } else {
+            setBrandData(result);
+        }
     };
 
     // const handleFieldChange = (e) => {
@@ -71,7 +75,7 @@ export default function ManageBrand() {
                 <input
                     type="text"
                     className="search-input"
-                    placeholder="Tìm kiếm theo ID, tên, email nhãn hàng"
+                    placeholder="Tìm kiếm theo tên, username nhãn hàng"
                     onChange={(e) => handleSearch(e)}
                 />
                 <img src="/icons/search.svg" alt="search-icon" className="search-icon" />
@@ -125,7 +129,9 @@ export default function ManageBrand() {
 
                                     <td className='action-buttons'>
                                         <button className="edit-btn" onClick={() => handleEdit(item.id_brand)}>
-                                            <img src="/icons/edit.svg" alt="edit-btn" />
+                                            <div className='edit-icon'>
+                                                <img src="/icons/edit.svg" alt="edit-btn" />
+                                            </div>
                                             Sửa
                                         </button>
                                         {/* <button className="delete-btn" onClick={onDelete}>
