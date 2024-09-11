@@ -192,8 +192,8 @@ export default function QuizGameDetail() {
 
     {
       !showExitPopup && !showTimeUpPopup && showMC && (
-        <McCard  question_id = {questions[count].question_id} setMillisecondMC={setMillisecondMC}
-          question_text={questions[count].question_text.replace(/[^a-zA-Z0-9 ]/g, "")}></McCard>
+        <McCard  question_id = {questions[count].question_id} setMillisecondMC={setMillisecondMC} MCId={count}
+          question_text={questions[count].question_text.replace(/[.,?"':;()\[\]{}&!%$#@^*\-_=+\/\\]/g, "")}></McCard>
       )
     }
 

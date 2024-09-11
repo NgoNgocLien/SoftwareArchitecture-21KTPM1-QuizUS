@@ -5,7 +5,7 @@
 const USER_BE = 'http://10.0.0.212:8000/user';
 const GAME_BE = 'http://10.0.0.212:8000/game';
 const CAMPAIGN_BE = 'http://10.0.0.212:8000/campaign';
-const NOTIFICATION_BE = 'http://10.0.0.212:8004';
+const NOTIFICATION_BE = 'http://10.0.0.212:8000';
 
 // ml
 // const USER_BE = 'http://10.0.1.35:8000/user';
