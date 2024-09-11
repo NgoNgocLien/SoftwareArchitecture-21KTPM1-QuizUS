@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 import "../styles/common.css";
 import "../styles/input.css";
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateEvent() {
-    // Dropdown voucher
+    const navigate = useNavigate();
     const [selectedOption, setSelectedOption] = useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
+    const [amount, setAmount] = useState('');
+
+    const onNext = () => {
+        const url = `/create-game?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
+        navigate(url);
+    }
 
     const handleOption = (e) => {
         setSelectedOption(e.target.value);
@@ -31,7 +42,7 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label id="name">Tên sự kiện</label>
-                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" required/>
+                        <input type="text" id="name" placeholder="Nhập tên đăng nhập" required value={name} onChange={(e) => {setName(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -39,19 +50,19 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className="form-group">
                         <label id="description">Mô tả</label>
-                        <textarea id="description" placeholder="Mô tả sự kiện" maxLength="500"></textarea>
+                        <textarea id="description" placeholder="Mô tả sự kiện" maxLength="500"required value={description} onChange={(e) => {setDescription(e.target.value)}}></textarea>
                     </div>
                 </div>
 
                 {/* Date time */}
                 <div className='form-row'>
                     <div className="row-input">
-                        <label id="start_datetime">Ngày bắt đầu</label>
-                        <input type="datetime-local" id="start_datetime" placeholder="Chọn ngày bắt đầu" />
+                        <label id="start_datetime" >Ngày bắt đầu</label>
+                        <input type="datetime-local" id="start_datetime" placeholder="Chọn ngày bắt đầu" required value={start} onChange={(e) => {setStart(e.target.value)}}/>
                     </div>
                     <div className="row-input">
                         <label id="end_datetime">Ngày kết thúc</label>
-                        <input type="datetime-local" id="end_datetime" placeholder="Chọn ngày bắt đầu" />
+                        <input type="datetime-local" id="end_datetime" placeholder="Chọn ngày bắt đầu" required value={end} onChange={(e) => {setEnd(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -73,7 +84,7 @@ export default function CreateEvent() {
 
                     <div className="row-input">
                         <label id="max_amount_voucher">Số lượng</label>
-                        <input type="number" />
+                        <input type="number" required value={amount} onChange={(e) => {setAmount(e.target.value)}}/>
                     </div>
                 </div>
 
@@ -96,8 +107,8 @@ export default function CreateEvent() {
 
                 {/* Buttons */}
                 <div className="button-group">
-                    <button className="cancel-btn">Hủy</button>
-                    <button className="save-btn">Tiếp theo</button>
+                    <button className="cancel-btn" onClick={() => {navigate('/event')}}>Hủy</button>
+                    <button className="save-btn" onClick={onNext}>Tiếp theo</button>
                 </div>
 
             </div>
