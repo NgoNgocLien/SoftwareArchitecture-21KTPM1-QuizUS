@@ -36,10 +36,7 @@ export default function RootLayout() {
 
       retrieveFromSecureStore('id_player', setIdPlayer);
       if (id_player) {
-<<<<<<< HEAD
-=======
         notificationSocket.connect(id_player);
->>>>>>> 75e9483ce5402c45b23b97a62ffa3379e9d5e91f
         router.replace('/(tabs)');
       } else {
         router.replace('/login'); 
