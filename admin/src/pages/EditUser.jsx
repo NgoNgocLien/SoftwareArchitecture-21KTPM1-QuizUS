@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
-import { getPlayerById, updatePlayer } from '../api/playerApi';
+import { getPlayerById, updatePlayer, deactivatePlayer, activatePlayer } from '../api/playerApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
@@ -18,6 +18,7 @@ export default function EditUser() {
     const [gender, setGender] = useState('');
     const [facebook, setFacebook] = useState('');
     const [avatar, setAvatar] = useState('');
+    const [isActive, setIsActive] = useState(false);
 
     const onCancel  = () => {
         navigate(`/player`);
@@ -35,6 +36,7 @@ export default function EditUser() {
                 setGender(data.gender || '');
                 setFacebook(data.facebook || '');
                 setAvatar(data.avatar);
+                setIsActive(data.is_active || false);
             }
         }
         getData();
@@ -75,6 +77,40 @@ export default function EditUser() {
                     }
                 ]
             });
+        }
+    }
+
+    const handleToggleActivation = async () => {
+        if (isActive) {
+            // Khóa tài khoản
+            let success = await deactivatePlayer(id);
+            if (success) {
+                setIsActive(false); 
+                confirmAlert({
+                    message: 'Tài khoản đã bị khóa!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            } else {
+                confirmAlert({
+                    message: 'Khóa tài khoản thất bại!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            }
+        } else {
+            // Kích hoạt tài khoản
+            let success = await activatePlayer(id);
+            if (success) {
+                setIsActive(true); 
+                confirmAlert({
+                    message: 'Tài khoản đã được kích hoạt!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            } else {
+                confirmAlert({
+                    message: 'Kích hoạt tài khoản thất bại!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            }
         }
     }
 
@@ -124,9 +160,9 @@ export default function EditUser() {
                     <div className='form-group' style={{ flex: '1'}}>
                         <label>Giới tính</label>
                         <div className='radio-group'>
-                            <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'Nam'} onChange={(e) => setGender(e.target.value)} />
+                            <input type="radio" name="gender" id="nam" value="Nam" checked={gender === 'nam'} onChange={(e) => setGender(e.target.value)} />
                             <label htmlFor="nam">Nam</label>
-                            <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'Nữ'} onChange={(e) => setGender(e.target.value)} />
+                            <input type="radio" name="gender" id="nữ" value="Nữ" checked={gender === 'nữ'} onChange={(e) => setGender(e.target.value)} />
                             <label htmlFor="nữ">Nữ</label>
                         </div>
                     </div>
@@ -144,7 +180,9 @@ export default function EditUser() {
                 
                 {/* Buttons */}
                 <div className="button-row">
-                    <button className="lock-user">Khóa tài khoản</button>
+                    <button className={isActive ? "lock-user" : "activate-user"} onClick={handleToggleActivation}>
+                        {isActive ? 'Khóa tài khoản' : 'Kích hoạt tài khoản'}
+                    </button>
                     <div className="button-group">
                         <button className="cancel-btn" onClick={onCancel}>Hủy</button>
                         <button className="save-btn" onClick={() => {onSave()}}>Lưu</button>
