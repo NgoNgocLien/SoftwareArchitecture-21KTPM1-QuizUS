@@ -11,10 +11,17 @@ export default function CreateEvent() {
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
     const [amount, setAmount] = useState('');
+    const [gameType, setGameType] = useState('Trắc nghiệm');
 
     const onNext = () => {
-        const url = `/create-game?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
+        const prefix = gameType === 'Trắc nghiệm' ? '/create-game' : '/create-shake';
+        const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
         navigate(url);
+    }
+    console.log(gameType)
+
+    const onTypeChanged = (e) => {
+        setGameType(e.currentTarget.value);
     }
 
     const handleOption = (e) => {
@@ -99,10 +106,10 @@ export default function CreateEvent() {
                 {/* Game */}
                 <div className='radio-row'>
                     <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginRight: '24px'}}>Trò chơi</label>
-                    <input type="radio" value="Trắc nghiệm" id="quiz" />
-                    <label for="quiz">Trắc nghiệm</label>
-                    <input type="radio" value="Lắc vật phẩm" id="shake" />
-                    <label for="shake">Lắc vật phẩm</label>
+                    <input name="game_type" type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                    <label htmlFor="quiz">Trắc nghiệm</label>
+                    <input name="game_type" type="radio" value="Lắc vật phẩm" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                    <label htmlFor="shake">Lắc vật phẩm</label>
                 </div>
 
                 {/* Buttons */}
