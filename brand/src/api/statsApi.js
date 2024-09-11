@@ -12,9 +12,9 @@ const getStats = async (id_brand) => {
       return []
     }
 }
-const getVoucherStats = async () => {
+const getVoucherStats = async (id_brand) => {
     try {
-      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/voucher/stats`;
+      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/voucher/brandStats/${id_brand}`;
       const response = await axios.get(url);
       console.log(response)
       return response.data;

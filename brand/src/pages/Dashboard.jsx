@@ -22,13 +22,13 @@ export default function Dashboard() {
         }
         getData();
 
-        // const getVoucherData = async () => {
-        //     const response = await getVoucherStats();
-        //     setVoucherData(response);
-        // }
-        // getVoucherData();
+        const getVoucherData = async () => {
+            const response = await getVoucherStats(brand.id_brand);
+            setVoucherData(response);
+        }
+        getVoucherData();
     }, [])
-    
+    console.log(voucherData)
     return (
         <div>
             {/* Số lượng */}
