@@ -180,19 +180,19 @@ export function VoucherCard({
                                 <Text style={[styles.useButtonText, { color: Colors.gray._500 }]}>Đã sử dụng</Text>
                             </View>
                         )  : (
-                        (Date.now() < voucher.expired_date.getTime()) ? 
-                            <TouchableOpacity style={styles.useButton} activeOpacity={0.6} onPress={() => {
+                        (Date.now() > voucher.expired_date.getTime()) ? 
+                            <View style={[styles.useButton, {backgroundColor: Colors.gray._200}]} >
+                                <Text style={[styles.useButtonText, { color: Colors.gray._500 }]}>Hết hạn</Text>
+                            </View>
+                            
+                        :  <TouchableOpacity style={styles.useButton} activeOpacity={0.6} onPress={() => {
                                 router.push({
                                     pathname: '/voucher',
                                     params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id }
                                 })
                             }}>
-                                <Text style={styles.useButtonText}>Đổi ngay</Text>
+                                <Text style={styles.useButtonText}>Sử dụng</Text>
                             </TouchableOpacity> 
-                        :
-                            <View style={[styles.useButton, {backgroundColor: Colors.gray._200}]} >
-                                <Text style={[styles.useButtonText, { color: Colors.gray._500 }]}>Hết hạn</Text>
-                            </View>
                         )
                         
                     )

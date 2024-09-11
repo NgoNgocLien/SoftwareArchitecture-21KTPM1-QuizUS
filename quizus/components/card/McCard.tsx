@@ -9,24 +9,16 @@ import { useFocusEffect } from '@react-navigation/native';
 interface McCardProps {
   question_id?: string;
   question_text?: string;
+  MCId : number;
   setMillisecondMC: (value: number) => void;
 }
 
-const MCs = [
-    require('@/assets/images/gif/MC_01.gif'),
-    require('@/assets/images/gif/MC_02.gif'),
-    require('@/assets/images/gif/MC_03.gif'),
-    require('@/assets/images/gif/MC_04.gif'),
-    require('@/assets/images/gif/MC_05.gif'),
-    require('@/assets/images/gif/MC_06.gif'),
-    require('@/assets/images/gif/MC_07.gif'),
-    require('@/assets/images/gif/MC_08.gif'),
-    require('@/assets/images/gif/MC_09.gif'),
-];
+
 
 export function McCard({
     question_id = "q1",
     question_text = '',
+    MCId = 0,
     setMillisecondMC
 }: McCardProps) {
    
@@ -68,7 +60,7 @@ export function McCard({
     <View style={styles.videoContainer}>
       <Image
             style={{width: '100%', height: '100%'}}
-            source={MCs[Math.floor(Math.random() * MCs.length)]}
+            source={require('@/assets/images/gif/MC_01.gif')}
         />
     </View>
   );

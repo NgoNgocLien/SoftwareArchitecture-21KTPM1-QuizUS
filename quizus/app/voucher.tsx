@@ -300,7 +300,7 @@ export default function VoucherPage() {
                 <View style={styles.exchangeButtonContainer} >
                     { is_used ? 
                         <Button text='Đã sử dụng' type='disabled' style={styles.exchangeButton} disabled={true}/> :
-                    Date.now() < Date.parse(voucher.expired_date) ?
+                    Date.now() > Date.parse(voucher.expired_date) ?
                         <Button text='Hết hạn' type='disabled' style={styles.exchangeButton} disabled={true}/> :
 
                         <Button text='Dùng ngay' type='primary' style={styles.exchangeButton} onPress={() => {handleUseVoucher()}}/> 
