@@ -138,8 +138,7 @@ export default function CreateEvent() {
                 <div className='form-row'>
                     <div className='form-group'>
                         <label>Voucher đã phát</label>
-                        <input  type="number" 
-                                value="Số lượng voucher đã phát sẽ được thống kê khi sự kiện diễn ra" 
+                        <input  type="number"  
                                 readOnly/> 
                     </div>
                 </div>
