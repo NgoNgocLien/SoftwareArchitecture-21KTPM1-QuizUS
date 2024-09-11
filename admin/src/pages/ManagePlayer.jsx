@@ -88,15 +88,13 @@ export default function ManagePlayer() {
                                     <td>{user.gender}</td>
                                     <td>{user.birthdate}</td>*/}
 
-                                    <td className='action-buttons'>
+                                    <td>
                                         <button className="edit-btn" onClick={() => {onEdit(item.id_player)}}>
-                                            <img src="/icons/edit.svg" alt="edit-btn" />
+                                            <div className='edit-icon'>
+                                                <img src="/icons/edit.svg" alt="edit-btn" />
+                                            </div>
                                             Sửa
                                         </button>
-                                        {/* <button className="delete-btn" onClick={onDelete}>
-                                            <img src="/icons/delete.svg" alt="delete-btn" />
-                                            Xóa
-                                        </button> */}
                                     </td>
                                 </tr>
                             ))

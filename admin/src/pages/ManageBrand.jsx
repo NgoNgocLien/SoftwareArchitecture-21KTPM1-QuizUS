@@ -129,7 +129,9 @@ export default function ManageBrand() {
 
                                     <td className='action-buttons'>
                                         <button className="edit-btn" onClick={() => handleEdit(item.id_brand)}>
-                                            <img src="/icons/edit.svg" alt="edit-btn" />
+                                            <div className='edit-icon'>
+                                                <img src="/icons/edit.svg" alt="edit-btn" />
+                                            </div>
                                             Sửa
                                         </button>
                                         {/* <button className="delete-btn" onClick={onDelete}>
