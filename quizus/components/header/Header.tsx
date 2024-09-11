@@ -7,9 +7,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import eventEmitter from "@/models/notification/EventEmitter";
 
-export function Header({ notification, setNotification }:{
+export function Header({ notification, setNotification, previousRoute }:{
     notification: boolean,
     setNotification: (data: boolean) => void,
+    previousRoute: string,
 }) {
     // state of notification bell
     const router = useRouter();
@@ -19,6 +20,7 @@ export function Header({ notification, setNotification }:{
         setNotification(false);
         router.replace({
             pathname: '/noti',
+            params: { previousRoute },
         })
     }
 

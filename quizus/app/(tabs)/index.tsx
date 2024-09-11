@@ -146,7 +146,8 @@ export default function HomePage() {
         <View style={styles.background} >
             <Header 
                 notification={notification}
-                setNotification={setNotification} />
+                setNotification={setNotification} 
+                previousRoute={""}/>
             <View style={[styles.container, { marginTop: 20, marginBottom: 10 }]}>
                 <SearchBar editable={false} onPress={() => router.push('/(tabs)/search')} />
             </View>
