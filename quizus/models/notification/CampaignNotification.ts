@@ -5,8 +5,8 @@ export class CampaignNotification extends Noti {
   private name_campaign: string;
   private start_time: string;
 
-  constructor(seen_time: string, noti_time: string, id_campaign: string, name_campaign: string, start_time: string) {
-    super(seen_time, noti_time);
+  constructor(_id: string, seen_time: string, noti_time: string, id_campaign: string, name_campaign: string, start_time: string) {
+    super(_id, seen_time, noti_time);
     this.id_campaign = id_campaign;
     this.name_campaign = name_campaign;
 

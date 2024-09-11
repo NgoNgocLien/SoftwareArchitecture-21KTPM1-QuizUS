@@ -23,6 +23,7 @@ export const getPlayerById = async (id_player: string) => {
 
 export const getPlayerByKeyword = async (keyword: string) => {
     try {
+        // console.log(keyword)
         const response = await fetch(`${config.USER_BE}/api/player/search/${keyword}`, {
             method: 'GET',
             headers: {

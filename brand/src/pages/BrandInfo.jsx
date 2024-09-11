@@ -17,11 +17,6 @@ export default function BrandInfo() {
     const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
     const [logo, setLogo] = useState('');
-    
-    // Google Map
-    const addressInput = useRef(null);
-    const mapRef = useRef(null);
-    let autocomplete;
 
     useEffect(() => {
         const getData = async () => {
@@ -39,34 +34,6 @@ export default function BrandInfo() {
         }
         getData();
     }, [])
-
-    useEffect(() => {
-        // Initialize the autocomplete when the component loads
-        if (window.google) {
-            autocomplete = new window.google.maps.places.Autocomplete(addressInput.current, {
-                types: ["geocode"],
-            });
-    
-            // Listener for when a place is selected
-            autocomplete.addListener("place_changed", () => {
-                const place = autocomplete.getPlace();
-    
-                if (place.geometry) {
-                // Display map if a valid address is selected
-                    const map = new window.google.maps.Map(mapRef.current, {
-                        zoom: 15,
-                        center: place.geometry.location,
-                    });
-    
-                    // Place a marker at the selected location
-                    new window.google.maps.Marker({
-                        map,
-                        position: place.geometry.location,
-                    });
-                }
-            });
-        }
-    }, []);
 
     return (
         <div className="ctn">
@@ -134,24 +101,25 @@ export default function BrandInfo() {
                         <input  type="text"
                                 id="address" 
                                 placeholder="Nhập địa chỉ"
-                                ref={addressInput} 
+                                // ref={addressInput} 
                                 value={address} 
                                 onChange={(e) => {setAddress(e.target.value)}}
                                 />
                     </div>
                 </div>
-                <div ref={mapRef} style={{ width: "100%", height: "400px", marginTop: "10px" }}></div>
+                {/* Map */}
+                {/* <div ref={} style={{ width: "100%", height: "400px", marginTop: "10px" }}></div> */}
 
                 {/* Website */}
                 <div className="form-row">
-                    {/* <div className="form-group">
+                    <div className="form-group">
                         <label htmlFor="website">Trang web</label>
                         <input type="url" id="website" placeholder="Nhập URL trang web" value={website} onChange={(e) => {setWebsite(e.target.value)}}/>
-                    </div> */}
-                    {/* <div className="form-group">
+                    </div>
+                    <div className="form-group">
                         <label htmlFor="phone">Số điện thoại</label>
                         <input type="tel" id="phone"/>
-                    </div> */}
+                    </div>
                 </div>
 
                 {/* Buttons */}

@@ -53,7 +53,7 @@ export default function CreateGame() {
     return (
         <div className="ctn">
             <div className="input-ctn">
-                <h6>Tạo trò chơi</h6>
+                <h6>Tạo trắc nghiệm</h6>
 
                 <div className="form-row">
                     {/* Phần thưởng */}

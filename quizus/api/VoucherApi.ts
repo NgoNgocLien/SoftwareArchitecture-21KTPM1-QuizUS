@@ -117,3 +117,49 @@ export const exchangeItemVoucher = async (id_player: string, id_campaign: string
         throw new Error('Failed to fetch data');
     }
 }
+
+export const giftVoucher = async (id_playerVoucher: string, id_receiver: string) => {
+    try {
+        // console.log('exchangeItemVoucher', id_player, id_campaign, id_voucher)
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/voucher/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                id_sender_voucher: id_playerVoucher,
+                id_receiver: id_receiver,
+            })
+        });
+
+        const result = await response.json();
+        if (response.status === 201) {
+            return result;
+        } else {
+            throw new Error('Failed to gift voucher ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to gift voucher');
+    }
+}
+export const useVoucher = async (id_playerVoucher: string) => {
+    try {
+        const response = await fetch(`${config.CAMPAIGN_BE}/api/voucher/used/66da72bca72515620596efca`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            return result;
+        } else {
+            throw new Error('Failed to fetch data ', result.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch data');
+    }
+}

@@ -14,9 +14,9 @@ const QuestionSchema = new Schema({
 });
 
 const QuizSchema = new Schema({
-  quiz_id: { type: String },
-  description: { type: String },
-  questions: [QuestionSchema]
-});
+    quiz_id: { type: String },
+    description: { type: String },
+    questions: [QuestionSchema]
+}, { versionKey: false });
 
 module.exports = mongoose.model('Quiz', QuizSchema);

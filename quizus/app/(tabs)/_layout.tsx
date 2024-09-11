@@ -88,7 +88,6 @@ export default function TabLayout() {
                 tabBarButton: () => null,
             }}
         />
-
         <Tabs.Screen 
             name="gift-item"
             options={{

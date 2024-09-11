@@ -14,7 +14,8 @@ const {
   receiveItem,
   getTurnRequest,
   getItemRequest,
-  seenTurnNoti
+  seenTurnNoti,
+  getPlayerCountByGameType
 } = require('../controllers/gameController');
 
 // Tìm kiếm game theo campaign
@@ -22,6 +23,9 @@ router.get('/campaign/:id_campaign', searchByCampaign);
 
 // lấy tất cả mảnh ghép (item) của người chơi
 router.get('/item/:id_player', getAllItem);
+
+// Lấy số lượng người chơi theo loại trò chơi
+router.get('/playerByGame', getPlayerCountByGameType);
 
 // lưu kết quả chơi game của người chơi
 router.post('/', saveResult);
@@ -41,7 +45,7 @@ router.put('/player_turn/minus', reducePlayerTurn);
 // xin lượt chơi từ bạn bè cho 1 campaign
 router.post('/player_turn/request', requestTurn);
 
-// người chơi từ chối / chấp nhận cho bạn bè lượt chơi
+// người chơi từ chối / chấp nhận cho bạn bè lượt chơi -> noti socket
 router.put('/player_turn/request', replyTurn);
 
 // xem thông báo liên quan đến noti

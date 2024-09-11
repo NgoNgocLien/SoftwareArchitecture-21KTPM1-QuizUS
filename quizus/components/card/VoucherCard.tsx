@@ -42,6 +42,7 @@ export function VoucherCard({
     campaign = defaultCampaign,
     playerInfo,
     is_used,
+    id_playerVoucher,
     ...rest
 }:{ 
     voucher: any,    
@@ -52,6 +53,7 @@ export function VoucherCard({
     },
     playerInfo?: PlayerInfo
     is_used?: boolean,
+    id_playerVoucher?: string,
     [key: string]: any;
 }) {
     const router = useRouter();
@@ -61,7 +63,6 @@ export function VoucherCard({
     :
         '';
     
-
     let enoughCoin = (voucher instanceof CoinVoucher) && playerInfo && playerInfo.getPlayerScore() >= (voucher as CoinVoucher).getScoreExchange();
     let quantity_item1 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem1(campaign._id, voucher._id) : 0;
     let quantity_item2 = playerInfo != undefined ? playerInfo.getPlayerQuantityItem2(campaign._id, voucher._id) : 0;
@@ -120,7 +121,7 @@ export function VoucherCard({
                 } else {
                     router.push({
                         pathname: '/voucher',
-                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false") }
+                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id }
                     })
                 }
             }}>
@@ -170,10 +171,12 @@ export function VoucherCard({
                         (Date.now() < voucher.expired_date.getTime()) && 
                         <Button text={"Sử dụng/Tặng"} size={'small'}
                             onPress={() =>{
+                                console.log(id_playerVoucher);
                                 router.replace({
                                     pathname: '/gift-voucher',
                                     params: {
                                         voucher: JSON.stringify(voucher),
+                                        id_playerVoucher: id_playerVoucher
                                     }
                                 })
                             }}></Button>

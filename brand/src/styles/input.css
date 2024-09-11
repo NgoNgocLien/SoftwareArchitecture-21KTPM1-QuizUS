@@ -64,7 +64,8 @@
 }
 
 .input-ctn h6 {
-    margin: 0 0 24px 0;
+    margin: 10px 0 24px 0;
+    font-size: 24px;
 }
 
 .form-row {
@@ -270,7 +271,7 @@ input[type="radio"] {
     font-size: 16px;
 }
 
-/* CreateGame */
+/* Create quiz */
 .question-container {
     margin-bottom: 24px;
     width: 100%;
@@ -323,4 +324,12 @@ form input[type="text"] {
 
 form {
     width: 100%;
+}
+
+/* Create shake */
+.item-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 16px 0;
 }

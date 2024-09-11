@@ -95,7 +95,21 @@ const search = async (req, res) => {
         const campaigns = await Campaign.find({
             name: new RegExp(req.params.keyword, 'i')
         });
-        res.status(200).json(campaigns);
+
+        const result = await Promise.all(campaigns.map(async (item) => {
+            const id_brand1 = item.id_brand1;
+            try {
+                const brandResponse = await axios.get(`http://gateway_proxy:8000/user/api/brand/${id_brand1}`);
+                return {
+                    ...item._doc,
+                    brand: brandResponse.data
+                };
+            } catch (axiosError) {
+                throw new Error("Failed to fetch brand information.");
+            }
+        }));
+
+        res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

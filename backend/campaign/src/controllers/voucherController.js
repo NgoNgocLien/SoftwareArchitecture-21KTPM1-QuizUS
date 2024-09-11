@@ -6,6 +6,7 @@ const PlayerGame = require('../models/playerGame');
 const campaign = require('../models/campaign');
 const VoucherGift = require('../models/voucherGift');
 const PlayerNoti = require('../models/playerNoti');
+const playerNoti = require('../models/playerNoti');
 
 // Lấy tất cả voucher đang hoạt động
 const getActive = async (req, res) => {
@@ -298,13 +299,13 @@ const exchangeByItem = async (req, res) => {
 // Sử dụng voucher
 const use = async (req, res) => {
     try {
-        const { id_player, id_campaign } = req.params;
+        const { id_playerVoucher } = req.params;
 
-        if (!id_player || !id_campaign) {
-            return res.status(400).json({ message: 'id_player and id_campaign are required' });
+        if (!id_playerVoucher) {
+            return res.status(400).json({ message: 'id_playerVoucher is required' });
         }
 
-        const playerVoucher = await PlayerVoucher.findOne({ id_player, id_campaign });
+        const playerVoucher = await PlayerVoucher.findOne({ _id: id_playerVoucher });
 
         if (!playerVoucher) {
             return res.status(404).json({ message: 'Voucher not found for this player.' });
@@ -330,78 +331,145 @@ const use = async (req, res) => {
 // tặng voucher cho bạn
 const sendVoucher = async (req, res) => {
     try {
-      const { id_sender_voucher, id_receiver } = req.body;
-  
-      if (!id_sender_voucher || !id_receiver) {
-        return res.status(400).json({ message: 'id_sender_voucher and id_receiver are required' });
-      }
-  
-      const senderVoucher = await PlayerVoucher.findById(id_sender_voucher);
-  
-      // Kiểm tra voucher đã sd hay chưa
-      if (senderVoucher.is_used) {
-        return res.status(400).json({ message: 'This voucher has been already used!' });
-      }
-  
-      senderVoucher.is_used = true;
-      await senderVoucher.save();
+        const { id_sender_voucher, id_receiver } = req.body;
 
-      // Tạo bản ghi mới trong PlayerVoucher để lưu thông tin voucher cho người nhận
-      const receiverVoucher = new PlayerVoucher({
-        id_player: id_receiver,
-        id_campaign: senderVoucher.id_campaign,
-        is_used: false     
-      });
-      await receiverVoucher.save();
-      
-      // Tạo bản ghi mới trong VoucherGift để lưu thông tin voucher đã tặng
-      const newVoucherGift = new VoucherGift({
-        id_sender: senderVoucher.id_player,
-        id_receiver,
-        id_playervoucher: receiverVoucher._id,
-        gift_time: new Date()     
-      });
-  
-      await newVoucherGift.save();
-  
-      // lấy thông tin sender
-      const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${senderVoucher.id_player}`);
-      const sender = senderResponse.data;
-  
-      // lấy thông tin campaign
-      const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${senderVoucher.id_campaign}`);
-      const campaign = campaignResponse.data;
+        if (!id_sender_voucher || !id_receiver) {
+            return res.status(400).json({ message: 'id_sender_voucher and id_receiver are required' });
+        }
 
-      // lấy thông tin voucher
-      const voucherResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/voucher/${campaign.id_voucher}`);
-      const voucher = voucherResponse.data;
-  
-      // Thêm noti
-      const newNoti = new PlayerNoti({
-        type: "friend",
-        subtype: "voucher",
-        id_receiver,
-        id_sender: senderVoucher.id_player,
-        name_sender: sender.username, 
-        id_voucher: campaign.id_voucher,
-        name_voucher: voucher.name,
-        id_vouchergift: newVoucherGift._id,
-        noti_time: new Date(), 
-        seen_time: null
-      });
-  
-      await newNoti.save();
-  
-      return res.status(201).json({
-        message: 'Voucher successfully sent!',
-        gift: newVoucherGift
-      });
-  
+        const senderVoucher = await PlayerVoucher.findById(id_sender_voucher);
+        console.log("senderVoucher: ", sendVoucher)
+        // Kiểm tra voucher đã sd hay chưa
+        if (senderVoucher.is_used) {
+            return res.status(400).json({ message: 'This voucher has been already used!' });
+        }
+
+        senderVoucher.is_used = true;
+        await senderVoucher.save();
+        console.log("senderVoucher1: ", sendVoucher)
+        // Tạo bản ghi mới trong PlayerVoucher để lưu thông tin voucher cho người nhận
+        const receiverVoucher = new PlayerVoucher({
+            id_player: id_receiver,
+            id_campaign: senderVoucher.id_campaign,
+            is_used: false
+        });
+        await receiverVoucher.save();
+        console.log("receiverVoucher: ", receiverVoucher)
+        // Tạo bản ghi mới trong VoucherGift để lưu thông tin voucher đã tặng
+        const newVoucherGift = new VoucherGift({
+            id_sender: senderVoucher.id_player,
+            id_receiver,
+            id_playervoucher: receiverVoucher._id,
+            gift_time: new Date()
+        });
+
+        await newVoucherGift.save();
+        console.log("newVoucherGift: ", newVoucherGift)
+
+        // lấy thông tin sender
+        const senderResponse = await axios.get(`http://gateway_proxy:8000/user/api/player/${senderVoucher.id_player}`);
+        const sender = senderResponse.data;
+
+        // lấy thông tin campaign
+        const campaignResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/campaign/${senderVoucher.id_campaign}`);
+        const campaign = campaignResponse.data;
+
+        // lấy thông tin voucher
+        const voucherResponse = await axios.get(`http://gateway_proxy:8000/campaign/api/voucher/${campaign.id_voucher}`);
+        const voucher = voucherResponse.data;
+
+        // Thêm noti
+        const newNoti = new PlayerNoti({
+            type: "friend",
+            subtype: "voucher",
+            id_receiver,
+            id_sender: senderVoucher.id_player,
+            name_sender: sender.username,
+            id_voucher: campaign.id_voucher,
+            name_voucher: voucher.name,
+            id_vouchergift: newVoucherGift._id,
+            noti_time: new Date(),
+            seen_time: null
+        });
+
+        await newNoti.save();
+
+        return res.status(201).json({
+            message: 'Voucher successfully sent!',
+            gift: newVoucherGift
+        });
     } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
   };
-  
+
+// Thống kê tình trạng voucher (đã sd/ chưa sd/ hết hạn/ tổng gtri)
+const getStats = async (req, res) => {
+    const campaigns = await Campaign.find().populate('id_voucher');
+
+    if (!campaigns || campaigns.length === 0) {
+        return res.status(404).json({ message: 'No campaigns found.' });
+    }
+
+    let totalVoucherCount = 0; // Tổng số lượng voucher thực tế phát hành
+    let usedVoucherCount = 0;
+    let unusedVoucherCount = 0;
+    let expiredVoucherCount = 0;
+    let totalVoucherValue = 0;
+
+    for (const campaign of campaigns) {
+        const voucher = await Voucher.findById(campaign.id_voucher);
+
+        // Nếu không có voucher cho campaign, bỏ qua
+        if (!voucher) {
+            continue;
+        }
+
+        // Số lượng voucher thực tế đã phát hành (given_amount_voucher)
+        const issuedVoucherCount = campaign.given_amount_voucher;
+        totalVoucherCount += issuedVoucherCount;
+
+        totalVoucherValue += campaign.max_amount_voucher * voucher.price;
+
+        // Kiểm tra voucher đã hết hạn chưa
+        if (voucher.expired_date < new Date()) {
+            expiredVoucherCount += issuedVoucherCount;
+        }
+
+        // Tìm số lượng voucher đã sử dụng từ bảng PlayerVoucher
+        const usedPlayerVouchers = await PlayerVoucher.find({
+            id_campaign: campaign._id,
+            is_used: true
+        });
+
+        // Tìm số lượng voucher đã sử dụng từ bảng PlayerVoucher
+        const unusedPlayerVouchers = await PlayerVoucher.find({
+            id_campaign: campaign._id,
+            is_used: false
+        });
+
+        const giftedVouchers = await VoucherGift.find({
+            id_playervoucher: { $in: unusedPlayerVouchers.map(v => v._id) }
+        }).distinct('id_playervoucher');
+
+        // Tính số lượng voucher đã sử dụng thật sự (không bao gồm voucher đã tặng)
+        const actualUsedVouchers = usedPlayerVouchers.length - giftedVouchers.length;
+        usedVoucherCount += actualUsedVouchers;
+
+        // Số lượng voucher chưa sử dụng = đã phát hành - đã sử dụng
+        const notUsedCount = issuedVoucherCount - actualUsedVouchers;
+        unusedVoucherCount += notUsedCount;
+    }
+
+    // Trả về kết quả thống kê
+    return res.status(200).json({
+        total_vouchers: totalVoucherCount,
+        used_vouchers: usedVoucherCount,
+        unused_vouchers: unusedVoucherCount,
+        expired_vouchers: expiredVoucherCount,
+        total_value: totalVoucherValue
+    });
+}
 
 module.exports = {
     getActive,
@@ -412,5 +480,6 @@ module.exports = {
     getExchanged,
     exchangeByCoin,
     exchangeByItem,
-    use, sendVoucher
+    use, sendVoucher,
+    getStats
 };

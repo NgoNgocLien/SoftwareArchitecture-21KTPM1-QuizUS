@@ -10,6 +10,7 @@ import {
     Share,
     Alert,
     Modal,
+    SafeAreaView,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 
@@ -48,18 +49,20 @@ export default function Campaign() {
     const id_campaign = params.id_campaign as string;
 
     const [loading, setLoading] = useState<boolean>(true);
+    const [playerLoading, setPlayerLoading] = useState<boolean>(true);
+    const [gameLoading, setGameLoading] = useState<boolean>(true);
     const [campaign, setCampaign] = useState<any|null>(null);
     const [type_game, setTypeGame] = useState<string|null>(null);
     const [voucher, setVoucher] = useState<Voucher|null>(null);
 
     // Fetch campaign info
     useEffect(() => {
+        setLoading(true)
         if (id_campaign){
             getCampaignById(id_campaign).then(result => {
-                // console.log('Campaign fetched:', result);
                 setCampaign(result)
 
-                if(result.id_quiz != null && result.id_quiz != undefined && result.id_quiz != ''){
+                if(result.id_quiz !== null && result.id_quiz !== undefined && result.id_quiz !== ''){
                     const newVoucher = VoucherFactory.createVoucher('coin', result.voucher);
                     setVoucher(newVoucher);
                     setTypeGame(config.QUIZ_GAME)
@@ -68,17 +71,110 @@ export default function Campaign() {
                     setVoucher(newVoucher);
                     setTypeGame(config.ITEM_GAME)
                 }
-
                 setLoading(false)
             }).catch(error => {
                 console.error('Error fetching campaign info:', error);
+                showToast('error', 'Lỗi hệ thống');
                 setLoading(false)
             });
         } else {
             router.back();
             showToast('error', 'Lỗi hệ thống');
+            setLoading(false)
         }
     }, [id_campaign])
+
+    const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
+    const [itemInfo, setItemInfo] = useState<Item|null>(null);
+    
+    useEffect(() => {
+        setGameLoading(true)
+        if (type_game ){ 
+            getGameInfo(id_campaign)
+            .then(gameInfo => {
+                if (type_game == config.QUIZ_GAME){
+                    setQuizInfo(gameInfo.id_quiz)
+                }
+                else if (type_game == config.ITEM_GAME){
+                    setItemInfo({
+                        item1_photo: gameInfo.item1_photo,
+                        item2_photo: gameInfo.item2_photo,
+                    })
+                }
+
+                setGameLoading(false)
+            })
+            .catch(error => {
+                console.error('Error fetching quiz info:', error);
+                showToast('error', 'Lỗi hệ thống');
+                setGameLoading(false)
+            });   
+        }
+    }, [type_game])
+
+    const [playerTurn, setPlayerTurn] = useState <number|null>(null);
+    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
+
+    useEffect(() => {
+        setPlayerLoading(true)
+        if (id_campaign){
+            retrieveFromSecureStore('id_player', (id_player: string) => {
+                getPlayerTurn(id_player, id_campaign)
+                .then(data => {
+                    setPlayerTurn(data.player_turn)
+                    setPlayerLoading(false)
+                })
+                .catch(error => {
+                    console.error('Error fetching player turn:', error);
+                    showToast('error', 'Lỗi hệ thống');
+                    setPlayerLoading(false)
+                });
+
+                getPlayerItem(id_player).then((data) => {
+                    const player_items = data.map((data: {
+                        id_campaign: any; vouchers: { id_voucher: any; }; 
+                        quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
+                    }) => {
+                        return {
+                            id_campaign: data.id_campaign,
+                            id_voucher: data.vouchers.id_voucher,
+                            quantity_item1: data.quantity_item1,
+                            quantity_item2: data.quantity_item2,
+                            item1_photo: data.item1_photo,
+                            item2_photo: data.item2_photo,
+                        }
+                    })
+
+                    getPlayerScore(id_player).then((data) => {
+                        setPlayerInfo(new PlayerInfo({
+                            player_score: data.score,
+                            player_items: player_items,
+                        }))
+
+                        setPlayerLoading(false)
+                    }).catch((error) => {
+                        console.error('Error fetching player score:', error);
+                        showToast('error', 'Lỗi hệ thống');
+
+                        setPlayerLoading(false)
+                    });
+
+                }).catch((error) => {
+                    console.error('Error fetching player score:', error);
+                    showToast('error', 'Lỗi hệ thống');
+
+                    setPlayerLoading(false);
+                });
+            }).catch((error) => {
+                console.error('Error retrieving id_player from SecureStore:', error);
+                showToast('error', 'Không tìm thấy thông tin người chơi');
+
+                setPlayerLoading(false);
+            });
+        }
+    },[id_campaign, playerTurn]);
+
+    const [isModalVisible, setModalVisible] = useState(false);
 
     const handleShare = async () => {
         try {
@@ -127,93 +223,13 @@ export default function Campaign() {
             Alert.alert(error.message);
         }
     };
-
-    const [quizInfo, setQuizInfo] = useState<Quiz|null>(null);
-    const [itemInfo, setItemInfo] = useState<Item|null>(null);
-    
-    useEffect(() => {
-        if (type_game ){ 
-            getGameInfo(id_campaign)
-            .then(gameInfo => {
-                if (type_game == config.QUIZ_GAME){
-                    // console.log("gameInfo: ", gameInfo)
-                    setQuizInfo(gameInfo.id_quiz)
-                }
-                else if (type_game == config.ITEM_GAME)
-                    setItemInfo({
-                        item1_photo: gameInfo.item1_photo,
-                        item2_photo: gameInfo.item2_photo,
-                    })
-            })
-            .catch(error => {
-                console.error('Error fetching quiz info:', error);
-            });   
-      
-        }
-    }, [type_game])
-
-    const [playerTurn, setPlayerTurn] = useState <number|null>(null);
-    const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
-
-    useEffect(() => {
-        if (id_campaign){
-            retrieveFromSecureStore('id_player', (id_player: string) => {
-                getPlayerTurn(id_player, id_campaign)
-                .then(data => {
-                    setPlayerTurn(data.player_turn)
-                })
-                .catch(error => {
-                    console.error('Error fetching player turn:', error);
-                });
-
-                getPlayerItem(id_player).then((data) => {
-                    const player_items = data.map((data: {
-                        id_campaign: any; vouchers: { id_voucher: any; }; 
-                        quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; 
-                    }) => {
-                        return {
-                            id_campaign: data.id_campaign,
-                            id_voucher: data.vouchers.id_voucher,
-                            quantity_item1: data.quantity_item1,
-                            quantity_item2: data.quantity_item2,
-                            item1_photo: data.item1_photo,
-                            item2_photo: data.item2_photo,
-                        }
-                    })
-
-                    // console.log("items: ", player_items)
-
-                    getPlayerScore(id_player).then((data) => {
-                        setPlayerInfo(new PlayerInfo({
-                            player_score: data.score,
-                            player_items: player_items,
-                        }))
-                    }).catch((error) => {
-                        console.error('Error fetching player score:', error);
-                        showToast('error', 'Lỗi hệ thống');
-                    });
-
-                }).catch((error) => {
-                    console.error('Error fetching player score:', error);
-                    showToast('error', 'Lỗi hệ thống');
-                });
-
-                
-            }).catch((error) => {
-                console.error('Error retrieving id_player from SecureStore:', error);
-                showToast('error', 'Không tìm thấy thông tin người chơi');
-            });
-        }
-    },[id_campaign, playerTurn]);
-
-    const [isModalVisible, setModalVisible] = useState(false);
     
     return (
         <View style={styles.container}>
             <SubHeader/>
             <View style={styles.background}>
 
-                {(loading || playerTurn == null || (quizInfo == null && itemInfo == null)) ? <LoadingView /> : campaign == null ? <EmptyView /> :
+                {loading ? <LoadingView /> : campaign == null ? <EmptyView /> :
                 (
                 <>
                 <ScrollView showsVerticalScrollIndicator={false} bounces={true}>
@@ -270,58 +286,64 @@ export default function Campaign() {
 
                         </View>
                         <View style={styles.horizontal_seperator}></View>
-                        <View style={styles.campaignDetailContainer}>
+                        <View style={[styles.campaignDetailContainer, {paddingBottom: 80}]}>
                             <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Mô tả</Heading>
                             <Paragraph type='p2' style={{marginHorizontal: 20}}>
                                 {campaign.description}
                             </Paragraph>
 
                             <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Voucher có thể đổi</Heading>
-                            <VoucherCard 
-                                style={{marginBottom: 100}}
-                                voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
-                                campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo, _id: id_campaign}}
-                                playerInfo={playerInfo}
-                            />
+                            {
+                                playerLoading ? <LoadingView /> : (
+                                    <VoucherCard 
+                                        style={{marginBottom: 20}}
+                                        voucher={type_game === config.QUIZ_GAME ? voucher as CoinVoucher : voucher as ItemVoucher}
+                                        campaign={{brandName: campaign.brand.name, brandLogo: campaign.brand.logo, _id: id_campaign}}
+                                        playerInfo={playerInfo}
+                                    />
+                                )
+                            }
                         </View>
                 </ScrollView>
                 
-                <View style={styles.joinButtonContainer} >
-                    {
-                        playerTurn 
-                        ?   <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
-                                onPress={() => {
-                                    if (type_game == config.QUIZ_GAME){
-                                        router.replace({
-                                            pathname: `/quizgame/detail`,
-                                            params: {
-                                                quizInfo: JSON.stringify(quizInfo),
-                                                id_campaign: campaign._id
-                                            }
-                                        })
-                                    } else if (type_game == config.ITEM_GAME){
-
-                                        router.replace({
-                                            pathname: `/itemgame/detail`,
-                                            params: {
-                                                itemInfo: JSON.stringify(itemInfo),
-                                                id_campaign: campaign._id
-                                            }
-                                        })
-                                    }
-                            }}/> 
-                        :   <Button text='Thêm lượt chơi' type='tertiary' style={styles.joinButton} 
-                                onPress={() => {setModalVisible(true);}}/> 
-                    }
-                    
-                    <PLayerTurnModal 
-                        isModalVisible={isModalVisible}
-                        setModalVisible={setModalVisible}
-                        id_campaign={campaign._id}
-                        afterShare={() => {setPlayerTurn(1)}}
-                        >
-                    </PLayerTurnModal>
-                </View>
+                {
+                    (playerLoading && gameLoading) ? null :
+                    <View style={styles.joinButtonContainer} >
+                        {
+                            playerTurn 
+                            ?   <Button text='Chơi ngay' type='primary' style={styles.joinButton} 
+                                    onPress={() => {
+                                        if (type_game == config.QUIZ_GAME){
+                                            router.replace({
+                                                pathname: `/quizgame/detail`,
+                                                params: {
+                                                    quizInfo: JSON.stringify(quizInfo),
+                                                    id_campaign: campaign._id
+                                                }
+                                            })
+                                        } else if (type_game == config.ITEM_GAME){
+                                            router.replace({
+                                                pathname: `/itemgame/detail`,
+                                                params: {
+                                                    itemInfo: JSON.stringify(itemInfo),
+                                                    id_campaign: campaign._id
+                                                }
+                                            })
+                                        }
+                                }}/> 
+                            :   <Button text='Thêm lượt chơi' type='tertiary' style={styles.joinButton} 
+                                    onPress={() => {setModalVisible(true);}}/> 
+                        }
+                        
+                        <PLayerTurnModal 
+                            isModalVisible={isModalVisible}
+                            setModalVisible={setModalVisible}
+                            id_campaign={campaign._id}
+                            afterShare={() => {setPlayerTurn(1)}}
+                            >
+                        </PLayerTurnModal>
+                    </View>
+                }
                 </>
                 )}
             </View>

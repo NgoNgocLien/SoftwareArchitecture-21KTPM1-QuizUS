@@ -9,12 +9,14 @@ import { SearchBar } from '@/components/input/SearchBar';
 import { Heading } from '@/components/text/Heading';
 import { Paragraph } from '@/components/text/Paragraph';
 import { CampaignCard } from '@/components/card/CampaignCard';
+import { searchCampaigns } from '@/api/CampaignApi';
 
 export default function Search() {
     type RecentSearch = {key: string};
 
     const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
     const [searchText, setSearchText] = useState<string>('');
+    const [campaignsFound, setCampaignsFound] = useState<any[]>([]);
 
     useEffect(() => {
         const loadRecentSearches = async () => {
@@ -30,7 +32,7 @@ export default function Search() {
         loadRecentSearches();
     }, []);
 
-    const handleAddRecentSearch = async (key: string) => {
+    const handleSearch = async (key: string) => {
         try {
             // limit recent searches to 5
             setSearchText(key);
@@ -40,6 +42,11 @@ export default function Search() {
             if (recentSearches.length >= 5) {
                 recentSearches.pop();
             }
+
+            searchCampaigns(key).then((result) => {
+                setCampaignsFound(result);
+            });
+
             let newRecentSearches = recentSearches.filter((search) => search.key !== key);
             newRecentSearches = [{key: key}, ...newRecentSearches];
             setRecentSearches([...newRecentSearches]);
@@ -59,45 +66,12 @@ export default function Search() {
         }
     };
 
-    const campaignsFound = [
-        {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725438734/image_40_pjzahq.png',
-            brandName: 'GRAB',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Cuộc Đua Săn Quà, Trúng Lớn Mỗi Ngày',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-        {
-            id: '64e9d9c8e8b4c21c4b2e9f5f',
-            brandLogo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1723476217/Shopee_oc4lkd.png',
-            brandName: 'SHOPEE',
-            start_datetime: '2024-08-25T12:00:00Z',
-            end_datetime: '2024-09-25T12:00:00Z',
-            name: 'Săn Kho Báu Mỗi Ngày, Trúng Voucher Đỉnh Cao',
-            
-            isFavorite: false,
-            id_brand1: 1,
-            id_brand2: 2,        
-            photo: 'https://res.cloudinary.com/dyvmxcaxw/image/upload/v1725439296/360_F_505624884_d3W9poOAjT6X7w41gxdxLFtxKjJ1DrWk_zfod62.jpg',
-            category: 'Mua sắm',
-            description: 'Shopee đã có mặt trên QuizUS! Có thực mới vực được đạo, nhanh tay nuốt trọn thử thách này thôi!',
-        },
-    ];
-
     return (
         <View style={styles.background} >
             <SafeAreaView >
                 <View style={styles.searchHeader}>
                     <FontAwesome6 name={'chevron-left'} style={{fontSize: 20, color: Colors.gray._500, paddingRight: 8, paddingVertical: 12}} onPress={() => router.back()} suppressHighlighting={true}/>
-                    <SearchBar styles={{ flex: 1 }} onSubmitEditing={(e: any) => handleAddRecentSearch(e.nativeEvent.text)} />
+                    <SearchBar styles={{ flex: 1 }} onSubmitEditing={(e: any) => handleSearch(e.nativeEvent.text)} />
                 </View>
             </SafeAreaView>
 

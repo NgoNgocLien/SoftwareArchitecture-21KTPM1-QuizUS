@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 
     categoryTab: {
         height: 40,
-        flexGrow: 1,
+        paddingHorizontal: 10,
         justifyContent: 'center',
         
         borderBottomColor: Colors.gray._500,

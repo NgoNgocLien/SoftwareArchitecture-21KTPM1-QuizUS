@@ -14,11 +14,14 @@ const {
     getExchanged,
     exchangeByCoin,
     exchangeByItem,
-    use, sendVoucher
+    use, sendVoucher, getStats
 } = require('../controllers/voucherController');
 
 // Lấy tất cả voucher đang hoạt động
 router.get('/active', getActive);
+
+// Thống kê tình trạng voucher (đã sd/ chưa sd/ hết hạn/ tổng gtri)
+router.get('/stats', getStats);
 
 // Lấy voucher theo id
 router.get('/:id_voucher', getVoucherById);
@@ -42,9 +45,12 @@ router.post('/exchange/item', exchangeByItem);
 router.get('/exchange/:id_player', getExchanged);
 
 // Sử dụng voucher
-router.put('/used/:id_player/:id_campaign', use);
+router.put('/used/:id_playerVoucher', use);
 
 // tặng voucher cho bạn
 router.post('/send', sendVoucher);
+
+// lấy tất cả thông báo đến người dùng
+router.get('/')
 
 module.exports = router;

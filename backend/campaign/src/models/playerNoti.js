@@ -22,6 +22,9 @@ const PlayerNotiSchema = new Schema({
     6. xin lượt chơi -> thêm turn request, thêm noti
     7. từ chối cho lượt chơi -> update turn request, update noti
     8. đồng ý cho lượt chơi -> update turn request, thêm noti
+
+    1
+    233458
      */
     type:{
         type: String,
