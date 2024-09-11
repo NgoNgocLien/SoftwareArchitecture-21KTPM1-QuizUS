@@ -726,6 +726,35 @@ const getTurnRequest = async (req, res) => {
     }
 };
 
+// Lấy số lượng người chơi theo loại trò chơi
+const getPlayerCountByGameType = async (req, res) => {
+    try {
+        // Đếm số lượng người chơi cho trò "lắc vật phẩm" (id_quiz là null)
+        const itemGameCampaigns = await Campaign.find({ id_quiz: null }).select('_id');
+        const itemGamePlayerCount = await PlayerGame.countDocuments({
+            id_campaign: { $in: itemGameCampaigns.map(campaign => campaign._id) }
+        });
+
+        // Đếm số lượng người chơi cho trò "trắc nghiệm" (id_quiz khác null)
+        const quizGameCampaigns = await Campaign.find({ id_quiz: { $ne: null } }).select('_id');
+        const quizGamePlayerCount = await PlayerGame.countDocuments({
+            id_campaign: { $in: quizGameCampaigns.map(campaign => campaign._id) }
+        });
+
+        // Trả về kết quả đếm số lượng người chơi theo loại trò chơi
+        return res.status(200).json({
+            itemGamePlayerCount, 
+            quizGamePlayerCount
+        });
+
+    } catch (error) {
+        console.error('Error in getPlayerCountByGameType:', error.message);
+        return res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
 
 module.exports = {
     searchByCampaign,
@@ -740,5 +769,6 @@ module.exports = {
     receiveItem,
     getTurnRequest,
     getItemRequest,
-    seenTurnNoti
+    seenTurnNoti,
+    getPlayerCountByGameType
 };
