@@ -33,7 +33,7 @@ export default function GameSettings() {
                     </div>
                 </div>
 
-                <div className='form-row'>
+                {/* <div className='form-row'>
                     <div className="form-group" style={{width: '100%'}}>
                         <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Số xu thưởng</label>
                         <input type="number" style={{width: '100%', boxSizing: 'border-box', fontSize: '16px'}} value="100"></input>
@@ -45,7 +45,16 @@ export default function GameSettings() {
                         <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Số mảnh ghép</label>
                         <input type="number" style={{width: '100%', boxSizing: 'border-box', fontSize: '16px'}} value="2"></input>
                     </div>
+                </div> */}
+                <div className="form-row" style={{ width: '30%'}}>
+                    <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Phần thưởng</label>
+                    <input type="checkbox" style={{ height: '18px', width: '18px', margin: '0'}} />
+                    <label style={{ margin: '0'}}>Xu thưởng</label>
+                    <input type="checkbox" style={{ height: '18px', width: '18px', margin: '0'}} />
+                    <label style={{ margin: '0'}}>Mảnh ghép</label>
                 </div>
+                
+                
 
                 <div className="form-row">
                     <div className="form-group">
