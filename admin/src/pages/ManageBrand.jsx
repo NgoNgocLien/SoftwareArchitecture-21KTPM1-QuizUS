@@ -52,8 +52,8 @@ export default function ManageBrand() {
         navigate('/add-brand');
     };
 
-    const handleEdit = (brand) => {
-        navigate('/edit-brand', { state: { brand } });
+    const handleEdit = (id_brand) => {
+        navigate(`/edit-brand/${id_brand}`);
     };
 
     return (
@@ -124,7 +124,7 @@ export default function ManageBrand() {
                                     </td>
 
                                     <td className='action-buttons'>
-                                        <button className="edit-btn" onClick={() => handleEdit(item)}>
+                                        <button className="edit-btn" onClick={() => handleEdit(item.id_brand)}>
                                             <img src="/icons/edit.svg" alt="edit-btn" />
                                             Sửa
                                         </button>
