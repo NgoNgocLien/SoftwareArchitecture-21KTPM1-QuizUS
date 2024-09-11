@@ -49,10 +49,12 @@ export default function Coins() {
 
     const [playerInfo, setPlayerInfo] = useState <PlayerInfo|undefined>(undefined);
 
-    useEffect(() => {
+    const fetchPlayerInfo = useCallback(() => {
+        console.log("hi")
         retrieveFromSecureStore('id_player', (id_player: string) => {
             getPlayerItem(id_player).then((data: any) => {
-                const player_items = data.map((data: any) => {
+                const player_items = data.map((data: {
+                    id_campaign: any; vouchers: { id_voucher: any; }; quantity_item1: any; quantity_item2: any; item1_photo: any; item2_photo: any; }) => {
                     return {
                         id_campaign: data.id_campaign,
                         id_voucher: data.vouchers.id_voucher,
@@ -72,6 +74,7 @@ export default function Coins() {
                         player_score: data.score,
                         player_items: player_items,
                     }))
+
                 }).catch((error) => {
                     console.error('Error fetching player score:', error);
                     showToast('error', 'Lỗi hệ thống');
@@ -87,7 +90,9 @@ export default function Coins() {
             console.error('Error retrieving id_player from SecureStore:', error);
             showToast('error', 'Không tìm thấy thông tin người chơi');
         });
-    },[]);
+    }, []);
+
+    useFocusEffect(fetchPlayerInfo);
 
     const handleTabFocus = (index: number) => {
         setFocusedTab(index);
@@ -206,6 +211,7 @@ export default function Coins() {
                                     key={index} 
                                     playerInfo={playerInfo}
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
+                                    updateCoins={fetchPlayerInfo}
                                 />
                             ))}
                             </ScrollView> 

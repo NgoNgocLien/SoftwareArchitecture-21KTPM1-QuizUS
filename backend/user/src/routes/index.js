@@ -10,6 +10,7 @@ const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const bcrypt = require('bcryptjs');
+const cloudinary = require('cloudinary').v2;
 
 const { successCode, failCode, errorCode } = require('../config/response');
 
@@ -92,6 +93,23 @@ rootRoute.post("/loginWeb", async (req, res) => {
         console.log(err)
         errorCode(res)
     }
+})
+
+// Get config from cloudinary
+rootRoute.get("/cloudinary", (req,res) => {
+    const timestamp = Math.round((new Date).getTime()/1000);
+
+    const signature = cloudinary.utils.api_sign_request({
+        timestamp: timestamp,
+        eager: 'c_pad,h_300,w_400|c_crop,h_200,w_260',
+        folder: 'quizus'}, process.env.SECRET_KEY);
+
+    res.json({
+        signature: signature,
+        timestamp: timestamp,
+        cloudname: process.env.CLOUD_NAME,
+        apikey: process.env.API_KEY
+    })
 })
 
 module.exports = rootRoute;

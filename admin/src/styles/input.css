@@ -223,8 +223,8 @@ select {
 
 /* editPlayer */
 .profile-avatar {
-    width: 168px;
-    height: 168px;
+    width: 12rem;
+    height: 12rem;
     border-radius: 10px;
     background-position: center;
     object-fit: contain;

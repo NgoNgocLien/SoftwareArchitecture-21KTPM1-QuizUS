@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
-import { getPlayerById, updatePlayer, deactivatePlayer, activatePlayer } from '../api/playerApi';
+import { getPlayerById, updatePlayer, deactivatePlayer, activatePlayer, uploadImgToCloudinary } from '../api/playerApi';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
@@ -18,7 +18,10 @@ export default function EditUser() {
     const [gender, setGender] = useState('');
     const [facebook, setFacebook] = useState('');
     const [avatar, setAvatar] = useState('');
+
     const [isActive, setIsActive] = useState(false);
+
+    const [avatarFile, setAvatarFile] = useState(null);
 
     const onCancel  = () => {
         navigate(`/player`);
@@ -43,6 +46,21 @@ export default function EditUser() {
     }, [id]);
 
     const onSave = async () => {
+        var imageUrl;
+        if (avatarFile) {
+            try {
+                imageUrl = await uploadImgToCloudinary(avatarFile);
+
+                if (imageUrl) {
+                    console.log('imageUrl:', imageUrl);
+                } else {
+                    console.error('Failed to upload image');
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+
         let updatedData = {
             id_player: id,
             username: fullname,
@@ -52,7 +70,7 @@ export default function EditUser() {
             dob,
             gender,
             facebook,
-            avatar
+            avatar: imageUrl
         }
         let success = await updatePlayer(updatedData);
         if (success) {
@@ -114,16 +132,31 @@ export default function EditUser() {
         }
     }
 
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+        console.log("file: ", file)
+
+        setAvatarFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatar(reader.result); 
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
+
     return(
         <div className='ctn'>
             <div className='brand-logo-ctn'>
                 <img src={avatar?.length > 0 ? avatar : '/icons/camera-plus.svg'} alt="brand-logo"  className='profile-avatar'/>
                 <div className="upload-btn-ctn">
-                    <button className="upload-btn"> {/* Button giả */}
+                    <button className="upload-btn">
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
                         Chọn ảnh
                     </button> 
-                    <input type="file" id="file-upload" /> {/* Code backend cho input này nha */}
+                    <input type="file" id="file-upload" accept="image/*" onChange={handleAvatarChange}/> 
                 </div>
             </div>
             
