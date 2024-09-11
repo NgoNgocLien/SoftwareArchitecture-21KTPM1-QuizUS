@@ -95,7 +95,7 @@ function BarChart() {
           text: 'Ngân sách (VNĐ)',
         },
         ticks: {
-          callback: (value) => `${(value / 1000000)} triệu`,
+          callback: (value) => `${(value / 1000000).toLocaleString('vi-VN')} triệu`,
         },
         min: 0,
         max: suggestedMax,
@@ -109,7 +109,7 @@ function BarChart() {
       },
       tooltip: {
         callbacks: {
-          label: (tooltipItem) => `${tooltipItem.dataset.label}: ${tooltipItem.raw.toLocaleString()} VNĐ`,
+          label: (tooltipItem) => `${tooltipItem.dataset.label}: ${tooltipItem.raw.toLocaleString('vi-VN')} VNĐ`,
         },
       },
     },    
