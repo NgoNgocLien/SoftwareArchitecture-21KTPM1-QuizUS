@@ -3,6 +3,8 @@ import "../styles/common.css";
 import "../styles/input.css";
 
 export default function CreateVoucher() {
+    const [start, setStart] = useState('');
+    
     return (
         <div className="ctn">
             {/* Voucher img */}
