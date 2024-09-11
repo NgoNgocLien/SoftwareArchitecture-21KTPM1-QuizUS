@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import "../styles/common.css";
 import "../styles/input.css";
+import { getGameById } from '../api/gameApi';
 
 export default function GameSettings() {
+    const { id_game } = useParams();
     const navigate = useNavigate();
+
+    const [field, setField] = useState('');
+
+    useEffect(() => {
+        const getData = async () => {
+            const data = await getGameById(id_game);
+
+            console.log(data)
+            if (data) {
+                setField(data.name || '');
+            }
+        }
+        getData();
+    }, [id_game]);
+
     return (
         <div className="ctn">
             <div className="input-ctn">
@@ -13,10 +30,9 @@ export default function GameSettings() {
                 <div className="form-row">
                     <div className="row-input" style={{ width: '100%'}}>
                         <label style={{ fontSize: '14px'}}>Chọn loại trò chơi</label>
-                        <select className="field-select">
-                                <option value="">Chọn</option>
-                                <option value="">Trắc nghiệm</option>
-                                <option value="">Lắc vật phẩm</option>
+                        <select className="field-select" value={field} onChange={(e) => {setField(e.target.value)}}>
+                                <option value="Trắc nghiệm">Trắc nghiệm</option>
+                                <option value="Lắc vật phẩm">Lắc vật phẩm</option>
                                 {/* {vouchers.map((voucher) => (
                                     <option key={voucher._id} value={voucher._id}>
                                         {voucher.name}
@@ -50,7 +66,7 @@ export default function GameSettings() {
                 <div className="form-row">
                     <div className="form-group">
                         <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Số loại voucher</label>
-                        <input type="number" style={{width: '100%', boxSizing: 'border-box', fontSize: '16px'}} value="2"></input>
+                        <input type="number" style={{width: '100%', boxSizing: 'border-box', fontSize: '16px'}} value="1"></input>
                     </div>
                 </div>
 
