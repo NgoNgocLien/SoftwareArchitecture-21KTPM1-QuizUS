@@ -64,19 +64,19 @@ export default function CreateEvent() {
                 {/* Date time */}
                 <div className='form-row'>
                     <div className="row-input">
-                        <label id="start_datetime" >Ngày bắt đầu</label>
+                        <label id="start_datetime" style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Ngày bắt đầu</label>
                         <input type="datetime-local" id="start_datetime" placeholder="Chọn ngày bắt đầu" required value={start} onChange={(e) => {setStart(e.target.value)}}/>
                     </div>
                     <div className="row-input">
-                        <label id="end_datetime">Ngày kết thúc</label>
+                        <label id="end_datetime" style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Ngày kết thúc</label>
                         <input type="datetime-local" id="end_datetime" placeholder="Chọn ngày bắt đầu" required value={end} onChange={(e) => {setEnd(e.target.value)}}/>
                     </div>
                 </div>
 
-                {/* Voucher */}
+                {/* Max Voucher */}
                 <div className='form-row'>
                     <div className="row-input">
-                        <label id="id_voucher">Chọn voucher</label>
+                        <label id="id_voucher" style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Chọn voucher</label>
                         <select className="field-select"
                                 value={selectedOption}
                                 onChange={handleOption}
@@ -90,7 +90,7 @@ export default function CreateEvent() {
                     </div>
 
                     <div className="row-input">
-                        <label id="max_amount_voucher">Số lượng</label>
+                        <label id="max_amount_voucher" style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Số lượng</label>
                         <input type="number" required value={amount} onChange={(e) => {setAmount(e.target.value)}}/>
                     </div>
                 </div>
@@ -102,7 +102,17 @@ export default function CreateEvent() {
                         <input type="number" /> {/* Lấy số lượng x price voucher */}
                     </div>
                 </div>
-                
+
+                {/* Given Vouchers */}
+                <div className='form-row'>
+                    <div className='form-group'>
+                        <label>Voucher đã phát</label>
+                        <input  type="number" 
+                                value="Số lượng voucher đã phát sẽ được thống kê khi sự kiện diễn ra" 
+                                readOnly/> 
+                    </div>
+                </div>
+
                 {/* Game */}
                 <div className='form-row'>
                     <div className='form-group'>
