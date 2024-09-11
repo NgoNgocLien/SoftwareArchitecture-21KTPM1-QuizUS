@@ -3,9 +3,10 @@
 
 // liên
 const USER_BE = 'http://192.168.1.14:8000/user';
-const GAME_BE = 'http://192.168.1.14:8000/game';
+const GAME_BE = 'http://192.168.1.14:8000';
 const CAMPAIGN_BE = 'http://192.168.1.14:8000/campaign';
 const NOTIFICATION_BE = 'http://192.168.1.14:8000';
+const QR_SCANNER = 'http://192.168.1.14:4000';
 
 // ml
 // const USER_BE = 'http://192.168.1.5:8000/user';
@@ -40,6 +41,8 @@ export default {
   CAMPAIGN_BE,
   GAME_BE,
   NOTIFICATION_BE,
+
+  QR_SCANNER,
 
   DURATION,
   QUIZ_SCORE,

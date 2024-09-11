@@ -33,6 +33,7 @@ import { Colors } from '@/constants/Colors';
 import { Paragraph } from '@/components/text/Paragraph';
 import { Heading } from '@/components/text/Heading';
 import { Button } from '@/components/Button';
+import config from '@/constants/config';
 
 export default function VoucherPage() {
 
@@ -246,7 +247,7 @@ export default function VoucherPage() {
 
                             <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>QR mã giảm giá</Heading>
                             <View style={styles.qrContainer}>
-                                <QRCode value="facebook.com" size={300} backgroundColor='white'/>
+                                <QRCode value={`${config.QR_SCANNER}/66da72bca72515620596efca`} size={300} backgroundColor='white'/>
                             </View>
 
                             <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Tặng mã giảm giá</Heading>
