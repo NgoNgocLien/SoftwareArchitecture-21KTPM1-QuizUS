@@ -28,14 +28,14 @@ services:
       - .:/app
       - /app/campaign/node_modules
 
-  notification:
-    build:
-      dockerfile: Dockerfile
-      context: ./notification
-    restart: always
-    volumes:
-      - .:/app
-      - /app/notification/node_modules
+  # notification:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./notification
+  #   restart: always
+  #   volumes:
+  #     - .:/app
+  #     - /app/notification/node_modules
 
   gateway_proxy:
     image: nginx:latest
@@ -45,7 +45,7 @@ services:
       - user
       - game
       - campaign
-      - notification
+      # - notification
     volumes:
       - .:/app/
       - ./nginx.conf:/etc/nginx/nginx.conf
