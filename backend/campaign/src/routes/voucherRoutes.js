@@ -47,4 +47,7 @@ router.put('/used/:id_player/:id_campaign', use);
 // tặng voucher cho bạn
 router.post('/send', sendVoucher);
 
+// lấy tất cả thông báo đến người dùng
+router.get('/')
+
 module.exports = router;

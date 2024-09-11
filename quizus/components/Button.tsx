@@ -36,6 +36,9 @@ export function Button({
   if (size === 'small'){
     buttonStyle.push(styles.small);
   }
+
+  
+  const textColor = (type === 'primary' || type === 'disabled') ? Colors.light.background : Colors.light.mainText
   
   return (
     <TouchableOpacity style={[...buttonStyle, style]} {...rest} activeOpacity={0.6}>
@@ -52,7 +55,7 @@ export function Button({
       <Paragraph 
         style={{textAlign: 'center'}}
         type="p2" 
-        color={type === 'primary' ? Colors.light.background : Colors.light.mainText}>
+        color={textColor}>
           {text} 
       </Paragraph>
     </TouchableOpacity>
@@ -74,7 +77,8 @@ const styles = StyleSheet.create({
   small: {
     height: 'auto',
     width: '80%',
-    paddingVertical: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
     alignSelf: 'center',
     marginBottom: 10,
   },

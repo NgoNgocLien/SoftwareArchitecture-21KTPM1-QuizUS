@@ -222,12 +222,12 @@ const requestTurn = async (req, res) => {
     }
 
     const playerGame = await PlayerGame.findOne({
-      id_player: id_receiver,
+      id_player: id_sender,
       id_campaign: id_campaign
     });
 
     if (!playerGame) {
-      return res.status(404).json({ message: 'Receiver is not participating in this campaign.' });
+      return res.status(404).json({ message: 'Sender is not participating in this campaign.' });
     }
 
     // Tạo bản ghi mới trong TurnRequest (Lưu thông tin xin lượt chơi)

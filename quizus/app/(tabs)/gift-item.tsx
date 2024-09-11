@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Image, TouchableWithoutFeedback, View, ScrollView, Text, Platform, KeyboardAvoidingView, TouchableOpacity, Keyboard } from 'react-native';
 
 import { Button } from '@/components/Button';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 
 import { retrieveFromSecureStore} from '@/api/SecureStoreService'
@@ -26,7 +26,21 @@ export default function GiftItem() {
     const [selectedIndex, setSelectedIndex] = useState(-1)
     const [selectedQuantity, setSelectedQuantity] = useState(-1)
     const [playerItems, setPlayerItems] = useState<any>([])
-    useEffect(() => {
+
+    useFocusEffect(
+        useCallback(() => {
+            // This will run when the screen comes into focus (when you navigate back to it)
+            // You can reset state here
+            setLoading(true);
+            setKeyword('');
+            setSelectedIndex(-1);
+            setSelectedQuantity(-1);
+            setPlayerItems([]);
+            retrieveData(); // Call function to fetch data again
+        }, [])
+    );
+
+   const retrieveData = () => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
             getPlayerItem(id_player).then((data: any) => {
                 let player_items: any[] = []
@@ -65,7 +79,7 @@ export default function GiftItem() {
             console.error('Error retrieving id_player from SecureStore:', error);
             showToast('error', 'Không tìm thấy thông tin người chơi');
         });
-    },[]);
+    };
     
     const handleGift = () => {
         setLoading(true);
@@ -97,6 +111,9 @@ export default function GiftItem() {
 
                 sendItem(id_player, player.id_player, playerItems[selectedIndex].id_item, playerItems[selectedIndex].id_campaign)
                 .then(() => {
+                    setSelectedIndex(-1)
+                    setSelectedQuantity(-1)
+                    setKeyword('')
                     showToast('success', 'Tặng thành công');
                     router.replace('/items')
                 })

@@ -14,6 +14,9 @@ import { Paragraph } from '@/components/text/Paragraph';
 import { VoucherNotification } from '@/models/notification/VoucherNotification';
 import { CampaignNotification } from '@/models/notification/CampaignNotification';
 import { Button } from '@/components/Button';
+import { getAll, updateSeenTime } from '@/api/NotiApi';
+import { FriendNotification, FriendTurnRequestNotification } from '@/models/notification/FriendNotification';
+import { replyTurn } from '@/api/GameApi';
 const tabNames = [
     { index: 0, name: 'Voucher' },
     { index: 1, name: 'Sự kiện' },
@@ -33,40 +36,42 @@ export default function Notification() {
     const params= useLocalSearchParams();
 
     const [loading, setLoading] = useState(true);
-    const [focusedTab, setFocusedTab] = useState(0);
-
-    const [vouchers, setVouchers] = useState<any[]| null>(null);
-    const [campaigns, setCampaigns] = useState<any[]| null>(null);
-    const [friends, setFriends] = useState<any[]| null>(null);
 
     const [notifications, setNotifications] = useState<Noti[]>([]);
-
-    const handleTabFocus = (index: number) => {
-        setFocusedTab(index);
-    }
+    const [unseen, setUnseen] = useState(false);
 
     const fetchNoti = () => {
         setLoading(true);
         retrieveFromSecureStore('id_player', (id_player: string) => {
            
-              const voucherFactory = new VoucherNotificationFactory();
-              const eventFactory = new EventNotificationFactory();
-              const friendFactory = new FriendNotificationFactory();
-        
-              // Map through the data and use the correct factory for each type
-              const mappedNotifications = data.map(item => {
-                if (item.type === 'voucher') {
-                  return voucherFactory.createVoucherNotification(item);
-                } else if (item.type === 'event') {
-                  return eventFactory.createEventNotification(item);
-                } else if (item.type === 'friend') {
-                  return friendFactory.createFriendNotification(item);
-                }
-                throw new Error('Unknown notification type');
-              });
-        
-              setNotifications(mappedNotifications);
-              setLoading(false);
+            getAll(id_player).then((players) =>{
+
+                const voucherFactory = new VoucherNotificationFactory();
+                const eventFactory = new EventNotificationFactory();
+                const friendFactory = new FriendNotificationFactory();
+            
+                // Map through the data and use the correct factory for each type
+                const mappedNotifications = players.map((item: any)  => {
+                    if (item.seen_time === null)
+                        setUnseen(true);
+
+                    // console.log(item.type)
+                    if (item.type === 'voucher') {
+                    return voucherFactory.createVoucherNotification(item);
+                    } else if (item.type === 'campaign') {
+                    return eventFactory.createEventNotification(item);
+                    } else if (item.type === 'friend') {
+                    return friendFactory.createFriendNotification(item);
+                    } else{
+                        console.log("Invalid type: ", item.type);
+                    }
+                    // throw new Error('Unknown notification type');
+                });
+
+                // console.log("abc: ", mappedNotifications);
+                setNotifications(mappedNotifications);
+            })
+            setLoading(false);
         })
     };
 
@@ -75,9 +80,35 @@ export default function Notification() {
     }, []);
 
     const handleReadNoti = () => {
-        
+        if (!unseen)
+            return;
+
+        retrieveFromSecureStore("id_player", (id_player: string) =>{
+            updateSeenTime(id_player).then(() => {
+                // Re-fetch notifications after updating seen_time
+                setUnseen(false);
+                fetchNoti();
+                
+            }).catch(error => {
+                console.error('Error updating seen time:', error);
+            });
+        })
     }
 
+    const handleAccept = (notification: FriendTurnRequestNotification) => {
+        console.log(notification.getSeenTime())
+        
+        // notification.replyTurn(true)
+    }
+
+    // console.log(notifications.length)
+
+    const handleRefuse = (notification: FriendTurnRequestNotification) => {
+        console.log(notification)
+        // notification.replyTurn(false)
+    }
+
+    console.log("unseen notifications: ", unseen)
     return (
         <View style={styles.background}>
             <SafeAreaView style={styles.header}>
@@ -92,7 +123,11 @@ export default function Notification() {
             </SafeAreaView>
             <View style={[styles.container, styles.titleContainer]}>
                 <Heading type="h4">Thông báo</Heading>
-                <Button text={'Đánh dấu đã đọc'} onPress={handleReadNoti}></Button>
+                <View>
+                    <Button text={'Đánh dấu đã đọc'} size={'small'} 
+                        type={ unseen ? 'primary' : 'disabled' }
+                        onPress={handleReadNoti}></Button>
+                </View>
             </View>
 
             {
@@ -112,7 +147,7 @@ export default function Notification() {
                                     (notification instanceof CampaignNotification) ? "Sự kiện" : "Bạn bè";
                                 
                                 return (
-                                    <View key={index} style={notification.getSeenTime() ? styles.notification : [styles.notification, styles.newNotification]}>
+                                    <View key={notification.getId()} style={notification.getSeenTime() ? styles.notification : [styles.notification, styles.newNotification]}>
                                         <View style={styles.notificationBody}>
                                             <Paragraph type="p1" style={styles.notificationContent}>{notification.getContent()}</Paragraph>
                                             {
@@ -121,6 +156,15 @@ export default function Notification() {
                                             }
                                             
                                         </View>
+                                        {
+                                            (notification instanceof FriendTurnRequestNotification) && notification.getIsAccept() == null && (
+                                                <View style={styles.buttonView}>
+                                                    <Button text={'Từ chối'} type={'tertiary'} style={styles.button} onPress={() => {handleRefuse(notification)}}></Button>
+                                                    <Button text={'Đồng ý'} style={styles.button} onPress={() => {handleAccept(notification)}}></Button>
+                                                </View>
+                                            )
+                                        }
+                                        
                                         <Paragraph type="p3" color={Colors.gray._500}>{type}</Paragraph>
                                     </View>
                                 )
@@ -174,10 +218,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        // backgroundColor: "yellow",
+        paddingRight: 0,
+        borderBottomColor: Colors.gray._200,
+        borderBottomWidth: 1,
     },
 
     notification:{
-        padding: 20
+        padding: 20,
+        borderBottomColor: Colors.gray._200,
+        borderBottomWidth: 1,
     },
     newNotification:{
         backgroundColor: Colors.light.secondary
@@ -195,6 +245,14 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.light.primary,
         borderRadius: 50,
         alignSelf: 'center',
-    }
+    },
 
+    buttonView:{
+        flexDirection: 'row',
+        justifyContent:'space-evenly',
+        marginTop: 10,
+    },
+    button:{
+        width: '35%',
+    },
 });

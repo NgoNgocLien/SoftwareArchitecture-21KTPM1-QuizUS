@@ -4,10 +4,10 @@ export abstract class VoucherNotification extends Noti {
   name_voucher: string;
   // is_used: boolean;
 
-  constructor(seen_time: string, noti_time: string,name_voucher: string
+  constructor(_id: string, seen_time: string, noti_time: string,name_voucher: string
     // , is_used: boolean
   ) {
-    super(seen_time, noti_time);
+    super(_id, seen_time, noti_time);
     this.name_voucher = name_voucher;
     // this.is_used = is_used;
   }
@@ -17,8 +17,8 @@ export abstract class VoucherNotification extends Noti {
 // import { VoucherNotification } from './VoucherNotification';
 
 export class VoucherRedeemedNotification extends VoucherNotification {
-  constructor(seen_time: string, noti_time: string, name_voucher: string) {
-    super(seen_time, noti_time, name_voucher);
+  constructor(_id: string, seen_time: string, noti_time: string, name_voucher: string) {
+    super(_id, seen_time, noti_time, name_voucher);
   }
 
   getContent(): string{
@@ -34,8 +34,8 @@ export class VoucherRedeemedNotification extends VoucherNotification {
 // import { VoucherNotification } from './VoucherNotification';
 
 export class VoucherUsedNotification extends VoucherNotification {
-  constructor(seen_time: string, noti_time: string, name_voucher: string) {
-    super(seen_time, noti_time, name_voucher);
+  constructor(_id: string, seen_time: string, noti_time: string, name_voucher: string) {
+    super(_id, seen_time, noti_time, name_voucher);
   }
 
   getContent(): string{

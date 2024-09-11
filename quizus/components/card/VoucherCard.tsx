@@ -42,6 +42,7 @@ export function VoucherCard({
     campaign = defaultCampaign,
     playerInfo,
     is_used,
+    id_playerVoucher,
     ...rest
 }:{ 
     voucher: any,    
@@ -52,6 +53,7 @@ export function VoucherCard({
     },
     playerInfo?: PlayerInfo
     is_used?: boolean,
+    id_playerVoucher?: string,
     [key: string]: any;
 }) {
     const router = useRouter();
@@ -170,10 +172,12 @@ export function VoucherCard({
                         (Date.now() < voucher.expired_date.getTime()) && 
                         <Button text={"Sử dụng/Tặng"} size={'small'}
                             onPress={() =>{
+                                console.log(id_playerVoucher);
                                 router.replace({
                                     pathname: '/gift-voucher',
                                     params: {
                                         voucher: JSON.stringify(voucher),
+                                        id_playerVoucher: id_playerVoucher
                                     }
                                 })
                             }}></Button>

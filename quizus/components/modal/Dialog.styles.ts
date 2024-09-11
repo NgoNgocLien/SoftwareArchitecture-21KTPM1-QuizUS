@@ -46,6 +46,8 @@ const dialogStyles = StyleSheet.create({
         color: Colors.light.primary,
         fontSize: 20,
     },
+
+    // ml
     buttonView:{
         flexDirection: 'row',
         justifyContent:'space-between',
@@ -66,6 +68,9 @@ const dialogStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
+    playerTurnContainer:{
+        maxHeight: 250,
+    }
 });
 
 export default dialogStyles;

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Image, TouchableWithoutFeedback, View, Clipboard, Text, Platform, KeyboardAvoidingView, TouchableOpacity, Keyboard, Alert, ScrollView } from 'react-native';
 // import Clipboard from '@react-native-clipboard/clipboard';
 
 import { Button } from '@/components/Button';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 
 import { retrieveFromSecureStore} from '@/api/SecureStoreService'
@@ -19,34 +19,33 @@ import { EmptyView } from '@/components/EmptyView';
 import { LoadingView } from '@/components/LoadingView';
 import { sendItem } from '@/api/GameApi';
 import { Paragraph } from '@/components/text/Paragraph';
+import { giftVoucher } from '@/api/VoucherApi';
 
 export default function GiftVoucher() {
     const router = useRouter();
     const params = useLocalSearchParams();
     
     const voucher = JSON.parse(params.voucher as string)
+    const id_playerVoucher = params.id_playerVoucher as string
     const [iaUsed, setIsUsed] = useState(false);
 
     const [loading, setLoading] = useState(false)
     const [keyword, setKeyword] = useState('')
-
-
-    useEffect(() => {
-        retrieveFromSecureStore('id_player', (id_player: string) => {
-                        
-        }).catch((error) => {
-            console.error('Error retrieving id_player from SecureStore:', error);
-            showToast('error', 'Không tìm thấy thông tin người chơi');
-        });
-    },[]);
     
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(false); // Reset loading to false
+            setKeyword(''); // Clear keyword when screen is revisited
+        }, [])
+    );
+
     const handleGift = () => {
         setLoading(true);
 
-
+        console.log("keyword: ", keyword);
         getPlayerByKeyword(keyword)
         .then(player => {
-            console.log('gift-item: ', player.id_player)
+            // console.log('gift-voucher: ', player.id_player)
 
             retrieveFromSecureStore('id_player', (id_player: string) => {
 
@@ -56,13 +55,17 @@ export default function GiftVoucher() {
                     return;
                 }
 
-                console.log('gift-item: ',{
-                    id_sender: id_player,
+                console.log('gift-voucher: ',{
+                    id_playervoucher: id_playerVoucher,
                     id_receiver: player.id_player,
                 })
 
-            
-                setLoading(false);
+                giftVoucher(id_playerVoucher, player.id_player)
+                setLoading(false);              
+                showToast('success','Tặng voucher thành công')
+                router.replace({
+                    pathname: '/my-vouchers'
+                })
             })
         })
         .catch(() => {
@@ -70,6 +73,8 @@ export default function GiftVoucher() {
             showToast('error', 'Không tìm thấy người dùng');
         })
     }
+
+    // console.log(params)
 
     return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -90,7 +95,7 @@ export default function GiftVoucher() {
             <View style={[styles.container]}>
                 <Label>Tặng cho</Label>
                 <Input type={"default"} placeholder={"Nhập số điện thoại, email"}
-                    onChangeText={setKeyword}/>
+                    onChangeText={text => setKeyword(text)} value={keyword}/>
                 {
                     loading ? <LoadingView/> :
                     <Button onPress={handleGift} style={styles.giftButton} text={'Tặng ngay'}></Button> 

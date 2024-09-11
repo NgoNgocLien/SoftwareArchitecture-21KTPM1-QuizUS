@@ -43,7 +43,7 @@ export default function MyVouchers() {
                     let itemVouchers: any[] = [];
 
                     playerVouchers.map((playerVoucher: {campaign?: any; voucher?: any; is_used?:boolean}) => {
-                        console.log(playerVoucher.campaign.id_quiz);
+                        // console.log(playerVoucher.campaign.id_quiz);
                         const { voucher, ...newPlayerVoucher } = playerVoucher;
 
                         if (playerVoucher.campaign.id_quiz !== "" && playerVoucher.campaign.id_quiz !== null && playerVoucher.campaign.id_quiz !== undefined) {
@@ -143,6 +143,7 @@ export default function MyVouchers() {
                                         campaign={item.campaign}
                                         key={index} 
                                         is_used={item.is_used}
+                                        id_playerVoucher={item.id_playerVoucher}
                                         style={index === vouchers[0].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}
@@ -163,6 +164,7 @@ export default function MyVouchers() {
                                         campaign={item.campaign}
                                         key={index} 
                                         is_used={item.is_used}
+                                        id_playerVoucher={item.id_playerVoucher}
                                         style={index === vouchers[1].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}
@@ -183,6 +185,7 @@ export default function MyVouchers() {
                                         campaign={item.campaign}
                                         key={index} 
                                         is_used={item.is_used}
+                                        id_playerVoucher={item.id_playerVoucher}
                                         style={index === vouchers[2].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}

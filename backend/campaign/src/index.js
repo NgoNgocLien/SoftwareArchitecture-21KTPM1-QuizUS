@@ -12,6 +12,7 @@ const app = express();
 const campaignRoutes = require('./routes/campaignRoutes');
 const voucherRoutes = require('./routes/voucherRoutes');
 const gameRoutes = require('./routes/gameRoutes');
+const notiRoutes = require('./routes/notiRoutes');
 
 app.use(express.json());
 app.use(cors());
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/api/campaign', campaignRoutes);
 app.use('/api/voucher', voucherRoutes);
 app.use('/api/game', gameRoutes);
+app.use('/api/noti', notiRoutes);
 
 mongoose.connect(dbURI, {
     useNewUrlParser: true,

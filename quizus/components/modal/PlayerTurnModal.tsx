@@ -144,7 +144,7 @@ export default function PLayerTurnModal({
         >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={dialogStyles.centeredView}>
-            <View style={dialogStyles.modalView}>
+            <View style={[dialogStyles.modalView, dialogStyles.playerTurnContainer]}>
                 {
                     !showTurnRequest && 
                     <>
@@ -172,7 +172,7 @@ export default function PLayerTurnModal({
                     <>
                     <View style={[dialogStyles.topView, {flexDirection: "column", gap: 10}]}>
                         <Heading type={'h5'}>Xin lượt chơi</Heading>
-                        <Input type={"default"} placeholder={"Nhập số điện thoại, email, mã định danh"}
+                        <Input type={"default"} placeholder={"Nhập số điện thoại, email"}
                                 onChangeText={setKeyword} style={{marginBottom:0}}/>
                         {
                             errMsg && <Paragraph type={'p2'} color={Colors.feedback.error}>{errMsg}</Paragraph>

@@ -6,6 +6,7 @@ const PlayerGame = require('../models/playerGame');
 const campaign = require('../models/campaign');
 const VoucherGift = require('../models/voucherGift');
 const PlayerNoti = require('../models/playerNoti');
+const playerNoti = require('../models/playerNoti');
 
 // Lấy tất cả voucher đang hoạt động
 const getActive = async (req, res) => {
@@ -401,7 +402,7 @@ const sendVoucher = async (req, res) => {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   };
-  
+
 
 module.exports = {
     getActive,
