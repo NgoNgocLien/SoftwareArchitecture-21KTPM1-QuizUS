@@ -79,7 +79,7 @@ export default function CreateGame() {
 
         if (success) {
             confirmAlert({
-                message: 'Tạo nhãn hàng thành công!',
+                message: 'Tạo sự kiện thành công!',
                 buttons: [
                     {
                         label: 'Xác nhận',
@@ -92,7 +92,7 @@ export default function CreateGame() {
         }
         else {
             confirmAlert({
-                message: 'Tạo nhãn hàng thất bại!',
+                message: 'Tạo sự kiện thất bại!',
                 buttons: [
                     {
                         label: 'Xác nhận'

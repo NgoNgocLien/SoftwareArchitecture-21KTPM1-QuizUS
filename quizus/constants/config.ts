@@ -11,7 +11,7 @@
 const USER_BE = 'http://10.0.1.35:8000/user';
 const GAME_BE = 'http://10.0.1.35:8000/game';
 const CAMPAIGN_BE = 'http://10.0.1.35:8000/campaign';
-const NOTIFICATION_BE = 'http://10.0.1.35:8000/notification';
+const NOTIFICATION_BE = 'http://10.0.1.35:8004/';
 
 // simple
 // const USER_BE = 'http://192.168.0.225:8000/user';

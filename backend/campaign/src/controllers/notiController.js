@@ -65,40 +65,35 @@ const isSameDay = (date1, date2) => {
            date1.getDate() === date2.getDate();
 };
 
-cron.schedule('*/1 * * * *', async () => {
-    console.log('Running daily notification task');
+// cron.schedule('*/1 * * * *', async () => {
+//     console.log('Running daily notification task');
 
-    try {
-        // get all noti from PlayerNoti that noti_time = now (just compare day month year)
-        const notifications = await playerNoti.find({
-            type: 'campaign'
-        });
+//     try {
+//         // get all noti from PlayerNoti that noti_time = now (just compare day month year)
+//         const notifications = await playerNoti.find({
+//             type: 'campaign'
+//         });
 
-        const result = notifications.filter(noti => isSameDay(new Date(noti.noti_time), new Date(Date.now())))
+//         const result = notifications.filter(noti => isSameDay(new Date(noti.noti_time), new Date(Date.now())))
 
-        console.log(result)
+//         console.log(result)
 
-        for (const noti of result) {
-            await notify({
-                id_receiver: noti.id_receiver,
-                content: noti.content,
-                type: noti.type,
-                id_campaign: noti.id_campaign,
-                start_time: noti.start_time,
-                noti_time: noti.noti_time
-            });
-        }
+//         if (result) {
+//             await notify({
+//                 type: 'campaign'
+//             });
+//         }
 
-        // call notify function to pass noti as data
+//         // call notify function to pass noti as data
 
-        console.log('Daily notifications sent successfully');
-    } catch (error) {
-        console.error('Error sending daily notifications:', error.message);
-    }
-}, {
-    scheduled: true,
-    timezone: "Asia/Ho_Chi_Minh" // Set your timezone as needed
-});
+//         console.log('Daily notifications sent successfully');
+//     } catch (error) {
+//         console.error('Error sending daily notifications:', error.message);
+//     }
+// }, {
+//     scheduled: true,
+//     timezone: "Asia/Ho_Chi_Minh" // Set your timezone as needed
+// });
 
 
 module.exports = {
