@@ -10,7 +10,7 @@ app.use(express.json());
 
 const io = new Server(server, {
     cors: {
-        origin: "http://10.0.0.212:3000",
+        origin: "http://10.0.1.35:3000",
         methods: ["GET", "POST"],
     },
 });

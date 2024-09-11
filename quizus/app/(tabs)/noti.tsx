@@ -50,6 +50,7 @@ export default function Notification() {
                     if (item.type === 'voucher') {
                     return voucherFactory.createVoucherNotification(item);
                     } else if (item.type === 'campaign') {
+                        console.log("noti: ", item)
                     return eventFactory.createEventNotification(item);
                     } else if (item.type === 'friend') {
                     return friendFactory.createFriendNotification(item);

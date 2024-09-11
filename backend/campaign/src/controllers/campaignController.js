@@ -8,6 +8,7 @@ const Quiz = require('../models/quiz');
 const ItemGift = require('../models/itemGift');
 const TurnRequest = require('../models/turnRequest');
 const VoucherGift = require('../models/voucherGift');
+const PlayerNoti = require('../models/playerNoti');
 
 // Lấy tất cả các chiến dịch
 const getAll = async (req, res) => {
@@ -353,21 +354,30 @@ const like = async (req, res) => {
 
         const now = new Date();
         const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
-        const startTimeMinusOneDay = new Date(campaign.start_time.getTime() - oneDayInMilliseconds);
+        const startTimeMinusOneDay = new Date(campaign.start_datetime.getTime() - oneDayInMilliseconds);
 
         if (startTimeMinusOneDay > now) {
-            const newNotification = new Notification({
+            const newNotification = new PlayerNoti({
                 id_receiver: playerId,
                 type: 'campaign',
                 name_campaign: campaign.name, // Storing the campaign name
                 id_campaign: campaignId,      // Storing the campaign ID
-                start_time: campaign.start_time,
+                start_time: campaign.start_datetime,
                 noti_time: startTimeMinusOneDay,               
                 seen_time: null,   
             });
 
             await newNotification.save();
-            console.log(`Notification created for player ${playerId}`);
+            // console.log({
+            //     id_receiver: playerId,
+            //     type: 'campaign',
+            //     name_campaign: campaign.name, // Storing the campaign name
+            //     id_campaign: campaignId,      // Storing the campaign ID
+            //     start_time: campaign.start_datetime,
+            //     noti_time: startTimeMinusOneDay,               
+            //     seen_time: null,  
+            //     subtype: null, 
+            // });
         }
 
         res.status(200).json(playerLike);
@@ -399,6 +409,13 @@ const unlike = async (req, res) => {
 
         playerLike.campaigns.splice(campaignIndex, 1);
         await playerLike.save();
+
+        const deletedNoti = await PlayerNoti.deleteOne({
+            id_receiver: playerId,
+            type: 'campaign',
+            id_campaign: campaignId
+        });
+
         res.json(playerLike);
     } catch (error) {
         res.status(500).json({ message: error.message });

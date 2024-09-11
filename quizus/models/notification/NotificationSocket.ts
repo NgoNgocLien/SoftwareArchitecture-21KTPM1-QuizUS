@@ -29,7 +29,7 @@ class NotificationSocket {
 
     // Lắng nghe sự kiện từ socket khi có thông báo mới
     this.socket?.on('notification', (data) => {
-      console.log('Received notification from server:', data); // Debug thông báo
+      // console.log('Received notification from server:', data); // Debug thông báo
       showToast('info', "Bạn có thông báo mới"); // Show toast with the notification message
       eventEmitter.emit('notification', data); // Phát sự kiện 'notification' cho tất cả listener
     });
