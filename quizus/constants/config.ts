@@ -2,20 +2,20 @@
 // rồi mọi ng để config này vô file gitignore
 
 // liên
-const USER_BE = 'http://192.168.1.14:8000/user';
-const GAME_BE = 'http://192.168.1.14:8000';
-const CAMPAIGN_BE = 'http://192.168.1.14:8000/campaign';
-const NOTIFICATION_BE = 'http://192.168.1.14:8000';
-const QR_SCANNER = 'http://192.168.1.14:4000';
+// const USER_BE = 'http://192.168.1.14:8000/user';
+// const GAME_BE = 'http://192.168.1.14:8000';
+// const CAMPAIGN_BE = 'http://192.168.1.14:8000/campaign';
+// const NOTIFICATION_BE = 'http://192.168.1.14:8000';
+// const QR_SCANNER = 'http://192.168.1.14:4000';
 
 // ml
-// const USER_BE = 'http://192.168.1.5:8000/user';
-// const GAME_BE = 'http://192.168.1.5:8000';
-// const CAMPAIGN_BE = 'http://192.168.1.5:8000/campaign';
-// const NOTIFICATION_BE = 'http://192.168.1.5:8000';
-// const QR_SCANNER = 'http://192.168.1.5:4000';
+const USER_BE = 'http://10.126.0.158:8000/user';
+const GAME_BE = 'http://10.126.0.158:8000';
+const CAMPAIGN_BE = 'http://10.126.0.158:8000/campaign';
+const NOTIFICATION_BE = 'http://10.126.0.158:8004';
+const QR_SCANNER = 'http://10.126.0.158:4000';
 
-const NOTI_BE = '';
+// const NOTI_BE = '';
 
 const DURATION = 40000;
 

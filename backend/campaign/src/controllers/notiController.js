@@ -7,6 +7,8 @@ const PlayerGame = require('../models/playerGame');
 const VoucherGift = require('../models/voucherGift');
 const playerNoti = require('../models/playerNoti');
   
+const noti_url = '10.126.0.158:8004'
+
 // lấy thông báo gửi đến người dùng
 const getAll = async (req, res) => {
     try {
@@ -52,12 +54,17 @@ const updateSeenTime = async (req, res) => {
 }
 
 // thông báo đến người dùng
-const URL = 'http://10.0.1.35:8004/emit-notification'
+const URL = `http://${noti_url}/emit-notification`;
 const notify = (data) => {
     return axios.post(URL, {
-        noti: data
+        noti: data // Ensure 'data' has the correct structure expected by the server
+    }).then(() => {
+        console.log("Notification sent successfully!");
+    }).catch((error) => {
+        console.error("Failed to send notification:", error.message);
+        console.error("Error details:", error.response?.data);
     });
-}
+};
 
 const isSameDay = (date1, date2) => {
     return date1.getFullYear() === date2.getFullYear() &&

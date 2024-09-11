@@ -39,8 +39,9 @@ export default function Login() {
 
       const result = await response.json();
       if (response.ok) {
+        console.log(result)
         saveToSecureStore("id_player", result.id_player);
-        saveToSecureStore("name_player", result.name);
+        saveToSecureStore("name_player", result.username);
 
         router.replace('/(tabs)');
       } else {

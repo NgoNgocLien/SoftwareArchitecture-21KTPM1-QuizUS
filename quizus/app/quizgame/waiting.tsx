@@ -24,23 +24,22 @@ export default function QuizGameDetail() {
   const [playerList, setPlayerList] = useState<any[]>([]);
 
   useEffect(() => {
-    retrieveFromSecureStore("id_player", (id_player: string) =>{
-      retrieveFromSecureStore("name_player", (name_player: string) =>{
-
-       gameSocket.connect(id_player, name_player);
-
-       gameSocket.on('connect', () => {
+    retrieveFromSecureStore("id_player", (id_player: string) => {
+    //   console.log("id_player retrieved:", id_player);
+      retrieveFromSecureStore("name_player", (name_player: string) => {
+        // console.log("name_player retrieved:", name_player);
         console.log(`${name_player} has connected to the socket server`);
-        setPlayerList((prevList) => [...prevList, { id_player, name_player }]);
+  
+        gameSocket.connect(id_player, name_player);
+  
+        gameSocket.on('connect', () => {
+          console.log(`${name_player} has connected to the socket server (socket event)`);
+          setPlayerList((prevList) => [...prevList, { id_player, name_player }]);
+        });
       });
-
-      })
-    })
-    
-    return () => {
-
-    };
+    });
   }, []);
+  
 
   return (
   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
