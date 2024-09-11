@@ -57,7 +57,20 @@ const getPlayerStats = async () => {
   }
 }
 
+const getBudgetStats = async () => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/budget`;
+    const response = await axios.get(url);
+    console.log(response)
+    return response.data;
+  }
+  catch (err) {
+    console.log(err.message);
+    return []
+  }
+}
+
 
 export {
-  getStats, getVoucherStats, getPlayerByGameStats, getPlayerStats
+  getStats, getVoucherStats, getPlayerByGameStats, getPlayerStats, getBudgetStats
 };
