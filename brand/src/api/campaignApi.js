@@ -65,13 +65,13 @@ const updateCampaign = async (updatedData) => {
   }
 }
 
-const createCampaign = async () => {
+// const createCampaign = async () => {
   
-}
+// }
 
 const createEvent = async (campaign, quiz) => {
   try {
-    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/`;
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign`;
     const response = await axios.post(url, {
       campaign, 
       quiz
@@ -94,5 +94,5 @@ export{
   createEvent,
   getCampaignById,
   updateCampaign,
-  createCampaign
+  // createCampaign
 }
