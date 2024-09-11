@@ -65,9 +65,14 @@ const updateCampaign = async (updatedData) => {
   }
 }
 
+const createCampaign = async () => {
+  
+}
+
 export{
   getAll,
   searchCampaign,
   getCampaignById,
-  updateCampaign
+  updateCampaign,
+  createCampaign
 }

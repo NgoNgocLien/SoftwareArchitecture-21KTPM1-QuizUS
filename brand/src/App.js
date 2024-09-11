@@ -59,13 +59,13 @@ function App() {
           <Route path="/voucher" element={<ManageVoucher />} />
           <Route path="/info" element={<BrandInfo />} />
           <Route path="/edit" element={<UpdatePlayer />} />
-          <Route path="/create-event" element={<CreateEvent />} />
-          <Route path="/create-game" element={<CreateGame />} />
-          <Route path="/create-shake" element={<CreateShake />} />
         </Route>
 
         <Route element={<Layout1 />}>
           <Route path="/edit-event/:id" element={<EditEvent />} />
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/create-game" element={<CreateGame />} />
+          <Route path="/create-shake" element={<CreateShake />} />
         </Route>
       </Routes>
     </Router>
