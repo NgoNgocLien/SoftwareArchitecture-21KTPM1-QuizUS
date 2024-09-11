@@ -14,7 +14,7 @@ const {
     getExchanged,
     exchangeByCoin,
     exchangeByItem,
-    use, sendVoucher, getStats
+    use, sendVoucher, getStats, getBrandStats
 } = require('../controllers/voucherController');
 
 // Lấy tất cả voucher đang hoạt động
@@ -22,6 +22,9 @@ router.get('/active', getActive);
 
 // Thống kê tình trạng voucher (đã sd/ chưa sd/ hết hạn/ tổng gtri)
 router.get('/stats', getStats);
+
+// Thống kê tình trạng voucher (đã phát hành/ chưa phát hành/ hết hạn/ tổng gtri)
+router.get('/brandStats/:id_brand', getBrandStats);
 
 // Lấy voucher theo id
 router.get('/:id_voucher', getVoucherById);

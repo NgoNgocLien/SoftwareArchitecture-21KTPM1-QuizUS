@@ -60,6 +60,6 @@ const CampaignSchema = new Schema({
     score_award: {
         type: Number,
     }
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('Campaign', CampaignSchema);
