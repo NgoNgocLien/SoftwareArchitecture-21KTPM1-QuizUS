@@ -63,6 +63,7 @@ function App() {
           <Route path="/add-brand" element={<AddBrand />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
           <Route path="/edit-brand/:id_brand" element={<EditBrand />} />
+          <Route path="/game-settings" element={<GameSettings />} />
         </Route>
       </Routes>
     </Router>
