@@ -13,6 +13,7 @@ import {
     SafeAreaView,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import { SubHeader } from '@/components/header/SubHeader';
 import { Colors } from '@/constants/Colors';
@@ -224,6 +225,7 @@ export default function Campaign() {
     };
     
     return (
+        <RootSiblingParent>
         <View style={styles.container}>
             <SubHeader/>
             <View style={styles.background}>
@@ -347,6 +349,7 @@ export default function Campaign() {
                 )}
             </View>
         </View>
+        </RootSiblingParent>
     )
 }
 

@@ -42,7 +42,7 @@ export default function ItemGameDetail() {
             const isItem1 = Math.random() < 0.5;
             
             // Trigger alert only once
-            Alert.alert('Item Selected', `You got item: ${isItem1 ? "Item 1" : "Item 2"}`);
+            // Alert.alert('Item Selected', `You got item: ${isItem1 ? "Item 1" : "Item 2"}`);
             
             const response = await fetch(`${config.CAMPAIGN_BE}/api/game`, {
                 method: 'POST',
