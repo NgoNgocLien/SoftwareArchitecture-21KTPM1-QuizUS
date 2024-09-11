@@ -207,10 +207,10 @@ export default function EditBrand() {
                     <div className="form-group">
                         <label htmlFor="field">Lĩnh vực</label>
                         <select id="field" value={field} onChange={(e) => {setField(e.target.value)}}>
-                            <option value="restaurant">Nhà hàng</option>
-                            <option value="cafe">Cafe & Bánh</option>
-                            <option value="shopping">Mua sắm</option>
-                            <option value="entertainment">Giải trí</option>
+                            <option value="Nhà hàng">Nhà hàng</option>
+                            <option value="Cafe & Bánh">Cafe & Bánh</option>
+                            <option value="Mua sắm">Mua sắm</option>
+                            <option value="Giải trí">Giải trí</option>
                         </select>
                     </div>
                 </div>
