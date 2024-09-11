@@ -51,9 +51,9 @@ router.put('/player_turn/seen', seenTurnNoti);
 router.post('/item/send', sendItem);
 
 // lấy các thông báo tặng mảnh ghép từ bạn bè
-router.get('/item/request/:id_player', getItemRequest);
+// router.get('/item/request/:id_player', getItemRequest);
 
 // nhận mảnh ghép từ bạn
-router.put('/item/receive', receiveItem);
+// router.put('/item/receive', receiveItem);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import eventEmitter from './EventEmitter'; // Đảm bảo EventEmitter đã được cài đặt và import đúng cách
-
+import config from './../../constants/config'
 class NotificationSocket {
   private socket: Socket | null = null;
 
@@ -8,7 +8,7 @@ class NotificationSocket {
   public connect(id_player: string) {
     if (!this.socket) {
       console.log("abc")
-      this.socket = io('http://192.168.2.177:8004', { transports: ['websocket'] }); // Đảm bảo URL server đúng
+      this.socket = io(config.NOTIFICATION_BE, { transports: ['websocket'] }); // Đảm bảo URL server đúng
       this.init(id_player);
     }
   }

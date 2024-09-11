@@ -1,8 +1,16 @@
 const { Server } = require("socket.io");
+const express = require('express');
+const http = require('http');
+const app = express();
 
-const io = new Server({
+// Create HTTP server and bind socket.io to it
+const server = http.createServer(app);
+
+app.use(express.json());
+
+const io = new Server(server, {
     cors: {
-        origin: "http://192.168.2.53:8081", // Add localhost for web testing
+        origin: "http://172.16.100.127:3000",
         methods: ["GET", "POST"],
     },
 });
@@ -36,7 +44,6 @@ io.on("connection", (socket) => {
         console.log('Current online users:', onlineUsers);
     });
 
-
     // Lắng nghe khi người dùng ngắt kết nối
     socket.on("disconnect", () => {
         removeUser(socket.id);
@@ -45,6 +52,18 @@ io.on("connection", (socket) => {
     });
 });
 
-io.listen(8004, () => {
-    console.log('Socket.IO server is listening on port 8004');
+app.post('/emit-notification', (req, res) => {
+    const { noti } = req.body;
+    // console.log(noti)
+    const user = getUser(noti.id_receiver);
+    if (user) {
+        io.to(user.socketId).emit('notification', { noti });
+        res.status(200).json({ message: 'Notification sent successfully', noti });
+    } else {
+        res.status(404).json({ message: 'User not found' });
+    }
+});
+
+server.listen(8004, () => {
+    console.log('Socket.IO server with API is listening on port 8004');
 });

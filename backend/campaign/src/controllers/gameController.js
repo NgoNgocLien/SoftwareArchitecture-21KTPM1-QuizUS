@@ -538,7 +538,49 @@ const sendItem = async (req, res) => {
             seen_time: null
         });
 
-        await newNoti.save();
+        await newNoti.save({
+                type: newNoti.type,
+                subtype: newNoti.subtype,
+                id_receiver: newNoti.id_receiver,
+                id_sender: newNoti.id_sender,
+                name_sender: newNoti.name_sender,
+                id_campaign: newNoti.id_campaign,
+                name_campaign: newNoti.name_campaign,
+                id_item: newNoti.id_item,
+                id_itemgift: newNoti.id_itemgift,
+                noti_time: newNoti.noti_time,
+                seen_time: newNoti.seen_time
+            });
+
+        console.log({
+            type: newNoti.type,
+            subtype: newNoti.subtype,
+            id_receiver: newNoti.id_receiver,
+            id_sender: newNoti.id_sender,
+            name_sender: newNoti.name_sender,
+            id_campaign: newNoti.id_campaign,
+            name_campaign: newNoti.name_campaign,
+            id_item: newNoti.id_item,
+            id_itemgift: newNoti.id_itemgift,
+            noti_time: newNoti.noti_time,
+            seen_time: newNoti.seen_time
+        })
+
+        await axios.post('http://172.16.100.127:8004/emit-notification', {
+            noti: {
+                type: newNoti.type,
+                subtype: newNoti.subtype,
+                id_receiver: newNoti.id_receiver,
+                id_sender: newNoti.id_sender,
+                name_sender: newNoti.name_sender,
+                id_campaign: newNoti.id_campaign,
+                name_campaign: newNoti.name_campaign,
+                id_item: newNoti.id_item,
+                id_itemgift: newNoti.id_itemgift,
+                noti_time: newNoti.noti_time,
+                seen_time: newNoti.seen_time
+            }
+        });
 
         return res.status(201).json({
             message: 'Item successfully sent!',
