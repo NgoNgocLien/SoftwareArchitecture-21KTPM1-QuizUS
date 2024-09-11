@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBrandByID, uploadImgToCloudinary } from '../api/brandApi';
+import { getBrandByID, updateBrand, deactivateBrand, activateBrand, uploadImgToCloudinary } from '../api/brandApi';
 import "../styles/common.css";
 import "../styles/input.css";
 import { confirmAlert } from 'react-confirm-alert';
@@ -84,63 +84,63 @@ export default function EditBrand() {
             logo: imageUrl
         }
         
-        // let success = await updatePlayer(updatedData);
-        // if (success) {
-        //     confirmAlert({
-        //         message: 'Chỉnh sửa người dùng thành công!',
-        //         buttons: [
-        //             {
-        //                 label: 'Xác nhận',
-        //                 onClick: () => {
-        //                     navigate(`/player`);
-        //                 }
-        //             }
-        //         ]
-        //     });
-        // }
-        // else {
-        //     confirmAlert({
-        //         message: 'Chỉnh sửa người dùng thất bại!',
-        //         buttons: [
-        //             {
-        //                 label: 'Xác nhận'
-        //             }
-        //         ]
-        //     });
-        // }
+        let success = await updateBrand(updatedData);
+        if (success) {
+            confirmAlert({
+                message: 'Chỉnh sửa brand thành công!',
+                buttons: [
+                    {
+                        label: 'Xác nhận',
+                        onClick: () => {
+                            navigate(`/brand`);
+                        }
+                    }
+                ]
+            });
+        }
+        else {
+            confirmAlert({
+                message: 'Chỉnh sửa brand thất bại!',
+                buttons: [
+                    {
+                        label: 'Xác nhận'
+                    }
+                ]
+            });
+        }
     }
 
     const handleToggleActivation = async () => {
         if (isActive) {
             // Khóa tài khoản
-            // let success = await deactivatePlayer(id);
-            // if (success) {
-            //     setIsActive(false); 
-            //     confirmAlert({
-            //         message: 'Tài khoản đã bị khóa!',
-            //         buttons: [{ label: 'Xác nhận' }]
-            //     });
-            // } else {
-            //     confirmAlert({
-            //         message: 'Khóa tài khoản thất bại!',
-            //         buttons: [{ label: 'Xác nhận' }]
-            //     });
-            // }
+            let success = await deactivateBrand(id_brand);
+            if (success) {
+                setIsActive(false); 
+                confirmAlert({
+                    message: 'Tài khoản đã bị khóa!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            } else {
+                confirmAlert({
+                    message: 'Khóa tài khoản thất bại!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            }
         } else {
             // Kích hoạt tài khoản
-            // let success = await activatePlayer(id);
-            // if (success) {
-            //     setIsActive(true); 
-            //     confirmAlert({
-            //         message: 'Tài khoản đã được kích hoạt!',
-            //         buttons: [{ label: 'Xác nhận' }]
-            //     });
-            // } else {
-            //     confirmAlert({
-            //         message: 'Kích hoạt tài khoản thất bại!',
-            //         buttons: [{ label: 'Xác nhận' }]
-            //     });
-            // }
+            let success = await activateBrand(id_brand);
+            if (success) {
+                setIsActive(true); 
+                confirmAlert({
+                    message: 'Tài khoản đã được kích hoạt!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            } else {
+                confirmAlert({
+                    message: 'Kích hoạt tài khoản thất bại!',
+                    buttons: [{ label: 'Xác nhận' }]
+                });
+            }
         }
     }
 
