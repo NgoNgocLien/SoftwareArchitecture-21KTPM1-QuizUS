@@ -1,8 +1,18 @@
 import React, { useState } from "react";
 import "../styles/common.css";
 import "../styles/input.css";
+import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 export default function CreateGame() {
+    const storedBrand = localStorage.getItem('brand');
+    const brand = storedBrand ? JSON.parse(storedBrand) : null;
+
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
     // Sử dụng map để khởi tạo các câu hỏi và đáp án độc lập
     const [questions, setQuestions] = useState(
         Array(10).fill().map(() => ({
@@ -11,6 +21,7 @@ export default function CreateGame() {
         }))
     );
     const [reward, setReward] = useState(0);
+    const [description, setDescription] = useState(0);
 
     // Hàm xử lý thay đổi câu hỏi
     const handleQuestionChange = (index, value) => {
@@ -44,10 +55,49 @@ export default function CreateGame() {
     };
 
     // Hàm xử lý khi submit form
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Quiz Data:", { questions, reward });
-        alert("Tạo trò chơi thành công!");
+        const campaign = {
+           name: searchParams.get('name'),
+           description: searchParams.get('description'),
+           start_datetime: searchParams.get('start'),
+           end_datetime: searchParams.get('end'),
+           max_amount_voucher: searchParams.get('amount'),
+           given_amount_voucher: 0,
+           score_award: reward,
+           id_brand1: brand.id_brand || 0
+        }
+        const quiz = {
+            questions,
+            description
+        }
+        console.log(campaign)
+        console.log(quiz);
+        const success = await 
+
+        if (success) {
+            confirmAlert({
+                message: 'Tạo nhãn hàng thành công!',
+                buttons: [
+                    {
+                        label: 'Xác nhận',
+                        onClick: () => {
+                            navigate(`/brand`);
+                        }
+                    }
+                ]
+            });
+        }
+        else {
+            confirmAlert({
+                message: 'Tạo nhãn hàng thất bại!',
+                buttons: [
+                    {
+                        label: 'Xác nhận'
+                    }
+                ]
+            });
+        }
     };
 
     return (
@@ -63,7 +113,7 @@ export default function CreateGame() {
                             type="number"
                             value={reward}
                             onChange={handleRewardChange}
-                            required
+                            // required
                             min="0"
                         />
                     </div>
@@ -75,6 +125,8 @@ export default function CreateGame() {
                             type="text"
                             placeholder="Mỗi game sẽ có mặc định 10 câu hỏi. Nếu người chơi trả lời đúng tất cả các câu hỏi sẽ nhận được xu thưởng. Tuy nhiên, nếu trả lời sai bất kỳ câu hỏi nào sẽ không nhận được xu."
                             style={{ height: '100px' }}
+                            value={description}
+                            onChange={(e) => {setDescription(e.target.value)}}
                         />
                     </div>
                 </div>
@@ -89,7 +141,7 @@ export default function CreateGame() {
                                 placeholder={`Nhập câu hỏi ${index + 1}`}
                                 value={q.question_text}
                                 onChange={(e) => handleQuestionChange(index, e.target.value)}
-                                required
+                                // required
                             />
 
                             <div className="options-container">
@@ -100,7 +152,7 @@ export default function CreateGame() {
                                             placeholder={`Đáp án ${i + 1}`}
                                             value={option.answer_text}
                                             onChange={(e) => handleAnswerChange(index, i, e.target.value)}
-                                            required
+                                            // required
                                         />
                                         <input
                                             type="radio"
@@ -116,7 +168,7 @@ export default function CreateGame() {
                     ))}
                     {/* Buttons */}
                     <div className="button-group align-self-center">
-                        <button type="button" className="cancel-btn">Hủy</button>
+                        <button type="button" className="cancel-btn" onClick={() => {navigate('/create-event')}}>Hủy</button>
                         <button type="submit" className="save-btn">Lưu trò chơi</button>
                     </div>
                 </form>

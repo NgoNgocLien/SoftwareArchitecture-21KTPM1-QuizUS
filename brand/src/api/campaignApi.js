@@ -33,7 +33,27 @@ const searchCampaign = async (id , keyword) => {
   }
 }
 
+const createEvent = async (campaign, quiz) => {
+  try {
+    const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/`;
+    const response = await axios.post(url, {
+      campaign, 
+      quiz
+    });
+    
+    if (response.status === 200 || response.status === 201) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export{
   getAll,
-  searchCampaign
+  searchCampaign,
+  createEvent
 }
