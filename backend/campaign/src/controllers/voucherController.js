@@ -318,7 +318,6 @@ const exchangeByItem = async (req, res) => {
         // console.log(campaign)
         await campaign.save();
 
-
         // Thêm noti
         const newNoti = new PlayerNoti({
             type: "voucher",
