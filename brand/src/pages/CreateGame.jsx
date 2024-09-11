@@ -115,7 +115,7 @@ export default function CreateGame() {
                             type="number"
                             value={reward}
                             onChange={handleRewardChange}
-                            // required
+                            required
                             min="0"
                         />
                     </div>
@@ -143,7 +143,7 @@ export default function CreateGame() {
                                 placeholder={`Nhập câu hỏi ${index + 1}`}
                                 value={q.question_text}
                                 onChange={(e) => handleQuestionChange(index, e.target.value)}
-                                // required
+                                required
                             />
 
                             <div className="options-container">
@@ -154,7 +154,7 @@ export default function CreateGame() {
                                             placeholder={`Đáp án ${i + 1}`}
                                             value={option.answer_text}
                                             onChange={(e) => handleAnswerChange(index, i, e.target.value)}
-                                            // required
+                                            required
                                         />
                                         <input
                                             type="radio"
