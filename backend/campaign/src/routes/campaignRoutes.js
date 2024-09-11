@@ -22,7 +22,8 @@ const {
     getCampaignsOfVoucher,
     getStats,
     getPlayerStats, 
-    getBudgetStatsByField
+    getBudgetStatsByField,
+    getEventStatsByField
 } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -54,6 +55,9 @@ router.get('/player', getPlayerStats);
 
 // Thống kê ngân sách đã sử dụng theo lĩnh vực từ đầu năm đến tháng hiện tại
 router.get('/budget', getBudgetStatsByField);
+
+// Thống kê tình trạng các sự kiện (đang diễn ra/sắp diễn ra/ đã kết thúc)
+router.get('/event', getEventStatsByField);
 
 // Lấy thông tin của một chiến dịch
 router.get('/:id_campaign', getById);

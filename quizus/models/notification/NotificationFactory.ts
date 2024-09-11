@@ -18,7 +18,7 @@ export interface NotificationAbstractFactory {
 
 export class VoucherNotificationFactory implements NotificationAbstractFactory {
   createVoucherNotification(data: any): Noti {
-    if (data.isUsed) {
+    if (data.is_used) {
       return new VoucherUsedNotification(data._id, data.seen_time, data.noti_time, data.name_voucher);
     } else {
       return new VoucherRedeemedNotification(data._id, data.seen_time, data.noti_time, data.name_voucher);

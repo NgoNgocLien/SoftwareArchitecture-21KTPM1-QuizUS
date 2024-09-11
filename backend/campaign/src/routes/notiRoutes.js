@@ -4,6 +4,7 @@ const {
     getAll, updateSeenTime
 } = require('../controllers/notiController');
 
+
 // lấy tất cả thông báo đến người dùng
 router.get('/:id_player', getAll)
 

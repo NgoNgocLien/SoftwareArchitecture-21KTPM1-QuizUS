@@ -6,7 +6,8 @@ const PlayerGame = require('../models/playerGame');
 const campaign = require('../models/campaign');
 const VoucherGift = require('../models/voucherGift');
 const PlayerNoti = require('../models/playerNoti');
-const playerNoti = require('../models/playerNoti');
+
+const {notify} = require('../controllers/notiController')
 
 // Lấy tất cả voucher đang hoạt động
 const getActive = async (req, res) => {
@@ -94,6 +95,7 @@ const searchByBrand = async (req, res) => {
 // Tạo voucher
 const create = async (req, res) => {
     const voucher = new Voucher({
+        name: req.body.name,
         id_brand: req.body.id_brand,
         code: req.body.code,
         qr_code: req.body.qr_code,
@@ -195,7 +197,7 @@ const exchangeByCoin = async (req, res) => {
             return res.status(400).json({ message: 'id_player, id_campaign, and score_exchange are required' });
         }
 
-        const campaign = await Campaign.findById(id_campaign);
+        const campaign = await Campaign.findById(id_campaign).populate('id_voucher');
         if (!campaign) {
             return res.status(404).json({ message: 'Campaign not found.' });
         }
@@ -225,6 +227,33 @@ const exchangeByCoin = async (req, res) => {
                 // Cập nhật giá trị given_amount_voucher của campaign
                 campaign.given_amount_voucher += 1;
                 await campaign.save();
+
+                // Thêm noti
+                const newNoti = new PlayerNoti({
+                    type: "voucher",
+                    subtype: null,
+                    id_receiver: id_player,
+                    id_voucher: campaign.id_voucher._id,
+                    name_voucher: campaign.id_voucher.name,
+                    is_used: false,
+                    noti_time: new Date(),
+                    seen_time: null
+                });
+
+                await newNoti.save();
+
+                const noti = {
+                    type: newNoti.type,
+                    subtype: newNoti.subtype,
+                    id_receiver: newNoti.id_receiver,
+                    id_voucher: newNoti.id_voucher,
+                    name_voucher: newNoti.name_voucher,
+                    is_used: newNoti.is_used,
+                    noti_time: newNoti.noti_time,
+                    seen_time: newNoti.seen_time
+                }
+
+                await notify(noti);
 
                 return res.status(201).json({
                     playerVoucher: savedPlayerVoucher,
@@ -262,7 +291,7 @@ const exchangeByItem = async (req, res) => {
             return res.status(400).json({ message: 'Insufficient items to exchange for voucher.' });
         }
 
-        const campaign = await Campaign.findById(id_campaign);
+        const campaign = await Campaign.findById(id_campaign).populate('id_voucher');
         if (!campaign) {
             return res.status(404).json({ message: 'Campaign not found.' });
         }
@@ -285,13 +314,44 @@ const exchangeByItem = async (req, res) => {
         await playerGame.save();
 
         campaign.given_amount_voucher += 1;
+
+        // console.log(campaign)
         await campaign.save();
+
+        
+        // Thêm noti
+        const newNoti = new PlayerNoti({
+            type: "voucher",
+            subtype: null,
+            id_receiver: id_player,
+            id_voucher: campaign.id_voucher._id,
+            name_voucher: campaign.id_voucher.name,
+            is_used: false,
+            noti_time: new Date(),
+            seen_time: null
+        });
+
+        await newNoti.save();
+
+        const noti = {
+            type: newNoti.type,
+            subtype: newNoti.subtype,
+            id_receiver: newNoti.id_receiver,
+            id_voucher: newNoti.id_voucher,
+            name_voucher: newNoti.name_voucher,
+            is_used: newNoti.is_used,
+            noti_time: newNoti.noti_time,
+            seen_time: newNoti.seen_time
+        }
+
+        await notify(noti);
 
         return res.status(201).json({
             playerVoucher: savedPlayerVoucher,
             message: 'Voucher exchange successful, items deducted, and campaign updated.'
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
@@ -305,7 +365,14 @@ const use = async (req, res) => {
             return res.status(400).json({ message: 'id_playerVoucher is required' });
         }
 
-        const playerVoucher = await PlayerVoucher.findOne({ _id: id_playerVoucher });
+        const playerVoucher = await PlayerVoucher.findOne({ _id: id_playerVoucher })
+        .populate({
+            path: 'id_campaign',
+            populate: {
+                path: 'id_voucher',
+                model: 'Voucher'
+            }
+        });
 
         if (!playerVoucher) {
             return res.status(404).json({ message: 'Voucher not found for this player.' });
@@ -318,12 +385,40 @@ const use = async (req, res) => {
         playerVoucher.is_used = true;
         await playerVoucher.save();
 
+         // Thêm noti
+         const newNoti = new PlayerNoti({
+            type: "voucher",
+            subtype: null,
+            id_receiver: playerVoucher.id_player,
+            id_voucher: playerVoucher.id_campaign.id_voucher._id,
+            name_voucher: playerVoucher.id_campaign.id_voucher.name,
+            is_used: true,
+            noti_time: new Date(),
+            seen_time: null
+        });
+
+        await newNoti.save();
+
+        const noti = {
+            type: newNoti.type,
+            subtype: newNoti.subtype,
+            id_receiver: newNoti.id_receiver,
+            id_voucher: newNoti.id_voucher,
+            name_voucher: newNoti.name_voucher,
+            is_used: newNoti.is_used,
+            noti_time: newNoti.noti_time,
+            seen_time: newNoti.seen_time
+        }
+
+        await notify(noti);
+
         return res.status(200).json({
             message: 'Voucher successfully used.',
             playerVoucher
         });
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
@@ -393,6 +488,21 @@ const sendVoucher = async (req, res) => {
         });
 
         await newNoti.save();
+
+        const noti = {
+            type: newNoti.type,
+            subtype: newNoti.subtype,
+            id_receiver: newNoti.id_receiver,
+            id_sender: newNoti.id_sender,
+            name_sender: newNoti.name_sender,
+            id_voucher: newNoti.id_voucher,
+            name_voucher: newNoti.name_voucher,
+            id_vouchergift: newNoti.id_vouchergift,
+            noti_time: newNoti.noti_time,
+            seen_time: newNoti.seen_time
+        }
+
+        await notify(noti);
 
         return res.status(201).json({
             message: 'Voucher successfully sent!',

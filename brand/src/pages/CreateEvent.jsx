@@ -3,8 +3,7 @@ import "../styles/common.css";
 import "../styles/input.css";
 import { useNavigate } from 'react-router-dom';
 import { getAll } from '../api/voucherApi';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import { uploadImgToCloudinary } from '../api/cloudinary';
 
 export default function CreateEvent() {
     const navigate = useNavigate();
@@ -18,10 +17,27 @@ export default function CreateEvent() {
     const [vouchers, setVouchers] = useState([]);
     const [selectedVoucher, setSelectedVoucher] = useState(null);
     const [budget, setBudget] = useState(0);
+    const [avatar, setAvatar] = useState('');
+    const [avatarFile, setAvatarFile] = useState(null);
 
-    const onNext = () => {
+
+    const onNext = async () => {
+        var imageUrl;
+        if (avatarFile) {
+            try {
+                imageUrl = await uploadImgToCloudinary(avatarFile);
+
+                if (imageUrl) {
+                    console.log('imageUrl:', imageUrl);
+                } else {
+                    console.error('Failed to upload image');
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
         const prefix = gameType === 'Trắc nghiệm' ? '/create-game' : '/create-shake';
-        const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}`
+        const url = `${prefix}?name=${name}&description=${description}&start=${start}&end=${start}&amount=${amount}&budget=${budget}&id_voucher=${selectedVoucher?._id || ""}&photo=${imageUrl}`
         navigate(url);
     }
 
@@ -42,7 +58,7 @@ export default function CreateEvent() {
         const storeBrand = localStorage.getItem('brand');
         const brand = storeBrand ? JSON.parse(storeBrand) : null;
         const fetchVouchers = async () => {
-            const voucherData = await getAll(brand.id_brand);
+            const voucherData = await getAll(brand?.id_brand || 1);
             setVouchers(voucherData); 
         };
 
@@ -67,34 +83,35 @@ export default function CreateEvent() {
             selectedVoucher: selectedVoucher?._id || null,
             budget
         };
-
-        // const success = await updateCampaign(id, Event);
-        // if (success) {
-        //     confirmAlert({
-        //         message: 'Sự kiện đã được cập nhật thành công!',
-        //         buttons: [{ label: 'Xác nhận', onClick: () => navigate('/event') }]
-        //     });
-        // } else {
-        //     confirmAlert({
-        //         message: 'Cập nhật sự kiện thất bại!',
-        //         buttons: [{ label: 'Xác nhận' }]
-        //     });
-        // }
     };
 
     const onCancel = () => navigate('/event');
+
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+
+        setAvatarFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatar(reader.result); 
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
 
     return (
         <div className="ctn">
             {/* Event img */}
             <div className="event-img-ctn">
-                <img src="/images/image 41.png" alt="event-img" className="event-img" />
+                <img src={avatar?.length > 0 ? avatar : "/images/image 41.png"} alt="event-img" className="event-img" />
                 <div className="event-btn-ctn">
                     <button className="event-upload-btn"> {/* Button giả */}
                         <img src="/icons/camera-plus.svg" alt="upload-img" />
                         Chọn ảnh
                     </button> 
-                    <input type="file" id="file-upload" />
+                    <input type="file" id="file-upload"  accept="image/*" onChange={handleAvatarChange}/>
                 </div>
             </div>
 
@@ -177,10 +194,10 @@ export default function CreateEvent() {
                     <div className='form-group'>
                         <label>Trò chơi</label>
                         <div className='radio-group'>
-                            <input type="radio" value={gameType} id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
+                            <input name="game_type" type="radio" value="Trắc nghiệm" id="quiz" onChange={((e) => { onTypeChanged(e) })} checked/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Trắc nghiệm</label>
 
-                            <input type="radio" value={gameType} id="shake" onChange={((e) => { onTypeChanged(e) })}/>
+                            <input name="game_type" type="radio" value="Lắc" id="shake" onChange={((e) => { onTypeChanged(e) })}/>
                             <label style={{ fontSize: '16px', fontFamily: 'regular-font'}}>Lắc vật phẩm</label>
                         </div>
                     </div>

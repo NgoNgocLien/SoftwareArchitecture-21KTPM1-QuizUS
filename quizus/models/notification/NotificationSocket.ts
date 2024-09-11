@@ -8,10 +8,19 @@ class NotificationSocket {
   // Kết nối tới socket chỉ khi chưa có kết nối
   public connect(id_player: string) {
     if (!this.socket) {
-      console.log("abc")
-      this.socket = io(config.NOTIFICATION_BE, { transports: ['websocket'] }); // Đảm bảo URL server đúng
-      this.init(id_player);
+      console.log("Connecting to Socket.IO server...");
+      this.socket = io(config.NOTIFICATION_BE, { 
+        transports: ['websocket'], // Ensure websocket is used for transport
+        query: { id_player: id_player },
+        reconnection: true, // Enable automatic reconnection
+        reconnectionAttempts: Infinity, // Unlimited reconnection attempts
+        reconnectionDelay: 1000, // Delay in ms before attempting to reconnect
+        reconnectionDelayMax: 5000, // Maximum delay between reconnection attempts
+        timeout: 20000, // 20 seconds timeout for connection before failing
+      });
+      
     }
+    this.init(id_player);
   }
 
   private init(id_player: string) {
@@ -20,7 +29,7 @@ class NotificationSocket {
 
     // Lắng nghe sự kiện từ socket khi có thông báo mới
     this.socket?.on('notification', (data) => {
-      console.log('Received notification from server:', data); // Debug thông báo
+      // console.log('Received notification from server:', data); // Debug thông báo
       showToast('info', "Bạn có thông báo mới"); // Show toast with the notification message
       eventEmitter.emit('notification', data); // Phát sự kiện 'notification' cho tất cả listener
     });
@@ -31,7 +40,7 @@ class NotificationSocket {
     });
 
     this.socket?.on('connect_error', (err) => {
-      console.error('Connection error:', err.message);
+      console.error('Connection error:', err);
     });
   }
 

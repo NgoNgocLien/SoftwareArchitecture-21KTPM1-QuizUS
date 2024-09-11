@@ -15,6 +15,7 @@ import { LoadingView } from '@/components/LoadingView';
 import { useFocusEffect } from 'expo-router';
 import { showToast } from '@/components/ToastBar';
 import eventEmitter from '@/models/notification/EventEmitter';
+import notificationSocket from '@/models/notification/NotificationSocket';
 
 export default function Favorite() {
     const [campaigns, setCampaigns] = useState<any[]>([]);
@@ -27,7 +28,7 @@ export default function Favorite() {
         };
 
         retrieveFromSecureStore('id_player', (id_player: string) => {
-            // notificationSocket.connect(id_player);
+            notificationSocket.connect(id_player);
 
             eventEmitter.on('notification', handleNotification);
         })
@@ -70,7 +71,8 @@ export default function Favorite() {
         <View style={styles.background} >
             <Header 
                 notification={notification}
-                setNotification={setNotification}/>
+                setNotification={setNotification}
+                previousRoute={"favorite"}/>
             <View style={[styles.container, styles.titleContainer]}>
                 <Heading type="h4">Yêu thích</Heading>
                 <FontAwesome name={'search'} style={styles.searchIcon} />

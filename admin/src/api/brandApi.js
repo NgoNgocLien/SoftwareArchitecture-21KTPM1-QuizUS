@@ -50,8 +50,113 @@ const createBrand = async (brandData) => {
   }
 }
 
+const getBrandByID = async (id_brand) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand/${id_brand}`;
+    const response = await axios.get(url);
+    
+    if (response.status === 200 || response.status === 201) 
+      return response.data;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
+const uploadImgToCloudinary = async (image) => {
+  const url = `${process.env.REACT_APP_USER_URL}/api/cloudinary`;
+  const config = await axios.get(url);
+
+  console.log(config.data);
+  if (config.data) {
+    const url = "https://api.cloudinary.com/v1_1/" + config.data.cloudname + "/auto/upload";
+
+    const cloudinaryData = new FormData();
+    cloudinaryData.append("file", image);
+    cloudinaryData.append("api_key", config.data.apikey);
+    cloudinaryData.append("timestamp", config.data.timestamp);
+    cloudinaryData.append("signature", config.data.signature);
+    cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+    cloudinaryData.append("folder", "quizus");
+  
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: cloudinaryData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+      
+      const data = await response.text();
+      return JSON.parse(data).secure_url;
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
+    }
+  } 
+  return null
+}
+
+const updateBrand = async (updatedData) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand`;
+    const response = await axios.put(url, updatedData);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
+const deactivateBrand = async (id_brand) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand/deactivate/${id_brand}`;
+    const response = await axios.put(url);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
+const activateBrand = async (id_brand) => {
+  try {
+    const url = `${process.env.REACT_APP_USER_URL}/api/brand/activate/${id_brand}`;
+    const response = await axios.put(url);
+    
+    if (response.status === 200) 
+      return true;
+    else 
+      return false;
+  }
+  catch (err) {
+    console.log(err.message);
+    return false;
+  }
+}
+
 export {
   getAllBrands,
   searchBrand,
-  createBrand
+  createBrand,
+  getBrandByID,
+  uploadImgToCloudinary,
+  updateBrand,
+  deactivateBrand,
+  activateBrand
 };

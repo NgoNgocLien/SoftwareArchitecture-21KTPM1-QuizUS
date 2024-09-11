@@ -36,7 +36,7 @@ export default function ManageEvent() {
 
     useEffect(() => {
         const getData = async () => {
-            const data = await getAll(brand?.id_brand); 
+            const data = await getAll(brand?.id_brand || 1); 
             if (data?.length > 0) {
                 setData(data);
                 setFullData(data);

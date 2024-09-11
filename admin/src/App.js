@@ -15,6 +15,7 @@ import Login from './pages/login';
 import AddBrand from './pages/AddBrand';
 import EditUser from './pages/EditUser';
 import EditBrand from './pages/EditBrand';
+import GameSettings from './pages/GameSettings';
 
 function Layout() {
   return (
@@ -61,7 +62,8 @@ function App() {
         <Route element={<Layout1 />}>
           <Route path="/add-brand" element={<AddBrand />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
-          <Route path="/edit-brand/:id" element={<EditBrand />} />
+          <Route path="/edit-brand/:id_brand" element={<EditBrand />} />
+          <Route path="/game-settings/:id_game" element={<GameSettings />} />
         </Route>
       </Routes>
     </Router>
