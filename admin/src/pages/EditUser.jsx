@@ -72,6 +72,7 @@ export default function EditUser() {
             facebook,
             avatar: imageUrl
         }
+        
         let success = await updatePlayer(updatedData);
         if (success) {
             confirmAlert({

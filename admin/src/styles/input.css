@@ -221,6 +221,46 @@ select {
     background: #ed5055;
 }
 
+.cancel-brand-btn {
+    border-radius: 6px;
+    border: 1.5px solid #0063D6;
+    display: flex;
+    width: 110px;
+    padding: 14px 16px;
+    background: none;
+    justify-content: center;
+    align-items: center;
+    gap: var(--Sizes-8, 8px);
+    color: #0063D6;
+    font-family: semibold-font;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.cancel-brand-btn:hover {
+    border: 1.5px solid #007AFF;
+    color: #007AFF;
+}
+
+.save-brand-btn {
+    display: flex;
+    width: 110px;
+    padding: 14px 16px;
+    background: #0063D6;
+    font-family: medium-font;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.save-brand-btn:hover {
+    background: #007AFF;
+}
+
 /* editPlayer */
 .profile-avatar {
     width: 12rem;
@@ -228,4 +268,8 @@ select {
     border-radius: 10px;
     background-position: center;
     object-fit: contain;
+}
+
+#field{
+    padding: 12px;
 }
