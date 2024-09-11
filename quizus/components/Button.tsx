@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
 
   small: {
     height: 'auto',
-    width: '100%',
+    width: '80%',
     paddingVertical: 5,
     paddingHorizontal: 15,
     alignSelf: 'center',

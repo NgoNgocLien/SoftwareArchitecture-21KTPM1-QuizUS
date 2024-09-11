@@ -97,7 +97,7 @@ export default function Items() {
         }
     }
 
-    useFocusEffect(useCallback(()=> {
+    const fetchPlayerInfo = useCallback(() => {
         retrieveFromSecureStore('id_player', (id_player: string) => {
             getPlayerItem(id_player).then((data: any) => {
                 const player_items = data.map((data: {
@@ -137,7 +137,9 @@ export default function Items() {
             console.error('Error retrieving id_player from SecureStore:', error);
             showToast('error', 'Không tìm thấy thông tin người chơi');
         });
-    },[]));
+    }, []);
+
+    useFocusEffect(fetchPlayerInfo);
 
     const fetchItemVouchers = useCallback(() => {
         setLoading(true);
@@ -262,6 +264,7 @@ export default function Items() {
                                     campaign={item.campaign}
                                     key={index} 
                                     playerInfo={playerInfo}
+                                    updateCoins={fetchPlayerInfo}
                                     style={index === vouchers.length - 1 ? { marginBottom: 32 } : {}} 
                                 />
                             ))}
