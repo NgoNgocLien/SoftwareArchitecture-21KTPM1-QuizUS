@@ -61,7 +61,8 @@ export default function Dashboard() {
                         <p>Thống kê</p>
                         <h6>Tình trạng sự kiện</h6>
                         {/* <EventChart /> */}
-                        <PlayerChart /> {/* Để tạm */}
+                        <PlayerChart /> {/* Để tạm */} 
+                        {/* Đang diễn ra - Sắp diễn ra - Đã kết thúc*/}
                     </div>
                 </div>
                 
