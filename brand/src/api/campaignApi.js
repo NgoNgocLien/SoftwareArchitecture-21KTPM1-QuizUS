@@ -51,7 +51,6 @@ const getCampaignById = async (id) => {
 const updateCampaign = async (updatedData) => {
   try {
     const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign`;
-    console.log(updatedData)
     const response = await axios.put(url, {
       ...updatedData
     });
