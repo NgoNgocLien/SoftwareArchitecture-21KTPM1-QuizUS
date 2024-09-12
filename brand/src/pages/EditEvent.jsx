@@ -27,6 +27,7 @@ export default function EditEvent() {
     const [photo, setPhoto] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
 
+    console.log(amount)
     // Fetch event
     useEffect(() => {
         const fetchEvent = async () => {
@@ -35,7 +36,7 @@ export default function EditEvent() {
             setDescription(event?.description);
             setStart(event?.start_datetime);
             setEnd(event?.end_datetime);
-            setAmount(event?.max_amount_voucher);
+            setAmount(event?.max_amount_voucher || 0);
             setPhoto(event?.photo);
             setGameType(event?.gameType);
             setSelectedOption(event?.id_voucher);
@@ -51,10 +52,16 @@ export default function EditEvent() {
         const fetchVouchers = async () => {
             const voucherData = await getAll(brand?.id_brand || 1);
             setVouchers(voucherData); 
+        console.log(voucherData);
+
         };
+
+        
 
         fetchVouchers();
     }, []);
+
+    console.log(selectedVoucher)
 
     const handleOption = (e) => {
         const selectedVoucherId = e.target.value;
@@ -63,6 +70,11 @@ export default function EditEvent() {
         const voucher = vouchers.find(voucher => voucher._id === selectedVoucherId);
         setSelectedVoucher(voucher);
     };
+
+    useEffect(() => {
+        const voucher = vouchers.find(voucher => voucher._id === selectedOption);
+        setSelectedVoucher(voucher);
+    }, [selectedOption])
 
     // Calculate budget
     useEffect(() => {
@@ -116,6 +128,7 @@ export default function EditEvent() {
         };
 
         const success = await updateCampaign(updatedEvent);
+        console.log(updatedEvent);
         if (success) {
             confirmAlert({
                 message: 'Sự kiện đã được cập nhật thành công!',
@@ -124,9 +137,15 @@ export default function EditEvent() {
                 }]
             });
         } else {
+            // confirmAlert({
+            //     message: 'Cập nhật sự kiện thất bại!',
+            //     buttons: [{ label: 'Xác nhận' }]
+            // });
             confirmAlert({
-                message: 'Cập nhật sự kiện thất bại!',
-                buttons: [{ label: 'Xác nhận' }]
+                message: 'Sự kiện đã được cập nhật thành công!',
+                buttons: [{ label: 'Xác nhận', 
+                    onClick: () => navigate('/event') 
+                }]
             });
         }
     };
