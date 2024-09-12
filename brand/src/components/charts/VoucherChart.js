@@ -5,11 +5,13 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const VoucherChart = ({ chartData }) => {
+  console.log("chartData: ", chartData);
+
   const data = {
     labels: ['Đã sử dụng', 'Chưa sử dụng', 'Hết hạn sử dụng'],
     datasets: [
       {
-        data: [chartData?.validUsedVouchers || 0, chartData?.validUnusedVouchers || 0, chartData?.expiredVouchers || 0],
+        data: [chartData?.used_vouchers || 0, chartData?.unused_vouchers || 0, chartData?.expired_vouchers || 0],
         backgroundColor: ['#34C759', '#007AFF', '#D5D5D5'],
         hoverBackgroundColor: ['#34C759', '#007AFF', '#D5D5D5'],
         borderWidth: 1,
@@ -28,9 +30,9 @@ const VoucherChart = ({ chartData }) => {
   };
 
   return (
-    <div>
+    <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
       <Doughnut data={data} options={options} />
-      <p>Tổng giá trị voucher: {chartData?.totalValue || 0} VNĐ</p>
+      <p>Tổng giá trị voucher: {chartData?.total_value?.toLocaleString('vi-VN') || 0} VNĐ</p>
     </div>
   );
 };
