@@ -825,6 +825,59 @@ const getBrandStats = async (req, res) => {
     }
 };
 
+// Thống kê tình trạng các sự kiện (đang diễn ra/ sắp diễn ra/ đã kết thúc)
+const getEventStats = async (req, res) => {
+    try {
+        const { id_brand } = req.params;
+        const currentDate = new Date();
+
+        if (!id_brand) {
+            return res.status(400).json({ message: 'id_brand is required' });
+        }
+
+        // Ongoing campaigns for the brand
+        const ongoingCampaigns = await Campaign.countDocuments({
+            $or: [
+                { id_brand1: id_brand },
+                { id_brand2: id_brand }
+            ],
+            start_datetime: { $lte: currentDate },
+            end_datetime: { $gte: currentDate }
+        });
+
+        // Upcoming campaigns for the brand
+        const upcomingCampaigns = await Campaign.countDocuments({
+            $or: [
+                { id_brand1: id_brand },
+                { id_brand2: id_brand }
+            ],
+            start_datetime: { $gt: currentDate }
+        });
+
+        // Finished campaigns for the brand
+        const finishedCampaigns = await Campaign.countDocuments({
+            $or: [
+                { id_brand1: id_brand },
+                { id_brand2: id_brand }
+            ],
+            end_datetime: { $lt: currentDate }
+        });
+
+        // Return statistics for the specific brand
+        return res.status(200).json({
+            ongoing: ongoingCampaigns,
+            upcoming: upcomingCampaigns,
+            finished: finishedCampaigns
+        });
+    } catch (error) {
+        console.error('Error fetching brand event stats:', error);
+        return res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    };
+};
+
 const getBrandPlayerStats = async (req, res) => {
     try {
         const { id_brand } = req.params;
@@ -1021,6 +1074,8 @@ const getBrandBudgetStats = async (req, res) => {
     }
 };
 
+
+
 module.exports = {
     getAll,
     getInProgress,
@@ -1044,5 +1099,6 @@ module.exports = {
     getEventStatsByField,
     getBrandStats,
     getBrandPlayerStats,
-    getBrandBudgetStats
+    getBrandBudgetStats,
+    getEventStats
 };

@@ -25,7 +25,7 @@ const {
     getBudgetStatsByField,
     getEventStatsByField,
     getBrandStats, getBrandPlayerStats, 
-    getBrandBudgetStats
+    getBrandBudgetStats, getEventStats
 } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -69,6 +69,9 @@ router.get('/brandBudget/:id_brand', getBrandBudgetStats);
 
 // Thống kê tình trạng các sự kiện (đang diễn ra/sắp diễn ra/ đã kết thúc)
 router.get('/event', getEventStatsByField);
+
+// Thống kê tình trạng các sự kiện (đang diễn ra/sắp diễn ra/ đã kết thúc) của brand
+router.get('/event/:id_brand', getEventStats);
 
 // Lấy thông tin của một chiến dịch
 router.get('/:id_campaign', getById);
