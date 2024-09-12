@@ -118,7 +118,7 @@ export default function GameSettings() {
                 <div className="form-row">
                     <div className="form-group">
                         <label style={{ fontFamily: 'semibold-font', fontSize: '14px', marginBottom: '4px'}}>Số loại voucher</label>
-                        <input type="number" style={{width: '100%', boxSizing: 'border-box', fontSize: '16px'}} value={voucher} onChange={(e) => {setVoucher(e.target.value)}}></input>
+                        <input type="number" style={{width: '100%', boxSizing: 'border-box', fontSize: '16px'}} readOnly value={voucher} onChange={(e) => {setVoucher(e.target.value)}}></input>
                     </div>
                 </div>
 
