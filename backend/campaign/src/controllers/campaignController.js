@@ -825,6 +825,140 @@ const getBrandStats = async (req, res) => {
     }
 };
 
+const getBrandPlayerStats = async (req, res) => {
+    try {
+        const { id_brand } = req.params;
+
+        if (!id_brand) {
+            return res.status(400).json({ message: 'id_brand is required' });
+        }
+
+        const startOfYear = getStartOfYear(); // Lấy thời gian đầu năm
+        const currentMonth = new Date();
+        let months = currentMonth.getMonth() + 1; // Lấy số tháng từ đầu năm đến hiện tại
+        let recentPlayerCount = new Array(months).fill(0);
+        let recentPlayerGames = new Array(months).fill(0);
+        let recentItemGifts = new Array(months).fill(0);
+
+        // 1. Số lượng người chơi đăng ký cho brand từ đầu năm đến tháng hiện tại
+        const playersResponse = await axios.get(`http://gateway_proxy:8000/user/api/player`);
+        const players = playersResponse.data;
+
+        players.forEach(player => {
+            const creationTime = new Date(player.creation_time);
+            if (creationTime >= startOfYear) {
+                const month = creationTime.getMonth(); 
+                for (let i = month; i < months; i++) {
+                    recentPlayerCount[i]++;
+                }
+            }
+        });
+
+        // 2. Số lượng người chơi tham gia sự kiện của brand từ đầu năm đến tháng hiện tại
+        const campaigns = await Campaign.find({
+            $or: [
+                { id_brand1: id_brand },
+                { id_brand2: id_brand }
+            ],
+            start_datetime: { $gte: startOfYear }
+        }).select('_id start_datetime'); 
+
+        const campaignIds = campaigns.map(campaign => campaign._id);
+
+        const playerGames = await PlayerGame.find({
+            id_campaign: { $in: campaignIds }
+        }).populate('id_campaign');
+
+        let uniquePlayersPerMonth = Array.from({ length: months }, () => new Set());
+
+        playerGames.forEach(game => {
+            const campaignStart = new Date(game.id_campaign.start_datetime);
+            const playerId = game.id_player; 
+            const month = campaignStart.getMonth(); 
+
+            for (let i = month; i < months; i++) {
+                uniquePlayersPerMonth[i].add(playerId);
+            }
+        });
+
+        uniquePlayersPerMonth.forEach((playerSet, index) => {
+            recentPlayerGames[index] = playerSet.size; 
+        });
+
+        // 3. Số lượng người chơi trao đổi vật phẩm (tặng item, tặng voucher, tặng lượt chơi) cho brand từ đầu năm đến tháng hiện tại
+        let uniqueItemGiversAndReceiversPerMonth = Array.from({ length: months }, () => new Set());
+
+        const itemGifts = await ItemGift.find({
+            id_campaign: { $in: campaignIds },
+            gift_time: { $gte: startOfYear }
+        });
+
+        itemGifts.forEach(gift => {
+            const giftTime = new Date(gift.gift_time);
+            const senderId = gift.id_sender; 
+            const receiverId = gift.id_receiver; 
+            const month = giftTime.getMonth(); 
+
+            for (let i = month; i < months; i++) {
+                uniqueItemGiversAndReceiversPerMonth[i].add(senderId); 
+                uniqueItemGiversAndReceiversPerMonth[i].add(receiverId); 
+            }
+        });
+
+        const voucherGifts = await VoucherGift.find({
+            id_campaign: { $in: campaignIds },
+            gift_time: { $gte: startOfYear }
+        });
+
+        voucherGifts.forEach(gift => {
+            const giftTime = new Date(gift.gift_time);
+            const senderId = gift.id_sender; 
+            const receiverId = gift.id_receiver; 
+            const month = giftTime.getMonth(); 
+
+            for (let i = month; i < months; i++) {
+                uniqueItemGiversAndReceiversPerMonth[i].add(senderId); 
+                uniqueItemGiversAndReceiversPerMonth[i].add(receiverId); 
+            }
+        });
+
+        const turnRequests = await TurnRequest.find({
+            id_campaign: { $in: campaignIds },
+            reply_time: { $gte: startOfYear },
+            is_accept: true 
+        });
+
+        turnRequests.forEach(turn => {
+            const replyTime = new Date(turn.reply_time);
+            const senderId = turn.id_sender; 
+            const receiverId = turn.id_receiver; 
+            const month = replyTime.getMonth(); 
+
+            for (let i = month; i < months; i++) {
+                uniqueItemGiversAndReceiversPerMonth[i].add(senderId);
+                uniqueItemGiversAndReceiversPerMonth[i].add(receiverId); 
+            }
+        });
+
+        uniqueItemGiversAndReceiversPerMonth.forEach((playerSet, index) => {
+            recentItemGifts[index] = playerSet.size; 
+        });
+
+        // Trả về kết quả cho chart
+        res.status(200).json({
+            recentPlayerCount,         // Số lượng người chơi đăng ký theo tháng
+            recentPlayerGames,         // Số lượng người chơi tham gia sự kiện theo tháng
+            recentItemGifts            // Số lượng người chơi tặng item, tặng voucher, tặng lượt chơi theo tháng
+        });
+    } catch (error) {
+        console.error('Error fetching brand player statistics:', error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAll,
     getInProgress,
@@ -846,5 +980,6 @@ module.exports = {
     getPlayerStats,
     getBudgetStatsByField,
     getEventStatsByField,
-    getBrandStats
+    getBrandStats,
+    getBrandPlayerStats
 };
