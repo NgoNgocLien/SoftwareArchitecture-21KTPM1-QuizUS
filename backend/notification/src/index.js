@@ -20,7 +20,7 @@ const io = new Server(server, {
     path: '/notification',
 });
 
-app.set("socketio", io);
+// app.set("socketio", io);
 
 let onlineUsers = [];
 

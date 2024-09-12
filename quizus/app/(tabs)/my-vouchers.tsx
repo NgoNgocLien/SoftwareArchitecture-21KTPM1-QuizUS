@@ -211,6 +211,7 @@ export default function MyVouchers() {
                                         campaign={item.campaign}
                                         key={index} 
                                         is_used={item.is_used}
+                                        id_playerVoucher={item.id_playerVoucher}
                                         style={index === vouchers[3].length - 1 ? { marginBottom: 32 } : {}} 
                                     />
                                 ))}
