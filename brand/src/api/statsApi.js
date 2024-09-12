@@ -64,9 +64,9 @@ const getBudgetStats = async (id_brand) => {
     }
 }
   
-const getEventStats = async () => {
+const getEventStats = async (id_brand) => {
     try {
-      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/event`;
+      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/event/${id_brand}`;
       const response = await axios.get(url);
       console.log(response)
       return response.data;
