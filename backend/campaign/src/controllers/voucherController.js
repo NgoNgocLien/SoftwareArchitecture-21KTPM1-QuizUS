@@ -602,47 +602,71 @@ const getBrandStats = async (req, res) => {
                 { id_brand1: id_brand },
                 { id_brand2: id_brand }
             ]
-        }).populate('id_voucher'); 
+        }).populate('id_voucher');
 
-        let totalVoucherCount = 0; // Tổng số lượng voucher dự kiến phát hành
-        let issuedVoucherCount = 0; // Số lượng voucher đã phát hành
-        let unusedVoucherCount = 0; // Số lượng voucher chưa phát hành
-        let expiredVoucherCount = 0; // Số lượng voucher đã hết hạn
-        let totalVoucherValue = 0;   // Tổng giá trị của các voucher
+        console.log(campaigns);
+        
+        if (!campaigns || campaigns.length === 0) {
+            return res.status(404).json({ message: 'No campaigns found for this brand.' });
+        }
 
-        // 2. Duyệt qua tất cả các campaign để tính toán
+        let totalVoucherCount = 0; // Tổng số lượng voucher thực tế phát hành
+        let usedVoucherCount = 0;
+        let unusedVoucherCount = 0;
+        let expiredVoucherCount = 0;
+        let totalVoucherValue = 0;
+
         for (const campaign of campaigns) {
-            const maxVoucher = campaign.max_amount_voucher;
-            const givenVoucher = campaign.given_amount_voucher;
-            const voucher = campaign.id_voucher;
+            const voucher = await Voucher.findById(campaign.id_voucher);
 
-            // Tổng số lượng voucher dự kiến phát hành
-            totalVoucherCount += maxVoucher;
-
-            // Số lượng voucher đã phát hành
-            issuedVoucherCount += givenVoucher;
-
-            // Số lượng voucher chưa phát hành
-            unusedVoucherCount += (maxVoucher - givenVoucher);
-
-            // Kiểm tra nếu voucher đã hết hạn
-            if (voucher && new Date(voucher.expired_date) < new Date()) {
-                expiredVoucherCount += givenVoucher;
+            // Nếu không có voucher cho campaign, bỏ qua
+            if (!voucher) {
+                continue;
             }
 
-            // Tính tổng giá trị của các voucher
-            if (voucher) {
-                totalVoucherValue += maxVoucher * voucher.price;
+            // Số lượng voucher thực tế đã phát hành (given_amount_voucher)
+            const issuedVoucherCount = campaign.given_amount_voucher;
+            totalVoucherCount += issuedVoucherCount;
+
+            totalVoucherValue += campaign.max_amount_voucher * voucher.price;
+
+            // Kiểm tra voucher đã hết hạn chưa
+            if (voucher.expired_date < new Date()) {
+                expiredVoucherCount += issuedVoucherCount;
             }
+
+            // Tìm số lượng voucher đã sử dụng từ bảng PlayerVoucher
+            const usedPlayerVouchers = await PlayerVoucher.find({
+                id_campaign: campaign._id,
+                is_used: true
+            });
+
+            // Tìm số lượng voucher chưa sử dụng từ bảng PlayerVoucher
+            const unusedPlayerVouchers = await PlayerVoucher.find({
+                id_campaign: campaign._id,
+                is_used: false
+            });
+
+            const giftedVouchers = await VoucherGift.find({
+                id_playervoucher: { $in: unusedPlayerVouchers.map(v => v._id) }
+            }).distinct('id_playervoucher');
+
+            // Tính số lượng voucher đã sử dụng thật sự (không bao gồm voucher đã tặng)
+            const actualUsedVouchers = usedPlayerVouchers.length - giftedVouchers.length;
+            usedVoucherCount += actualUsedVouchers;
+
+            // Số lượng voucher chưa sử dụng = đã phát hành - đã sử dụng
+            const notUsedCount = issuedVoucherCount - actualUsedVouchers;
+            unusedVoucherCount += notUsedCount;
         }
 
         // Trả về kết quả thống kê
-        res.status(200).json({
-            total_voucher_count: totalVoucherCount, // Tổng số lượng voucher dự kiến phát hành
-            issued_voucher_count: issuedVoucherCount, // Số lượng voucher đã phát hành
-            unused_voucher_count: unusedVoucherCount, // Số lượng voucher chưa phát hành
-            expired_voucher_count: expiredVoucherCount, // Số lượng voucher đã hết hạn
-            total_voucher_value: totalVoucherValue   // Tổng giá trị của voucher
+        return res.status(200).json({
+            total_vouchers: totalVoucherCount,
+            used_vouchers: usedVoucherCount,
+            unused_vouchers: unusedVoucherCount,
+            expired_vouchers: expiredVoucherCount,
+            total_value: totalVoucherValue
         });
 
     } catch (error) {
