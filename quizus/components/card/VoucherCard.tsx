@@ -133,7 +133,7 @@ export function VoucherCard({
                 } else {
                     router.push({
                         pathname: '/voucher',
-                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id }
+                        params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id, id_playerVoucher: id_playerVoucher }
                     })
                 }
             }}>
@@ -188,7 +188,7 @@ export function VoucherCard({
                         :  <TouchableOpacity style={styles.useButton} activeOpacity={0.6} onPress={() => {
                                 router.push({
                                     pathname: '/voucher',
-                                    params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id }
+                                    params: { id_voucher: voucher._id, mine: "true", is_used: (is_used ? "true" : "false"), id_campaign: campaign._id, id_playerVoucher: id_playerVoucher }
                                 })
                             }}>
                                 <Text style={styles.useButtonText}>Sử dụng</Text>

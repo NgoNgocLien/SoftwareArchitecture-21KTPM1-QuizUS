@@ -4,7 +4,8 @@ const port = 4000;
 
 
 app.get("/:id", (req, res) => {
-    fetch(`http://localhost:8000/campaign/api/voucher/used/${req.params.id}`, {
+    console.log(req.params.id)
+    fetch(`http://10.126.0.158:8000/campaign/api/voucher/used/${req.params.id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

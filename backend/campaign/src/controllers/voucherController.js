@@ -369,8 +369,8 @@ const use = async (req, res) => {
         if (!id_playerVoucher) {
             return res.status(400).json({ message: 'id_playerVoucher is required' });
         }
-
-        const playerVoucher = await PlayerVoucher.findOne({ _id: id_playerVoucher })
+        console.log("id_playerVoucher: ", id_playerVoucher)
+        const playerVoucher = await PlayerVoucher.findById(id_playerVoucher)
             .populate({
                 path: 'id_campaign',
                 populate: {
@@ -391,31 +391,31 @@ const use = async (req, res) => {
         await playerVoucher.save();
 
         // Thêm noti
-        //  const newNoti = new PlayerNoti({
-        //     type: "voucher",
-        //     subtype: null,
-        //     id_receiver: playerVoucher.id_player,
-        //     id_voucher: playerVoucher.id_campaign.id_voucher._id,
-        //     name_voucher: playerVoucher.id_campaign.id_voucher.name,
-        //     is_used: true,
-        //     noti_time: new Date(),
-        //     seen_time: null
-        // });
+         const newNoti = new PlayerNoti({
+            type: "voucher",
+            subtype: null,
+            id_receiver: playerVoucher.id_player,
+            id_voucher: playerVoucher.id_campaign.id_voucher._id,
+            name_voucher: playerVoucher.id_campaign.id_voucher.name,
+            is_used: true,
+            noti_time: new Date(),
+            seen_time: null
+        });
 
-        // await newNoti.save();
+        await newNoti.save();
 
-        // const noti = {
-        //     type: newNoti.type,
-        //     subtype: newNoti.subtype,
-        //     id_receiver: newNoti.id_receiver,
-        //     id_voucher: newNoti.id_voucher,
-        //     name_voucher: newNoti.name_voucher,
-        //     is_used: newNoti.is_used,
-        //     noti_time: newNoti.noti_time,
-        //     seen_time: newNoti.seen_time
-        // }
+        const noti = {
+            type: newNoti.type,
+            subtype: newNoti.subtype,
+            id_receiver: newNoti.id_receiver,
+            id_voucher: newNoti.id_voucher,
+            name_voucher: newNoti.name_voucher,
+            is_used: newNoti.is_used,
+            noti_time: newNoti.noti_time,
+            seen_time: newNoti.seen_time
+        }
 
-        // await notify(noti);
+        await notify(noti);
 
         return res.status(200).json({
             message: 'Voucher successfully used.',
@@ -514,6 +514,7 @@ const sendVoucher = async (req, res) => {
             gift: newVoucherGift
         });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

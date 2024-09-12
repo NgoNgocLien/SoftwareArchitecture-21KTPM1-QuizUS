@@ -46,6 +46,7 @@ export default function VoucherPage() {
 
     useEffect(() => {
         if (mine) {
+            console.log("id_playerVoucher: ", params.id_playerVoucher)
             setIsUsed(params.is_used === 'true');
             setIdPlayerVoucher(params.id_playerVoucher as string);
         }
@@ -180,7 +181,7 @@ export default function VoucherPage() {
                     return;
                 }
 
-                console.log('gift-voucher: ',{
+                console.log('gift-voucher voucher.tsx: ',{
                     id_playervoucher: id_playerVoucher,
                     id_receiver: player.id_player,
                 })
@@ -247,7 +248,7 @@ export default function VoucherPage() {
 
                             <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>QR mã giảm giá</Heading>
                             <View style={styles.qrContainer}>
-                                <QRCode value={`${config.QR_SCANNER}/66da72bca72515620596efca`} size={300} backgroundColor='white'/>
+                                <QRCode value={`${config.QR_SCANNER}/${id_playerVoucher}`} size={300} backgroundColor='white'/>
                             </View>
 
                             <Heading type="h5" style={[styles.heading, {marginHorizontal: 20}]}>Tặng mã giảm giá</Heading>
