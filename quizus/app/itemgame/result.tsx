@@ -75,13 +75,13 @@ export default function ItemGameResult() {
         </View>
         <Paragraph type={'p2'} color={Colors.light.background} style={{textAlign: 'center'}}>Đây là 1 trong 2 mảnh ghép để đổi voucher Grab. Thu thập đủ 2 mảnh ghép để đổi voucher ngay nhé!</Paragraph>
 
-        <Button text="Đổi voucher" type="primary" 
+        {/* <Button text="Đổi voucher" type="primary" 
             style={{
                 marginBottom: -10,
                 backgroundColor: (quantity_item1 >= 1 && quantity_item2 >= 1) ? Colors.feedback.warning : Colors.gray._500
             }} 
             onPress={() => {router.back()}}>
-        </Button>
+        </Button> */}
         <Paragraph type={'p3'} color={Colors.light.background} style={{alignSelf: 'flex-start'}}>Đang có: {quantity_item1 + quantity_item2} mảnh Grab</Paragraph>
 
         <View style={styles.buttonContainer}>

@@ -317,7 +317,7 @@ export default function Campaign() {
                                         if (type_game == config.QUIZ_GAME){
                                             router.replace({
                                                 pathname: `/quizgame/detail`,
-                                                params: {
+                                                params: {   
                                                     quizInfo: JSON.stringify(quizInfo),
                                                     id_campaign: campaign._id
                                                 }
