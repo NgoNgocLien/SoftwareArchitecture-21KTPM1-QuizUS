@@ -38,9 +38,9 @@ const getPlayerByGameStats = async () => {
     }
 }
   
-const getPlayerStats = async () => {
+const getPlayerStats = async (id_brand) => {
     try {
-      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/player`;
+      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/brandPlayer/${id_brand}`;
       const response = await axios.get(url);
       console.log(response)
       return response.data;
@@ -51,9 +51,9 @@ const getPlayerStats = async () => {
     }
 }
   
-const getBudgetStats = async () => {
+const getBudgetStats = async (id_brand) => {
     try {
-      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/budget`;
+      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/brandBudget/${id_brand}`;
       const response = await axios.get(url);
       console.log(response)
       return response.data;
@@ -64,9 +64,9 @@ const getBudgetStats = async () => {
     }
 }
   
-const getEventStats = async () => {
+const getEventStats = async (id_brand) => {
     try {
-      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/event`;
+      const url = `${process.env.REACT_APP_CAMPAIGN_URL}/api/campaign/event/${id_brand}`;
       const response = await axios.get(url);
       console.log(response)
       return response.data;

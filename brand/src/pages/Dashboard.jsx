@@ -59,7 +59,7 @@ export default function Dashboard() {
                     {/* Thống kê ngân sách */}
                     <div className='budget-chart'>
                         <p>Thống kê</p>
-                        <h6>Ngân sách đã sử dụng</h6>
+                        <h6>Ngân sách đã sử dụng cho các campaign</h6>
                         <BarChart />
                     </div>
                 </div>
@@ -81,7 +81,7 @@ export default function Dashboard() {
                     <div className='voucher-chart'>
                         <p>Thống kê</p>
                         <h6>Tình trạng sự kiện</h6>
-                        {/* <EventChart /> */}
+                        <EventChart />
                     </div>
                 </div>
                 
