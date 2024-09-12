@@ -959,6 +959,68 @@ const getBrandPlayerStats = async (req, res) => {
     }
 };
 
+// Thống kê ngân sách đã sử dụng cho các campaign của brand từ đầu năm đến tháng hiện tại
+const getBrandBudgetStats = async (req, res) => {
+    try {
+        const { id_brand } = req.params;
+        if (!id_brand) {
+            return res.status(400).json({ message: 'id_brand is required' });
+        }
+
+        const startOfYear = getStartOfYear();
+        const currentMonth = new Date();
+        
+        // Khởi tạo mảng để lưu ngân sách sử dụng theo campaign
+        let campaignBudgetStats = [];
+
+        // Tìm tất cả các campaign của brand theo id_brand
+        const campaigns = await Campaign.find({
+            $or: [
+                { id_brand1: id_brand },
+                { id_brand2: id_brand }
+            ],
+            start_datetime: { $gte: startOfYear }
+        }).populate('id_voucher');
+
+        // Tính toán ngân sách đã sử dụng cho mỗi campaign
+        campaigns.forEach(campaign => {
+            const voucher = campaign.id_voucher;
+            if (voucher) {
+                const voucherPrice = voucher.price || 0;
+                const campaignMaxVoucher = campaign.max_amount_voucher || 0;
+                const campaignGivenVoucher = campaign.given_amount_voucher || 0;
+
+                // Tính tổng ngân sách đã sử dụng (voucher đã phát hành) cho campaign
+                const usedBudget = campaignGivenVoucher * voucherPrice;
+
+                // Tổng ngân sách dự kiến của campaign (tổng số lượng voucher dự kiến)
+                const totalBudget = campaignMaxVoucher * voucherPrice;
+
+                // Thêm thông tin ngân sách vào mảng campaignBudgetStats
+                campaignBudgetStats.push({
+                    campaign_id: campaign._id,
+                    campaign_name: campaign.name,
+                    used_budget: usedBudget,  // Ngân sách đã sử dụng (đã phát hành)
+                    total_budget: totalBudget, // Tổng ngân sách dự kiến (tối đa)
+                    start_datetime: campaign.start_datetime // Thời gian bắt đầu campaign
+                });
+            }
+        });
+
+        // Trả về kết quả thống kê
+        res.status(200).json({
+            id_brand: id_brand,
+            campaigns: campaignBudgetStats // Ngân sách đã sử dụng cho từng campaign
+        });
+    } catch (error) {
+        console.error('Error fetching brand campaign budget statistics:', error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAll,
     getInProgress,
@@ -981,5 +1043,6 @@ module.exports = {
     getBudgetStatsByField,
     getEventStatsByField,
     getBrandStats,
-    getBrandPlayerStats
+    getBrandPlayerStats,
+    getBrandBudgetStats
 };

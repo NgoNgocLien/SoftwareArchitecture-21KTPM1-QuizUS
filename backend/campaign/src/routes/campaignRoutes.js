@@ -24,7 +24,8 @@ const {
     getPlayerStats, 
     getBudgetStatsByField,
     getEventStatsByField,
-    getBrandStats, getBrandPlayerStats
+    getBrandStats, getBrandPlayerStats, 
+    getBrandBudgetStats
 } = require('../controllers/campaignController');
 
 // Lấy tất cả các chiến dịch
@@ -62,6 +63,9 @@ router.get('/brandPlayer/:id_brand', getBrandPlayerStats);
 
 // Thống kê ngân sách đã sử dụng theo lĩnh vực từ đầu năm đến tháng hiện tại
 router.get('/budget', getBudgetStatsByField);
+
+// Thống kê ngân sách đã sử dụng của brand từ đầu năm đến tháng hiện tại
+router.get('/brandBudget/:id_brand', getBrandBudgetStats);
 
 // Thống kê tình trạng các sự kiện (đang diễn ra/sắp diễn ra/ đã kết thúc)
 router.get('/event', getEventStatsByField);
